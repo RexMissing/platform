@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="riskManagementWeb:war">
+    <output-path>$PROJECT_DIR$/riskManagement/riskManagementWeb/target</output-path>
+    <root id="archive" name="riskManagementWeb-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="riskManagementWeb:war exploded" />
+    </root>
+  </artifact>
+</component>

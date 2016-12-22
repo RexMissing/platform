@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.rentManagement.business.contract.mapper.RemoveMapper">
+    <sql id="Remove_fields">
+          ID,CONTRACTID,REMOVEMAN,CREATETIME,REMOVESTATUS,APPID
+    </sql>
+    <resultMap id="RemoveResultMap" type="Remove">
+        <id property="id" column="ID" />
+        <result property="contractId" column="CONTRACTID"/>
+        <result property="removeMan" column="REMOVEMAN"/>
+        <result property="createTime" column="CREATETIME"/>
+        <result property="removeStatus" column="REMOVESTATUS"/>
+        <result property="appId" column="APPID"/>
+    </resultMap>
+    <insert id="add" parameterType="Remove"  keyProperty="id"
+            useGeneratedKeys="true">
+
+        INSERT INTO
+        remove(
+        <include refid="Remove_fields" />
+        )
+        VALUES (#{id}, #{contractId},#{removeMan},#{createTime},#{removeStatus},#{appId});
+        <selectKey resultType="long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+  <!--  <select id="getListByAppId" parameterType="java.lang.Long" resultMap="RemoveResultMap">
+        select
+        <include refid="Remove_fields" />
+        from remove
+        where APPID=#{appId}
+        order by remove.id desc
+    </select>
+    -->
+    <select id="getListByAppId" parameterType="java.lang.Long" resultType="Map">
+           select c.name contractName,i.removeMan,i.createTime,i.removeStatus,i.id
+           from  remove AS i,contract AS c
+           where i.appId=#{appId} AND i.contractId=c.id
+    </select>
+
+    <update id="update" parameterType="Remove">
+        UPDATE remove
+        <set>
+            <if test="removeMan!=null"> REMOVEMAN=#{removeMan},</if>
+            <if test="removeStatus!=null"> REMOVESTATUS=#{removeStatus},</if>
+            <if test="image!=null"> IMAGE=#{image},</if>
+
+        </set>
+        WHERE ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Remove">
+        DELETE FROM remove
+        <where>
+            <if test="id!=null">ID=#{id}</if>
+        </where>
+    </delete>
+
+    <select id="findByCondition" parameterType="map" resultType="map">
+        select remove.*,contract.name,customer.name as customerName
+        from remove
+        LEFT JOIN contract ON remove.contractId=contract.id
+        LEFT JOIN customer ON contract.customerId=customer.id
+        <where>
+            <if test="appId!=null"> remove.APPID=#{appId}</if>
+            <if test="user!=null">AND remove.removeMan like CONCAT('%',#{user},'%') </if>
+            <if test="device!=null">AND contract.name like CONCAT('%',#{device},'%')</if>
+            <if test="startTime!=null"><![CDATA[ AND remove.createTime>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND remove.createTime<=#{endTime} ]]> </if>
+        </where>
+        order by remove.id desc
+    </select>
+
+    <select id="getInfo" parameterType="map" resultType="map">
+        select remove.*,contract.name as contractName,customer.name as customerName
+        from remove
+        LEFT JOIN contract ON remove.contractId=contract.id
+        LEFT JOIN customer ON contract.customerId=customer.id
+        <where>
+            <if test="appId!=null">remove.APPID=#{appId}</if>
+            <if test="removeId!=null">AND remove.id=#{removeId}</if>
+        </where>
+        order by remove.id desc
+    </select>
+
+    <select id="getListByContractId" parameterType="map" resultType="Map">
+        select remove.*,contract.name as contractName,customer.name as customerName
+        from remove
+        LEFT JOIN contract ON remove.contractId=contract.id
+        LEFT JOIN customer ON contract.customerId=customer.id
+        <where>
+            <if test="appId!=null">remove.appId=#{appId}</if>
+            <if test="contractId!=null">AND remove.contractId=#{contractId}</if>
+        </where>
+        order by remove.id desc
+    </select>
+</mapper>

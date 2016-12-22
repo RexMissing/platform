@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="js/jquery.form.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function(){
+            $.post($.URL.preBury.list,null,preBury_listCallback,"json");
+            $.post($.URL.contract.list,null,preBury_listContractCallback,"json");
+            $("#ppreBuryTime").ligerDateEditor({labelWidth: 100, labelAlign: 'right' });
+        });
+
+        function preBury_listContractCallback(data){
+            if(data.code==200){
+                var ContractIdData=[];
+                $.each(data.data,function(index,content){
+                    var j=[];
+                    j["text"]=content.name;
+                    j["id"]=content.id;
+                    ContractIdData.push(j);
+                });
+                $("#preBury_contractId").ligerComboBox({emptyText:null,   //实现下拉框
+                    data:ContractIdData,
+                    valueFieldID: 'preBury_contractFieldId',
+                    label:'选择合同',labelWidth:200,labelAlign:'center'
+                });
+            }
+        }
+
+        var preBuryData = {};
+        function preBury_listCallback(data) {
+            if(data.code == 200) {
+                preBuryData.Rows = data.data;
+                preBuryData.total = data.data.length;
+                preBury_f_initGrid();
+            }
+        }
+
+        var preBury_manager;
+        function preBury_f_initGrid(){
+            preBury_manager = $("#preBury_mainGrid").ligerGrid( {
+
+                enabledEdit:true,clickToEdit:false,isScroll:false,
+                data: preBuryData,
+                width:'100%',
+
+                columns:[
+                    {display:'合同名称',name:'contractName',width:100,type:'int',frozen:true} ,
+                    {display:'预埋人员',name:'preBuryMan',width:100,editor:{type:'text'}},
+                    {display:'预埋数量',name:'preBuryCount',width:100,editor:{type:'text'}},
+                    {display:'预埋时间',name:'preBuryTime',width:100,frozen:true},
+                    {display:'预埋状态',name:'preBuryStatus',width:100,
+                        editor:{type:'select',valueField:"type",data:[{type:'未完成',text:'未完成'},{type:'完成',text:'完成'}],emptyText:null}
+                    } ,
+                    {display:'操作',isSort:false,render:function(rowdata,rowindex,value)
+                    {
+                        var h="";
+                        if(!rowdata._editing)
+                        {
+                            h += "<a href='javascript:preBury_beginEdit(" + rowindex + ")'>修改</a> ";
+                            h +="<a href='javascript:preBury_deleteRow("+ rowindex +")'>删除</a> " ;
+                        }
+                        else{
+                            h +="<a href='javascript:preBury_endEdit("+ rowindex +")'>提交</a> "  ;
+                            h +="<a href='javascript:preBury_cancelEdit("+ rowindex +")'>取消</a> ";
+                        }
+                        return h;
+                    }
+                    }
+                ]
+            });
+        }
+
+        function preBury_beginEdit(rowid){
+            preBury_manager.beginEdit(rowid);
+        }
+        function preBury_cancelEdit(rowid){
+            preBury_manager.cancelEdit(rowid);
+        }
+        function preBury_endEdit(rowid){
+            preBury_manager.endEdit(rowid);
+            var row=preBury_manager.getRow(rowid);
+            var jsonString= $.toJSON(row);
+            $.post($.URL.preBury.update,{"jsonString":jsonString},preBury_updateCallBack,"json");
+        }
+        function preBury_updateCallBack(data){
+            if(data.code==200){
+                $.ligerDialog.success("修改成功") ;
+            }
+            else{
+                $.ligerDialog.error("修改失败！");
+            }
+        }
+        function preBury_deleteRow(rowid){
+            if(confirm("确认删除？"))
+            {
+                var row=preBury_manager.getRow(rowid);
+                var jsonString= $.toJSON(row);
+                $.post($.URL.preBury.delete,{"jsonString":jsonString},preBury_deleteCallBack,"json");
+                preBury_manager.deleteRow(rowid);
+            }
+        }
+        function preBury_deleteCallBack(data){
+            if(data.code==200)
+            {
+                $.ligerDialog.success("成功删除！");
+            }
+            else{
+                $.ligerDialog.error("删除失败！");
+            }
+        }
+
+        function preBury_f_add() {
+            $("#preBury_Container").css('display','block');
+            $.ligerDialog.open({title:'添加预埋信息', target: $("#preBury_Container"),width:500});
+        }
+        $("#preBury_submitBtn").click(function(){
+            var data={};
+            data.contractId=$("#preBury_contractFieldId").val();
+            data.preBuryMan=$("#preBury_man").val();
+            data.preBuryCount=$("#preBury_count").val();
+            data.preBuryStatus=$("#preBury_status").val();
+
+            $.post($.URL.preBury.add,{"jsonString": $.toJSON(data)},preBury_addCallback,"json");
+        })
+        function preBury_addCallback(data){
+            if(data.code==200){
+                preBury_uploadImage(data.data);
+                $.post($.URL.preBury.list,null,preBury_listCallback,"json");
+            }
+            else if(data.code==500)
+            {
+                $.ligerDialog.error(data.message);
+                $.post($.URL.preBury.list,null,preBury_listCallback,"json");
+            }
+        }
+        function preBury_uploadImage(preBuryId){
+            $("#preBuryIdInput").val(preBuryId);
+            $("#preBuryImageUploadForm").ajaxSubmit({success:preBury_uploadImageCallback,dataType:'json',type:'post',url:'rs/preBury/upload'});
+        }
+
+        function preBury_uploadImageCallback(data){
+            if(data.code==200){
+                $.ligerDialog.success("操作成功！");
+            }
+            else if(data.code==500)
+            {
+                $.ligerDialog.error(data.message);
+                $.post($.URL.preBury.list,null,preBury_listCallback,"json");
+            }
+        }
+
+        $("#preBury_searchBtn").click(function(){
+            var data={};
+            data.contractName=$("#scontractName").val();
+            if(data.contractName==""){
+                $.post($.URL.preBury.list,null,preBury_listCallback,"json");
+            }else{
+                $.post($.URL.preBury.findByCondition,data,preBury_queryListCallback,"json");
+            }
+        });
+        function preBury_queryListCallback(data){
+            if(data.code==200){
+                preBuryData.Rows=data.data;
+                preBuryData.Total=data.data.length;
+                preBury_f_initGrid();
+            }
+            else if(data.code==500) {
+                $.ligerDialog.error(data.message);
+            }
+        };
+
+    </script>
+    <style type="text/css">
+        .l-button-submit {width:80px; float:left; margin-left:10px; padding-bottom:2px;}
+        .l-table-edit-td{ padding:4px;}
+        .l-button-submit{width:80px; float:left; margin-left:10px; padding-bottom:2px;}
+        .l-dialog-tc{background:#E0EDFF;}
+        {background:#E0EDFF; }
+    </style>
+</head>
+<body  style="padding:10px">
+<div id="preBury_Container" style="display:none">
+    <form name="form1" method="post" action="" id="form1">
+        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+            <tr>
+                <td align="right" class="l-table-edit-td">合同号:</td>
+                <td align="left" class="l-table-edit-td">
+                    <input name="contractId" type="text" id="preBury_contractId" ltype="text"/>
+                </td>
+
+
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+
+                <td align="right" class="l-table-edit-td">预埋人员:</td>
+                <td align="left" class="l-table-edit-td">
+                    <input type="text"  id="preBury_man">
+                </td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">预埋数量:</td>
+                <td align="left" class="l-table-edit-td">
+                    <input type="text"  id="preBury_count">
+                </td>
+
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+
+                <td align="right" class="l-table-edit-td">预埋状态:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="installStatus" id="preBury_status" ltype="select" >
+                        <option value="未完成">未完成</option>
+                        <option value="完成">完成</option>
+                    </select>
+                </td>
+            </tr>
+    </form>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">预埋拍照:</td>
+                <td align="left" class="l-table-edit-td" colspan="4">
+                    <form id="preBuryImageUploadForm" action="rs/preBury/upload" method="POST" enctype="multipart/form-data">
+                        <input name="filename" type="file" >
+                        <input id="preBuryIdInput" name="preBuryId" type="hidden">
+                    </form>
+                </td>
+            </tr>
+
+        </table>
+        <br />
+        <input type="button" value="提交" id="preBury_submitBtn" class="l-button l-button-submit" />
+
+</div>
+<div id="list">
+    <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <tr>
+            <td align="right" class="l-table-edit-td">合同名称:</td>
+            <td align="left" class="l-table-edit-td"><input name="scontractName" type="text" id="scontractName" ltype="text" /></td>
+            <td align="right"><input type="button" value="查询" id="preBury_searchBtn" class="l-button l-button-submit" /></td>
+            <td align="right"><input type="button" value="添加" id="addSubmitBtn" onclick="preBury_f_add()" class="l-button l-button-submit" /></td>
+        </tr>
+    </table>
+    <div class="l-clear"></div>
+    <div id="preBury_mainGrid" style="margin-top:5px"></div> <br />
+</div>
+<div style="display:none;">
+    <!-- g data total ttt -->
+</div>
+</body>
+</html>

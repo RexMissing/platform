@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>inspectManagement</artifactId>
+        <groupId>inspectManagement</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>inspectManagement-business</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>inspectManagement-business-inspectTable</module>
+        <module>inspectManagement-business-inspectResult</module>
+      <!--  <module>inspectManagement-business-Department</module>
+        <module>inspectManagement-business-employee</module>
+        <module>inspectManagement-business-employeeRole</module>-->
+        <module>inspectManagement-business-device</module>
+        <module>inspectManagement-business-configuration</module>
+        <module>inspectManagement-business-inspectReport</module>
+        <module>inspectManagement-business-DeptAndEmployee</module>
+        <module>inspectManagement-business-task</module>
+        <module>inspectManagement-business-inspectLocate</module>
+        <module>inspectManagement-business-user</module>
+        <!--<module>inspectManagement-business-student</module>-->
+    </modules>
+
+</project>

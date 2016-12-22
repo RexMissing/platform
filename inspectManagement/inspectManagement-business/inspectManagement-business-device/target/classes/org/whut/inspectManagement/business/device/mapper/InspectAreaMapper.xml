@@ -1,0 +1,133 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.inspectManagement.business.device.mapper.InspectAreaMapper">
+    <sql id="inspectArea_fields">
+       ID,NAME,DESCRIPTION,CREATETIME,NUMBER,DEVICETYPEID,APPID
+    </sql>
+    <resultMap id="inspectAreaResultMap" type="InspectArea">
+        <id property="id" column="ID"/>
+        <result property="name" column="NAME"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="createtime" column="CREATETIME" />
+        <result property="number" column="NUMBER"/>
+        <result property="deviceTypeId" column="DEVICETYPEID"/>
+        <result property="appId" column="APPID"/>
+    </resultMap>
+    <insert id="add" parameterType="InspectArea"  keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        inspectarea(
+        <include refid="inspectArea_fields"/>
+        )
+        VALUES (#{id},#{name},#{description},#{createtime},#{number},#{deviceTypeId},#{appId});
+        <selectKey  resultType="long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <select id="findByCondition" parameterType="map" resultMap="inspectAreaResultMap">
+        select
+        <include refid="inspectArea_fields"/>
+        from inspectarea
+        <where>
+            <if test="name!=null">NAME=#{name}</if>
+            <if test="description!=null">AND DESCRIPTION=#{description}</if>
+            <if test="createtime!=null">AND CREATETIME=#{createtime}</if>
+            <if test="number!=null">AND NUMBER=#{number}</if>
+            <if test="deviceTypeId!=null">AND DEVICETYPEID=#{deviceTypeId}</if>
+            <if test="appId!=null">AND APPID=#{appId}</if>
+        </where>
+    </select>
+
+    <select id="getTypeIdByAreaId"   parameterType="java.lang.Long" resultType="java.lang.Long">
+        select
+          deviceTypeId
+        from    inspectarea
+        where  ID=#{id}
+    </select>
+
+    <select id="findIdByName"   parameterType="java.lang.String" resultType="java.lang.Long">
+        select
+           id
+        from    inspectarea
+        where  NAME=#{name}
+    </select>
+
+    <update id="update" parameterType="InspectArea">
+        UPDATE inspectarea
+        <set>
+            <if test="name!=null">NAME=#{name},</if>
+            <if test="description!=null">DESCRIPTION=#{description},</if>
+            <if test="createtime!=null">CREATETIME=#{createtime},</if>
+            <if test="number!=null">NUMBER=#{number},</if>
+            <if test="deviceTypeId!=null">DEVICETYPEID=#{deviceTypeId}</if>
+
+        </set>
+        WHERE ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="InspectArea">
+        DELETE FROM inspectarea
+        <where>
+            <if test="id!=null">ID=#{id}</if>
+        </where>
+    </delete>
+
+    <select id="getAreaById"   parameterType="java.lang.Long" resultType="java.lang.String">
+        select  name
+        from  inspectarea
+        where ID=#{id}
+    </select>
+
+    <select id="getDeviceTypeByAreaId"   parameterType="java.lang.Long" resultType="java.lang.String">
+        select dt.name
+        from  inspectarea as ia, devicetype as dt
+        where ia.id=#{inspectAreaId} and dt.id = ia.deviceTypeId
+    </select>
+    <select id="getInspectAreaIdByAreaNameAndDeviceTypeName" parameterType="map" resultType="java.lang.Long">
+        SELECT ia.id
+        FROM inspectarea ia,devicetype dt
+        WHERE ia.name=#{areaName} AND dt.id=ia.deviceTypeId AND dt.name=#{deviceTypeName} AND ia.appid=#{appId}
+    </select>
+    <select id="getDeviceTypeById" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT dt.name
+        FROM devicetype dt,inspectarea ia
+        WHERE   ia.id=#{inspectAreaId} AND dt.id=ia.devicetypeid
+    </select>
+    <select id="getInspectAreaByDeviceTypeId" parameterType="java.lang.Long" resultMap="inspectAreaResultMap">
+        SELECT *
+        FROM inspectarea
+        WHERE devicetypeid=#{deviceTypeId}
+    </select>
+
+    <select id="getListByAppId" parameterType="java.lang.Long" resultMap="inspectAreaResultMap">
+        select
+        <include refid="inspectArea_fields"/>
+        from inspectarea
+        where APPID=#{appId}
+    </select>
+
+    <select id="getIdByName" parameterType="map" resultType="java.lang.Long">
+        select id
+        from inspectarea
+        where NAME=#{name} and APPID=#{appId}
+    </select>
+    <select id="getIdByNumber" parameterType="map" resultType="java.lang.Long">
+        select id
+        from inspectarea
+        where NUMBER=#{number} and APPID=#{appId}
+    </select>
+    <select id="getAreaIdByName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        id
+        FROM
+        inspectarea
+        WHERE name=#{name}
+    </select>
+    <select id="getAreaNameByAppId" parameterType="java.lang.Long" resultType="map">
+        SELECT DISTINCT(`name`)
+        From inspectarea
+        WHERE appId=#{appId}
+    </select>
+</mapper>

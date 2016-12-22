@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.inspectManagement.business.task.mapper.InspectTaskMapper">
+    <sql id="inspect_task_fields">
+        ID,INSPECTPLANID,INSPECTTABLEID,INSPECTTABLERECORDID,USERID,DEVICEID,FAULTCOUNT,INSPECTTIME,CREATETIME,STATUS,TASKDATE,TIMESTART,TIMEEND,APPID
+            </sql>
+    <resultMap type="InspectTask" id="inspect_taskResultMapper">
+        <id property="id" column="ID"/>
+        <result property="inspectPlanId" column="INSPECTPLANID"/>
+        <result property="inspectTableId" column="INSPECTTABLEID"/>
+        <result property="inspectTableRecordId" column="INSPECTTABLERECORDID"/>
+        <result property="userId" column="USERID"/>
+        <result property="deviceId" column="DEVICEID"/>
+        <result property="faultCount" column="FAULTCOUNT"/>
+        <result property="inspectTime" column="INSPECTTIME"/>
+        <result property="createtime" column="CREATETIME"/>
+        <result property="status" column="STATUS"/>
+        <result property="taskDate" column="TASKDATE"/>
+        <result property="timeStart" column="TIMESTART"/>
+        <result property="timeEnd" column="TIMEEND"/>
+        <result property="appId" column="APPID"/>
+    </resultMap>
+    <insert id="add" parameterType="InspectTask" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        inspect_task
+        (
+        <include refid="inspect_task_fields"/>
+        )
+        values (#{id},#{inspectPlanId},#{inspectTableId},#{inspectTableRecordId},#{userId},#{deviceId},#{faultCount},#{inspectTime},#{createtime},#{status},#{taskDate},#{timeStart},#{timeEnd},#{appId});
+        <selectKey keyProperty="id" resultType="long">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="InspectTask">
+        update inspect_task
+        <set>
+            <if test="inspectPlanId!=null">INSPECTPLANID=#{inspectPlanId},</if>
+            <if test="inspectTableId!=null">INSPECTTABLEID=#{inspectTableId},</if>
+            <if test="inspectTableRecordId!=null">INSPECTTABLERECORDID=#{inspectTableRecordId},</if>
+            <if test="userId!=null">USERID=#{userId},</if>
+            <if test="deviceId!=null">DEVICEID=#{deviceId},</if>
+            <if test="faultCount!=null">FAULTCOUNT=#{faultCount},</if>
+            <if test="inspectTime!=null">INSPECTTIME=#{inspectTime},</if>
+            <if test="status!=null">STATUS=#{status},</if>
+            <if test="taskDate!=null">TASKDATE=#{taskDate},</if>
+            <if test="timeStart!=null">TIMESTART=#{timeStart},</if>
+            <if test="timeEnd!=null">TIMEEND=#{timeEnd},</if>
+        </set>
+        <where>
+            <if test="id != null">ID=#{id}</if>
+            <if test="appId!=null">AND APPID=#{appId}</if>
+        </where>
+    </update>
+
+    <update id="completeTask" parameterType="InspectTask">
+        update inspect_task
+        <set>
+            <if test="inspectTableRecordId!=null">INSPECTTABLERECORDID=#{inspectTableRecordId},</if>
+            <if test="faultCount!=null">FAULTCOUNT=#{faultCount},</if>
+            <if test="inspectTime!=null">INSPECTTIME=#{inspectTime},</if>
+            <if test="status!=null">STATUS=#{status},</if>
+        </set>
+        <where>
+            <if test="appId!=null">AND appId=#{appId}</if>
+            <if test="inspectTableId!=null"> AND inspectTableId=#{inspectTableId}</if>
+            <if test="userId!=null"> AND userId=#{userId}</if>
+            <if test="deviceId!=null"> AND deviceId=#{deviceId}</if>
+            <if test="taskDate!=null"> AND taskDate=#{taskDate}</if>
+            <if test="timeStart!=null"><![CDATA[ AND TIMESTART<=#{timeStart}]]></if>
+            <if test="timeStart!=null"><![CDATA[ AND TIMEEND>=#{timeStart}]]></if>
+        </where>
+    </update>
+
+    <delete id="delete" parameterType="InspectTask">
+        DELETE FROM inspect_task
+        <where>
+            <if test="appId!=null">APPID=#{appId}</if>
+            <if test="id != null">AND ID=#{id}</if>
+        </where>
+    </delete>
+
+    <select id="getListByAppId" parameterType="java.lang.Long" resultMap="inspect_taskResultMapper">
+        select
+        <include refid="inspect_task_fields"/>
+        from inspect_task
+        where APPID=#{appId}
+    </select>
+
+    <select id="findByCondition" parameterType="InspectTask" resultMap="inspect_taskResultMapper">
+        SELECT
+        a.*,b.`name` as planName,c.`name` as tableName,d.`name` as deviceName,e.name as userName
+        FROM inspect_task a,inspect_plan b,inspecttable c,device d,employee e
+        <where>
+            a.inspectPlanId=b.id and a.inspectTableId=c.id and a.deviceId=d.id and a.userId=e.userId
+            <if test="appId!=0"> AND a.APPID=#{appId}</if>
+            <if test="userId!=0">AND a.userId=#{userId}</if>
+            <if test="deviceId!=0">AND a.deviceId=#{deviceId}</if>
+            <if test="inspectPlanId!=0">AND a.inspectPlanId=#{inspectPlanId}</if>
+            <if test="inspectTableId!=0">AND a.inspectTableId=#{inspectTableId}</if>
+            <if test="taskDate!=null">AND a.taskDate=#{taskDate}</if>
+            <if test="startDay!=null"><![CDATA[ AND a.taskDate>=#{startDay}]]></if>
+            <if test="endDay!=null"><![CDATA[ AND a.taskDate<=#{endDay} ]]> </if>
+        </where>
+    </select>
+
+    <insert id="dispatchTask" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        <selectKey keyProperty="id" resultType="long">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+        insert into inspect_task
+        (
+        <include refid="inspect_task_fields"/>
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.inspectPlanId},#{item.inspectTableId},#{item.inspectTableRecordId},#{item.userId},#{item.deviceId},#{item.faultCount},#{item.inspectTime},#{item.createtime},#{item.status},#{item.taskDate},#{item.timeStart},#{item.timeEnd},#{item.appId})
+        </foreach>
+
+    </insert>
+
+    <select id="getDispatchTaskList" parameterType="java.util.List" resultMap="inspect_taskResultMapper">
+        SELECT a.inspectPlanId,b.inspectTableId,a.userId,a.deviceId,b.timeStart,b.timeEnd,b.appId,CURDATE() as taskDate,NOW() as createtime
+        FROM user_inspect_plan a,inspect_plan b,device c,inspecttable d,employee e
+        where a.inspectPlanId=b.id and a.deviceId=c.id and a.userId=e.userId and b.inspectTableId=d.id and b.rule IN
+        <foreach item="ruleItem" index="index" collection="list" open="(" separator="," close=")">
+            #{ruleItem}
+        </foreach>
+    </select>
+    <select id="getInspectTaskInfo" parameterType="java.lang.String" resultType="map">
+         SELECT  u.id,u.name as username,t.name as tname,d.name as devname
+        FROM user u,inspecttable t,device d,inspecttask task
+        WHERE u.id=task.userId AND t.id=task.inspectTableId AND d.id=task.deviceId
+        And task.appId=#{appId}
+    </select>
+</mapper>

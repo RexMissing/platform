@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.inspectManagement.business.device.mapper.DeviceMapper">
+    <sql id="device_fields">
+          ID,NAME,NUMBER,DESCRIPTION,APPID,DEVICETYPEID,IMAGE
+    </sql>
+    <resultMap id="deviceResultMap" type="device">
+        <id property="id" column="ID" />
+        <result property="name" column="NAME" />
+        <result property="number" column="NUMBER"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="appId" column="APPID"/>
+        <result property="deviceTypeId" column="DEVICETYPEID"/>
+        <result property="image" column="IMAGE"/>
+    </resultMap>
+    <insert id="add" parameterType="device"  keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO
+        device(
+        <include refid="device_fields" />
+        )
+        VALUES (#{id}, #{name},#{number},#{description},#{appId},#{deviceTypeId},#{image});
+        <selectKey resultType="long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <select id="get" parameterType="long" resultMap="deviceResultMap">
+        SELECT
+        <include refid="device_fields" />
+        FROM device WHERE ID=#{id}
+    </select>
+
+    <select id="getIdByNumber"  parameterType="map" resultType="java.lang.Long">
+        select   id
+        from   device
+        where number=#{number}
+        and  appId=#{appId}
+    </select>
+
+    <select id="findByCondition" parameterType="device" resultMap="deviceResultMap">
+        select
+        <include refid="device_fields"/>
+        from device
+        <where>
+            <if test="name!=null">NAME=#{name}</if>
+            <if test="number!=null">and  NUMBER=#{number}</if>
+            <if test="description!=null">and DESCRIPTION=#{description}</if>
+            <if test="appId!=null">and APPID=#{appId}</if>
+            <if test="deviceTypeId!=null">and DEVICETYPEID=#{deviceTypeId}</if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="Device">
+        update device
+        <set>
+            <if test="name!=null">NAME=#{name},</if>
+            <if test="number!=null">  NUMBER=#{number},</if>
+            <if test="description!=null"> DESCRIPTION=#{description},</if>
+            <if test="appId!=null">APPID=#{appId},</if>
+            <if test="deviceTypeId!=null"> DEVICETYPEID=#{deviceTypeId}</if>
+        </set>
+        where ID=#{id};
+    </update>
+
+    <delete id="delete" parameterType="Device">
+        DELETE FROM device
+        <where>
+            <if test="id != null">ID=#{id}</if>
+
+            <if test="name != null"> AND NAME=#{name}</if>
+        </where>
+    </delete>
+
+    <select id="getListByCondition" parameterType="map" resultType="map">
+        select
+        dt.name as deviceType,dt.number as deviceTypeNumber,d.number as deviceNumber,t.name as tagName,t.id as tagId,t.number as tagNumber
+        from device d,devicetype dt,inspecttag t
+        <where>
+            d.deviceTypeId=dt.id
+            and t.deviceId = d.id
+            <if test="deviceNumber!=null">and d.number=#{deviceNumber}</if>
+            <if test="deviceType!=null">and  dt.name=#{deviceType}</if>
+            <if test="tagName!=null">and t.name=#{tagName}</if>
+            <if test="appId!=null">and d.appId=#{appId}</if>
+        </where>
+    </select>
+
+    <select id="getListByTagId" parameterType="java.lang.Long" resultType="map">
+        select
+        dt.name as deviceType,dt.number as deviceTypeNumber,d.number as deviceNumber,t.name as tagName,t.id as tagId,t.number as tagNumber,ta.name as tagAreaName,ta.id as tagAreaId
+        from device d,devicetype dt,inspecttag t,inspectarea ta
+        <where>
+            d.deviceTypeId=dt.id
+            and t.deviceId = d.id
+            and t.inspectAreaId=ta.id
+            <if test="_parameter!=null">and t.id=#{_parameter}</if>
+        </where>
+    </select>
+
+    <select id="getNameById" parameterType="java.lang.Long" resultType="java.lang.String">
+        select name
+        from device
+        where ID=#{id}
+    </select>
+
+    <select id="getListByAppId" parameterType="java.lang.Long" resultMap="deviceResultMap">
+        select
+        <include refid="device_fields"/>
+        from device
+        where APPID=#{appId}
+    </select>
+
+    <select id="getIdByName" parameterType="map" resultType="java.lang.Long">
+        select id
+        from device
+        <if test="name!=null">
+        where NAME=#{name}
+        </if>
+        <if test="appId!=0L">
+        and APPID=#{appId}
+        </if>
+
+    </select>
+
+    <select id="getInfoByCondition" parameterType="map" resultMap="deviceResultMap">
+        select
+        <include refid="device_fields"/>
+        from device
+        <where>
+            <if test="name !=null"> NAME LIKE #{name}</if>
+            <if test="number !=null"> and NUMBER LIKE #{number}</if>
+            <if test="deviceTypeId !=0">and DEVICETYPEID = #{deviceTypeId}</if>
+            <if test="appId !=null"> and APPID=#{appId}</if>
+        </where>
+    </select>
+
+    <update id="updateImage" parameterType="Device">
+        UPDATE device
+        <set>
+            <if test="image != null">IMAGE=#{image}</if>
+        </set>
+        WHERE ID = #{id};
+    </update>
+
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.monitor.business.monitor.mapper.AreaMapper">
+    <sql id="Area_fields">
+          ID,NAME,DESCRIPTION,CREATETIME,GROUPID,APPID
+    </sql>
+    <resultMap id="AreaResultMap" type="Area">
+        <id property="id" column="ID" />
+        <result property="name" column="NAME"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="createtime" column="CREATETIME"/>
+        <result property="groupId" column="GROUPID"/>
+        <result property="appId" column="APPID"/>
+    </resultMap>
+    <insert id="add" parameterType="Area"  keyProperty="id"
+            useGeneratedKeys="true">
+
+        INSERT INTO
+        area(
+        <include refid="Area_fields" />
+        )
+        VALUES (#{id}, #{name},#{description},#{createtime},#{groupId},#{appId});
+        <selectKey resultType="long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+    <update id="update" parameterType="Area">
+        UPDATE area
+        <set>
+            <if test="name!=null">NAME=#{name},</if>
+            <if test="description!=null">DESCRIPTION=#{description},</if>
+            <if test="groupId!=null">GROUPID=#{groupId},</if>
+            <if test="appId!=null">APPID=#{appId}</if>
+        </set>
+        WHERE ID=#{id}
+    </update>
+    <delete id="delete" parameterType="Area">
+        DELETE FROM area
+        <where>
+            <if test="id!=null">ID=#{id}</if>
+        </where>
+    </delete>
+    <!--<select id="getListByAppId" parameterType="java.lang.Long" resultMap="AreaResultMap">-->
+        <!--SELECT *-->
+        <!--FROM area-->
+        <!--WHERE APPID=#{appId}-->
+    <!--</select>-->
+    <select id="getListByAppId" parameterType="java.lang.Long" resultType="Map">
+        SELECT c.id,c.`name`,c.description,c.createtime,`group`.`name` groupName
+        FROM `group`,area AS c
+        WHERE c.appId=#{appId} AND c.groupId=`group`.id
+    </select>
+
+    <select id="getAreaByGroupId" parameterType="java.lang.Long" resultMap="AreaResultMap">
+        SELECT *
+        FROM area
+        WHERE area.groupId=#{groupId}
+    </select>
+
+
+    <select id="getIdByNameAndGroupIdAndAppId" parameterType="map" resultType="java.lang.Long">
+        SELECT ID
+        FROM area
+        WHERE NAME=#{name} AND GROUPID=#{groupId} AND APPID=#{appId}
+    </select>
+    <select id="getAreaNameListByAppId" parameterType="java.lang.Long" resultType="map">
+        SELECT DISTINCT(area.`name`)
+        FROM area
+        WHERE appId=#{appId}
+    </select>
+    <select id="getAreaNames" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT name
+        FROM area
+        WHERE groupId=#{groupId}
+    </select>
+    <select id="getAreaNameBySNum" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT area.name
+        FROM area,sensor
+        WHERE sensor.number=#{sNum} AND area.id=sensor.areaId
+    </select>
+</mapper>

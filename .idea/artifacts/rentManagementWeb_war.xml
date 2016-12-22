@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="rentManagementWeb:war">
+    <output-path>$PROJECT_DIR$/rentManagement/rentManagementWeb/target</output-path>
+    <root id="archive" name="rentManagementWeb-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="rentManagementWeb:war exploded" />
+    </root>
+  </artifact>
+</component>

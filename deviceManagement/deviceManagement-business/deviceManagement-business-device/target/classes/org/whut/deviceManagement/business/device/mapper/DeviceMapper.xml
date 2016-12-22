@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.deviceManagement.business.device.mapper.DeviceMapper">
+    <sql id="device_fields">
+          id,typeId,projectId,mongoId,address,status,name,number,price,producer,produceTime,createTime,priceUnit,lng,lat,appId
+    </sql>
+    <resultMap id="device_resultMap" type="Device">
+        <id property="id" column="ID" />
+        <result property="typeId" column="typeId"/>
+        <result property="projectId" column="projectId"/>
+        <result property="mongoId" column="mongoId"/>
+        <result property="address" column="address"/>
+        <result property="status" column="status"/>
+        <result property="name" column="name"/>
+        <result property="number" column="number"/>
+        <result property="price" column="price"/>
+        <result property="producer" column="producer"/>
+        <result property="produceTime" column="produceTime"/>
+        <result property="createTime" column="createTime"/>
+        <result property="priceUnit" column="priceUnit"/>
+        <result property="lng" column="lng"/>
+        <result property="lat" column="lat"/>
+        <result property="appId" column="appId"/>
+    </resultMap>
+
+    <insert id="add" parameterType="Device"  keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO
+        device(
+        <include refid="device_fields" />
+        )
+        VALUES (#{id},#{typeId},#{projectId},#{mongoId},#{address},#{status},#{name},#{number},#{price},#{producer},#{produceTime},#{createTime},#{priceUnit},#{lng},#{lat},#{appId});
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="Device">
+        update device
+        <set>
+            <if test="typeId!=null">typeId=#{typeId},</if>
+            <if test="projectId!=null">projectId=#{projectId},</if>
+            <if test="mongoId!=null">mongoId=#{mongoId},</if>
+            <if test="address!=null">address=#{address},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="name!=null">name=#{name},</if>
+            <if test="number!=null">number=#{number},</if>
+            <if test="price!=null">price=#{price},</if>
+            <if test="producer!=null">producer=#{producer},</if>
+            <if test="produceTime!=null">produceTime=#{produceTime},</if>
+            <if test="priceUnit!=null">priceUnit=#{priceUnit},</if>
+            <if test="lng!=null">lng=#{lng},</if>
+            <if test="lat!=null">lat=#{lat},</if>
+        </set>
+        where id=#{id} and appId=#{appId}
+    </update>
+
+    <update id="updateByNumber" parameterType="Device">
+        update device
+        <set>
+            <if test="typeId!=null">typeId=#{typeId},</if>
+            <if test="projectId!=null">projectId=#{projectId},</if>
+            <if test="mongoId!=null">mongoId=#{mongoId},</if>
+            <if test="address!=null">address=#{address},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="name!=null">name=#{name},</if>
+            <if test="number!=null">number=#{number},</if>
+            <if test="price!=null">price=#{price},</if>
+            <if test="producer!=null">producer=#{producer},</if>
+            <if test="produceTime!=null">produceTime=#{produceTime},</if>
+            <if test="priceUnit!=null">priceUnit=#{priceUnit},</if>
+            <if test="lng!=null">lng=#{lng},</if>
+            <if test="lat!=null">lat=#{lat},</if>
+        </set>
+        where number=#{number}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM device
+        WHERE ID=#{id}
+    </delete>
+
+    <select id="getListByAppId" parameterType="java.lang.Long" resultType="map">
+        select device.*,device_type.name as deviceType,p.name project
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        LEFT JOIN project p ON device.projectId=p.id
+        where device.appId=#{appId}
+    </select>
+
+    <select id="getIdByNumber" parameterType="map" resultType="java.lang.Long">
+        select id
+        from device
+        where NUMBER=#{number} and APPID=#{appId}
+    </select>
+
+    <select id="getByNumber" parameterType="java.lang.String" resultType="Device">
+        select *
+        from device
+        where NUMBER=#{number}
+    </select>
+
+    <select id="detailInfo" parameterType="map" resultType="map">
+        select device.*,device_type.name as deviceType,p.name project
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        LEFT JOIN project p ON device.projectId=p.id
+        where device.id=#{deviceId} and device.appId=#{appId}
+        <!--联查错误，改后台传name -->
+    </select>
+
+    <select id="findByCondition" parameterType="map" resultType="map">
+        select device.*,device_type.name as deviceType,p.name project
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        LEFT JOIN project p ON device.projectId=p.id
+        where
+        <if test="appId!=null"> device.APPID=#{appId}</if>
+        <if test="typeId!=null"> AND device.typeId=#{typeId}</if>
+        <if test="optionType!=null"> AND device.optionType=#{optionType}</if>
+        <if test="number!=null">AND device.number like CONCAT('%',#{number},'%') </if>
+        <if test="name!=null">AND device.name like CONCAT('%',#{name},'%')</if>
+        <if test="producer!=null">AND device.producer like CONCAT('%',#{producer},'%')</if>
+        <if test="startTime!=null"><![CDATA[ AND device.produceTime>=#{startTime}]]></if>
+        <if test="endTime!=null"><![CDATA[ AND device.produceTime<=#{endTime} ]]> </if>
+        <if test="projectId!=null"> AND device.projectId=#{projectId}</if>
+    </select>
+
+</mapper>

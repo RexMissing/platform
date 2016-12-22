@@ -1,0 +1,176 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="riskManagementWeb:war exploded">
+    <output-path>$PROJECT_DIR$/riskManagement/riskManagementWeb/target/riskManagementWeb-1.0-SNAPSHOT</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="riskManagementWeb" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.springframework:spring-core:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.1" />
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.12" />
+          <element id="library" level="project" name="Maven: logkit:logkit:1.0.1" />
+          <element id="library" level="project" name="Maven: avalon-framework:avalon-framework:4.1.3" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-web:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet:2.5.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet-core:2.5.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:javax.inject:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-common:2.5.1" />
+          <element id="library" level="project" name="Maven: javax.annotation:javax.annotation-api:1.2" />
+          <element id="library" level="project" name="Maven: com.google.guava:guava:13.0.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-api:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-utils:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-locator:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:asm-all-repackaged:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:cglib:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:osgi-resource-locator:1.0.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-server:2.5.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-client:2.5.1" />
+          <element id="library" level="project" name="Maven: javax.validation:validation-api:1.1.0.Final" />
+          <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0" />
+          <element id="archive" name="business-address-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="business-address" />
+          </element>
+          <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.mybatis:mybatis:3.2.3" />
+          <element id="library" level="project" name="Maven: org.mybatis:mybatis-spring:1.2.2" />
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.ext:jersey-spring3:2.5.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:config-types:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:core:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-config:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.jvnet:tiger-types:1.4" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2.external:bean-validator:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-runlevel:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:class-model:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: junit:junit:4.3.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.hk2:spring-bridge:2.2.0-b21" />
+          <element id="archive" name="fundamental-datasource-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-datasource" />
+          </element>
+          <element id="archive" name="fundamental-config-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-config" />
+          </element>
+          <element id="library" level="project" name="Maven: commons-pool:commons-pool:1.6" />
+          <element id="library" level="project" name="Maven: commons-dbcp:commons-dbcp:1.4" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.18" />
+          <element id="archive" name="fundamental-orm-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-orm" />
+          </element>
+          <element id="archive" name="fundamental-util-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-util" />
+          </element>
+          <element id="library" level="project" name="Maven: org.glassfish.jersey.media:jersey-media-json-jackson:2.5.1" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.13" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.13" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-jaxrs:1.9.13" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-xc:1.9.13" />
+          <element id="library" level="project" name="Maven: org.codehaus.jettison:jettison:1.3.1" />
+          <element id="library" level="project" name="Maven: stax:stax-api:1.0.1" />
+          <element id="archive" name="fundamental-logger-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-logger" />
+          </element>
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.0.7" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.0.7" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.1" />
+          <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.7.1" />
+          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.1" />
+          <element id="library" level="project" name="Maven: org.logback-extensions:logback-ext-spring:0.1.1" />
+          <element id="archive" name="riskManagement-business-craneInspectReport-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="riskManagement-business-craneInspectReport" />
+          </element>
+          <element id="archive" name="fundamental-jxl-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-jxl" />
+          </element>
+          <element id="library" level="project" name="Maven: net.sourceforge.jexcelapi:jxl:2.6" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.1" />
+          <element id="library" level="project" name="Maven: commons-io:commons-io:2.4" />
+          <element id="archive" name="fundamental-fileupload-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-fileupload" />
+          </element>
+          <element id="library" level="project" name="Maven: joda-time:joda-time:2.1" />
+          <element id="library" level="project" name="Maven: commons-fileupload:commons-fileupload:1.2.2" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.7" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-compress:1.4.1" />
+          <element id="library" level="project" name="Maven: org.tukaani:xz:1.0" />
+          <element id="archive" name="fundamental-mongoConnector-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-mongoConnector" />
+          </element>
+          <element id="library" level="project" name="Maven: org.mongodb:mongo-java-driver:2.11.3" />
+          <element id="archive" name="fundamental-map-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-map" />
+          </element>
+          <element id="archive" name="business-user-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="business-user" />
+          </element>
+          <element id="archive" name="business-app-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="business-app" />
+          </element>
+          <element id="archive" name="fundamental-exception-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-exception" />
+          </element>
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:3.2.0.RELEASE" />
+          <element id="archive" name="riskManagement-business-riskcolor-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="riskManagement-business-riskcolor" />
+          </element>
+          <element id="archive" name="riskManagement-business-riskmodel-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="riskManagement-business-riskmodel" />
+          </element>
+          <element id="archive" name="business-datarule-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="business-datarule" />
+          </element>
+          <element id="archive" name="fundamental-redisConnector-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-redisConnector" />
+          </element>
+          <element id="library" level="project" name="Maven: redis.clients:jedis:2.1.0" />
+          <element id="archive" name="riskManagement-business-map-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="riskManagement-business-map" />
+          </element>
+          <element id="archive" name="riskManagement-business-report-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="riskManagement-business-report" />
+          </element>
+          <element id="archive" name="fundamental-report-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-report" />
+          </element>
+          <element id="library" level="project" name="Maven: net.sf.jasperreports:jasperreports:3.7.2" />
+          <element id="library" level="project" name="Maven: commons-beanutils:commons-beanutils:1.8.0" />
+          <element id="library" level="project" name="Maven: com.lowagie:itext:2.1.7" />
+          <element id="library" level="project" name="Maven: bouncycastle:bcmail-jdk14:138" />
+          <element id="library" level="project" name="Maven: bouncycastle:bcprov-jdk14:138" />
+          <element id="library" level="project" name="Maven: org.bouncycastle:bctsp-jdk14:1.38" />
+          <element id="library" level="project" name="Maven: org.bouncycastle:bcprov-jdk14:1.38" />
+          <element id="library" level="project" name="Maven: org.bouncycastle:bcmail-jdk14:1.38" />
+          <element id="library" level="project" name="Maven: jfree:jcommon:1.0.15" />
+          <element id="library" level="project" name="Maven: jfree:jfreechart:1.0.12" />
+          <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.3.02" />
+          <element id="library" level="project" name="Maven: eclipse:jdtcore:3.1.0" />
+          <element id="library" level="project" name="Maven: org.codehaus.groovy:groovy-all:1.7.5" />
+          <element id="library" level="project" name="Maven: com.lowagie:itextasian:1.0" />
+          <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.1" />
+          <element id="library" level="project" name="Maven: commons-digester:commons-digester:2.1" />
+          <element id="library" level="project" name="Maven: org.apache.poi:poi:3.8" />
+          <element id="archive" name="riskManagement-business-craneType-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="riskManagement-business-craneType" />
+          </element>
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-web:3.2.0.RELEASE" />
+          <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-config:3.2.0.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.security:spring-security-cas-client:3.0.0.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.jasig.cas:cas-client-core:3.1.9" />
+          <element id="library" level="project" name="Maven: net.bull.javamelody:javamelody-core:1.49.0" />
+          <element id="library" level="project" name="Maven: org.jrobin:jrobin:1.5.9" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/riskManagement/riskManagementWeb/target/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="riskManagementWeb/web/Web" />
+    </root>
+  </artifact>
+</component>

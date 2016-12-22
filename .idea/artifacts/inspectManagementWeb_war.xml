@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="inspectManagementWeb:war">
+    <output-path>$PROJECT_DIR$/inspectManagement/inspectManagementWeb/target</output-path>
+    <root id="archive" name="inspectManagementWeb-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="inspectManagementWeb:war exploded" />
+    </root>
+  </artifact>
+</component>

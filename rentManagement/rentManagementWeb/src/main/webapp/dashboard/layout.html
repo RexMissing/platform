@@ -1,0 +1,45 @@
+
+<script src="lib/ligerUI/js/plugins/ligerTab.js" type="text/javascript"></script>
+<script>
+    var navtab = null;
+    $(document).ready(function () {
+        $("#tab").ligerTab();
+        navtab = $("#tab").ligerGetTabManager();
+
+        $("#tab").ligerTab({onAfterSelectTabItem: function (tabid) {
+            loadTabPage(tabid);
+        }});
+
+        loadTabPage('locationTab');
+    });
+    function loadTabPage(tabid){
+        var tab =$("#"+tabid);
+        if(tab.attr("url")!=""){
+            tab.load(tab.attr("url"))
+        }
+    }
+</script>
+<style type="text/css">
+</style>
+<div id="tab" style="height: 100%;">
+    <div id="locationTab" tabid="locationTab" url="dashboard/location.html" title="设备实况" style="height: 100%;">
+    </div>
+    <div id="contractTab" tabid="contractTab" url="dashboard/contract.html"  title="项目" style="height: 100%;">
+    </div>
+    <div id="preburyTab" tabid="preburyTab" url="dashboard/prebury.html"  title="预埋" style="height: 100%;">
+    </div>
+    <div id="installTab" tabid="installTab" url="dashboard/install.html"  title="安装" style="height: 100%;">
+    </div>
+    <div id="removeTab" tabid="removeTab" url="dashboard/remove.html"  title="拆卸" style="height: 100%;">
+    </div>
+    <div id="transmitTab" tabid="transmitTab" url="dashboard/transport.html"  title="运输" style="height: 100%;">
+    </div>
+    <div id="inStoreTab" tabid="inStoreTab" url="dashboard/inStock.html"  title="入库" style="height: 100%;">
+    </div>
+    <div id="outStoreTab" tabid="outStoreTab" url="dashboard/outStock.html"  title="出库" style="height: 100%;">
+    </div>
+    <div id="deviceTab" tabid="deviceTab" url="dashboard/reportBoard.html"  title="统计分析" style="height: 100%;">
+    </div>
+
+</div>
+

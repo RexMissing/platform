@@ -1,0 +1,740 @@
+<html><head>
+    <link rel="stylesheet" href="css/controlBasic.css"/>
+    <link rel="stylesheet" href="css/dropList.css"/>
+    <link rel="stylesheet" href="css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/dataGrid.css"/>
+    <link rel="stylesheet" href="css/jquery.ui.css"/>
+    <link rel="stylesheet" href="css/jquery.ui.theme.css"/>
+    <link rel="stylesheet" href="css/jquery.wijmo.wijgrid.css"/>
+    <link rel="stylesheet" href="css/jquery.wijmo.wijpager.css"/>
+    <link rel="stylesheet" href="css/lable.css"/>
+    <link rel="stylesheet" href="css/realTimeLable.css"/>
+    <link rel="stylesheet" href="css/tree.css"/>
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="js/jquery.json-2.4.min.js" type="text/javascript"></script>
+    <script src="js/config.js" type="text/javascript"></script>
+    <script src="js/highcharts.js" type="text/javascript"></script>
+    <script src="js/chartTool.js" type="text/javascript"></script>
+    <script src="js/chartToolOfData.js" type="text/javascript"></script>
+    <script src="js/statisticCharTool.js" type="text/javascript"></script>
+    <script src="js/dataApplication.js" type="text/javascript"></script>
+    <script src="js/webSocket.js" type="text/javascript"></script>
+    <script src="js/initPage.js" type="text/javascript"></script>
+    <script src="js/drawHighCharts.js" type="text/javascript"></script>
+    <script>
+        var  groupName=parent.gName;
+        var locMap=[];
+        var locMapSum=[];
+        var locName=[];
+        var belowFirst=[];
+        var count=[];
+        var countSum=[];
+        var singleMap={};
+        var clickAreaName="";
+        var sensorNum="";
+        var first=1;
+        var dataFirst=1;
+        var num=1;
+        var areaClick=0; //是否点击了菜单中的区域，默认是最上面的那个区域
+        var single=0;    //是否点击了菜单中的单个传感器，默认没有点击
+        var firstDrawBelowCharts=1;
+        var s='';
+        var shapeValue=0;
+
+
+
+        $(document).ready(function () {
+            $.post($.URL.group.list,null,gridCallback);
+            $("#backBtn").click(function(){
+                window.parent.jumpURL("xingbian.html");
+            });
+        });
+        function getListByGroupNameGridCallback(data){
+            if(data.code==200){
+                s= $.subscription(data);     //拼接订阅字符串
+                //将拼接订阅字符串，发布到websocket通道中，通过回调函数得到服务器返回的数据
+                $.initWebSocket(s,webSocketCallback);
+            }
+        }
+        function webSocketCallback(data){
+           var jsonData = eval("(" +data+ ")");
+           wsData=jsonData.sensors[0].data[0];
+           wsDataNum= jsonData.sensors[0].sensorNum ;
+           belowGroupNum= jsonData.sensors[0].groupName;
+           var aName=jsonData.sensors[0].areaName ;
+           console.log("areaName:"+aName);
+           for(var i=0;i<locName.length;i++){
+                    if(locName[i]==aName){
+                        if(clickAreaName==locName[i]){
+                            areaClick=i;          //被点击的是第几个区域，如上、中、下分别为0、1、2
+                        }
+                        if(belowGroupNum=groupName){
+                        locMap[i][wsDataNum]=wsData;
+                        locMapSum[i][wsDataNum]=wsData;
+                        count[i]++;
+                        countSum[i]++;
+                        if (countSum[i]==8){
+                            countSum[i]=0;
+                            shapeValue=$.belowAlgorithmProcess(i,locName,locName[i],locMapSum[i]);
+                        initBelowCharts(locMapSum[i],locName,locName[i],shapeValue);
+                            locMapSum[i]= { } ;   }
+
+                        }
+                    }
+                }
+                if(single==0){          //没有点击单个传感器
+                    initMapCharts(locMap[areaClick],count[areaClick],wsDataNum);  //给被点击的那个区域绘图，默认是最上面的那个区域
+                }
+                else if(single==1){     //点击单个传感器
+                    if(sensorNum==wsDataNum) {
+                        singleMap[wsDataNum]=wsData;
+                        initSingleCharts(singleMap,sensorNum);  //给被点击的单个传感器绘图
+                        singleMap={};
+                    }
+                }
+            }
+        function gridCallback(data) {
+            if(data.code == 200) {
+                var cgData = data.data;
+                if(parent.gName==""){
+                    groupName=cgData[0].name;
+                }
+                $.post($.URL.sensor.getListByGroupName,{"groupName":groupName},getListByGroupNameGridCallback,'json');
+                $.creatSelectHead(groupName,cgData);
+                creatMenu(groupName);
+                $("div.tree-node").click(function(){
+                    $(this).parent().find("ul").toggle();
+                    $(this).parent().find(".tree-hit").toggleClass("tree-collapsed tree-expanded");
+                });
+                $("#tankSelect").click(function(){
+                    $("#selectOptions").toggle();
+                });
+                $("#selectOptions li a").click(function(){
+                    $("#selectTank").html($(this).text());
+                    $("#selectOptions").hide();
+                    groupName=$(this).text();
+                    changeGroupName(groupName);
+                    $("div.tree-node").click(function(){
+                        $(this).parent().find("ul").toggle();
+                        $(this).parent().find(".tree-hit").toggleClass("tree-collapsed tree-expanded");
+                    });
+                });
+            }
+        }
+        function changeGroupName(data){
+            if($.WebSocketConnect()!=null){
+                $.WebSocketClose();
+            }
+            single=0;
+            $.post($.URL.sensor.getListByGroupName,{"groupName":data},getListByGroupNameGridCallback,'json');
+            creatMenu(data);
+        }
+        function initSingleCharts(data,s){
+            if(dataFirst==1){
+                $.initHighChart("#DynamicChart861722", data) ;
+                dataFirst=0;
+            }
+            if(dataFirst==2){
+                $.destroyChart("#DynamicChart861722", data);
+                dataFirst=0;
+            }
+            else
+                $.addPointOnChart("#DynamicChart861722", data,s) ;
+        }
+
+        function initBelowCharts(map,locName,loc,shapeValue){
+            if(firstDrawBelowCharts==1 ){
+                $.initAlgorithmHighChart("#DynamicChart552271",locName,shapeValue);
+                firstDrawBelowCharts=2;
+            }
+            else
+                $.addPointOnAlgorithmChart("#DynamicChart552271",loc,locName,shapeValue) ;
+        }
+        function initMapCharts(map,n,lineName){
+            if(first==1){
+                $.initHighChart("#DynamicChart861722", map);
+                if(n==8){
+                    first=0;
+                }
+          }
+           else if(first==2){
+                $.destroyChart("#DynamicChart861722",map);
+                first=0;
+            }
+            else
+            $.addPointOnChart("#DynamicChart861722", map,lineName);
+        }
+        function creatMenuHead(data){
+            var menuHead="";
+                for(var i=0 ;i<data.length ; i++){
+                    $.ajax({
+                        url:$.URL.sensor.getSensorsByAreaName,
+                        async:false,
+                        dataType:'json',
+                        type:'POST',
+                        data:{"AreaName":data[i],"GroupName":groupName},
+                        success:(function(sensoResult){
+                            menuHead=menuHead+ '<li  class="tankArea" id="tankArea">'+
+                                    '<div class="tree-node tree-node-extStyle tree-node-selected" node-id="'+num+'" style="cursor: pointer;">'+
+                                    '<span class="tree-hit tree-expanded"></span>'+
+                                    '<span class="tree-icon tree-folder icon-blank tree-folder-open"></span>'+
+                                    '<span class="tree-title">'+data[i]+'</span>'+
+                                    '</div><ul style="display: block;">';
+                            var tr = document.getElementById('label9');
+                            if(navigator.appName.indexOf("Explorer")>-1)
+                                tr.innerText=groupName+'  '+'实时曲线';
+                            else
+                                tr.textContent=groupName+'  '+'实时曲线';
+                            locName[i]=data[i];
+                            locMap[i]={};
+                            locMapSum[i]={};
+                            belowFirst[i]=1;
+                            count[i]=0;
+                            countSum[i]=0;
+                            num=num+1;
+                            first=1;
+                            areaClick=0;
+                            var result=sensoResult.data;
+                            for(var j=0 ;j<result.length ;j++){
+                                menuHead=menuHead+ ' <li><div class="tree-node" node-id="'+num+'" style="cursor: pointer;">' +
+                                        '<span class="tree-indent"></span>' +
+                                        '<span class="tree-indent"></span>' +
+                                        '<span class="tree-icon tree-file icon-blank"></span>' +
+                                        '<span class="tree-title">'+result[j].number+'</span></div></li>'
+                                  num=num+1;
+                            }
+                            menuHead=menuHead+ '</ul> </li>';
+                        })
+                    });
+                }
+
+            document.getElementById("sensorMenu").innerHTML=menuHead;
+            $("#sensorMenu ul li").click(function(){
+                single=1;      //单个传感器被点击
+                if(dataFirst==0){
+                    dataFirst=2;
+                }
+                else
+                    dataFirst=1;
+                sensorNum=$(this).text();
+            });
+            $("div.tree-node-selected").click(function(){
+                single=0;
+                clickAreaName=$(this).text();
+                if(first==0){
+                    first=2;
+                }
+                else
+                    first=1;
+            });
+        }
+        function creatMenu(data){
+           $.ajax({
+               url:$.URL.area.getAreaListByGroupName,
+               async:false,
+               dataType:'json',
+               type:'POST',
+               data:{"groupName":data},
+               success:(function(areaResult){
+                  creatMenuHead(areaResult.data);
+               })
+           });
+       }
+    </script>
+</head><body>
+<div id="workspace" style="background-color: rgb(255, 255, 255); width: 1280px; height: 1024px; opacity: 1;">
+    <div class="PanelSty agi-panel" id="Panel743571"
+         style="z-index: 1000; width: 253.939px; height: 798.945px; left: 0px; top: 0px; border-radius: 0px; background: none no-repeat scroll center center / 100% 100% rgb(255, 255, 255); border-width: 1px; border-style: solid; border-color: rgb(195, 195, 195);"></div>
+    <div class="PanelSty agi-panel" id="Panel473942"
+         style="z-index: 1000; width: 1008.26px; height: 437.451px; left: 266px; top: 15px; border-radius: 0px; background: none no-repeat scroll center center / 100% 100% rgb(255, 255, 255); border-width: 0px; border-style: solid; border-color: rgb(0, 0, 0);"></div>
+    <div class="PanelSty agi-panel" id="Panel975225"
+         style="z-index: 1000; width: 1007.32px; height: 338.989px; left: 267px; top: 462px; border-radius: 0px; background: none no-repeat scroll center center / 100% 100% rgb(255, 255, 255); border-width: 0px; border-style: solid; border-color: rgb(0, 0, 0);"></div>
+
+    <div class="PanelSty agi-panel tree" id="Panel27733"
+         style="z-index: 3000; width: 238.009px; height: 715.956px; left: 8px; top: 77px; border-radius: 0px; background: none no-repeat scroll center center / 100% 100% rgb(255, 255, 255); border-width: 0px; border-style: solid; border-color: rgb(255, 255, 255); overflow-y: scroll;">
+        <ul id="sensorMenu">
+<!--此处代码自动生成  -->
+        </ul>
+
+    </div>
+
+    <div class="PanelSty selectPanelSty dropdownControlShell" id="Panel_DropDownList338998" recivedata="true"
+         style="width: 145px; height: 35px; left: 70px; top: 16px; z-index: 3001;">
+        <div class="" id="head_DropDownList338998" style="display: none;"><span>DropDownList338998</span></div>
+        <div class="selectPanelBodySty">
+            <div class="navbar" id="DropDownList338998">
+                <ul style="height: 25px;background: transparent;" role="navigation"
+                    class="nav pull-right dropdownlistControl">
+                    <li style="height: 25px;" class="dropdown"><a id="tankSelect" data-toggle="dropdown"
+                                                                  class="dropdown-toggle dropdown-theme1-a"
+                                                                  role="button" href="#"
+                                                                  style="height: 22px; padding: 0px; vertical-align: top; overflow: hidden; color: rgb(255, 255, 255); background: none repeat scroll 0% 0% rgb(170, 170, 255); border-width: 0px; border-style: solid; border-color: rgb(0, 0, 0); border-radius: 5px; font-size: 13px;">
+                        <span class="DropDownListTextOver" style="width: 123px;" id="selectTank">罐_1</span>
+
+                        <div style="float:left; margin-left: 0px;" class="downArrow"></div>
+                    </a>
+                        <ul id="selectOptions" role="menu" class="dropdown-menu" style="overflow-y: auto;">
+                   <!--此处动态生成  -->
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+
+
+    <div class="PanelSty selectPanelSty" id="Panel_Label592272" recivedata="true"
+         style="width: 28px; height: 29px; left: 282px; top: 689px; font-weight: normal; font-family: '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 1019;">
+        <div class="" id="head_Label592272" style="display: none;"><span>Label592272</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label592272">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label2">态
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label409538" recivedata="true"
+         style="width: 69px; height: 29px; left: 412px; top: 493px; font-weight: normal; font-family: '微软雅黑' background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 3012; opacity: 0;">
+        <div class="" id="head_Label409538" style="display: none;"><span>Label409538</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label409538">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 12px; color: rgb(66, 66, 66); text-align: center;"
+                                    id="label3">开始时间:
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label784372" recivedata="true"
+         style="width: 71px; height: 29px; left: 981px; top: 492px; border-radius: 5px; font-weight: normal; font-family:  '微软雅黑'; background: none repeat scroll 0% 0% rgb(170, 170, 255); border: 1px solid rgb(195, 195, 195); z-index: 3011; opacity: 0;">
+        <div class="" id="head_Label784372" style="display: none;"><span>Label784372</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label784372">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 12px; color: rgb(255, 255, 255); text-align: center;"
+                                    id="label1">数据导出
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label919489" recivedata="true"
+         style="width: 46px; height: 32px; left: 10px; top: 15px; border-radius: 8px; font-weight: normal; font-family:  '微软雅黑'; background: none repeat scroll 0% 0% rgb(170, 170, 255); border: 0px solid rgb(0, 0, 0); z-index: 3002;">
+        <div class="" id="head_Label919489" style="display: none;"><span>Label919489</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label919489">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td id="backBtn" style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(255, 255, 255); text-align: center;"
+                                    >返回
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label733437" recivedata="true"
+         style="width: 28px; height: 26px; left: 282px; top: 642px; font-weight: normal; font-family:  '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 1018;">
+        <div class="" id="head_Label733437" style="display: none;"><span>Label733437</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label733437">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label4">状
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label821957" recivedata="true"
+         style="width: 26px; height: 37px; left: 282px; top: 531px; font-weight: normal; font-family:  '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 1016;">
+        <div class="" id="head_Label821957" style="display: none;"><span>Label821957</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label821957">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label5">变
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label672867" recivedata="true"
+         style="width: 28px; height: 28px; left: 283px; top: 739px; font-weight: normal; font-family: '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 1020;">
+        <div class="" id="head_Label672867" style="display: none;"><span>Label672867</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label672867">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label6">值
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label743464" recivedata="true"
+         style="width: 26px; height: 37px; left: 276px; top: 206px; font-weight: normal; font-family:  '微软雅黑'; border: 0px solid rgb(0, 0, 0); z-index: 1018;">
+        <div class="" id="head_Label743464" style="display: none;"><span>Label743464</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label743464">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label7">点
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label431788" recivedata="true"
+         style="width: 26px; height: 37px; left: 276px; top: 154px; font-weight: normal; font-family:  '微软雅黑'; border: 0px solid rgb(0, 0, 0); z-index: 1017;">
+        <div class="" id="head_Label431788" style="display: none;"><span>Label431788</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label431788">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label8">测
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label875150" recivedata="true"
+         style="width: 238px; height: 42px; left: 645px; top: 9px; font-weight: normal; font-family: '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 1015;">
+        <div class="" id="head_Label875150" style="display: none;"><span>Label875150</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label875150">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label15">测点实时曲线（可显示多条）
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label847721" recivedata="true"
+         style="width: 235px; height: 29px; left: 645px; top: 461px; font-weight: normal; font-family:  '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 1010;">
+        <div class="" id="head_Label847721" style="display: none;"><span>Label847721</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label847721">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(0, 0, 0); text-align: center;"
+                                    id="label9">罐_1&mdash;&mdash;实时曲线
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label785454" recivedata="true"
+         style="width: 26px; height: 37px; left: 276px; top: 261px; font-weight: normal; font-family:  '微软雅黑'; border: 0px solid rgb(0, 0, 0); z-index: 1019;">
+        <div class="" id="head_Label785454" style="display: none;"><span>Label785454</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label785454">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label10">值
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label341576" recivedata="true"
+         style="width: 63px; height: 29px; left: 662px; top: 492px; font-weight: normal; font-family:  '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 3013; opacity: 0;">
+        <div class="" id="head_Label341576" style="display: none;"><span>Label341576</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label341576">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 12px; color: rgb(66, 66, 66); text-align: center;"
+                                    id="label11">结束时间:
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label247273" recivedata="true"
+         style="width: 155px; height: 30px; left: 957px; top: 461px; font-weight: normal; font-family:  '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 2002; cursor: pointer;">
+        <div class="" id="head_Label247273" style="display: none;"><span>Label247273</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label247273">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 12px; color: rgb(0, 0, 0); text-align: center;"
+                                    id="label12">查看历史曲线
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label260151" recivedata="true"
+         style="width: 37px; height: 42px; left: 266px; top: 302px; font-weight: normal; font-family:  '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 3003;">
+        <div class="" id="head_Label260151" style="display: none;"><span>Label260151</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label260151">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label13">(με)
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_Label915995" recivedata="true"
+         style="width: 26px; height: 37px; left: 282px; top: 585px; font-weight: normal; font-family:  '微软雅黑'; background: none repeat scroll 0% 0% transparent; border: 0px solid rgb(0, 0, 0); z-index: 1017;">
+        <div class="" id="head_Label915995" style="display: none;"><span>Label915995</span></div>
+        <div class="selectPanelBodySty">
+            <table width="100%" value="" class="LabelPor" id="Label915995">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td style="white-space: nowrap; line-height: 0; font-size: 14px; color: rgb(51, 51, 51); text-align: left;"
+                                    id="label14">形
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+
+    <div class="PanelSty selectPanelSty" id="Panel_DynamicChart611927" recivedata="true"
+         style="width: 977px; height: 285px; left: 296px; top: 517px; z-index: 1005; opacity: 0;">
+        <div class="" id="head_DynamicChart611927" style="display: none;"><span>DynamicChart611927</span></div>
+        <div class="selectPanelBodySty">
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_DynamicChart861722" recivedata="true"
+         style="width: 977px; height: 420px; left: 296px; top: 42px; z-index: 1014;">
+    <div class="" id="head_DynamicChart861722" style="display: none;"><span>DynamicChart861722</span></div>
+    <div class="selectPanelBodySty">
+    <div style="width:100%;height:100%;margin: 0 auto" id="DynamicChart861722" data-highcharts-chart="9">
+
+    </div>
+    </div>
+    <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div class="PanelSty selectPanelSty" id="Panel_DynamicChart552271" recivedata="true"
+         style="width: 976px; height: 348px; left: 297px; top: 454px; z-index: 1003; opacity: 1;">
+    <div class="" id="head_DynamicChart552271" style="display: none;"><span>DynamicChart552271</span></div>
+    <div class="selectPanelBodySty">
+    <div style="width:100%;height:100%;margin: 0 auto" id="DynamicChart552271" data-highcharts-chart="11">
+        <div class="highcharts-container" id="highcharts-44"
+             style="position: relative; overflow: hidden; width: 976px; height: 348px; text-align: left; line-height: normal; z-index: 0; left: 0px; top: 0px;">
+
+        </div>
+    </div>
+    </div>
+    <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+
+
+    <div style="padding-bottom: 15px; width: 53px; height: 33px; left: 920px; top: 490px; z-index: 3009; opacity: 0;"
+         class="PanelSty selectPanelSty" id="Panel_InquireButton158897" recivedata="true">
+        <div class="" id="head_InquireButton158897" style="display: none;"><span>InquireButton158897</span></div>
+        <div class="selectPanelBodySty"><input type="button" value="查询" id="InquireButton158897"
+                                               class="InquireButtonClass"
+                                               style="font-size: 12px; color: rgb(255, 255, 255); border-radius: 7px; background: none repeat scroll 0% 0% rgb(170, 170, 255); border: 1px solid rgb(195, 195, 195);">
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div style="padding-bottom: 10px; width: 167px; height: 42px; left: 480px; top: 489px; z-index: 3007; opacity: 0;"
+         class="PanelSty selectPanelSty" id="Panel_DatePicker272913" recivedata="true">
+        <div class="" id="head_DatePicker272913" style="display: none;"><span>DatePicker272913</span></div>
+        <div class="selectPanelBodySty"><input type="text"
+                                               style="width: 100%; padding: 0px; font-size: 14px; background: none repeat scroll 0% 0% rgb(170, 170, 255); border: 1px solid rgb(195, 195, 195); color: rgb(255, 255, 255); border-radius: 5px; text-indent: 15px; z-index: 3007;"
+                                               class="DatePicker" id="DatePicker272913" readonly="readonly">
+            <button class="Zebra_DatePicker_Icon Zebra_DatePicker_Icon_Inside" type="button"
+                    style="top: 4px; right: 0px;">Pick a date
+            </button>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+    <div style="padding-bottom: 10px; width: 167px; height: 42px; left: 732px; top: 489px; z-index: 3008; opacity: 0;"
+         class="PanelSty selectPanelSty" id="Panel_DatePicker752928" recivedata="true">
+        <div class="" id="head_DatePicker752928" style="display: none;"><span>DatePicker752928</span></div>
+        <div class="selectPanelBodySty"><input type="text"
+                                               style="width: 100%; padding: 0px; font-size: 14px; background: none repeat scroll 0% 0% rgb(170, 170, 255); border: 1px solid rgb(195, 195, 195); color: rgb(255, 255, 255); border-radius: 5px; text-indent: 15px; z-index: 3008;"
+                                               class="DatePicker" id="DatePicker752928" readonly="readonly">
+            <button class="Zebra_DatePicker_Icon Zebra_DatePicker_Icon_Inside" type="button"
+                    style="top: 4px; right: 0px;">Pick a date
+            </button>
+        </div>
+        <div class="selectPanelFooterSty" style="display: none;"></div>
+    </div>
+</div>
+
+</body></html>

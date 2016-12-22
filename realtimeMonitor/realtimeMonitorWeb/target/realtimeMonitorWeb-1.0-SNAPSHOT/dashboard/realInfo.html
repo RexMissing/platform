@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/main.css"/>
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerButton.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/rightHidePanel.js"></script>
+    <script type="text/javascript">
+        var currentMonitor,grid;
+        var  sensorTime=" ";
+        var sensorLastDate=new Array();
+        var sNumList= new Array();
+        var sState="";
+        var sT="";
+        var date;
+        var currDate;
+        var dif;
+        var num="";
+        var sensorCondition=[];
+        $(document).ready(function() {
+            $.post($.URL.sensor.homePage,{"fStatus":"false"},gridCallback,"json");
+        });
+        function connect() {
+            var url= $.URL.websocket.register;
+            var s="{c:'Subscribe',sensors:["+num+"]}";
+            ws =  new WebSocket(url);
+            ws.onopen = function () {
+                console.log('Info: connection opened.');
+                ws.send(s);
+                ws.onclose = function (event) {
+                    console.log('Info: connection closed.');
+                    console.log(event);			};
+            } ;
+            ws.onmessage = function (event) {
+                console.log ("收到消息！"+event.data);
+                var jsonData = eval("(" +event.data+ ")");
+                number=jsonData.sensors[0].sensorNum;
+                for(var i=0;i<sNumList.length;i++){
+                    if(number==sNumList[i]){
+                        sensorLastDate[i]=jsonData.sensors[0].lastCommunicateTime;
+                        sensorCondition[i].lastMessageTime = sensorLastDate[i];
+                        grid.updateCell('lastMessageTime',sensorLastDate[i],i);
+                        sT = sensorLastDate[i].replace(/-/g,"/");
+                        //要计算的日期
+                        date = new Date(sT);
+                        //当前日期
+                        currDate = new Date();
+                        dif = (currDate.getTime()-date.getTime())/(1000*3600);
+                        console.log("dif : " + dif);
+                        if(dif>0.002 || jsonData.sensors[0].isConnected == "false"){
+                            sensorCondition[i].sensorStatus = "离线";
+                        }
+                        else{
+                            sensorCondition[i].sensorStatus = "在线";
+                        }
+                        sState = sensorCondition[i].sensorStatus;
+                        grid.updateCell('sensorStatus',sState,i);
+                        console.log("number" + number + "lastMessageTime " + sensorCondition[i].lastMessageTime + "|sensorStatus:" + sensorCondition[i].sensorStatus + "|isConnected:" + jsonData.sensors[0].isConnected);
+                    }
+                }
+            };
+        }
+        $("#tab").ligerTab({onBeforeSelectTabItem:function disconnect() {        //失去焦点
+            if (ws != null) {
+                ws.close();
+                ws = null;
+            }
+        }});
+        var  number;
+        var gridData = {};
+        function gridCallback(data){
+            for(var i=0;i<data.data.length;i++)  {
+                sNumList[i]=data.data[i].number;
+                if(i==0){
+                    num=data.data[i].number+",";
+                }
+                else {
+                    num=num+data.data[i].number+",";
+                }
+            }
+            var lastIndex = num.lastIndexOf(',');
+            if (lastIndex > -1) {
+                num = num.substring(0, lastIndex) + num.substring(lastIndex + 1, num.length);
+
+            }
+            connect();
+            gridData.Rows = data.data;
+            gridData.Total = data.length;
+            number=data.data.number;
+            f_getLastTime();
+            f_initGrid();
+        }
+
+        function f_getLastTime() {
+            var s=0;
+            var status;
+            var tempURL = $.URL.sensors.getWarnCondition;
+            for(var i=0; i<sNumList.length; i++) {
+                var j={};
+                var myURL = tempURL + sNumList[i].toString();
+                $.ajax({
+                    url: myURL+".html",
+                    async:false,
+                    dataType:'jsonp',
+                    success: function(result) {
+                        if( result["lastDate"]==null){
+                            s=1;
+                            sensorTime="0000-00-00 00:00:00";
+                        }
+                        else {
+                            sensorTime = result["lastDate"].toString();
+                        }
+                        sT = sensorTime.replace(/-/g,"/");
+                        //要计算的日期
+                        date = new Date(sT);
+                        //当前日期
+                        currDate = new Date();
+                        dif = (currDate.getTime()-date.getTime())/(1000*3600);
+                        if(dif>0.0002){
+                            status="离线";
+                        }
+                        else{
+                            status="在线";
+                        }
+                        j["lastMessageTime"] = sensorTime;
+                        j["sensorStatus"] = status;
+                        j["number"] = sNumList[i];
+                        sensorCondition.push(j);
+                        console.log(sensorCondition);
+                    }
+                });
+            }
+        }
+
+        function f_initGrid(){
+            grid = $("#monitorGrid").ligerGrid({
+                columns:[
+                    {name:'number',display:'编号',width:'auto'},
+                    {name:'name',display:'传感器',width:'auto'},
+                    {name:'groupName',display:'监测组',width:'auto'},
+                    {name:'areaName',display:'监测区域',width:'auto'},
+                    {name:'collectorName',display:'采集仪名称',width:'auto'},
+                    {name:'lastMessageTime',display:'最后通信时间',width:'auto'
+                        ,render:function(item){
+                        for(var i=0;i<sensorCondition.length;i++) {
+                            if(item.number == sensorCondition[i].number) {
+                                sensorTime = sensorCondition[i].lastMessageTime;
+                                sState = sensorCondition[i].sensorStatus;
+                            }
+                        }
+                        return sensorTime;
+                    }
+                    },
+                    { display: '状态', name: 'sensorStatus',width:'auto'
+                        ,render: function() {
+                        return sState;
+                    }},
+                    { display: '操作', isSort: false,  render: function (rowdata, rowindex, value)
+                    {
+                        var h = "";
+                        h += "<a href='javascript:getInfo(" + rowindex + ")'>查看</a> ";
+                        return h;
+                    }
+                    }
+                ],
+                data:gridData,clickToEdit: false, isScroll: true, usePager: false,
+                width:'auto',resizable:true
+            });
+        }
+
+        function curDateCallback() {
+            return sensorTime;
+        }
+
+
+        function getInfo(rowindex){
+            currentMonitor = grid.getRow(rowindex);
+            $("#realInfoTab").load("dashboard/realData.html");
+        }
+
+    </script>
+
+    <style type="text/css">
+        .l-div {height: 30px;margin-top: 10px}
+        .l-span-edit-com{margin-left: 10px;  width: 70px;float: left;margin-top:2px}
+        .l-edit-com{width: 60px; margin-left: 10px; float: left;}
+    </style>
+</head>
+<body>
+<!--<p>测试页面是否正常</p>-->
+<div id="monitorContainer">
+    <div id="monitorGrid" style="width: 100%;margin-top: 5px;"/>
+</div>
+<br/>
+</body>
+</html>

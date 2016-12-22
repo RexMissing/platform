@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="org.whut.inspectManagement.business.inspectTable.mapper.InspectItemMapper">
+        <sql id="inspectItem_fields">
+          ID,NAME,DESCRIPTION,CREATETIME,INSPECTTABLEID,INSPECTAREAID,NUMBER,ISINPUT,APPID
+    </sql>
+    <resultMap id="inspectItemResultMap" type="inspectItem">
+        <id property="id" column="ID" />
+        <result property="name" column="NAME" />
+        <result property="description" column="DESCRIPTION"/>
+        <result property="createtime" column="CREATETIME" />
+        <result property="inspectTableId" column="INSPECTTABLEID"/>
+        <result property="inspectAreaId" column="INSPECTAREAID"/>
+        <result property="number" column="NUMBER"/>
+        <result property="isInput" column="ISINPUT"/>
+        <result property="appId" column="APPID"/>
+    </resultMap>
+    <insert id="add" parameterType="inspectItem"  keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO
+       inspectitem(
+        <include refid="inspectItem_fields" />
+        )
+        VALUES (#{id}, #{name},#{description}, #{createtime},#{inspectTableId},#{inspectAreaId},#{number},#{isInput},#{appId});
+        <selectKey resultType="long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+    <select id="findByCondition" parameterType="map" resultMap="inspectItemResultMap">
+        SELECT
+        <include refid="inspectItem_fields"/>
+        FROM inspectitem
+        <where>
+            <if test="name!=null">NAME=#{name}</if>
+            <if test="description!=null">AND DESCRIPTION=#{description}</if>
+            <if test="createtime!=null">AND CREATETIME=#{createtime}</if>
+            <if test="inspectTableId!=null">AND INSPECTTABLEID=#{inspectTableId}</if>
+            <if test="inspectAreaId!=null">AND INSPECTAREAID=#{inspectAreaId}</if>
+            <if test="number!=null">AND NUMBER=#{number}</if>
+            <if test="isInput!=null">AND ISINPUT=#{isInput}</if>
+            <if test="appId!=null">AND APPID=#{appId}</if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="inspectItem">
+        UPDATE inspectitem
+        <set>
+            <if test="name!=null">NAME=#{name},</if>
+            <if test="description!=null">DESCRIPTION=#{description},</if>
+            <if test="createtime!=null"> CREATETIME=#{createtime},</if>
+            <if test="inspectTableId!=null">INSPECTTABLEID=#{inspectTableId},</if>
+            <if test="inspectAreaId!=null"> INSPECTAREAID=#{inspectAreaId},</if>
+            <if test="number!=null">NUMBER=#{number},</if>
+            <if test="isInput!=null">ISINPUT=#{isInput},</if>
+            <if test="appId!=null">APPID=#{appId}</if>
+        </set>
+        WHERE ID=#{id}
+    </update>
+    <delete id="delete" parameterType="inspectItem">
+        DELETE FROM inspectitem
+        <where>
+            <if test="id!=null">ID=#{id}</if>
+        </where>
+    </delete>
+    <insert id="addList" parameterType="java.util.List" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+        INSERT INTO
+        inspectitem(
+        <include refid="inspectItem_fields"/>)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name},#{item.description},#{item.createtime},#{item.inspectTableId},#{item.inspectAreaId},#{item.number},#{item.isInput},#{item.appId})
+        </foreach>
+    </insert>
+    <select id="getInspectItemId" parameterType="map" resultType="java.lang.Long">
+        SELECT id
+        FROM inspectitem
+        WHERE name=#{name} AND number=#{number} AND inspectTableId=#{tableId} AND inspectAreaId=#{areaId} AND appid=#{appId}
+    </select>
+    <select id="getInspectItemListByAppId" parameterType="java.lang.Long" resultMap="inspectItemResultMap">
+        SELECT *
+        FROM inspectitem
+        WHERE appid=#{appId}
+    </select>
+    <select id="getInspectItemByInspectTableId" parameterType="map" resultMap="inspectItemResultMap">
+        SELECT *
+        FROM inspectitem
+        WHERE appid=#{appId}
+        AND inspectTableId = #{inspectTableId}
+        order by inspectAreaId asc
+    </select>
+    <select id="getInspectItemList" parameterType="java.lang.Long" resultType="map">
+        SELECT item.id,item.`name`,item.number,intable.`name` AS inspectTable,type.`name` AS deviceType,inarea.`name` AS inspectArea,item.isInput AS input,GROUP_CONCAT(DISTINCT choice.choiceValue separator ';') AS choiceValue,item.description,item.createtime
+        FROM inspectitem item LEFT JOIN inspecttable intable ON item.inspectTableId=intable.id
+        LEFT JOIN inspectarea inarea ON item.inspectAreaId=inarea.id
+        LEFT JOIN devicetype type ON type.id=inarea.deviceTypeId
+        LEFT JOIN inspectitem_choice _choice ON  _choice.inspectItemId=item.id
+        LEFT JOIN inspectchoice choice ON _choice.inspectChoiceId=choice.id
+        WHERE item.appId=#{appId}
+        GROUP BY item.id
+    </select>
+</mapper>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="trackSystemWeb:war">
+    <output-path>$PROJECT_DIR$/trackSystem/trackSystemWeb/target</output-path>
+    <root id="archive" name="trackSystemWeb-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="trackSystemWeb:war exploded" />
+    </root>
+  </artifact>
+</component>

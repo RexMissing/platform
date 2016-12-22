@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.monitor.business.monitor.mapper.CollectorMapper">
+    <sql id="collector_fields">
+          ID,NAME,DESCRIPTION,NUMBER,STATUS,LASTMESSAGETIME,MAXFREQUENCY,MINFREQUENCY,WORKFREQUENCY,APPID
+    </sql>
+    <resultMap id="CollectorResultMap" type="Collector">
+        <id property="id" column="ID" />
+        <result property="name" column="NAME" />
+        <result property="description" column="DESCRIPTION"/>
+        <result property="number" column="NUMBER" />
+        <result property="status" column="STATUS" />
+        <result property="lastMessageTime" column="LASTMESSAGETIME" />
+        <result property="maxFrequency" column="MAXFREQUENCY" />
+        <result property="minFrequency" column="MINFREQUENCY" />
+        <result property="workFrequency" column="WORKFREQUENCY"/>
+        <result property="appId" column="APPID"/>
+    </resultMap>
+
+    <insert id="add" parameterType="Collector"  keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO
+        collector(
+        <include refid="collector_fields" />
+        )
+        VALUES (#{id},#{name},#{description},#{number},#{status},#{lastMessageTime},#{maxFrequency},#{minFrequency},#{workFrequency},#{appId});
+        <selectKey resultType="long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+    <update id="update" parameterType="Collector">
+        UPDATE collector
+        <set>
+            <if test="name!=null">NAME=#{name},</if>
+            <if test="description!=null">DESCRIPTION=#{description},</if>
+            <if test="number!=null"> NUMBER=#{number},</if>
+            <if test="status!=null">STATUS=#{status},</if>
+            <if test="lastMessageTime!=null">LASTMESSAGETIME=#{lastMessageTime},</if>
+            <if test="maxFrequency!=null">MAXFREQUENCY=#{maxFrequency},</if>
+            <if test="minFrequency!=null">MINFREQUENCY=#{minFrequency},</if>
+            <if test="workFrequency!=null">WORKFREQUENCY=#{workFrequency},</if>
+            <if test="appId!=null">APPID=#{appId}</if>
+        </set>
+        WHERE ID=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Collector">
+        DELETE FROM collector
+        <where>
+            <if test="id!=null">ID=#{id}</if>
+        </where>
+    </delete>
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM collector
+        WHERE ID=#{id}
+    </delete>
+    <select id="getListByAppId" parameterType="java.lang.Long" resultType="map">
+        SELECT c.id,c.`name`,c.number,c.maxFrequency,c.minFrequency,c.workFrequency,c.lastMessageTime,c.`status`,c.description
+        FROM collector AS c
+        WHERE c.appId=#{appId}
+    </select>
+    <select id="getCollectorNameByAppId" parameterType="java.lang.Long" resultType="map">
+        SELECT c.id,c.`name`AS collectorName
+        FROM collector AS c
+        WHERE c.appId=#{appId}
+    </select>
+    <select id="getCollector" parameterType="java.lang.Long" resultMap="CollectorResultMap">
+         SELECT *
+         FROM collector
+    </select>
+    <select id="getIdByNumberAndAppId" parameterType="map" resultType="java.lang.Long">
+        SELECT id
+        FROM collector
+        WHERE appId=#{appId} AND number=#{number}
+    </select>
+    <select id="getCollectorNameListByAppId" parameterType="java.lang.Long" resultType="String">
+        SELECT DISTINCT(`name`)
+        FROM collector
+        WHERE appId=#{appId}
+    </select>
+    <select id="getCollectorNames" parameterType="java.lang.Long" resultType="String">
+        SELECT `name`
+        FROM collector
+        WHERE appId=#{appId}
+    </select>
+
+    <select id="getCollectNameById" parameterType="java.lang.Long" resultType="String">
+        SELECT `name`
+        FROM collector
+        WHERE ID=#{id}
+    </select>
+    <select id="getCollectNumberBySensorNumber" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT c.number
+        FROM collector c,sensor  s
+        WHERE s.number=#{number} AND s.collectorId=c.id
+    </select>
+
+    <update id="updateStatusByNumber" parameterType="map">
+        UPDATE collector
+        <set>
+            <if test="status!=null">status=#{status}</if>
+        </set>
+        WHERE `number`=#{number}
+    </update>
+
+    <update id="updateTimeByNumber" parameterType="map">
+        UPDATE collector
+        <set>
+            <if test="lastMessageTime!=null">lastMessageTime=#{lastMessageTime}</if>
+        </set>
+        WHERE `number`=#{number}
+    </update>
+</mapper>

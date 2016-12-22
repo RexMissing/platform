@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"/>
+
+    <bean id="brokerConfigbean" class="org.whut.platform.fundamental.activemq.broker.BrokerConfigBean">
+        <property name="brokerInfos">
+            <list>
+                <bean id="localhostA" class="org.whut.platform.fundamental.activemq.broker.BrokerInfo">
+                    <property name="brokerAddr" value="127.0.0.1"/>
+                    <property name="brokerName" value="localhostA"/>
+                    <property name="brokerPort" value="61616"/>
+                    <property name="monitorPort" value="11099"/>
+                </bean>
+                <!--<bean id="localhostB" class="org.whut.platform.fundamental.activemq.broker.BrokerInfo">-->
+                    <!--<property name="brokerAddr" value="127.0.0.1"/>-->
+                    <!--<property name="brokerName" value="localhostB"/>-->
+                    <!--<property name="brokerPort" value="61617"/>-->
+                    <!--<property name="monitorPort" value="11098"/>-->
+                <!--</bean>-->
+                <!--<bean id="localhostC" class="org.whut.platform.fundamental.activemq.broker.BrokerInfo">-->
+                    <!--<property name="brokerAddr" value="127.0.0.1"/>-->
+                    <!--<property name="brokerName" value="localhostC"/>-->
+                    <!--<property name="brokerPort" value="61618"/>-->
+                    <!--<property name="monitorPort" value="11097"/>-->
+                <!--</bean>-->
+            </list>
+        </property>
+    </bean>
+
+    <bean id="producerConnectionFactory" class="org.whut.platform.fundamental.activemq.connectionFactory.MyConnectionFactory">
+        <property name="activeMQConnectionFactory" ref="activeMQConnectionFactory" />
+        <property name="brokerConfigBean" ref="brokerConfigbean"/>
+    </bean>
+
+    <bean id="consumerConnectionFactory" class="org.whut.platform.fundamental.activemq.connectionFactory.MyConnectionFactory">
+        <property name="activeMQConnectionFactory" ref="activeMQConnectionFactory" />
+        <property name="brokerConfigBean" ref="brokerConfigbean"/>
+    </bean>
+
+    <bean id="pooledMessageProducer" class="org.whut.platform.fundamental.activemq.producer.PooledMessageProducerImpl"
+          init-method="start" destroy-method="stop">
+        <property name="myConnectionFactory" ref="producerConnectionFactory" />
+        <property name="brokers">
+            <list>
+                <value>localhostA</value>
+                <!--<value>localhostB</value>-->
+                <!--<value>localhostC</value>-->
+            </list>
+        </property>
+    </bean>
+
+    <!--<bean id="testProducer" class="org.whut.platform.fundamental.activemq.test.TestProducer">-->
+        <!--<property name="pooledMessageProducer" ref="pooledMessageProducer"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="testListener" class="org.whut.platform.fundamental.activemq.test.TestListener"-->
+    <!--init-method="start" destroy-method="stop" scope="prototype">-->
+        <!--<property name="myConnectionFactory" ref="consumerConnectionFactory" />-->
+        <!--<property name="brokers">-->
+            <!--<list>-->
+                <!--<value>localhostA</value>-->
+                <!--<value>localhostB</value>-->
+                <!--&lt;!&ndash;<value>localhostC</value>&ndash;&gt;-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean id="sessionFactoryConfig" class="org.whut.platform.fundamental.activemq.config.SessionFactoryConfig">
+        <property name="BROKER_NAMES">
+            <list>
+                <value>localhostA</value>
+                <!--<value>localhostB</value>-->
+                <!--<value>localhostC</value>-->
+            </list>
+        </property>
+        <property name="BROKER_URLS">
+            <list>
+                <value>tcp://localhost:61616</value>
+                <!--<value>tcp://localhost:61617</value>-->
+                <!--<value>tcp://localhost:61618</value>-->
+            </list>
+        </property>
+    </bean>
+    <bean id="connectionPool" class="org.whut.platform.fundamental.activemq.pool.ConnectionPool"
+          init-method="start" destroy-method="stop">
+        <property name="sessionFactoryConfig" ref="sessionFactoryConfig"/>
+    </bean>
+
+    <bean id="sessionPool" class="org.whut.platform.fundamental.activemq.pool.SessionPool"
+          init-method="start" destroy-method="stop">
+        <property name="connectionPool" ref="connectionPool"/>
+        <property name="sessionFactoryConfig" ref="sessionFactoryConfig"/>
+    </bean>
+
+    <bean id="pooledSessionProducer" class="org.whut.platform.fundamental.activemq.producer.PooledSessionProducerImpl">
+        <property name="sessionPool" ref="sessionPool"/>
+        <property name="sessionFactoryConfig" ref="sessionFactoryConfig"/>
+    </bean>
+
+    <!--<bean id="testListener" class="org.whut.platform.fundamental.activemq.test.TestSessionListener">-->
+        <!--<property name="sessionPool" ref="sessionPool"/>-->
+    <!--</bean>-->
+</beans>

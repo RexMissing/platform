@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/report.css">
+    <link rel="stylesheet" href="css/reportShow.css">
+    <script src="lib/ligerUI/js/plugins/ligerForm.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerButton.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerRadio.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function(){
+            $.get($.URL.device.list,null,listCallback,"json");
+            function listCallback(data){
+                if(data.code==200){
+                    var deviceData=[];
+                    for(i=0;i<data.data.length;i++){
+                        var d={};
+                        d['text']=data.data[i].name;
+                        d['id']=data.data[i].id;
+                        deviceData.push(d);
+                    }
+                    $("#txt3").ligerComboBox({
+                        data:deviceData,valueFieldID:"txt3"
+                    });
+                }
+            }
+            $("#txt4").ligerDateEditor();
+            $("#txt5").ligerDateEditor();
+            showDeviceHistoryReport();
+            $("#submitBtn5").click(function(){
+                showDeviceHistoryReport();
+            });
+        });
+        function showDeviceHistoryReport(){
+            var device=$("#txt3").val();
+            var sTime=$("#txt4").val();
+            var eTime=$("#txt5").val();
+            var j={"sTime":sTime,"eTime":eTime,"deviceName":device};
+            var jsonString= $.toJSON(j);
+            $("#deviceHistoryShow").load($.URL.inspectReport.reportSearch,{"jsonString":jsonString,"flag":"4","type":"html"},reportSearchCallback,"json");
+            $("#deviceHistoryDiv").css("display","block");
+        }
+        function reportSearchCallback(data){
+            if(data.code==200){
+
+            }
+        }
+        $("#deviceHistoryBtn").click(function(){
+            var type=$("#deviceHistoryType").val();
+            if(type!=null){
+                var typeFlag=type+",4";
+                location.href= "rs/inspectReport/exportSearchReport/"+typeFlag;
+            }else{
+                $.ligerDialog().alert("请输入导出报表类型!");
+            }
+        });
+        $("#deviceHistoryType").ligerComboBox({
+            data: [
+                { text: 'pdf', id: '1' },
+                { text: 'word', id: '2' },
+                { text: 'excel', id: '3' }
+            ], valueFieldID: 'deviceHistoryType'
+        });
+    </script>
+
+</head>
+<body>
+<div id="searchContainer" class="searchContainer">
+    <div class="searchItem"><span class="item_font">设备:</span><span class="item_input"><input id="txt3" type="text"></span></div>
+    <div class="searchItem"><span class="item_font">起始时间:</span><span class="item_input"><input id="txt4" type="text"></span></div>
+    <div class="searchItem"><span class="item_font">终止时间:</span><span class="item_input"><input id="txt5" type="text"></span></div>
+    <div class="btn"><span><input type="button" value="查看" id="submitBtn5" class="l-button l-button-submit" /></span></div>
+</div>
+<div class="exportDiv" id="deviceHistoryDiv">
+                 <span class="exportType">
+                    <span class="type_font">导出类型:</span><span class="type_input"><input type="text" id="deviceHistoryType"></span>
+                 </span>
+    <span class="exportBtn"><span><input type="button" value="导出" id="deviceHistoryBtn" class="l-button l-button-submit" /></span></span>
+</div>
+<div id="deviceHistoryShow"></div>
+</body>
+</html>

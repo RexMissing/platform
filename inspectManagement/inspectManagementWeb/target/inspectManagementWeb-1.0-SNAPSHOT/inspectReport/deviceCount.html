@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/report.css">
+    <link rel="stylesheet" href="css/reportShow.css">
+    <script src="lib/ligerUI/js/plugins/ligerForm.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerButton.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerRadio.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function(){
+            $("#txt4").ligerDateEditor();
+            $("#txt5").ligerDateEditor();
+            showDeviceCountReport();
+            $("#submitBtn1").click(function(){
+                showDeviceCountReport();
+            });
+        });
+        function showDeviceCountReport(){
+            var sTime=$("#txt4").val();
+            var eTime=$("#txt5").val();
+            var j={"sTime":sTime,"eTime":eTime};
+            var jsonString= $.toJSON(j);
+            $("#deviceCountShow").load($.URL.inspectReport.reportSearch,{"jsonString":jsonString,"flag":"0","type":"html"},reportSearchCallback,"json");
+            $("#eDeviceCountDiv").css("display","block");
+        }
+        function reportSearchCallback(data){
+            if(data.code==200){
+
+            }
+        }
+        $("#eDeviceCountBtn").click(function(){
+            var type=$("#eDeviceCountType").val();
+            if(type!=null){
+                var typeFlag=type+",0";
+                location.href= "rs/inspectReport/exportSearchReport/"+typeFlag;
+            }else{
+                $.ligerDialog().alert("请输入导出报表类型!");
+            }
+        });
+        $("#eDeviceCountType").ligerComboBox({
+            data: [
+                { text: 'pdf', id: '1' },
+                { text: 'word', id: '2' },
+                { text: 'excel', id: '3' }
+            ], valueFieldID: 'eDeviceCountType'
+        });
+    </script>
+</head>
+<body>
+     <div id="searchContainer" class="searchContainer">
+     <div class="searchItem"><span class="item_font">起始时间:</span><span class="item_input"><input id="txt4" type="text"></span></div>
+     <div class="searchItem"><span class="item_font">终止时间:</span><span class="item_input"><input id="txt5" type="text"></span></div>
+     <div class="btn"><span><input type="button" value="查看" id="submitBtn1" class="l-button l-button-submit" /></span></div>
+     </div>
+     <div class="exportDiv" id="eDeviceCountDiv">
+                 <span class="exportType">
+                    <span class="type_font">导出类型:</span><span class="type_input"><input type="text" id="eDeviceCountType"></span>
+                 </span>
+         <span class="exportBtn"><span><input type="button" value="导出" id="eDeviceCountBtn" class="l-button l-button-submit" /></span></span>
+     </div>
+     <div id="deviceCountShow" class="reportShow"></div>
+</body>
+</html>
