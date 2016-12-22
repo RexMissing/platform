@@ -4,9 +4,7 @@ import org.whut.meterManagement.smsmeterlib.frames.SMC;
 import org.whut.meterManagement.smsmeterservice.entity.MeterPrice;
 import org.whut.meterManagement.sqldatalib.SqlHelper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,9 +75,11 @@ public class SMSBusiness {
     /// <returns></returns>
     public boolean openUser(int userID,String meterID,int saleStrategyID,double money,Timestamp sdt,int cbr,StringBuffer sismsID){
         //1.查询开户单价
-        MeterPrice mtp = new MeterPrice();
-        ResultSet rs = sqlHelper.executeQuery("select * from TSaleStrategy where FStrategyID="+String.valueOf(saleStrategyID));
+        ResultSet rs=null;
+        ResultSet rs1 = null;
         try {
+            MeterPrice mtp = new MeterPrice();
+            rs = sqlHelper.executeQuery("select * from TSaleStrategy where FStrategyID="+String.valueOf(saleStrategyID));
             rs.next();
             mtp.setStrategyID(saleStrategyID);
             mtp.setPrice(rs.getDouble("FPrice"));
@@ -91,7 +91,6 @@ public class SMSBusiness {
             mtp.setAmount2(rs.getInt("FBeginAmount2"));
             mtp.setAmount3(rs.getInt("FBeginAmount3"));
             mtp.setCycleLength(rs.getInt("FCycleLength"));
-
             //2.查询FrameID
             int frameID = Integer.parseInt(sqlHelper.executeScalar("select count(*) from TAllSend where FMeterID='"
                     + meterID + "'").toString());
@@ -99,12 +98,12 @@ public class SMSBusiness {
             //3.获得新的Sismsid
             sismsID.append(getNewSMID());
             //4.查询表具密钥及短信号码
-            ResultSet rs1 = sqlHelper.executeQuery("select * from TMeter where FMeterID='" + meterID + "'");
+            rs1 = sqlHelper.executeQuery("select * from TMeter where FMeterID='" + meterID + "'");
             String meterKey = "";
             String destAddr = "";
-            rs.next();
-            meterKey = rs.getString("Fkey");
-            destAddr = rs.getString("FUIM");
+            rs1.next();
+            meterKey = rs1.getString("Fkey");
+            destAddr = rs1.getString("FUIM");
             //5.组成短信指令帧
             String SMS = SMC.getMeterOpenFrame(meterID,meterKey,(byte)0x23,
                     money,mtp.getPrice(),mtp.getPrice1(),mtp.getPrice2(),mtp.getPrice3()
@@ -136,7 +135,39 @@ public class SMSBusiness {
             sqlHelper.executeWithTransaction(sqlList);
         } catch (SQLException e) {
             e.printStackTrace();
+            sismsID.append(e.getMessage());
             return false;
+        } finally {
+            if(rs!=null) {
+                Statement stmt = null;
+                Connection conn = null;
+                try {
+                    stmt = rs.getStatement();
+                    conn = stmt.getConnection();
+                    rs.close();
+                    if(stmt!=null)
+                        stmt.close();
+                    if(conn!=null)
+                        conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(rs1!=null) {
+                Statement stmt = null;
+                Connection conn = null;
+                try {
+                    stmt = rs1.getStatement();
+                    conn = stmt.getConnection();
+                    rs1.close();
+                    if(stmt!=null)
+                        stmt.close();
+                    if(conn!=null)
+                        conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return true;
     }
