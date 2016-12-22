@@ -1,5 +1,6 @@
 package org.whut.meterManagement.std;
 
+import org.whut.meterManagement.sqldatalib.MysqlHelper;
 import org.whut.meterManagement.sqldatalib.SqlHelper;
 
 /**
@@ -12,16 +13,7 @@ public class StdUtils {
     public static SqlHelper getSqlh() {
         if (sqlh==null)
         {
-            //return new MSSqlHelper(ConfigurationManager.AppSettings["SQLServer"]);
-//            if (ConfigurationManager.AppSettings["DataBaseType"]=="MSSQL")
-//            {
-//                return new MSSqlHelper(ConfigurationManager.AppSettings["MSSQL"]);
-//            }
-//            if (ConfigurationManager.AppSettings["DataBaseType"]=="MySQL")
-//            {
-//                return new MySqlHelper(ConfigurationManager.AppSettings["MySQL"]);
-//            }
-            return null;
+            return new MysqlHelper("jdbc:");
         }
         else
         {
