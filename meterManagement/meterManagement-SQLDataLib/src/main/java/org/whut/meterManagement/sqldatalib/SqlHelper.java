@@ -2,6 +2,7 @@ package org.whut.meterManagement.sqldatalib;
 
 import org.whut.meterManagement.sqldatalib.entity.MyTableField;
 
+import javax.sql.RowSet;
 import java.sql.ResultSet;
 import java.util.List;
 
