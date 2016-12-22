@@ -25,7 +25,7 @@ public class BusinessIml implements BusinessService {
     /// <param name="CBR">抄表日</param>
     /// <returns></returns>
     @Override
-    public WResult UserOpenMeter(WS_Operator op, int userID, String meterID, int strategyID, double money, Timestamp sdt, int cbr) {
+    public WResult userOpenMeter(WS_Operator op, int userID, String meterID, int strategyID, double money, Timestamp sdt, int cbr) {
         WResult rst = new WResult(userID);
 
         if (!rst.VerOP(op))
@@ -60,7 +60,7 @@ public class BusinessIml implements BusinessService {
     /// <param name="cardID">IC卡编号</param>
     /// <returns></returns>
     @Override
-    public WResult UserOpenIC(WS_Operator op, int userID, String meterID, int strategyID, double money, Timestamp sdt, int cbr, String cardID, int overdraftStyle, WS_IcData icdata) {
+    public WResult userOpenIC(WS_Operator op, int userID, String meterID, int strategyID, double money, Timestamp sdt, int cbr, String cardID, int overdraftStyle, WS_IcData icdata) {
         WResult rst = new WResult();
         icdata = null;
         if (!rst.VerOP(op))
@@ -152,7 +152,7 @@ public class BusinessIml implements BusinessService {
     /// <param name="UserIDs">用户编号</param>
     /// <returns>成功发送指令的用户编号</returns>
     @Override
-    public List<WResult> RemoteReadMeter(WS_Operator op, List<Integer> userIDs) {
+    public List<WResult> remoteReadMeter(WS_Operator op, List<Integer> userIDs) {
         List<WResult> rst = new ArrayList<WResult>();
         if (!(new WResult()).VerOP(op))
         {
@@ -185,7 +185,7 @@ public class BusinessIml implements BusinessService {
     /// <param name="DT">设定时间</param>
     /// <returns></returns>
     @Override
-    public List<WResult> RemoteReadMeterAtTime(WS_Operator op, List<Integer> userIDs, Timestamp dt) {
+    public List<WResult> remoteReadMeterAtTime(WS_Operator op, List<Integer> userIDs, Timestamp dt) {
         List<WResult> rst = new ArrayList<WResult>();
         if (!(new WResult()).VerOP(op))
         {
@@ -210,127 +210,127 @@ public class BusinessIml implements BusinessService {
     }
 
     @Override
-    public List<WResult> RemoteValveControl(WS_Operator op, int mode, List<Integer> userIDs) {
+    public List<WResult> remoteValveControl(WS_Operator op, int mode, List<Integer> userIDs) {
         return null;
     }
 
     @Override
-    public List<WResult> RemoteCloseValveAtTime(WS_Operator op, List<Integer> userIDs, Timestamp AtTime) {
+    public List<WResult> remoteCloseValveAtTime(WS_Operator op, List<Integer> userIDs, Timestamp AtTime) {
         return null;
     }
 
     @Override
-    public List<WResult> CheckMeterTime(WS_Operator op, List<Integer> userIDs) {
+    public List<WResult> checkMeterTime(WS_Operator op, List<Integer> userIDs) {
         return null;
     }
 
     @Override
-    public WResult RemoteMeterUserSet(WS_Operator op, int userID, int Sum, int cur, int pre, byte mode) {
+    public WResult remoteMeterUserSet(WS_Operator op, int userID, int Sum, int cur, int pre, byte mode) {
         return null;
     }
 
     @Override
-    public WResult RemoteCharge(WS_Operator op, int userID, double money) {
+    public WResult remoteCharge(WS_Operator op, int userID, double money) {
         return null;
     }
 
     @Override
-    public WResult ICCharge(WS_Operator op, int userID, double money, String cardID, String IcData, WS_IcData icdata) {
+    public WResult icCharge(WS_Operator op, int userID, double money, String cardID, String IcData, WS_IcData icdata) {
         return null;
     }
 
     @Override
-    public WResult ReadIC(WS_Operator op, String cardID, String IcData, WS_IcData icdata) {
+    public WResult readIC(WS_Operator op, String cardID, String IcData, WS_IcData icdata) {
         return null;
     }
 
     @Override
-    public WResult RemoteChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schdt) {
+    public WResult remoteChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schdt) {
         return null;
     }
 
     @Override
-    public WResult ICChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schdt, String cardID, String IcData, WS_IcData icdata) {
+    public WResult icChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schdt, String cardID, String IcData, WS_IcData icdata) {
         return null;
     }
 
     @Override
-    public WResult BatchChangePrice(WS_Operator op, int saleID, int NewSaleID, boolean isAtTime, Timestamp schdt) {
+    public WResult batchChangePrice(WS_Operator op, int saleID, int NewSaleID, boolean isAtTime, Timestamp schdt) {
         return null;
     }
 
     @Override
-    public WResult ReSendCmd(WS_Operator op, String sismsid) {
+    public WResult reSendCmd(WS_Operator op, String sismsid) {
         return null;
     }
 
     @Override
-    public WResult ReWriteIC(WS_Operator op, String sismsid, String cardID, WS_IcData icdata) {
+    public WResult reWriteIC(WS_Operator op, String sismsid, String cardID, WS_IcData icdata) {
         return null;
     }
 
     @Override
-    public WResult MeterJieSuan(WS_Operator op, int userID, int MeterRead) {
+    public WResult meterJieSuan(WS_Operator op, int userID, int MeterRead) {
         return null;
     }
 
     @Override
-    public WResult ChangeMeter(WS_Operator op, Integer userID, String NewmeterID, double Updatemoney, double Chargemoney, String cardID, WS_IcData icdata) {
+    public WResult changeMeter(WS_Operator op, Integer userID, String NewmeterID, double Updatemoney, double Chargemoney, String cardID, WS_IcData icdata) {
         return null;
     }
 
     @Override
-    public List<WResult> ChangeCbr(WS_Operator op, List<Integer> userIDs, int cbr) {
+    public List<WResult> changeCbr(WS_Operator op, List<Integer> userIDs, int cbr) {
         return null;
     }
 
     @Override
-    public List<WResult> ChangeOverdraftStyle(WS_Operator op, List<Integer> userIDs, int overdraftStyle) {
+    public List<WResult> changeOverdraftStyle(WS_Operator op, List<Integer> userIDs, int overdraftStyle) {
         return null;
     }
 
     @Override
-    public WResult UpdateUserInfo(WS_Operator op, WS_UserInfo usi) {
+    public WResult updateUserInfo(WS_Operator op, WS_UserInfo usi) {
         return null;
     }
 
     @Override
-    public WResult NewArea(WS_Operator op, String area) {
+    public WResult newArea(WS_Operator op, String area) {
         return null;
     }
 
     @Override
-    public WResult UpdatePrice(WS_Operator op, WS_Price Pr) {
+    public WResult updatePrice(WS_Operator op, WS_Price Pr) {
         return null;
     }
 
     @Override
-    public WResult ImportMeter(WS_Operator op, List<WS_Meter> MTS) {
+    public WResult importMeter(WS_Operator op, List<WS_Meter> MTS) {
         return null;
     }
 
     @Override
-    public WResult ChangePassword(WS_Operator op, String NewPsw) {
+    public WResult changePassword(WS_Operator op, String NewPsw) {
         return null;
     }
 
     @Override
-    public WResult NewOperator(WS_Operator op, WS_Operator nop) {
+    public WResult newOperator(WS_Operator op, WS_Operator nop) {
         return null;
     }
 
     @Override
-    public WResult OperatorResetPassword(WS_Operator op, WS_Operator target) {
+    public WResult operatorResetPassword(WS_Operator op, WS_Operator target) {
         return null;
     }
 
     @Override
-    public WResult ImportMeterFile(WS_Operator op, ExcelFile efile) {
+    public WResult importMeterFile(WS_Operator op, ExcelFile efile) {
         return null;
     }
 
     @Override
-    public WResult DownloadMeterTemplate(WS_Operator op, ExcelFile exfile) {
+    public WResult downloadMeterTemplate(WS_Operator op, ExcelFile exfile) {
         return null;
     }
 }
