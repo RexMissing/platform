@@ -1,4 +1,8 @@
 
+import org.whut.meterManagement.database.DB;
+import org.whut.meterManagement.sqldatalib.MysqlHelper;
+import org.whut.meterManagement.sqldatalib.entity.MyTableField;
+
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,44 +14,24 @@ import java.util.Date;
  */
 public class Test {
     public static void main(String[] args){
-        /*Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test","root","root");
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM user");
-            while(rs.next()){
-                String username = rs.getString("username");
-                System.out.println("username："+username);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if(rs!=null){
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(stmt!=null){
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(conn!=null){
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
+        MysqlHelper mysqlHelper = new MysqlHelper("jdbc:mysql://127.0.0.1:3306/test?user=root&password=root");
+        //insert into user(username,password) values('aaa','123')
+        //delete from user where username = 'aaa'
+        //int i = mysqlHelper.executeNonQuery("delete from user where username = 'aaa'");
+        //System.out.println(i);
+        //int j = mysqlHelper.executeNonQuery("update User set password='123'");
+        //System.out.println(j);
+
+        List<MyTableField> fieldList = new ArrayList<MyTableField>();
+        MyTableField field1 = new MyTableField();
+        field1.setFieldName("username");
+        field1.setFieldValue("aaa");
+        fieldList.add(field1);
+        MyTableField field2 = new MyTableField();
+        field2.setFieldName("password");
+        field2.setFieldValue("123");
+        fieldList.add(field2);
+        int j = mysqlHelper.insertGetID("user", fieldList);
+        System.out.println(j);
     }
 }
