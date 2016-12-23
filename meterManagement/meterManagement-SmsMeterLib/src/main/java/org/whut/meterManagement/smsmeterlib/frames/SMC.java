@@ -6,11 +6,22 @@ import org.whut.meterManagement.smsmeterlib.send.SendFrame;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by zhang_minzhong on 2016/12/16.
  */
 public class SMC {
+
+    //字符串密钥转密钥字节数组
+    public static byte[] getKeyBytes(String key){
+        byte[] keyBytes = new byte[16];
+        for(int i=0;i<16;i++){
+            keyBytes[i] = (byte) Integer.parseInt(key.substring(i * 2, i * 2 + 2),16);
+        }
+        return keyBytes;
+    }
+
     /// <summary>
     /// 表具开通帧
     /// </summary>
@@ -32,13 +43,12 @@ public class SMC {
     /// <param name="bzql">本周期量</param>
     /// <param name="szql">上周期量</param>
     /// <returns></returns>
-    public static String getMeterOpenFrame(String meterId,String key,byte fid,double money,double p0,double p1,double p2,double p3,int a1,int a2,int a3,String nkey,Timestamp beginDT,byte clen,byte cbr,int bzql,int szql){
+    public static String getMeterOpenFrame(String meterId,String key,byte fid,double money,
+                                           double p0,double p1,double p2,double p3,int a1,int a2,int a3,
+                                           String nkey,Date beginDT,byte clen,byte cbr,int bzql,int szql){
         String strResult = "";
         //生成新密钥数组
-        byte[] bKey = new byte[16];
-        for(int i=0;i<16;i++){
-            bKey[i] = (byte) Integer.parseInt(nkey.substring(i * 2, i * 2 + 2),16);
-        }
+        byte[] bKey = getKeyBytes(nkey);
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterId);
         sf.setFuncCode((byte) 0x23);
@@ -299,10 +309,6 @@ public class SMC {
         sf.ProcFrame(rst, key);
         return rst.toString();
     }
-
-
-
-
 
 
 }

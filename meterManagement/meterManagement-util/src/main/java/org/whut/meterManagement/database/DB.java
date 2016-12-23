@@ -26,7 +26,7 @@ public class DB {
         return conn;
     }
 
-
+    //关闭连接
     public static void closeConn(Connection conn){
         try {
             if(conn!=null){
@@ -34,6 +34,36 @@ public class DB {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    //根据结果集关闭连接
+    public static void closeConn(ResultSet rs){
+        if(rs!=null) {
+            Statement stmt = null;
+            Connection conn = null;
+            try {
+                stmt = rs.getStatement();
+                conn = stmt.getConnection();
+                DB.closeResultSet(rs);
+                DB.closeStmt(stmt);
+                DB.closeConn(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    //根据Statement关闭连接
+    public static void closeConn(Statement stmt){
+        if(stmt!=null){
+            Connection conn = null;
+            try {
+                conn = stmt.getConnection();
+                DB.closeStmt(stmt);
+                DB.closeConn(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -59,6 +89,7 @@ public class DB {
         return pStmt;
     }
 
+    //关闭Statement
     public static void closeStmt(Statement stmt){
         try {
             if(stmt!=null){
@@ -80,6 +111,7 @@ public class DB {
         return rs;
     }
 
+    //关闭结果集
     public static void closeResultSet(ResultSet rs){
         try {
             if(rs!=null){
@@ -89,7 +121,6 @@ public class DB {
             e.printStackTrace();
         }
     }
-
 
     //执行一条更新操作语句，并返回所影响的行数目
     public static int updateGetCount(Statement stmt,String updateSql) {

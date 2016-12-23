@@ -21,8 +21,7 @@ public class Test {
         //System.out.println(i);
         //int j = mysqlHelper.executeNonQuery("update User set password='123'");
         //System.out.println(j);
-
-        List<MyTableField> fieldList = new ArrayList<MyTableField>();
+        /*List<MyTableField> fieldList = new ArrayList<MyTableField>();
         MyTableField field1 = new MyTableField();
         field1.setFieldName("username");
         field1.setFieldValue("aaa");
@@ -32,6 +31,6 @@ public class Test {
         field2.setFieldValue("123");
         fieldList.add(field2);
         int j = mysqlHelper.insertGetID("user", fieldList);
-        System.out.println(j);
+        System.out.println(j);*/
     }
 }
