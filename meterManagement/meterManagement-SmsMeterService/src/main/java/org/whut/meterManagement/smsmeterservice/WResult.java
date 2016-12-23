@@ -47,6 +47,15 @@ public class WResult {
         setID(id);
     }
 
+    public WResult(boolean bResult) {
+        setBResult(bResult);
+    }
+
+    public WResult(int ID, boolean bResult) {
+        setID(ID);
+        setBResult(bResult);
+    }
+
     //验证普通操作员
     public boolean VerOP(WS_Operator op) {
         //00640072003000770073007300400050
