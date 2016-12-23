@@ -24,31 +24,31 @@ public interface BusinessService {
     List<WResult> remoteValveControl(WS_Operator op, int mode, List<Integer> userIDs);
 
     
-    List<WResult> remoteCloseValveAtTime(WS_Operator op, List<Integer> userIDs, Timestamp AtTime);
+    List<WResult> remoteCloseValveAtTime(WS_Operator op, List<Integer> userIDs, Timestamp atTime);
 
     
     List<WResult> checkMeterTime(WS_Operator op, List<Integer> userIDs);
 
     
-    WResult remoteMeterUserSet(WS_Operator op, int userID, int Sum, int cur, int pre, byte mode);
+    WResult remoteMeterUserSet(WS_Operator op, int userID, int sum, int cur, int pre, byte mode);
 
     
     WResult remoteCharge(WS_Operator op, int userID, double money);
 
     
-    WResult icCharge(WS_Operator op, int userID, double money, String cardID, String IcData, WS_IcData icdata);
+    WResult icCharge(WS_Operator op, int userID, double money, String cardID, String data, WS_IcData icdata);
 
     
-    WResult readIC(WS_Operator op, String cardID, String IcData, WS_IcData icdata);
+    WResult readIC(WS_Operator op, String cardID, String data, WS_IcData icdata);
 
     
-    WResult remoteChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schdt);
+    WResult remoteChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schDT);
 
     
-    WResult icChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schdt, String cardID, String IcData, WS_IcData icdata);
+    WResult icChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schDT, String cardID, String data, WS_IcData icdata);
 
     
-    WResult batchChangePrice(WS_Operator op, int saleID, int NewSaleID, boolean isAtTime, Timestamp schdt);
+    WResult batchChangePrice(WS_Operator op, int saleID, int newSaleID, boolean isAtTime, Timestamp schDT);
 
     
     WResult reSendCmd(WS_Operator op, String sismsid);

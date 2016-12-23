@@ -42,10 +42,10 @@ public class WS_IcData {
 
     public WS_IcData() {}
 
-    public WS_IcData(String cardID, String dataStr) {
-        setCardID(cardID);
-        setDataStr(dataStr);
-    }
+//    public WS_IcData(String cardID, String dataStr) {
+//        setCardID(cardID);
+//        setDataStr(dataStr);
+//    }
 
     /// <summary>
     /// 根据命令字符串，生成卡对象
@@ -53,9 +53,9 @@ public class WS_IcData {
     /// <param name="cardID"></param>
     /// <param name="sms"></param>
     /// <returns></returns>
-    public static WS_IcData buildWrite(String cardID, String sms)
+    public static WS_IcData buildWrite(String cardID, String sms, WS_IcData ic)
     {
-        WS_IcData ic = new WS_IcData();
+        //WS_IcData ic = new WS_IcData();
 //        IC.cardID = cardID;
 //        IC.cmdStr = sms;
 //        IC.dataStr = "05010101000000000000000000000000";
@@ -74,9 +74,9 @@ public class WS_IcData {
         return ic;
     }
 
-    public static WS_IcData buildWrite(String cardID, String[] sms)
+    public static WS_IcData buildWrite(String cardID, String[] sms, WS_IcData ic)
     {
-        WS_IcData ic = new WS_IcData();
+        //WS_IcData ic = new WS_IcData();
 //        IC.cardID = cardID;
 //        IC.cmdStr = sms.toString();
 //        IC.dataStr = "05010" + sms.length + "01000000000000000000000000";
@@ -108,29 +108,30 @@ public class WS_IcData {
     /// <param name="IC">ICData对象</param>
     /// <param name="er"></param>
     /// <returns></returns>
-    public static boolean readFromDataStr(String icdata, String cardID, WS_IcData IC, StringBuffer er)
+    public static boolean readFromDataStr(String icData, String cardID, WS_IcData IC, StringBuffer sb)
     {
-        er = new StringBuffer();
-        IC = null;
+        //er = new StringBuffer();
+        //IC = null;
 
-        if ((!icdata.substring(0, 2).equals("05")) && (!icdata.substring(0, 2).equals("DD")))
+        if ((!icData.substring(0, 2).equals("05")) && (!icData.substring(0, 2).equals("DD")))
         {
-            er.append("非用户卡");
+            sb.append("非用户卡");
             return false;
         }
-        IC = new WS_IcData(cardID, icdata);
-        if (icdata.substring(2, 4).equals("00"))
+        IC.setCardID(cardID);
+        IC.setDataStr(icData);
+        if (icData.substring(2, 4).equals("00"))
         {
             //表具回传，将数据还原为通讯帧，加入到TSms_RECEIVE表中
-            //IC.cmdStr = "h40" + icdata.Substring(32, 128) + "16";
-            IC.setCmdStr("h40" + icdata.substring(32, 160) + "16");
+            //IC.cmdStr = "h40" + icData.Substring(32, 128) + "16";
+            IC.setCmdStr("h40" + icData.substring(32, 160) + "16");
             if (!StdUtils.getSqlh().executeExsit("select * from TIC_RECEIVE where FCardID='"
-                    + IC.cardID + "' and FCmdStr='" + IC.cmdStr + "'"))
+                    + IC.getCardID() + "' and FCmdStr='" + IC.getCmdStr() + "'"))
             {
-                StdUtils.getSqlh().executeNonQuery("insert TIC_RECEIVE(FCardID,FCmdStr) values('" + cardID + "','" + IC.cmdStr + "')");
+                StdUtils.getSqlh().executeNonQuery("insert TIC_RECEIVE(FCardID,FCmdStr) values('" + cardID + "','" + IC.getCmdStr() + "')");
             }
         }
-        if (icdata.substring(2, 4).equals("01"))
+        if (icData.substring(2, 4).equals("01"))
         {
             //发送帧
         }

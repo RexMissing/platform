@@ -26,25 +26,21 @@ public class BusinessIml implements BusinessService {
     /// <returns></returns>
     @Override
     public WResult userOpenMeter(WS_Operator op, int userID, String meterID, int strategyID, double money, Timestamp sdt, int cbr) {
-        WResult rst = new WResult(userID);
+        WResult wr = new WResult(userID);
 
-        if (!rst.VerOP(op))
-        {
-            return rst;
+        if (!wr.VerOP(op)) {
+            return wr;
         }
         StringBuffer Sismsid = new StringBuffer();
         SMSBusiness busi = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
         boolean brst = busi.openUser(userID, meterID, strategyID, money, sdt, cbr, Sismsid);
-        if (brst)
-        {
+        if (brst) {
             // TODO  SendSmsCommand
-            //rst.setBResult(busi.SendSmsCommand(Sismsid));
+            //wr.setBResult(busi.SendSmsCommand(Sismsid));
+        } else {
+            wr.setErDes(Sismsid);
         }
-        else
-        {
-            rst.setErDes(Sismsid);
-        }
-        return rst;
+        return wr;
     }
 
     /// <summary>
@@ -59,34 +55,22 @@ public class BusinessIml implements BusinessService {
     /// <returns></returns>
     @Override
     public WResult userOpenIC(WS_Operator op, int userID, String meterID, int strategyID, double money, Timestamp sdt, int cbr, String cardID, int overdraftStyle, WS_IcData icdata) {
-        WResult rst = new WResult();
-        icdata = null;
-        if (!rst.VerOP(op))
-        {
-            return rst;
-        }
-        else
-        {
+        WResult wr = new WResult();
+        //icdata = null;
+        if (!wr.VerOP(op)) {
+            return wr;
+        } else {
             ResultSet rs = StdUtils.getSqlh().executeQuery("select * from TUser where FCardID='" + cardID + "'");
             try {
-                if (rs.getRow() == 0)
-                {
+                if (rs.getRow() == 0) {
                     //新卡号，可使用，更新TUser中的FCardID
                     StdUtils.getSqlh().executeNonQuery("update TUser set FCardID='" + cardID + "' where FUserID=" + userID);
-                }
-                else
-                {
-//                    if ((int)rs.Rows[0]["FUserID"] != userID)
-//                    {
-//                        rst.bResult = false;
-//                        rst.erDes = "卡号以被其他用户使用";
-//                        return rst;
-//                    }
-                    // TODO 第一行
-                    if (Integer.parseInt(rs.getString("FUserID")) == userID) {
-                        rst.setBResult(false);
-                        rst.getErDes().append("卡号以被其他用户使用");
-                        return rst;
+                } else {
+                    rs.next();
+                    if (Integer.parseInt(rs.getObject("FUserID").toString()) == userID) {
+                        wr.setBResult(false);
+                        wr.getErDes().append("卡号已被其他用户使用");
+                        return wr;
                     }
                 }
             } catch (SQLException e) {
@@ -99,26 +83,24 @@ public class BusinessIml implements BusinessService {
             String[] SMSs = new String[3]; //0:开通;1:更改服务号码;2:更改透支方式
 
             boolean brst = busiSvr.openUser(userID, meterID, strategyID, money, sdt, cbr, Sismsid);
-            if (!brst)
-            {
-//                rst.ErDes = Sismsid;
-//                rst.bResult = false;
-                rst.setBResult(false);
-                rst.getErDes().append(Sismsid);
-                return rst;
+            if (!brst) {
+//                wr.ErDes = Sismsid;
+//                wr.bResult = false;
+                wr.setBResult(false);
+                wr.getErDes().append(Sismsid);
+                return wr;
             }
             // TODO
             //SMSs[0] = busiSvr.GetCommandStr(Sismsid);
 
             // TODO
             //brst = busiSvr.SetServerNo(MeterID, SNO, out Sismsid);
-            if (!brst)
-            {
-//                rst.bResult = false;
-//                rst.ErDes = Sismsid;
-                rst.setBResult(false);
-                rst.getErDes().append(Sismsid);
-                return rst;
+            if (!brst) {
+//                wr.bResult = false;
+//                wr.ErDes = Sismsid;
+                wr.setBResult(false);
+                wr.getErDes().append(Sismsid);
+                return wr;
             }
             // TODO
             //SMSs[1] = busiSvr.GetCommandStr(Sismsid);
@@ -127,20 +109,20 @@ public class BusinessIml implements BusinessService {
             //更改透支方式
             // TODO
             //brst = busiSvr.OverdraftStyle(userID, OverdraftStyle, Sismsid);
-            if (!brst)
-            {
-//                rst.bResult = false;
-//                rst.ErDes = Sismsid;
-                rst.setBResult(false);
-                rst.getErDes().append(Sismsid);
-                return rst;
+            if (!brst) {
+//                wr.bResult = false;
+//                wr.ErDes = Sismsid;
+                wr.setBResult(false);
+                wr.getErDes().append(Sismsid);
+                return wr;
             }
             // TODO
             //SMSs[2] = busiSvr.GetCommandStr(Sismsid);
 
-            icdata = WS_IcData.buildWrite(cardID, SMSs);
+            //icdata = WS_IcData.buildWrite(cardID, SMSs);
+            WS_IcData.buildWrite(cardID, SMSs, icdata);
         }
-        return rst;
+        return wr;
     }
 
     /// <summary>
@@ -151,27 +133,25 @@ public class BusinessIml implements BusinessService {
     /// <returns>成功发送指令的用户编号</returns>
     @Override
     public List<WResult> remoteReadMeter(WS_Operator op, List<Integer> userIDs) {
-        List<WResult> rst = new ArrayList<WResult>();
-        if (!(new WResult()).VerOP(op))
-        {
-            return rst;
+        List<WResult> wrList = new ArrayList<WResult>();
+        if (!(new WResult()).VerOP(op)) {
+            return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
-        for (int i = 0; i < userIDs.size(); i++)
-        {
+        for (int i = 0; i < userIDs.size(); i++) {
             StringBuffer er = new StringBuffer();
-            WResult wsr = new WResult();
-//            wsr.ID = UserIDs[i];
-//            wsr.BResult = busiSvr.ReadMeter(UserIDs[i], er);
-//            wsr.ErDes = er;
-            wsr.setID(userIDs.get(i));
+            WResult wr = new WResult();
+//            wr.ID = UserIDs[i];
+//            wr.BResult = busiSvr.ReadMeter(UserIDs[i], er);
+//            wr.ErDes = er;
+            wr.setID(userIDs.get(i));
             // TODO
-            //wsr.setBResult(busiSvr.ReadMeter(userIDs.get(i), er));
-            wsr.setErDes(er);
+            //wr.setBResult(busiSvr.ReadMeter(userIDs.get(i), er));
+            wr.setErDes(er);
 
-            rst.add(wsr);
+            wrList.add(wr);
         }
-        return rst;
+        return wrList;
     }
 
     /// <summary>
@@ -182,28 +162,26 @@ public class BusinessIml implements BusinessService {
     /// <param name="DT">设定时间</param>
     /// <returns></returns>
     @Override
-    public List<WResult> remoteReadMeterAtTime(WS_Operator op, List<Integer> userIDs, Timestamp dt) {
-        List<WResult> rst = new ArrayList<WResult>();
-        if (!(new WResult()).VerOP(op))
-        {
-            return rst;
+    public List<WResult> remoteReadMeterAtTime(WS_Operator op, List<Integer> userIDs, Timestamp rs) {
+        List<WResult> wrList = new ArrayList<WResult>();
+        if (!(new WResult()).VerOP(op)) {
+            return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
-        for (int i = 0; i < userIDs.size(); i++)
-        {
+        for (int i = 0; i < userIDs.size(); i++) {
             StringBuffer er = new StringBuffer();
-            WResult wsr = new WResult();
-//            wsr.ID = UserIDs[i];
-//            wsr.BResult = busiSvr.ReadMeter(UserIDs[i], DT, er);
-//            wsr.ErDes = er;
-            wsr.setID(userIDs.get(i));
+            WResult wr = new WResult();
+//            wr.ID = UserIDs[i];
+//            wr.BResult = busiSvr.ReadMeter(UserIDs[i], DT, er);
+//            wr.ErDes = er;
+            wr.setID(userIDs.get(i));
             // TODO
-            //wsr.setBResult(busiSvr.ReadMeter(userIDs.get(i), dt, er));
-            wsr.setErDes(er);
-            
-            rst.add(wsr);
+            //wr.setBResult(busiSvr.ReadMeter(userIDs.get(i), rs, er));
+            wr.setErDes(er);
+
+            wrList.add(wr);
         }
-        return rst;
+        return wrList;
     }
 
     /// <summary>
@@ -215,24 +193,22 @@ public class BusinessIml implements BusinessService {
     /// <returns></returns>
     @Override
     public List<WResult> remoteValveControl(WS_Operator op, int mode, List<Integer> userIDs) {
-        List<WResult> rst = new ArrayList<WResult>();
-        if (!(new WResult()).VerOP(op))
-        {
-            return rst;
+        List<WResult> wrList = new ArrayList<WResult>();
+        if (!(new WResult()).VerOP(op)) {
+            return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
-        for (int i = 0; i < userIDs.size(); i++)
-        {
+        for (int i = 0; i < userIDs.size(); i++) {
             StringBuffer er = new StringBuffer();
-            WResult wsr = new WResult();
-            wsr.setID(userIDs.get(i));
+            WResult wr = new WResult();
+            wr.setID(userIDs.get(i));
             // TODO
-            //wsr.setBResult(busiSvr.ValveControl(userIDs.get(i), mode, er));
-            wsr.setErDes(er);
+            //wr.setBResult(busiSvr.ValveControl(userIDs.get(i), mode, er));
+            wr.setErDes(er);
 
-            rst.add(wsr);
+            wrList.add(wr);
         }
-        return rst;
+        return wrList;
     }
 
     /// <summary>
@@ -244,24 +220,22 @@ public class BusinessIml implements BusinessService {
     /// <returns></returns>
     @Override
     public List<WResult> remoteCloseValveAtTime(WS_Operator op, List<Integer> userIDs, Timestamp atTime) {
-        List<WResult> rst = new ArrayList<WResult>();
-        if (!(new WResult()).VerOP(op))
-        {
-            return rst;
+        List<WResult> wrList = new ArrayList<WResult>();
+        if (!(new WResult()).VerOP(op)) {
+            return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
-        for (int i = 0; i < userIDs.size(); i++)
-        {
+        for (int i = 0; i < userIDs.size(); i++) {
             StringBuffer er = new StringBuffer();
-            WResult wsr = new WResult();
-            wsr.setID(userIDs.get(i));
+            WResult wr = new WResult();
+            wr.setID(userIDs.get(i));
             // TODO
-            //wsr.setBResult(busiSvr.CloseValveAtTime(userIDs.get(i), atTime, er));
-            wsr.setErDes(er);
+            //wr.setBResult(busiSvr.CloseValveAtTime(userIDs.get(i), atTime, er));
+            wr.setErDes(er);
 
-            rst.add(wsr);
+            wrList.add(wr);
         }
-        return rst;
+        return wrList;
     }
 
     /// <summary>
@@ -272,69 +246,339 @@ public class BusinessIml implements BusinessService {
     /// <returns></returns>
     @Override
     public List<WResult> checkMeterTime(WS_Operator op, List<Integer> userIDs) {
-        List<WResult> rst = new ArrayList<WResult>();
-        if (!(new WResult()).VerOP(op))
-        {
-            return rst;
+        List<WResult> wrList = new ArrayList<WResult>();
+        if (!(new WResult()).VerOP(op)) {
+            return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
-        for (int i = 0; i < userIDs.size(); i++)
-        {
+        for (int i = 0; i < userIDs.size(); i++) {
             StringBuffer er = new StringBuffer();
-            WResult wsr = new WResult();
-            wsr.setID(userIDs.get(i));
+            WResult wr = new WResult();
+            wr.setID(userIDs.get(i));
             // TODO
-            //wsr.setBResult(busiSvr.CheckMeterTime(userIDs.get(i), er));
-            wsr.setErDes(er);
+            //wr.setBResult(busiSvr.CheckMeterTime(userIDs.get(i), er));
+            wr.setErDes(er);
 
-            rst.add(wsr);
+            wrList.add(wr);
         }
-        return rst;
+        return wrList;
     }
 
+    /// <summary>
+    /// 设置表具总用量及阶梯周期量
+    /// </summary>
+    /// <param name="op">操作员</param>
+    /// <param name="UserID">用户编号</param>
+    /// <param name="Sum">总用量</param>
+    /// <param name="cur">当前周期量</param>
+    /// <param name="pre">上个周期量</param>
+    /// <param name="mode">设置模式</param>
+    /// <returns></returns>
     @Override
-    public WResult remoteMeterUserSet(WS_Operator op, int userID, int Sum, int cur, int pre, byte mode) {
-        return null;
+    public WResult remoteMeterUserSet(WS_Operator op, int userID, int sum, int cur, int pre, byte mode) {
+        WResult wr = new WResult(userID);
+        if (!wr.VerOP(op)) {
+            return wr;
+        } else {
+            StringBuffer er = new StringBuffer();
+            SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+            // TODO
+            //wr.setBResult(busiSvr.MeterUseSet(userID, sum, cur, pre, mode, er));
+            wr.setErDes(er);
+        }
+        return wr;
     }
 
+    /// <summary>
+    /// 短信充值
+    /// </summary>
+    /// <param name="op">操作员</param>
+    /// <param name="UserID">用户编号</param>
+    /// <param name="Money">充值金额</param>
+    /// <returns></returns>
     @Override
     public WResult remoteCharge(WS_Operator op, int userID, double money) {
-        return null;
+        WResult wr = new WResult(userID, false);
+        if (!wr.VerOP(op)) {
+            return wr;
+        } else {
+            StringBuffer Sismsid = new StringBuffer();
+            SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+
+            // TODO
+//            boolean brst = busiSvr.Charge(userID, money, Sismsid);
+//            if (brst)
+//            {
+//                wr.setBResult(busiSvr.SendSmsCommand(Sismsid));
+//            }
+//            else
+//            {
+//                wr.setBResult(false);
+//                wr.setErDes(Sismsid);
+//            }
+        }
+        return wr;
     }
 
+    /// <summary>
+    /// IC卡充值
+    /// </summary>
+    /// <param name="op">操作员</param>
+    /// <param name="UserID">用户编号</param>
+    /// <param name="Money">充值金额</param>
+    /// <param name="Ver">表具版本</param>
+    /// <returns></returns>
     @Override
-    public WResult icCharge(WS_Operator op, int userID, double money, String cardID, String IcData, WS_IcData icdata) {
-        return null;
+    public WResult icCharge(WS_Operator op, int userID, double money, String cardID, String data, WS_IcData icdata) {
+        WResult wr = new WResult(userID, false);
+        //icdata = null;
+        if (!wr.VerOP(op)) {
+            return wr;
+        }
+        WS_IcData ic = new WS_IcData();
+        StringBuffer Sismsid = new StringBuffer();
+        if (!WS_IcData.readFromDataStr(data, cardID, ic, Sismsid)) {
+            wr.setBResult(false);
+            wr.setErDes(Sismsid);
+            return wr;
+        }
+        //查询IC卡号对应的用户
+        ResultSet rs = StdUtils.getSqlh().executeQuery("select * from TUser where FCardID='" + cardID + "'");
+        try {
+            if (rs.getRow() == 0) {
+                //新卡号，可使用，更新TUser中的FCardID
+                StdUtils.getSqlh().executeNonQuery("update TUser set FCardID='" + cardID + "' where FUserID=" + userID);
+            } else {
+                rs.next();
+                if (Integer.parseInt(rs.getObject("FUserID").toString()) != userID) {
+                    wr.setBResult(false);
+                    wr.getErDes().append("卡号与用户编号不符，不能充值");
+                    return wr;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        // TODO
+//        boolean brst = busiSvr.Charge(userID, money, Sismsid);
+//        if (brst)
+//        {
+//            String SMS = busiSvr.GetCommandStr(Sismsid);
+//            //icdata = WS_IcData.buildWrite(cardID, SMS);
+//            WS_IcData.buildWrite(cardID, SMS, icdata);
+//            wr.setBResult(true);
+//        }
+//        else
+//        {
+//            wr.setErDes(Sismsid);
+//        }
+        return wr;
     }
 
+    /// <summary>
+    /// 读取IC卡回传数据
+    /// </summary>
+    /// <param name="op"></param>
+    /// <param name="CardID"></param>
+    /// <param name="IcData"></param>
+    /// <returns></returns>
     @Override
-    public WResult readIC(WS_Operator op, String cardID, String IcData, WS_IcData icdata) {
-        return null;
+    public WResult readIC(WS_Operator op, String cardID, String data, WS_IcData icdata) {
+        WResult wr = new WResult(false);
+        //icdata = null;
+        if (!wr.VerOP(op)) {
+            return wr;
+        }
+        StringBuffer Sismsid = new StringBuffer();
+        if (!WS_IcData.readFromDataStr(data, cardID, icdata, Sismsid)) {
+            wr.setBResult(false);
+            wr.setErDes(Sismsid);
+        } else {
+            wr.setBResult(true);
+        }
+
+        return wr;
     }
 
+    /// <summary>
+    /// 更改单价(新表具)
+    /// </summary>
+    /// <param name="op">操作员</param>
+    /// <param name="UserID">用户编号</param>
+    /// <param name="SaleID">单价ID</param>
+    /// <param name="IsAtTime">是否定时</param>
+    /// <param name="SchDT">定时时间</param>
+    /// <returns></returns>
     @Override
-    public WResult remoteChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schdt) {
-        return null;
+    public WResult remoteChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schDT) {
+        WResult wr = new WResult();
+        if (!wr.VerOP(op)) {
+            return wr;
+        }
+        StringBuffer Sismsid = new StringBuffer();
+        SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        // TODO
+//        boolean brst = busiSvr.SetPrice(userID, saleID, schDT, isAtTime, Sismsid);
+//        if (brst)
+//        {
+//            wr.setBResult(busiSvr.SendSmsCommand(Sismsid));
+//        }
+//        else
+//        {
+//            wr.setBResult(false);
+//            wr.setErDes(Sismsid);
+//        }
+
+        return wr;
     }
 
+    /// <summary>
+    /// IC卡更改单价(新表具)
+    /// </summary>
+    /// <param name="op"></param>
+    /// <param name="UserID"></param>
+    /// <param name="SaleID"></param>
+    /// <param name="IsAtTime"></param>
+    /// <param name="SchDT"></param>
+    /// <param name="CardID"></param>
+    /// <param name="IcData"></param>
+    /// <returns></returns>
     @Override
-    public WResult icChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schdt, String cardID, String IcData, WS_IcData icdata) {
-        return null;
+    public WResult icChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schDT, String cardID, String data, WS_IcData icdata) {
+        WResult wr = new WResult();
+        //icdata = null;
+        if (!wr.VerOP(op)) {
+            return wr;
+        }
+        WS_IcData ic = new WS_IcData();
+        StringBuffer Er = new StringBuffer();
+        if (!WS_IcData.readFromDataStr(data, cardID, ic, Er)) {
+            wr.setBResult(false);
+            wr.setErDes(Er);
+            return wr;
+        }
+        //查询IC卡号对应的用户
+        ResultSet rs = StdUtils.getSqlh().executeQuery("select * from TUser where FCardID='" + cardID + "'");
+        try {
+            if (rs.getRow() == 0) {
+                //新卡号，可使用，更新TUser中的FCardID
+                StdUtils.getSqlh().executeNonQuery("update TUser set FCardID='" + cardID + "' where FUserID=" + userID);
+            } else {
+                rs.next();
+                if (Integer.parseInt(rs.getObject("FUserID").toString()) != userID) {
+                    wr.setBResult(false);
+                    wr.getErDes().append("卡号与用户编号不符，不能充值");
+                    return wr;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        StringBuffer Sismsid = new StringBuffer();
+        SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        // TODO
+//        boolean brst = busiSvr.SetPrice(userID, saleID, schDT, isAtTime, Sismsid);
+//        if (brst) {
+//            String SMS = busiSvr.GetCommandStr(Sismsid);
+//            WS_IcData.buildWrite(cardID, SMS, icdata);
+//            wr.setBResult(true);
+//        } else {
+//            wr.setErDes(Sismsid);
+//        }
+
+        return wr;
     }
 
+    /// <summary>
+    /// 批量价格调整
+    /// </summary>
+    /// <param name="op"></param>
+    /// <param name="SaleID"></param>
+    /// <param name="NewSaleID"></param>
+    /// <param name="IsAtTime"></param>
+    /// <param name="SchDT"></param>
+    /// <returns></returns>
     @Override
-    public WResult batchChangePrice(WS_Operator op, int saleID, int NewSaleID, boolean isAtTime, Timestamp schdt) {
-        return null;
+    public WResult batchChangePrice(WS_Operator op, int saleID, int newSaleID, boolean isAtTime, Timestamp schDT) {
+        WResult wr = new WResult(false);
+        if (!wr.VerOP(op)) {
+            return wr;
+        }
+        //查询符合记录的用户
+        ResultSet rs = StdUtils.getSqlh().executeQuery("select FUserID from TUser where FSaleStrategyID=" + saleID);
+        int cnt_Fail = 0;
+        int cnt_Succ = 0;
+        SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        try {
+            // TODO
+//            while (rs.next()) {
+//                StringBuffer Sismsid = new StringBuffer();
+//                if (busiSvr.SetPrice(Integer.parseInt(rs.getObject(1).toString()), newSaleID, schDT, isAtTime, Sismsid)) {
+//                    cnt_Succ++;
+//                    busiSvr.SendSmsCommand(Sismsid);
+//                } else {
+//                    cnt_Fail++;
+//                }
+//            }
+            wr.setBResult(true);
+            String str = "总计需要变更" + rs.getRow() + "户，成功变更" + cnt_Succ + "户，未变更" + cnt_Fail + "户";
+            wr.setErDes(new StringBuffer().append(str));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return wr;
     }
 
+    /// <summary>
+    /// 重发指令
+    /// </summary>
+    /// <param name="op"></param>
+    /// <param name="sismsid"></param>
+    /// <returns></returns>
     @Override
     public WResult reSendCmd(WS_Operator op, String sismsid) {
-        return null;
+        WResult wr = new WResult();
+        if (!wr.VerOP(op))
+        {
+            return wr;
+        }
+        else
+        {
+            SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+            //wr.setBResult(busiSvr.SendSmsCommand(sismsid));
+        }
+        return wr;
     }
 
+    /// <summary>
+    /// 重写IC卡指令
+    /// </summary>
+    /// <param name="op">操作员</param>
+    /// <param name="sismsid">指令唯一号</param>
+    /// <param name="cardid">IC卡编号</param>
+    /// <returns></returns>
     @Override
     public WResult reWriteIC(WS_Operator op, String sismsid, String cardID, WS_IcData icdata) {
-        return null;
+        WResult wr = new WResult();
+        //icdata = null;
+        if (!wr.VerOP(op))
+        {
+            return wr;
+        }
+        //WS_IcData ic = WS_IcData.ParseRead(IcRead);
+        StringBuffer Er = new StringBuffer();
+        SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        // TODO
+        //wr.setBResult(busiSvr.ReWriteIC(sismsid, cardID, Er));
+        wr.setErDes(Er);
+        if (wr.isBResult())
+        {
+            WS_IcData.buildWrite(cardID, Er.toString(), icdata);
+        }
+        return wr;
     }
 
     @Override
