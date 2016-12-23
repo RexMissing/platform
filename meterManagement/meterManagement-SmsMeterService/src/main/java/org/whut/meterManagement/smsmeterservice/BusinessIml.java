@@ -209,19 +209,90 @@ public class BusinessIml implements BusinessService {
         return rst;
     }
 
+    /// <summary>
+    /// 远程阀门控制
+    /// </summary>
+    /// <param name="op">操作员</param>
+    /// <param name="mode">膜式 1:关闭； 0:开启; -1:强制关闭</param>
+    /// <param name="UserIDs"></param>
+    /// <returns></returns>
     @Override
     public List<WResult> remoteValveControl(WS_Operator op, int mode, List<Integer> userIDs) {
-        return null;
+        List<WResult> rst = new ArrayList<WResult>();
+        if (!(new WResult()).VerOP(op))
+        {
+            return rst;
+        }
+        SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        for (int i = 0; i < userIDs.size(); i++)
+        {
+            StringBuffer er = new StringBuffer();
+            WResult wsr = new WResult();
+            wsr.setID(userIDs.get(i));
+            // TODO
+            //wsr.setBResult(busiSvr.ValveControl(userIDs.get(i), mode, er));
+            wsr.setErDes(er);
+
+            rst.add(wsr);
+        }
+        return rst;
     }
 
+    /// <summary>
+    /// 定时关闭阀门
+    /// </summary>
+    /// <param name="op"></param>
+    /// <param name="UserIDs"></param>
+    /// <param name="AtTime"></param>
+    /// <returns></returns>
     @Override
-    public List<WResult> remoteCloseValveAtTime(WS_Operator op, List<Integer> userIDs, Timestamp AtTime) {
-        return null;
+    public List<WResult> remoteCloseValveAtTime(WS_Operator op, List<Integer> userIDs, Timestamp atTime) {
+        List<WResult> rst = new ArrayList<WResult>();
+        if (!(new WResult()).VerOP(op))
+        {
+            return rst;
+        }
+        SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        for (int i = 0; i < userIDs.size(); i++)
+        {
+            StringBuffer er = new StringBuffer();
+            WResult wsr = new WResult();
+            wsr.setID(userIDs.get(i));
+            // TODO
+            //wsr.setBResult(busiSvr.CloseValveAtTime(userIDs.get(i), atTime, er));
+            wsr.setErDes(er);
+
+            rst.add(wsr);
+        }
+        return rst;
     }
 
+    /// <summary>
+    /// 请求表具校对时钟（适用于v1表具）
+    /// </summary>
+    /// <param name="op"></param>
+    /// <param name="UserIDs"></param>
+    /// <returns></returns>
     @Override
     public List<WResult> checkMeterTime(WS_Operator op, List<Integer> userIDs) {
-        return null;
+        List<WResult> rst = new ArrayList<WResult>();
+        if (!(new WResult()).VerOP(op))
+        {
+            return rst;
+        }
+        SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        for (int i = 0; i < userIDs.size(); i++)
+        {
+            StringBuffer er = new StringBuffer();
+            WResult wsr = new WResult();
+            wsr.setID(userIDs.get(i));
+            // TODO
+            //wsr.setBResult(busiSvr.CheckMeterTime(userIDs.get(i), er));
+            wsr.setErDes(er);
+
+            rst.add(wsr);
+        }
+        return rst;
     }
 
     @Override
