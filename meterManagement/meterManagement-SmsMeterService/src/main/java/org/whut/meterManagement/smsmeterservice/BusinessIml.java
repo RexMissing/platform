@@ -33,12 +33,10 @@ public class BusinessIml implements BusinessService {
             return rst;
         }
         StringBuffer Sismsid = new StringBuffer();
-        //SMSBusiness busi = StdUtils.GetBusiness(op.OpID);
         SMSBusiness busi = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
         boolean brst = busi.openUser(userID, meterID, strategyID, money, sdt, cbr, Sismsid);
         if (brst)
         {
-            //rst.bResult = busi.SendSmsCommand(Sismsid);
             // TODO  SendSmsCommand
             //rst.setBResult(busi.SendSmsCommand(Sismsid));
         }
@@ -84,6 +82,7 @@ public class BusinessIml implements BusinessService {
 //                        rst.erDes = "卡号以被其他用户使用";
 //                        return rst;
 //                    }
+                    // TODO 第一行
                     if (Integer.parseInt(rs.getString("FUserID")) == userID) {
                         rst.setBResult(false);
                         rst.getErDes().append("卡号以被其他用户使用");
@@ -96,7 +95,6 @@ public class BusinessIml implements BusinessService {
             // TODO
             //String SNO = ConfigurationManager.AppSettings["ServerNo"];
             StringBuffer Sismsid = new StringBuffer();
-            //SMSBusiness busiSvr = StdUtils.GetBusiness(op.OpID);
             SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
             String[] SMSs = new String[3]; //0:开通;1:更改服务号码;2:更改透支方式
 
@@ -158,7 +156,6 @@ public class BusinessIml implements BusinessService {
         {
             return rst;
         }
-        //SMSBusiness busiSvr = StdUtils.GetBusiness(op.OpID);
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
         for (int i = 0; i < userIDs.size(); i++)
         {
