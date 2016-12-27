@@ -12,8 +12,5 @@
 hs_err_pid*
 
 .idea/workspace.xml
-<<<<<<< HEAD
 *.iml
-=======
->>>>>>> 89a81f613247ef9ff3872d7dc1cc6ebdef732ad0
 target
