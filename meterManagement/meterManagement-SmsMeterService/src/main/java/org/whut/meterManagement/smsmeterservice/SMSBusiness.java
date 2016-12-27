@@ -162,7 +162,7 @@ public class SMSBusiness {
     // <param name="BZQL"></param>
     // <param name="SZQL"></param>
     // <param name="Sismsid"></param>
-    public boolean OpenMeter(int userID, String meterID, double updateMoney, double chargeMoney, int bzql, int szql, StringBuffer sismsID)
+    public boolean openMeter(int userID, String meterID, double updateMoney, double chargeMoney, int bzql, int szql, StringBuffer sismsID)
     {
        // Sismsid = "";
         ResultSet rs = null;

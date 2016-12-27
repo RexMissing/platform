@@ -10,11 +10,11 @@ import org.whut.meterManagement.sqldatalib.StdUtils;
 /// </summary>
 public class WS_IcData {
 
-    public String cardID; 
+    private String cardID;
 
-    public String dataStr; 
+    private String dataStr;
 
-    public String cmdStr;
+    private String cmdStr;
 
     public String getCardID() {
         return cardID;

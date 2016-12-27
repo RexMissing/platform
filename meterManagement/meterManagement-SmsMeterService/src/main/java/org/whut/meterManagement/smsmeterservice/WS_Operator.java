@@ -11,13 +11,13 @@ import org.whut.meterManagement.sqldatalib.StdUtils;
 /// </summary>
 public class WS_Operator {
 
-    public String opID;
+    private String opID;
     
-    public String opMd5; 
+    private String opMd5;
     
-    public String opName; 
+    private String opName;
     
-    public String opMemo;
+    private String opMemo;
 
     public String getOpID() {
         return opID;

@@ -10,11 +10,11 @@ import java.sql.SQLException;
  */
 public class WResult {
 
-    public boolean bResult;
+    private boolean bResult;
     
-    public StringBuffer erDes;
+    private StringBuffer erDes;
     
-    public int ID;
+    private int ID;
 
     public boolean isBResult() {
         return bResult;
