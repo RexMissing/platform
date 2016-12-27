@@ -57,10 +57,10 @@ public interface BusinessService {
     WResult reWriteIC(WS_Operator op, String sismsid, String cardid, WS_IcData icdata);
 
     
-    WResult meterJieSuan(WS_Operator op, int userID, int MeterRead);
+    WResult meterJieSuan(WS_Operator op, int userID, int meterRead);
 
     
-    WResult changeMeter(WS_Operator op, Integer userID, String NewmeterID, double Updatemoney, double Chargemoney, String cardid, WS_IcData icdata);
+    WResult changeMeter(WS_Operator op, Integer userID, String newMeterID, double updateMoney, double chargeMoney, String cardid, WS_IcData icdata);
 
     
     List<WResult> changeCbr(WS_Operator op, List<Integer> userIDs, int cbr);
