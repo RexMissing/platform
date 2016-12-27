@@ -19,8 +19,6 @@
         <module>meterManagement-SQLDataLib</module>
         <module>meterManagement-util</module>
         <module>meterManagementWeb</module>
-        <module>meterManagement-MeterSettlement</module>
-        <module>meterManagement-GasMetetModel</module>
     </modules>
 
 

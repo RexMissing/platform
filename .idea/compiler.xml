@@ -70,6 +70,7 @@
         <module name="inspectManagementWeb" />
         <module name="meterManagement-aes" />
         <module name="meterManagement-business" />
+        <module name="meterManagement-MeterSettlement" />
         <module name="meterManagement-SmsMeterLib" />
         <module name="meterManagement-SmsMeterService" />
         <module name="meterManagement-SQLDataLib" />

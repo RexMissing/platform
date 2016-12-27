@@ -1,7 +1,11 @@
 package org.whut.meterManagement.smsmeterservice;
 
 import org.whut.meterManagement.database.DB;
+import org.whut.meterManagement.date.DateUtil;
+import org.whut.meterManagement.smsmeterlib.enums.ValveCtrStyle;
+import org.whut.meterManagement.smsmeterlib.frames.Recharge;
 import org.whut.meterManagement.smsmeterlib.frames.SMC;
+import org.whut.meterManagement.smsmeterservice.entity.MeterFrameData;
 import org.whut.meterManagement.smsmeterservice.entity.MeterPrice;
 import org.whut.meterManagement.sqldatalib.SqlHelper;
 
@@ -44,8 +48,7 @@ public class SMSBusiness {
         this.sqlHelper = sqlHelper;
     }
 
-    private String getNewSMID()
-    {
+    private String getNewSMID() {
         String sismsid = "";
         Object o = sqlHelper.executeScalar("select FParamValue from TConfig where FParamName='SM_ID'").toString();
         if (o == null)
@@ -61,29 +64,7 @@ public class SMSBusiness {
         return sismsid;
     }
 
-    private MeterPrice getMeterPrice(int saleStrategyID,SqlHelper sqlh){
-        ResultSet rs=null;
-        MeterPrice mtp = new MeterPrice();
-        try {
-            rs = sqlh.executeQuery("select * from TSaleStrategy where FStrategyID=" + saleStrategyID);
-            rs.next();
-            mtp.setStrategyID(saleStrategyID);
-            mtp.setPrice(rs.getDouble("FPrice"));
-            mtp.setStrategyName(rs.getString("FStrategyName"));
-            mtp.setPrice1(rs.getDouble("FStagePrice1"));
-            mtp.setPrice2(rs.getDouble("FStagePrice2"));
-            mtp.setPrice3(rs.getDouble("FStagePrice3"));
-            mtp.setAmount1(rs.getInt("FBeginAmount1"));
-            mtp.setAmount2(rs.getInt("FBeginAmount2"));
-            mtp.setAmount3(rs.getInt("FBeginAmount3"));
-            mtp.setCycleLength(rs.getInt("FCycleLength"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            DB.closeConn(rs);
-        }
-        return mtp;
-    }
+
     /*
     前台业务处理功能
      */
@@ -100,7 +81,7 @@ public class SMSBusiness {
         //ResultSet rs=null;
         ResultSet rs1 = null;
         try {
-            MeterPrice mtp = getMeterPrice(saleStrategyID,sqlHelper);
+            MeterPrice mtp = MeterPrice.getMeterPrice(saleStrategyID, sqlHelper);
             //2.查询FrameID
             int frameID = Integer.parseInt(sqlHelper.executeScalar("select count(*) from TAllSend where FMeterID='"
                     + meterID + "'").toString());
@@ -144,6 +125,7 @@ public class SMSBusiness {
                     + sismsID + "','" + destAddr + "','" + SMS + "'," + userID + ",'开通用户')");
             sqlHelper.executeWithTransaction(sqlList);
         } catch (SQLException e) {
+            DB.closeResultSet(rs1);
             e.printStackTrace();
             sismsID.delete(0, sismsID.length() - 1).append(e.getMessage());
             return false;
@@ -193,7 +175,7 @@ public class SMSBusiness {
             int cbr = rs1.getInt("FReadMeterDay");
             Date sdt = rs1.getTimestamp("FStageBeginDate");
 
-            MeterPrice mtp = getMeterPrice(strategyID,sqlHelper);
+            MeterPrice mtp = MeterPrice.getMeterPrice(strategyID, sqlHelper);
             //生成最新的阶梯周期起始日期
             Date now = new Date();
             Calendar c = Calendar.getInstance();
@@ -241,12 +223,321 @@ public class SMSBusiness {
         }
         catch (Exception e)
         {
+            DB.closeConn(rs);
+            DB.closeConn(rs1);
             sismsID.append(e.getMessage());
-
             return false;
         }finally {
             DB.closeConn(rs);
             DB.closeConn(rs1);
+        }
+    }
+
+    // 充值或冲正（20140701修改,生成帧，不发送短信，需要调用SendSmsCommand发送短信指令）
+    // Money大于0时为充值，小于0时为冲正
+    // <param name="UserID">用户编号</param>
+    // <param name="Money">充值金额</param>
+    // <param name="Sismsid">错误信息,指令唯一编号</param>
+    public boolean charge(int userID, double money, StringBuffer sismsID)
+    {
+        //sismsID = "";
+        boolean isUncharge = false;
+        double t_money = money;
+        if (money < 0)
+        {
+            isUncharge = true;
+            money *= -1;
+        }
+        try
+        {
+            //查询表具相关信息
+            MeterFrameData mfd = MeterFrameData.getMeterFrameData(userID,sqlHelper);
+            //5.查询用户购买单价
+            int strategyID = Integer.valueOf(sqlHelper.executeScalar("select FSaleStrategyID from TUser where FUserID=" + userID).toString());
+            //6.增加充值记录，并获取充值ID
+            String sqlstr = "insert TRecharge(FUserID,FChargeMoney,FSaleStrategyID,FDate,FOperatorID) values("
+                    + userID + "," + money + "," + strategyID + ",'" + new SimpleDateFormat("yyyy-MM-dd").format(new Date())
+                    + "','" + operatorID + "')";
+            int chargeID = sqlHelper.insertGetID(sqlstr);
+
+            //7.生成短信指令
+            String SMS = SMC.getChangeMoneyFrame(mfd.getMeterID(),mfd.getMeterKey(),mfd.getFrameIDEx(),t_money,mfd.getiTimeSpan());
+            //8.更新数据库
+            List<String> SQLList = new ArrayList<String>();
+            SQLList.add("insert into TAllSend(FMeterID,FFuncCode,FSismsid,FFrameID) Values('" + mfd.getMeterID()
+                    + "',10,'" + mfd.getSismsID() + "'," + mfd.getFrameID() + ")");
+            if (isUncharge)
+            {
+                SQLList.add("update TUser set FSaleTotal=FSaleTotal-" + money + " where FUserID=" + userID);
+                SQLList.add("insert into TSetMoney(FMeterID,FMoney,FMode,FSismsid,FChargeID) values('" + mfd.getMeterID()
+                        + "'," + money + ",1,'" + mfd.getSismsID() + "'," + chargeID + ")");
+                SQLList.add("insert into TAllCommand(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                        + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'金额冲正')");
+            }
+            else
+            {
+                SQLList.add("update TUser set FSaleTotal=FSaleTotal+" + money + " where FUserID=" + userID);
+                SQLList.add("insert into TSetMoney(FMeterID,FMoney,FMode,FSismsid,FChargeID) values('" + mfd.getMeterID()
+                        + "'," + money + ",0,'" + mfd.getSismsID() + "'," + chargeID + ")");
+                SQLList.add("insert into TAllCommand(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                        + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'充值')");
+            }
+            sismsID.append(mfd.getSismsID());
+            sqlHelper.executeWithTransaction(SQLList);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            sismsID.delete(0,sismsID.length()-1).append(ex.getMessage());
+            return false;
+        }
+    }
+
+    // 及时读表(20140701修改，生成帧并发送短信指令)
+    // <param name="UserID">用户编号</param>
+    // <param name="Sismsid"></param>
+    public boolean readMeter(int userID, StringBuffer sismsID)
+    {
+        //Sismsid = "";
+        try
+        {
+            //查询表具相关信息
+            MeterFrameData mfd = MeterFrameData.getMeterFrameData(userID,sqlHelper);
+            //5.生成短信指令
+            String SMS = SMC.getMeterDataFrame(mfd.getMeterID(),mfd.getMeterKey(),mfd.getFrameID(),mfd.getiTimeSpan());
+            //6.更新数据
+            List<String> SQLList = new ArrayList<String>();
+            SQLList.add("insert into TAllSend(FMeterID,FFuncCode,FSismsid,FFrameID) Values('" + mfd.getMeterID()
+                    + "',5,'" + mfd.getSismsID() + "'," + mfd.getFrameID() + ")");
+            SQLList.add("Insert into TOtherCommand(FMeterID,FFuncCode,FSismsid) Values('" + mfd.getMeterID()
+                    + "',5,'" + mfd.getSismsID() + "')");
+            SQLList.add("insert into TAllCommand(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                    + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'读表')");
+            SQLList.add("insert into TSchedule(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                    + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'读表')");
+            sqlHelper.executeWithTransaction(SQLList);
+            sismsID.append(mfd.getSismsID());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            sismsID.delete(0,sismsID.length()-1).append(ex.getMessage());
+            return false;
+        }
+    }
+
+    // 定时读表(20140701修改,生成帧并发送短信指令)
+    // <param name="UserID">用户编号</param>
+    // <param name="SchDT">定时时间</param>
+    // <param name="Sismsid"></param>
+    public boolean readMeter(int userID, Date SchDT, StringBuffer sismsID)
+    {
+        //Sismsid = "";
+        try
+        {
+            //查询表具相关信息
+            MeterFrameData mfd = MeterFrameData.getMeterFrameData(userID,sqlHelper);
+            long end = SchDT.getTime();
+            long begin = DateUtil.createDate("2000-1-1 00:00:00").getTime();
+            int iTM = (int)((end - begin)/1000);
+            //5.生成短信指令
+            String SMS = SMC.getMeterDataFrameByDate(mfd.getMeterID(),mfd.getMeterKey(),mfd.getFrameID(),iTM,mfd.getiTimeSpan());
+            //6.更新数据
+            List<String> SQLList = new ArrayList<String>();
+            SQLList.add("insert into TAllSend(FMeterID,FFuncCode,FSismsid,FFrameID) Values('" + mfd.getMeterID()
+                    + "',30,'" + mfd.getSismsID() + "'," + mfd.getFrameID() + ")");
+            SQLList.add("Insert into TOtherCommand(FMeterID,FFuncCode,FSismsid,FScheduleTime) Values('" + mfd.getMeterID()
+                    + "',5,'" + mfd.getSismsID() + "','" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(SchDT) + "')");
+            SQLList.add("insert into TAllCommand(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                    + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'定时读表')");
+            SQLList.add("insert into TSchedule(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                    + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'定时读表')");
+            sqlHelper.executeWithTransaction(SQLList);
+            sismsID.append(mfd.getSismsID());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            sismsID.delete(0,sismsID.length()-1).append(ex.getMessage());
+            return false;
+        }
+    }
+
+    // 更新表具单价（20140701修改,生成帧，不发送短信，需要调用SendSmsCommand发送短信指令）
+    // <param name="UserID">用户编号</param>
+    // <param name="SaleStrategyID">单价策略ID</param>
+    // <param name="SchDT">定时时间</param>
+    // <param name="IsAtTime">是否定时</param>
+    // <param name="Er">错误信息</param>
+    public boolean setPrice(int userID, int saleStrategyID, Date SchDT, boolean isAtTime, StringBuffer sismsID)
+    {
+        //Sismsid = "";
+        try
+        {
+            //1.查询表具相关信息
+            MeterFrameData mfd = MeterFrameData.getMeterFrameData(userID,sqlHelper);
+            //2.查询现有单价信息
+            ResultSet rs = sqlHelper.executeQuery("select * from TUser where FUserID=" + userID);
+            int oldStrategyID = rs.getInt("FSaleStrategyID");
+            boolean oldStage = rs.getBoolean("FIsStagePrice");
+            if (saleStrategyID == oldStrategyID)
+            {
+                //单价相同，而且未变更阶梯价格是否开启状态
+                sismsID.append("变更单价与现有单价相同");
+                return false;
+            }
+
+            //3.查询单价Price
+            MeterPrice mp = MeterPrice.getMeterPrice(saleStrategyID,sqlHelper);
+
+            //4.更改处理
+            if (isAtTime)
+            {
+                //long end = SchDT.getTime();
+                //long begin = DateUtil.createDate("2000-1-1 00:00:00").getTime();
+                //long timeSpan = end - begin;
+                //定时更改，生成短信指令
+                String SMS = SMC.getChangePriceFrame(mfd.getMeterID(),mfd.getMeterKey(),mfd.getFrameID(),
+                        mp.getPrice(),mp.getPrice1(),mp.getPrice2(),mp.getPrice3(), mp.getAmount1(),mp.getAmount2(),mp.getAmount3(),
+                        SchDT, (byte)mp.getCycleLength(),SchDT,mfd.getiTimeSpan());
+                List<String> SQLList = new ArrayList<String>();
+                SQLList.add("update TUser set FNextStrategyID=" + saleStrategyID + " where FUserID="
+                        + userID);
+                SQLList.add("insert into TAllSend(FMeterID,FFuncCode,FSismsid,FFrameID) Values('" + mfd.getMeterID()
+                        + "',31,'" + mfd.getSismsID() + "'," + mfd.getFrameID() + ")");
+                SQLList.add("insert into TSetPrice(FMeterID,FStrategyID,FSismsid,FIsAtTime,FAtTime) Values('" + mfd.getMeterID()
+                        + "'," + mp.getStrategyID() + ",'" + mfd.getSismsID() + "',1,'"
+                        + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(SchDT) + "')");
+                SQLList.add("update TUser set FStageBeginDate='" + new SimpleDateFormat("yyyy/MM/dd").format(SchDT)+" 0:00:00"
+                        + "' where FUserID=" + userID);
+                SQLList.add("insert into TAllCommand(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                        + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'定时更新单价')");
+                //SQLList.Add("insert into TSchedule(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.Sismsid
+                //        + "','" + mfd.MeterSIM + "','" + SMS + "'," + UserID.ToString() + ",'定时更新单价')");
+                sqlHelper.executeWithTransaction(SQLList);
+            }
+            else
+            {
+                //直接更改，生成短信指令
+                String SMS = SMC.getChangePriceFrame(mfd.getMeterID(),mfd.getMeterKey(),mfd.getFrameID(),
+                        mp.getPrice(),mp.getPrice1(),mp.getPrice2(),mp.getPrice3(), mp.getAmount1(),mp.getAmount2(),mp.getAmount3(),
+                        SchDT, (byte)mp.getCycleLength(),null,mfd.getiTimeSpan());
+                List<String> SQLList = new ArrayList<String>();
+                SQLList.add("update TUser set FNextStrategyID=" + saleStrategyID + " where FUserID="
+                        + userID);
+                SQLList.add("insert into TAllSend(FMeterID,FFuncCode,FSismsid,FFrameID) Values('" + mfd.getMeterID()
+                        + "',8,'" + mfd.getSismsID() + "'," + mfd.getFrameID() + ")");
+                SQLList.add("insert into TSetPrice(FMeterID,FStrategyID,FSismsid) Values('" + mfd.getMeterID()
+                        + "'," + mp.getStrategyID() + ",'" + mfd.getSismsID() + "')");
+                SQLList.add("insert into TAllCommand(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                        + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'更新单价')");
+                //SQLList.Add("insert into TSchedule(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.Sismsid
+                //        + "','" + mfd.MeterSIM + "','" + SMS + "'," + UserID.ToString() + ",'更新单价')");
+                sqlHelper.executeWithTransaction(SQLList);
+            }
+            sismsID.append(mfd.getSismsID());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            sismsID.delete(0,sismsID.length()-1).append(ex.getMessage());
+            return false;
+        }
+    }
+
+    // 阀门控制(20140701修改,生成帧并发送短信指令)
+    // <param name="UserID">用户编号</param>
+    // <param name="Mode">1：关闭阀门; 0: 开启阀门; -1：强制关闭阀门</param>
+    // <param name="Sismsid"></param>
+    public boolean valveControl(int userID, int mode, StringBuffer sismsID)
+    {
+        //Sismsid = "";
+        if ((mode > 1) || (mode < -1))
+        {
+            return false;
+        }
+        try
+        {
+            //查询表具相关信息
+            MeterFrameData mfd = MeterFrameData.getMeterFrameData(userID,sqlHelper);
+            //5.生成短信指令
+            ValveCtrStyle vcs = null;
+            byte funCode = 0;
+            String desc = "";
+            switch (mode)
+            {
+                case -1:
+                    vcs = ValveCtrStyle.强制关闭;
+                    funCode = 12;
+                    desc = "强制关闭阀门";
+                    break;
+                case 0:
+                    vcs = ValveCtrStyle.允许开启;
+                    funCode = 1;
+                    desc = "允许开启阀门";
+                    break;
+                case 1:
+                    vcs = ValveCtrStyle.临时关闭;
+                    funCode = 3;
+                    desc = "临时关闭阀门";
+                    break;
+                default:
+                    return false;
+            }
+            String SMS = SMC.getValveControlFrame(mfd.getMeterID(),mfd.getMeterKey(),mfd.getFrameID(),vcs,null,mfd.getiTimeSpan());
+            //6.保存数据库
+            List<String> SQLList = new ArrayList<String>();
+            SQLList.add("insert into TAllSend(FMeterID,FFuncCode,FSismsid,FFrameID) Values('" + mfd.getMeterID()
+                    + "'," + funCode + ",'" + mfd.getSismsID() + "'," + mfd.getFrameID() + ")");
+            SQLList.add("Insert into TOtherCommand(FMeterID,FFuncCode,FSismsid) Values('" + mfd.getMeterID()
+                    + "'," + funCode + ",'" + mfd.getSismsID() + "')");
+            SQLList.add("insert into TAllCommand(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                    + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'" + desc + "')");
+            SQLList.add("insert into TSchedule(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                    + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'" + desc + "')");
+            sqlHelper.executeWithTransaction(SQLList);
+            sismsID.append(mfd.getSismsID());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            sismsID.delete(0,sismsID.length()-1).append(ex.getMessage());
+            return false;
+        }
+    }
+
+    // 定时关闭阀门(20140701修改,生成帧并发送短信指令)
+    // <param name="UserID"></param>
+    // <param name="SchDT"></param>
+    // <param name="Sismsid"></param>
+    public boolean closeValveAtTime(int userID, Date SchDT, StringBuffer sismsID)
+    {
+        //Sismsid = "";
+        try
+        {
+            //1.查询表具相关信息
+            MeterFrameData mfd = MeterFrameData.getMeterFrameData(userID,sqlHelper);
+            ValveCtrStyle vcs = ValveCtrStyle.定时关闭;
+            //2.生成短信指令
+            String SMS = SMC.getValveControlFrame(mfd.getMeterID(),mfd.getMeterKey(),mfd.getFrameID(),vcs,SchDT,mfd.getiTimeSpan());;
+            //3.保存数据库
+            List<String> SQLList = new ArrayList<String>();
+            SQLList.add("insert into TAllSend(FMeterID,FFuncCode,FSismsid,FFrameID) Values('" + mfd.getMeterID()
+                    + "',32,'" + mfd.getSismsID() + "'," + mfd.getFrameID() + ")");
+            SQLList.add("Insert into TOtherCommand(FMeterID,FFuncCode,FSismsid,FScheduleTime) Values('" + mfd.getMeterID()
+                    + "',32,'" + mfd.getSismsID() + "','" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(SchDT) + "')");
+            SQLList.add("insert into TSchedule(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                    + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'定时关闭阀门')");
+            SQLList.add("insert into TAllCommand(FSismsid,FDestAddr,FCmdStr,FUserID,FDes) Values('" + mfd.getSismsID()
+                    + "','" + mfd.getMeterSIM() + "','" + SMS + "'," + userID + ",'定时关闭阀门')");
+            sqlHelper.executeWithTransaction(SQLList);
+            sismsID.append(mfd.getSismsID());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            sismsID.delete(0,sismsID.length()-1).append(ex.getMessage());
+            return false;
         }
     }
 

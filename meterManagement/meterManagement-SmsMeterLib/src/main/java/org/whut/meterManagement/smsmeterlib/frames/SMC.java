@@ -114,14 +114,11 @@ public class SMC {
         return strResult;
     }
 
-    /// <summary>
-    /// 读取表具数据
-    /// </summary>
-    /// <param name="resid">表具编号</param>
-    /// <param name="key">表具秘钥</param>
-    /// <param name="fid">帧ID</param>
-    /// <param name="tmCorrection">时间修正值</param>
-    /// <returns></returns>
+    // 读取表具数据
+    // <param name="resid">表具编号</param>
+    // <param name="key">表具秘钥</param>
+    // <param name="fid">帧ID</param>
+    // <param name="tmCorrection">时间修正值</param>
     public static String getMeterDataFrame(String resid,String key,byte fid,int timeCorrection){
         String strResult = "";
         SendFrame sf = new SendFrame();
@@ -135,6 +132,20 @@ public class SMC {
         return strResult;
     }
 
+    //定期读表数据
+    public static String getMeterDataFrameByDate(String meterID, String meterKey, byte frameID, int timeSpan, int TimeCorrection){
+        String SMS = "";
+        SendFrame sf = new SendFrame();
+        sf.setMeterID(meterID);
+        sf.setFuncCode((byte)0x1E);
+        sf.addParam(timeSpan, 4);
+        sf.setFrameID(frameID);
+        sf.setTimeCorrection(TimeCorrection);
+        StringBuffer sb = new StringBuffer();
+        sf.ProcFrame(sb, meterKey);
+        SMS = sb.toString();
+        return SMS;
+    }
     /// <summary>
     /// 变更价格
     /// </summary>
@@ -153,7 +164,9 @@ public class SMC {
     /// <param name="atDT">定时更改时间点，为NULL表示即时更改</param>
     /// <param name="tmCorrection">时间修正值</param>
     /// <returns></returns>
-    public static String getChangePriceFrame(String resid,String key,byte fid,double p0,double p1,double p2,double p3,int a1,int a2,int a3,Timestamp beginDT,byte clen,Timestamp atDT,int timeCorrection){
+    public static String getChangePriceFrame(String resid,String key,byte fid,double p0,
+                                             double p1,double p2,double p3,int a1,int a2,int a3,
+                                             Date beginDT,byte clen,Date atDT,int timeCorrection){
         String strResult = "";
         SendFrame sf = new SendFrame();
         sf.setMeterID(resid);
@@ -252,7 +265,7 @@ public class SMC {
     /// <param name="atDT">定时时间</param>
     /// <param name="tmCorrection">时间修正值</param>
     /// <returns>帧命令字符串</returns>
-    public static String getValveControlFrame(String resid,String key,byte fid,ValveCtrStyle vcs,Timestamp atDT,int tmCorrection)
+    public static String getValveControlFrame(String resid,String key,byte fid,ValveCtrStyle vcs,Date atDT,int tmCorrection)
     {
         String strResult;
 
@@ -309,6 +322,4 @@ public class SMC {
         sf.ProcFrame(rst, key);
         return rst.toString();
     }
-
-
 }

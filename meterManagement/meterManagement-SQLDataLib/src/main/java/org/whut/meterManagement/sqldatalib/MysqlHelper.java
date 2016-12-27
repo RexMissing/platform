@@ -57,10 +57,11 @@ public class MysqlHelper implements SqlHelper {
             o = rs.getObject(1);
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            DB.closeResultSet(rs);
+            DB.closeStmt(stmt);
+            DB.closeConn(conn);
         }
-        DB.closeResultSet(rs);
-        DB.closeStmt(stmt);
-        DB.closeConn(conn);
         return o;
     }
 
@@ -142,10 +143,11 @@ public class MysqlHelper implements SqlHelper {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            DB.closeResultSet(rs);
+            DB.closeStmt(stmt);
+            DB.closeConn(conn);
         }
-        DB.closeResultSet(rs);
-        DB.closeStmt(stmt);
-        DB.closeConn(conn);
         return false;
     }
 
@@ -175,6 +177,8 @@ public class MysqlHelper implements SqlHelper {
         sql += ")";
         System.out.println(sql);
         int i = DB.updateGetAuto(stmt,sql);
+        DB.closeStmt(stmt);
+        DB.closeConn(conn);
         return i;
     }
 

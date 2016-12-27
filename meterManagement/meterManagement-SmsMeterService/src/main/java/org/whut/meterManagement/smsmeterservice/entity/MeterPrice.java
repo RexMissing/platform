@@ -1,5 +1,11 @@
 package org.whut.meterManagement.smsmeterservice.entity;
 
+import org.whut.meterManagement.database.DB;
+import org.whut.meterManagement.sqldatalib.SqlHelper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Created by zhang_minzhong on 2016/12/21.
  */
@@ -93,5 +99,30 @@ public class MeterPrice {
 
     public void setStrategyName(String strategyName) {
         this.strategyName = strategyName;
+    }
+
+    public static MeterPrice getMeterPrice(int saleStrategyID,SqlHelper sqlh){
+        ResultSet rs=null;
+        MeterPrice mtp = new MeterPrice();
+        try {
+            rs = sqlh.executeQuery("select * from TSaleStrategy where FStrategyID=" + saleStrategyID);
+            rs.next();
+            mtp.setStrategyID(saleStrategyID);
+            mtp.setPrice(rs.getDouble("FPrice"));
+            mtp.setStrategyName(rs.getString("FStrategyName"));
+            mtp.setPrice1(rs.getDouble("FStagePrice1"));
+            mtp.setPrice2(rs.getDouble("FStagePrice2"));
+            mtp.setPrice3(rs.getDouble("FStagePrice3"));
+            mtp.setAmount1(rs.getInt("FBeginAmount1"));
+            mtp.setAmount2(rs.getInt("FBeginAmount2"));
+            mtp.setAmount3(rs.getInt("FBeginAmount3"));
+            mtp.setCycleLength(rs.getInt("FCycleLength"));
+        } catch (SQLException e) {
+            DB.closeConn(rs);
+            e.printStackTrace();
+        } finally {
+            DB.closeConn(rs);
+        }
+        return mtp;
     }
 }

@@ -45,11 +45,12 @@ public class DB {
             try {
                 stmt = rs.getStatement();
                 conn = stmt.getConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
                 DB.closeResultSet(rs);
                 DB.closeStmt(stmt);
                 DB.closeConn(conn);
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -59,10 +60,11 @@ public class DB {
             Connection conn = null;
             try {
                 conn = stmt.getConnection();
-                DB.closeStmt(stmt);
-                DB.closeConn(conn);
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                DB.closeStmt(stmt);
+                DB.closeConn(conn);
             }
         }
     }
@@ -73,6 +75,7 @@ public class DB {
         try {
             stmt = conn.createStatement();
         } catch (SQLException e) {
+            DB.closeConn(conn);
             e.printStackTrace();
         }
         return stmt;
@@ -84,6 +87,7 @@ public class DB {
         try {
             pStmt = conn.prepareStatement(sql);
         } catch (SQLException e) {
+            DB.closeConn(conn);
             e.printStackTrace();
         }
         return pStmt;
@@ -106,6 +110,7 @@ public class DB {
         try {
             rs = stmt.executeQuery(sql);
         } catch (SQLException e) {
+            DB.closeConn(stmt);
             e.printStackTrace();
         }
         return rs;
@@ -128,6 +133,7 @@ public class DB {
         try {
             i = stmt.executeUpdate(updateSql);
         } catch (SQLException e) {
+            DB.closeConn(stmt);
             e.printStackTrace();
         }
         return i;
@@ -155,6 +161,7 @@ public class DB {
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
+            DB.closeConn(stmt);
             e.printStackTrace();
         }
     }
@@ -170,6 +177,8 @@ public class DB {
                 i = rs.getInt(1);
             }
         } catch (SQLException e) {
+            DB.closeResultSet(rs);
+            DB.closeConn(stmt);
             e.printStackTrace();
         }
         closeResultSet(rs);
