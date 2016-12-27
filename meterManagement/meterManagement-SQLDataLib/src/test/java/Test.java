@@ -14,7 +14,20 @@ import java.util.Date;
  */
 public class Test {
     public static void main(String[] args){
+        //database=sm_meter;user id=cdb_outerroot;password=jinklmou#8008;
+        // server=559beeffde656.sh.cdb.myqcloud.com;port=6039;characterset=gbk;allowzerodatetime=True;convertzerodatetime=True
         MysqlHelper mysqlHelper = new MysqlHelper("jdbc:mysql://127.0.0.1:3306/test?user=root&password=root");
+        ResultSet rs = mysqlHelper.executeQuery("select * from user");
+        try {
+            while (rs.next()){
+                System.out.println(rs.getString(1)+":"+rs.getString(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            System.out.print("finally");
+            DB.closeConn(rs);
+        }
         //insert into user(username,password) values('aaa','123')
         //delete from user where username = 'aaa'
         //int i = mysqlHelper.executeNonQuery("delete from user where username = 'aaa'");
@@ -32,5 +45,6 @@ public class Test {
         fieldList.add(field2);
         int j = mysqlHelper.insertGetID("user", fieldList);
         System.out.println(j);*/
+
     }
 }
