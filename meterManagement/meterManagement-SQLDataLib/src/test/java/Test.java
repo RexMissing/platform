@@ -28,6 +28,8 @@ public class Test {
             System.out.print("finally");
             DB.closeConn(rs);
         }
+        mysqlHelper.executeNonQuery(
+                "update user set password = '456'");
         //insert into user(username,password) values('aaa','123')
         //delete from user where username = 'aaa'
         //int i = mysqlHelper.executeNonQuery("delete from user where username = 'aaa'");

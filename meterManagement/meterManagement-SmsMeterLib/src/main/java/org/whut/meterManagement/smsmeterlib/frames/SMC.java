@@ -119,12 +119,23 @@ public class SMC {
     // <param name="key">表具秘钥</param>
     // <param name="fid">帧ID</param>
     // <param name="tmCorrection">时间修正值</param>
-    public static String getMeterDataFrame(String resid,String key,byte fid,int timeCorrection){
+    public static String getMeterDataFrame(String resid,String key,byte fid,Date date, int timeCorrection){
         String strResult = "";
         SendFrame sf = new SendFrame();
         sf.setMeterID(resid);
         sf.setTimeCorrection(timeCorrection);
-        sf.setFuncCode((byte)0x5);
+        //及时读表
+        if(date == null) {
+            sf.setFuncCode((byte)0x5);
+        }
+        //定期读表
+        else {
+            sf.setFuncCode((byte)0x1E);
+            long end = date.getTime();
+            long begin = DateUtil.createDate("2000-1-1 00:00:00").getTime();
+            int iTM = (int)((end - begin)/1000);
+            sf.addParam(iTM, 4);
+        }
         sf.setFrameID(fid);
         StringBuffer sb = new StringBuffer();
         sf.ProcFrame(sb,key);
@@ -132,20 +143,6 @@ public class SMC {
         return strResult;
     }
 
-    //定期读表数据
-    public static String getMeterDataFrameByDate(String meterID, String meterKey, byte frameID, int timeSpan, int TimeCorrection){
-        String SMS = "";
-        SendFrame sf = new SendFrame();
-        sf.setMeterID(meterID);
-        sf.setFuncCode((byte)0x1E);
-        sf.addParam(timeSpan, 4);
-        sf.setFrameID(frameID);
-        sf.setTimeCorrection(TimeCorrection);
-        StringBuffer sb = new StringBuffer();
-        sf.ProcFrame(sb, meterKey);
-        SMS = sb.toString();
-        return SMS;
-    }
     /// <summary>
     /// 变更价格
     /// </summary>
@@ -217,7 +214,7 @@ public class SMC {
 
         SendFrame sf = new SendFrame();
         sf.setMeterID(resid);
-        sf.setFuncCode((byte) 0x33);
+        sf.setFuncCode((byte) 0x21);
         sf.setFrameID(fid);
         sf.setTimeCorrection(tmCorrection);
         sf.addParam(style, 1);
@@ -300,6 +297,19 @@ public class SMC {
         return strResult;
     }
 
+    //要求校对表具时间
+    public static String getCheckMeterTimeFrame(String meterID, String key, byte frameID){
+        String SMS = "";
+        SendFrame sf = new SendFrame();
+        sf.setMeterID(meterID);
+        sf.setFuncCode((byte)41);
+        sf.setFrameID(frameID);
+        StringBuffer sb = new StringBuffer();
+        sf.ProcFrame(sb, key);
+        SMS = sb.toString();
+        return SMS;
+    }
+
     /**
      * 强制对时
      * @param resid   表具编号
@@ -321,5 +331,118 @@ public class SMC {
         StringBuffer rst = new StringBuffer();
         sf.ProcFrame(rst, key);
         return rst.toString();
+    }
+
+    // 设置表具周期量，包括本周期量和上周期量
+    public static String getMeterUseSetFrame(String meterID, String meterKey, byte frameID, int sum, int cur, int pre, byte mode) {
+        String SMS = "";
+        SendFrame sf = new SendFrame();
+        sf.setMeterID(meterID);
+        sf.setFuncCode((byte)0x06);
+        sf.setFrameID(frameID);
+        if ((mode / 4) > 0)
+        {
+            sf.addParam(2, 1);
+            sf.addParam(sum, 4, true);
+        }
+        else
+        {
+            if (sum >= 0)
+            {
+                sf.addParam(0, 1);
+                sf.addParam(sum, 4, true);
+            }
+            else
+            {
+                sf.addParam(1, 1);
+                sf.addParam(sum * -1, 4, true);
+            }
+        }
+        if ((mode % 4) > 1)
+        {
+            sf.addParam(2, 1);
+            sf.addParam(cur, 2, true);
+        }
+        else
+        {
+            if (cur >= 0)
+            {
+                sf.addParam(0, 1);
+                sf.addParam(cur, 2, true);
+            }
+            else
+            {
+                sf.addParam(1, 1);
+                sf.addParam(cur * -1, 2, true);
+            }
+        }
+        if ((mode % 2) == 1)
+        {
+            sf.addParam(2, 1);
+            sf.addParam(pre, 2, true);
+        }
+        else
+        {
+            if (pre >= 0)
+            {
+                sf.addParam(0, 1);
+                sf.addParam(pre, 2, true);
+            }
+            else
+            {
+                sf.addParam(1, 1);
+                sf.addParam(pre * -1, 2, true);
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        sf.ProcFrame(sb, meterKey);
+        SMS = sb.toString();
+        return SMS;
+    }
+
+    //更改表具每月抄表日
+    public static String getMeterSetCBRFrame(String meterID, String meterKey, byte frameID, int timeCorrection, int cbr) {
+        String SMS = "";
+        SendFrame sf = new SendFrame();
+        sf.setMeterID(meterID);
+        sf.setFuncCode((byte)0x25);
+        sf.setFrameID(frameID);
+        sf.setTimeCorrection(timeCorrection);
+        sf.addParam(cbr, 1);
+        StringBuffer sb = new StringBuffer();
+        sf.ProcFrame(sb,meterKey);
+        SMS = sb.toString();
+        return SMS;
+    }
+
+    // 读取历史阶梯周期使用量
+    public static String getReadCycleInfoFrame(String meterID, String meterKey, byte frameID, int timeCorrection) {
+        String SMS = "";
+        SendFrame sf = new SendFrame();
+        sf.setMeterID(meterID);
+        sf.setFuncCode((byte)0x29);
+        sf.setFrameID(frameID);
+        sf.setTimeCorrection(timeCorrection);
+        StringBuffer sb = new StringBuffer();
+        sf.ProcFrame(sb,meterKey);
+        SMS = sb.toString();
+        return SMS;
+    }
+
+    // 服务号码变更
+    // N:第几个短信平台号码
+    public static String getSetServerNoFrame(String meterID, String key, int frameID, int timeCorrection, int N, String serverNo) {
+        String SMS = "";
+        SendFrame SF = new SendFrame();
+        SF.setFuncCode((byte)0x0D);
+        SF.setMeterID(meterID);
+        SF.setFrameID((byte)0);
+        SF.setTimeCorrection(0);
+        SF.addParam(1, 1);
+        SF.addParam(serverNo);
+        StringBuffer sb = new StringBuffer();
+        SF.ProcFrame(sb,key);
+        SMS = sb.toString();
+        return SMS;
     }
 }
