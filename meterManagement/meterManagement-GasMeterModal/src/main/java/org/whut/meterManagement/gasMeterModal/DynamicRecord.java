@@ -1,5 +1,7 @@
 package org.whut.meterManagement.gasMeterModal;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -123,7 +125,7 @@ public class DynamicRecord {
     }
 
     public void stage(int R, double M, Date D) {
-        // TODO 第三个参数 D.toString() 有待修改
-        //StageStep.add(new StageBegin(R, M, D.toString()));
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        stageStep.add(new StageBegin(R, M, dateFormat.format(D)));
     }
 }

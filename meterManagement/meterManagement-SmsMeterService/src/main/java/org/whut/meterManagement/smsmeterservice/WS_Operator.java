@@ -12,11 +12,8 @@ import org.whut.meterManagement.sqldatalib.StdUtils;
 public class WS_Operator {
 
     private String opID;
-    
     private String opMd5;
-    
     private String opName;
-    
     private String opMemo;
 
     public String getOpID() {
@@ -51,59 +48,47 @@ public class WS_Operator {
         this.opMemo = opMemo;
     }
 
-    public boolean addOrModify(String parentID)
-    {
+    public boolean addOrModify(String parentID) {
         Object o = StdUtils.getSqlh().executeScalar("select count(*) from TOperator where FOperatorID='" + opID + "'");
         int cnt = Integer.parseInt(o.toString());
-        if (cnt>0)
-        {
+        if (cnt > 0) {
             int n = StdUtils.getSqlh().executeNonQuery("update TOperator set FPassword='" + opMd5 + "',FMemo='" + opMemo + "' where FOperatorID='" + opID + "'");
-            if (n == 0)
-            {
+            if (n == 0) {
                 return false;
             }
-        }
-        else
-        {
+        } else {
             int n = StdUtils.getSqlh().executeNonQuery("insert into TOperator(FOperatorID,FOperatorName,FPassword,FMemo,FParent) values('" + opID + "','" + opName + "','" + opMd5 + "','" + opMemo + "','" + parentID + "')");
-            if (n == 0)
-            {
+            if (n == 0) {
                 return false;
             }
         }
         return true;
     }
 
-    public static boolean newOpertor(WS_Operator op,String parentID, StringBuffer er)
-    {
-        er = new StringBuffer();
+    public static boolean newOpertor(WS_Operator op, String parentID, StringBuffer sb) {
+
         //判断opid是否存在
-        Object o =StdUtils.getSqlh().executeScalar("select count(*) from TOperator where FOperatorID='" + op.opID + "'");
+        Object o = StdUtils.getSqlh().executeScalar("select count(*) from TOperator where FOperatorID='" + op.opID + "'");
         int cnt = Integer.parseInt(o.toString());
-        if (cnt>0)
-        {
-            er.append("操作员编号重复");
+        if (cnt > 0) {
+            sb.append("操作员编号重复");
             return false;
         }
         String role = "";
-        if (parentID.equals("admin"))
-        {
+        if (parentID.equals("admin")) {
             role = "admin";
         }
         cnt = StdUtils.getSqlh().executeNonQuery("insert into TOperator(FOperatorID,FOperatorName,FPassword,FRole,FMemo,FParent) values('" + op.opID + "','" + op.opName + "','" + op.opMd5 + "','" + role + "','" + op.opMemo + "','" + parentID + "')");
-        if (cnt==0)
-        {
-            er.append("更新数据库失败");
+        if (cnt == 0) {
+            sb.append("更新数据库失败");
             return false;
         }
         return true;
     }
 
-    public boolean changePassword(String psw)
-    {
+    public boolean changePassword(String psw) {
         int n = StdUtils.getSqlh().executeNonQuery("update TOperator set FPassword='" + psw + "' where FOperatorID='" + opID + "'");
-        if (n == 0)
-        {
+        if (n == 0) {
             return false;
         }
 
@@ -111,15 +96,13 @@ public class WS_Operator {
         return true;
     }
 
-    public boolean defaultPassword()
-    {
+    public boolean defaultPassword() {
         int n = StdUtils.getSqlh().executeNonQuery("update TOperator set FPassword='" + MYCONST.defaultkey + "' where FOperatorID='" + opID + "'");
-        if (n==0)
-        {
+        if (n == 0) {
             return false;
         }
         opMd5 = MYCONST.defaultkey;
         return true;
     }
-    
+
 }

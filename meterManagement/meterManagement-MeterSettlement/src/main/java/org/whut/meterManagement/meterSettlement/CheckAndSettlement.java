@@ -8,7 +8,6 @@ import org.whut.meterManagement.sqldatalib.SqlHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,13 +24,13 @@ public class CheckAndSettlement {
         sqlhelper = s;
     }
 
-    public SettleResult execute(String meterID, int meterRead, double remainMoney, int bzql, int szql, Timestamp meterTime, StringBuffer Sismsid, Date receTime) {
+    public SettleResult execute(String meterID, int meterRead, double remainMoney, int bzql, int szql, Date meterTime, StringBuffer sb, Date receTime) {
         SettleResult sr = new SettleResult(false);
         MeterStatModal oldMSM = new MeterStatModal();
 
         ResultSet rs = sqlhelper.executeQuery("select * from TMeterStatus where FMeterID='" + meterID + "'");
         try {
-            if (rs.getRow() == 0) {
+            if (!rs.next()) {
                 sr.setDescription("获取表具上次状态数据失败！");
                 return sr;
             }
@@ -43,16 +42,15 @@ public class CheckAndSettlement {
 //        oldMSM.Money = (double) rs.Rows[0]["FResidual"];
 //        oldMSM.MeterTime = (Timestamp) rs.Rows[0]["FDateTime"];
         try {
-            rs.next();
             oldMSM.setMeterRead(rs.getInt("FMeterRead"));
             oldMSM.setMoney(rs.getDouble("FResidual"));
-            oldMSM.setMeterTime(rs.getTimestamp("FDateTime"));
+            oldMSM.setMeterTime(rs.getDate("FDateTime"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
         rs = sqlhelper.executeQuery("select A.FStageBeginDate,B.* from TUser A left join TSaleStrategy B on A.FSaleStrategyID=B.FStrategyID where A.FMeterID='" + meterID + "'");
         try {
-            if (rs.getRow() == 0) {
+            if (!rs.next()) {
                 sr.setDescription("获取用户单价数据失败！");
                 return sr;
             }
@@ -60,18 +58,7 @@ public class CheckAndSettlement {
             e.printStackTrace();
         }
         PriceModal priceModal = new PriceModal();
-//        priceModal.ID = (int) rs.Rows[0]["FStrategyID"];
-//        priceModal.p0 = (double) rs.Rows[0]["FPrice"];
-//        priceModal.p1 = (double) rs.Rows[0]["FStagePrice1"];
-//        priceModal.p2 = (double) rs.Rows[0]["FStagePrice2"];
-//        priceModal.p3 = (double) rs.Rows[0]["FStagePrice3"];
-//        priceModal.a1 = (int) rs.Rows[0]["FBeginAmount1"];
-//        priceModal.a2 = (int) rs.Rows[0]["FBeginAmount2"];
-//        priceModal.a3 = (int) rs.Rows[0]["FBeginAmount3"];
-//        priceModal.startDate = (Timestamp) rs.Rows[0]["FStageBeginDate"];
-//        priceModal.cycleLen = (int) rs.Rows[0]["FCycleLength"];
         try {
-            rs.next();
             priceModal.setID(rs.getInt("FStrategyID"));
             priceModal.setP0(rs.getDouble("FPrice"));
             priceModal.setP1(rs.getDouble("FStagePrice1"));
@@ -88,8 +75,8 @@ public class CheckAndSettlement {
         priceModal.sort();
         //查询是否发生金额变更
         double umoney = 0.00d;
-        if (!Sismsid.equals("")) {
-            rs = sqlhelper.executeQuery("select * from TSetMoney where FSismsid='" + Sismsid + "'");
+        if (!sb.toString().equals("")) {
+            rs = sqlhelper.executeQuery("select * from TSetMoney where FSismsid='" + sb.toString() + "'");
             try {
                 if (rs.getRow() > 0) {
 //                    int mode = Integer.parseInt(rs.Rows[0]["FMode"].ToString());
@@ -123,7 +110,7 @@ public class CheckAndSettlement {
         for (int i = 0; i < DR.getUseStep().size(); i++) {
             sqls.add("insert TMeterDynamic(FMeterID,FBeginRead,FEndRead,FGasPrice,FSismsid) Values('"
                     + meterID + "'," + DR.getUseStep().get(i).getbRead() + "," + DR.getUseStep().get(i).geteRead()
-                    + "," + DR.getUseStep().get(i).getPrice() + ",'" + Sismsid + "')");
+                    + "," + DR.getUseStep().get(i).getPrice() + ",'" + sb.toString() + "')");
         }
         for (int i = 0; i < DR.getStageStep().size(); i++) {
             sqls.add("insert TMeterStage(FMeterID,FStartRead,FStartDate,FStartMoney) values('"
@@ -146,7 +133,7 @@ public class CheckAndSettlement {
         PriceModal priceModal = new PriceModal();
         ResultSet rs = sqlhelper.executeQuery("select * from TMeterStatus where FMeterID='" + meterID + "'");
         try {
-            if (rs.getRow() == 0) {
+            if (!rs.next()) {
                 sr.setDescription("获取表具上次状态数据失败！");
                 return sr;
             }
@@ -157,7 +144,6 @@ public class CheckAndSettlement {
 //        oldMSM.Money = (double) rs.Rows[0]["FResidual"];
 //        oldMSM.MeterTime = (Timestamp) rs.Rows[0]["FDateTime"];
         try {
-            rs.next();
             oldMSM.setMeterRead(rs.getInt("FMeterRead"));
             oldMSM.setMoney(rs.getDouble("FResidual"));
             oldMSM.setMeterTime(rs.getTimestamp("FDateTime"));
@@ -166,7 +152,7 @@ public class CheckAndSettlement {
         }
         rs = sqlhelper.executeQuery("select A.FStageBeginDate,B.* from TUser A left join TSaleStrategy B on A.FSaleStrategyID=B.FStrategyID where A.FMeterID='" + meterID + "'");
         try {
-            if (rs.getRow() == 0) {
+            if (!rs.next()) {
                 sr.setDescription("获取用户单价数据失败！");
                 return sr;
             }
@@ -185,7 +171,6 @@ public class CheckAndSettlement {
 //        priceModal.StartDate = (Timestamp) rs.Rows[0]["FStageBeginDate"];
 //        priceModal.CycleLen = (int) rs.Rows[0]["FCycleLength"];
         try {
-            rs.next();
             priceModal.setID(rs.getInt("FStrategyID"));
             priceModal.setP0(rs.getDouble("FPrice"));
             priceModal.setP1(rs.getDouble("FStagePrice1"));

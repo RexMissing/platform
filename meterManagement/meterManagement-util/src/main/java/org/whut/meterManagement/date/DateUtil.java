@@ -58,9 +58,8 @@ public class DateUtil {
      * @return 天数
      */
     public static double getTotalDays(long milliseconds) {
-        double totalDays = (double) milliseconds / (24 * 3600 * 1000);
 
-        return totalDays;
+        return (double) milliseconds / (24 * 3600 * 1000);
     }
 
 

@@ -11,9 +11,7 @@ import org.whut.meterManagement.sqldatalib.StdUtils;
 public class WS_IcData {
 
     private String cardID;
-
     private String dataStr;
-
     private String cmdStr;
 
     public String getCardID() {
@@ -41,11 +39,6 @@ public class WS_IcData {
     }
 
     public WS_IcData() {}
-
-//    public WS_IcData(String cardID, String dataStr) {
-//        setCardID(cardID);
-//        setDataStr(dataStr);
-//    }
 
     /// <summary>
     /// 根据命令字符串，生成卡对象
@@ -110,7 +103,6 @@ public class WS_IcData {
     /// <returns></returns>
     public static boolean readFromDataStr(String icData, String cardID, WS_IcData IC, StringBuffer sb)
     {
-        //er = new StringBuffer();
         //IC = null;
 
         if ((!icData.substring(0, 2).equals("05")) && (!icData.substring(0, 2).equals("DD")))

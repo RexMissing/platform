@@ -11,9 +11,7 @@ import java.sql.SQLException;
 public class WResult {
 
     private boolean bResult;
-    
     private StringBuffer erDes;
-    
     private int ID;
 
     public boolean isBResult() {
@@ -43,17 +41,17 @@ public class WResult {
     public WResult() {
     }
 
-    public WResult(int id) {
-        setID(id);
+    public WResult(int ID) {
+        this.ID = ID;
     }
 
     public WResult(boolean bResult) {
-        setBResult(bResult);
+        this.bResult = bResult;
     }
 
     public WResult(int ID, boolean bResult) {
-        setID(ID);
-        setBResult(bResult);
+        this.ID = ID;
+        this.bResult = bResult;
     }
 
     //验证普通操作员

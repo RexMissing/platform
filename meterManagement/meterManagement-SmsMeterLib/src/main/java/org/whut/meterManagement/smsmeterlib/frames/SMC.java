@@ -4,7 +4,6 @@ import org.whut.meterManagement.date.DateUtil;
 import org.whut.meterManagement.smsmeterlib.enums.ValveCtrStyle;
 import org.whut.meterManagement.smsmeterlib.send.SendFrame;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
