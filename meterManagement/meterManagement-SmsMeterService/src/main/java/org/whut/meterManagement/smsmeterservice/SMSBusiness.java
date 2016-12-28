@@ -821,33 +821,34 @@ public class SMSBusiness {
         return true;
     }
 
-    /*//指令后续处理
+    //指令后续处理
     // <summary>
     // 发送短信指令
     // <param name="Sismsid"></param>
     public boolean sendSmsCommand(String Sismsid)
     {
-        String[] strSQL = new String[]{"insert TSchedule(FDestAddr,FCmdStr,FDateTime,FUserID,FDes,FSismsid) ",
-                "select FDestAddr,FCmdStr,FDateTime,FUserID,FDes,FSismsid from TAllCommand where "+ "FSismsid='" + Sismsid + "'"};
-        int n = sqlHelper.executeWithTransaction(strSQL);
+        String strSQL = "insert TSchedule(FDestAddr,FCmdStr,FDateTime,FUserID,FDes,FSismsid) "
+                + "select FDestAddr,FCmdStr,FDateTime,FUserID,FDes,FSismsid from TAllCommand where "
+                + "FSismsid='" + Sismsid + "'";
+        int n = sqlHelper.executeNonQuery(strSQL);
         if (n > 0)
             return true;
         else
             return false;
     }
 
-    /// 获取指令字符串（用于写IC卡）
-    /// <param name="Sismsid"></param>
-    public string GetCommandStr(string Sismsid)
+    // 获取指令字符串（用于写IC卡）
+    // <param name="Sismsid"></param>
+    public String getCommandStr(String Sismsid)
     {
-        object obj = sqlh.ExecuteScalar("select FCmdStr from TAllCommand where FSismsid='" + Sismsid + "'");
+        Object obj = sqlHelper.executeScalar("select FCmdStr from TAllCommand where FSismsid='" + Sismsid + "'");
         if (obj != null)
         {
-            return obj.ToString();
+            return obj.toString();
         }
         else
         {
             return "";
         }
-    }*/
+    }
 }
