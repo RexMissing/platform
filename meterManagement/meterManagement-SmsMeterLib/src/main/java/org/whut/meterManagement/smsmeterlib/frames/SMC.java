@@ -4,7 +4,6 @@ import org.whut.meterManagement.date.DateUtil;
 import org.whut.meterManagement.smsmeterlib.enums.ValveCtrStyle;
 import org.whut.meterManagement.smsmeterlib.send.SendFrame;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -217,7 +216,7 @@ public class SMC {
 
         SendFrame sf = new SendFrame();
         sf.setMeterID(resid);
-        sf.setFuncCode((byte) 0x33);
+        sf.setFuncCode((byte) 0x21);
         sf.setFrameID(fid);
         sf.setTimeCorrection(tmCorrection);
         sf.addParam(style, 1);

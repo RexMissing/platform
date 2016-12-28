@@ -1,6 +1,7 @@
 package org.whut.meterManagement.smsmeterservice;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,13 +19,13 @@ public interface BusinessService {
     List<WResult> remoteReadMeter(WS_Operator op, List<Integer> userIDs);
 
     
-    List<WResult> remoteReadMeterAtTime(WS_Operator op, List<Integer> userIDs, Timestamp dt);
+    List<WResult> remoteReadMeterAtTime(WS_Operator op, List<Integer> userIDs, Date dt);
 
     
     List<WResult> remoteValveControl(WS_Operator op, int mode, List<Integer> userIDs);
 
     
-    List<WResult> remoteCloseValveAtTime(WS_Operator op, List<Integer> userIDs, Timestamp atTime);
+    List<WResult> remoteCloseValveAtTime(WS_Operator op, List<Integer> userIDs, Date atTime);
 
     
     List<WResult> checkMeterTime(WS_Operator op, List<Integer> userIDs);
@@ -42,13 +43,13 @@ public interface BusinessService {
     WResult readIC(WS_Operator op, String cardID, String data, WS_IcData icdata);
 
     
-    WResult remoteChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schDT);
+    WResult remoteChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Date schDT);
 
     
     WResult icChangePrice(WS_Operator op, int userID, int saleID, boolean isAtTime, Timestamp schDT, String cardID, String data, WS_IcData icdata);
 
     
-    WResult batchChangePrice(WS_Operator op, int saleID, int newSaleID, boolean isAtTime, Timestamp schDT);
+    WResult batchChangePrice(WS_Operator op, int saleID, int newSaleID, boolean isAtTime, Date schDT);
 
     
     WResult reSendCmd(WS_Operator op, String sismsid);
@@ -77,16 +78,16 @@ public interface BusinessService {
     WResult newArea(WS_Operator op, String area);
 
     // C#中第二个参数前有ref关键字 
-    WResult updatePrice(WS_Operator op, WS_Price Pr);
+    WResult updatePrice(WS_Operator op, WS_Price pr);
 
     
     WResult importMeter(WS_Operator op, List<WS_Meter> MTS);
 
     
-    WResult changePassword(WS_Operator op, String NewPsw);
+    WResult changePassword(WS_Operator op, String newPsw);
 
     
-    WResult newOperator(WS_Operator op, WS_Operator nop);
+    WResult newOperator(WS_Operator op, WS_Operator newOP);
     
 
     WResult operatorResetPassword(WS_Operator op, WS_Operator target);
