@@ -4,7 +4,7 @@ import org.whut.meterManagement.gasMeterModal.DynamicRecord;
 import org.whut.meterManagement.gasMeterModal.GasMeterRun;
 import org.whut.meterManagement.gasMeterModal.MeterStatModal;
 import org.whut.meterManagement.gasMeterModal.PriceModal;
-import org.whut.meterManagement.sqldatalib.SqlHelper;
+import org.whut.meterManagement.sqldatalib.sqlhelper.SqlHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

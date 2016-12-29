@@ -1,7 +1,7 @@
 package org.whut.meterManagement.smsmeterservice.corebusiness_entity;
 
-import org.whut.meterManagement.database.DB;
-import org.whut.meterManagement.sqldatalib.SqlHelper;
+import org.whut.meterManagement.sqldatalib.dao.MySQLDB;
+import org.whut.meterManagement.sqldatalib.sqlhelper.SqlHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -116,10 +116,10 @@ public class MeterFrameData {
             int iTimeSpan = rs.getInt("FTimeUpdate");
             meterFrameData.setiTimeSpan(iTimeSpan);
         } catch (SQLException e) {
-            DB.closeConn(rs);
+            MySQLDB.closeConn(rs);
             e.printStackTrace();
         } finally {
-            DB.closeConn(rs);
+            MySQLDB.closeConn(rs);
         }
         //5.如果时间差小于半小时（1800秒）则返回0，不进行时间调整
         if (Math.abs(meterFrameData.getiTimeSpan()) <= 1800)

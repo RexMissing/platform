@@ -1,11 +1,11 @@
 package org.whut.meterManagement.smsmeterservice.corebusiness;
 
-import org.whut.meterManagement.database.DB;
+import org.whut.meterManagement.sqldatalib.dao.DB;
 import org.whut.meterManagement.smsmeterlib.enums.ValveCtrStyle;
 import org.whut.meterManagement.smsmeterlib.frames.SMC;
 import org.whut.meterManagement.smsmeterservice.corebusiness_entity.MeterFrameData;
 import org.whut.meterManagement.smsmeterservice.corebusiness_entity.MeterPrice;
-import org.whut.meterManagement.sqldatalib.SqlHelper;
+import org.whut.meterManagement.sqldatalib.sqlhelper.SqlHelper;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -78,6 +78,7 @@ public class SMSBusiness {
         //1.查询开户单价
         //ResultSet rs=null;
         ResultSet rs1 = null;
+        DB db = sqlHelper.getDB();
         try {
             MeterPrice mtp = MeterPrice.getMeterPrice(saleStrategyID, sqlHelper);
             //2.查询FrameID
@@ -123,13 +124,13 @@ public class SMSBusiness {
                     + sismsID + "','" + destAddr + "','" + SMS + "'," + userID + ",'开通用户')");
             sqlHelper.executeWithTransaction(sqlList);
         } catch (SQLException e) {
-            DB.closeResultSet(rs1);
+            db.closeResultSet(rs1);
             e.printStackTrace();
             sismsID.delete(0, sismsID.length()).append(e.getMessage());
             return false;
         } finally {
             //DB.closeConn(rs);
-            DB.closeResultSet(rs1);
+            db.closeResultSet(rs1);
         }
         return true;
     }
@@ -147,6 +148,7 @@ public class SMSBusiness {
        // Sismsid = "";
         ResultSet rs = null;
         ResultSet rs1 = null;
+        DB db = sqlHelper.getDB();
         try
         {
             //1.查询原来表号
@@ -221,13 +223,13 @@ public class SMSBusiness {
         }
         catch (Exception e)
         {
-            DB.closeConn(rs);
-            DB.closeConn(rs1);
+            db.closeConn(rs);
+            db.closeConn(rs1);
             sismsID.append(e.getMessage());
             return false;
         }finally {
-            DB.closeConn(rs);
-            DB.closeConn(rs1);
+            db.closeConn(rs);
+            db.closeConn(rs1);
         }
     }
 
@@ -756,6 +758,7 @@ public class SMSBusiness {
     public boolean reWriteIC(String sis, String cid, StringBuffer CmsStr)
     {
         ResultSet rs = null;
+        DB db = sqlHelper.getDB();
         try {
             rs = sqlHelper.executeQuery("select * from TAllCommand where FSismsid='" + sis + "'");
             if (!rs.next()) {
@@ -775,7 +778,7 @@ public class SMSBusiness {
             e.printStackTrace();
             return false;
         } finally {
-            DB.closeConn(rs);
+            db.closeConn(rs);
         }
         return true;
     }

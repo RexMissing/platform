@@ -1,4 +1,4 @@
-package org.whut.meterManagement.sqldatalib;
+package org.whut.meterManagement.sqldatalib.sqlhelper;
 
 /**
  * Created by chenfu on 2016/12/22.
@@ -10,7 +10,8 @@ public class StdUtils {
     public static SqlHelper getSqlh() {
         if (sqlh==null)
         {
-            return new MysqlHelper("jdbc:");
+            //return new MysqlHelper("jdbc:");
+            return new MysqlHelper();
         }
         else
         {

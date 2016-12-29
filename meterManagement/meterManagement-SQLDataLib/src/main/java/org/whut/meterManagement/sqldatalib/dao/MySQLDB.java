@@ -1,11 +1,11 @@
-package org.whut.meterManagement.database;
+package org.whut.meterManagement.sqldatalib.dao;
 
 import java.sql.*;
 
 /**
  * Created by zhang_minzhong on 2016/12/22.
  */
-public class DB {
+public class MySQLDB implements DB{
 
     static {
         try {
@@ -16,10 +16,10 @@ public class DB {
     }
 
     //获取连接
-    public static Connection getConn(String connStr){
+    public Connection getConn(){
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(connStr);
+            conn = DriverManager.getConnection(connString);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -27,7 +27,7 @@ public class DB {
     }
 
     //关闭连接
-    public static void closeConn(Connection conn){
+    public void closeConn(Connection conn){
         try {
             if(conn!=null){
                 conn.close();
@@ -38,7 +38,7 @@ public class DB {
     }
 
     //根据结果集关闭连接
-    public static void closeConn(ResultSet rs){
+    public void closeConn(ResultSet rs){
         if(rs!=null) {
             Statement stmt = null;
             Connection conn = null;
@@ -48,14 +48,14 @@ public class DB {
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
-                DB.closeResultSet(rs);
-                DB.closeStmt(stmt);
-                DB.closeConn(conn);
+                closeResultSet(rs);
+                closeStmt(stmt);
+                closeConn(conn);
             }
         }
     }
     //根据Statement关闭连接
-    public static void closeConn(Statement stmt){
+    public void closeConn(Statement stmt){
         if(stmt!=null){
             Connection conn = null;
             try {
@@ -63,38 +63,38 @@ public class DB {
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
-                DB.closeStmt(stmt);
-                DB.closeConn(conn);
+                closeStmt(stmt);
+                closeConn(conn);
             }
         }
     }
 
     //获取statement
-    public static Statement getStmt(Connection conn){
+    public Statement getStmt(Connection conn){
         Statement stmt = null;
         try {
             stmt = conn.createStatement();
         } catch (SQLException e) {
-            DB.closeConn(conn);
+            closeConn(conn);
             e.printStackTrace();
         }
         return stmt;
     }
 
     //获取preparedStatement
-    public static PreparedStatement getPStmt(Connection conn,String sql){
+    public PreparedStatement getPStmt(Connection conn,String sql){
         PreparedStatement pStmt = null;
         try {
             pStmt = conn.prepareStatement(sql);
         } catch (SQLException e) {
-            DB.closeConn(conn);
+            closeConn(conn);
             e.printStackTrace();
         }
         return pStmt;
     }
 
     //关闭Statement
-    public static void closeStmt(Statement stmt){
+    public void closeStmt(Statement stmt){
         try {
             if(stmt!=null){
                 stmt.close();
@@ -105,19 +105,19 @@ public class DB {
     }
 
     //获取结果集
-    public static ResultSet query(Statement stmt,String sql){
+    public ResultSet query(Statement stmt,String sql){
         ResultSet rs = null;
         try {
             rs = stmt.executeQuery(sql);
         } catch (SQLException e) {
-            DB.closeConn(stmt);
+            closeConn(stmt);
             e.printStackTrace();
         }
         return rs;
     }
 
     //关闭结果集
-    public static void closeResultSet(ResultSet rs){
+    public void closeResultSet(ResultSet rs){
         try {
             if(rs!=null){
                 rs.close();
@@ -128,12 +128,12 @@ public class DB {
     }
 
     //执行一条更新操作语句，并返回所影响的行数目
-    public static int updateGetCount(Statement stmt,String updateSql) {
+    public int updateGetCount(Statement stmt,String updateSql) {
         int i = 0;
         try {
             i = stmt.executeUpdate(updateSql);
         } catch (SQLException e) {
-            DB.closeConn(stmt);
+            closeConn(stmt);
             e.printStackTrace();
         }
         return i;
@@ -141,7 +141,7 @@ public class DB {
 
 
     //批量执行sql语句
-    public static void executeBatch(Statement stmt,String[] sqls){
+    public void executeBatch(Statement stmt,String[] sqls){
         Connection conn = null;
         try {
             conn = stmt.getConnection();
@@ -161,13 +161,13 @@ public class DB {
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
-            DB.closeConn(stmt);
+            closeConn(stmt);
             e.printStackTrace();
         }
     }
 
     //插入记录，获取生成的自增字段
-    public static int updateGetAuto(Statement stmt,String insertSql){
+    public int updateGetAuto(Statement stmt,String insertSql){
         int i = 0;
         ResultSet rs = null;
         try {
@@ -177,8 +177,8 @@ public class DB {
                 i = rs.getInt(1);
             }
         } catch (SQLException e) {
-            DB.closeResultSet(rs);
-            DB.closeConn(stmt);
+            closeResultSet(rs);
+            closeConn(stmt);
             e.printStackTrace();
         }
         closeResultSet(rs);

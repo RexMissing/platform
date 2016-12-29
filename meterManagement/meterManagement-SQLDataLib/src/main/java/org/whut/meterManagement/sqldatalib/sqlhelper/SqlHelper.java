@@ -1,8 +1,8 @@
-package org.whut.meterManagement.sqldatalib;
+package org.whut.meterManagement.sqldatalib.sqlhelper;
 
+import org.whut.meterManagement.sqldatalib.dao.DB;
 import org.whut.meterManagement.sqldatalib.entity.MyTableField;
 
-import javax.sql.RowSet;
 import java.sql.ResultSet;
 import java.util.List;
 
@@ -10,6 +10,7 @@ import java.util.List;
  * Created by zhang_minzhong on 2016/12/21.
  */
 public interface SqlHelper {
+    public DB getDB();
     public int executeNonQuery(String updateSql);
     public Object executeScalar(String selectSql);
     ResultSet executeQuery(String sql);
