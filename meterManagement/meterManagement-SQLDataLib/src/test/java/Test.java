@@ -1,13 +1,8 @@
 
-import org.whut.meterManagement.database.DB;
-import org.whut.meterManagement.sqldatalib.MysqlHelper;
-import org.whut.meterManagement.sqldatalib.entity.MyTableField;
+import org.whut.meterManagement.sqldatalib.dao.MySQLDB;
+import org.whut.meterManagement.sqldatalib.sqlhelper.MysqlHelper;
 
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Date;
 
 /**
  * Created by zhang_minzhong on 2016/12/21.
@@ -26,7 +21,7 @@ public class Test {
             e.printStackTrace();
         }finally {
             System.out.print("finally");
-            DB.closeConn(rs);
+            mysqlHelper.getDB().closeConn(rs);
         }
         mysqlHelper.executeNonQuery("insert user(username,password) select username,password from user");
         //insert into user(username,password) values('aaa','123')

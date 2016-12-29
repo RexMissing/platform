@@ -1,7 +1,7 @@
 package org.whut.meterManagement.smsmeterservice.corebusiness_entity;
 
-import org.whut.meterManagement.database.DB;
-import org.whut.meterManagement.sqldatalib.SqlHelper;
+import org.whut.meterManagement.sqldatalib.dao.MySQLDB;
+import org.whut.meterManagement.sqldatalib.sqlhelper.SqlHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -118,10 +118,10 @@ public class MeterPrice {
             mtp.setAmount3(rs.getInt("FBeginAmount3"));
             mtp.setCycleLength(rs.getInt("FCycleLength"));
         } catch (SQLException e) {
-            DB.closeConn(rs);
+            MySQLDB.closeConn(rs);
             e.printStackTrace();
         } finally {
-            DB.closeConn(rs);
+            MySQLDB.closeConn(rs);
         }
         return mtp;
     }

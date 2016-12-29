@@ -1,6 +1,6 @@
 package org.whut.meterManagement.smsmeterservice.service_entity;
 
-import org.whut.meterManagement.sqldatalib.StdUtils;
+import org.whut.meterManagement.sqldatalib.sqlhelper.StdUtils;
 
 /**
  * Created by chenfu on 2016/12/22.

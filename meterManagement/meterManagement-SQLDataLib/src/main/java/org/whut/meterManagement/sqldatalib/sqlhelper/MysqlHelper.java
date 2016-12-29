@@ -1,6 +1,7 @@
-package org.whut.meterManagement.sqldatalib;
+package org.whut.meterManagement.sqldatalib.sqlhelper;
 
-import org.whut.meterManagement.database.DB;
+import org.whut.meterManagement.sqldatalib.dao.DB;
+import org.whut.meterManagement.sqldatalib.dao.MySQLDB;
 import org.whut.meterManagement.sqldatalib.entity.MyTableField;
 
 import java.sql.Connection;
@@ -13,31 +14,21 @@ import java.util.List;
  * Created by zhang_minzhong on 2016/12/22.
  */
 public class MysqlHelper implements SqlHelper {
-    private String connString;
-
-    public String getConnString() {
-        return connString;
+    public DB getDB(){
+        DB db = new MySQLDB();
+        return db;
     }
-
-    public void setConnString(String connString) {
-        this.connString = connString;
-    }
-
-    public MysqlHelper(String connString) {
-        this.connString = connString;
-    }
-
-
     // 执行数据库更新语句
     // <param name="updateSql">SQL语句(Insert,Update或Delete)</param>
     // <returns>更新行数</returns>
     @Override
     public int executeNonQuery(String updateSql) {
-        Connection conn = DB.getConn(connString);
-        Statement stmt = DB.getStmt(conn);
-        int i = DB.updateGetCount(stmt, updateSql);
-        DB.closeStmt(stmt);
-        DB.closeConn(conn);
+        DB db = getDB();
+        Connection conn = db.getConn();
+        Statement stmt = db.getStmt(conn);
+        int i = db.updateGetCount(stmt, updateSql);
+        db.closeStmt(stmt);
+        db.closeConn(conn);
         return i;
     }
 
@@ -46,21 +37,23 @@ public class MysqlHelper implements SqlHelper {
     // <returns>返回首行首列对象</returns>
     @Override
     public Object executeScalar(String selectSql) {
+
         if(selectSql.toUpperCase().indexOf("SELECT")<0)
             return null;
         Object o = null;
-        Connection conn = DB.getConn(connString);
-        Statement stmt = DB.getStmt(conn);
-        ResultSet rs = DB.query(stmt, selectSql);
+        DB db = getDB();
+        Connection conn = db.getConn();
+        Statement stmt = db.getStmt(conn);
+        ResultSet rs = db.query(stmt, selectSql);
         try {
             rs.next();
             o = rs.getObject(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            DB.closeResultSet(rs);
-            DB.closeStmt(stmt);
-            DB.closeConn(conn);
+            db.closeResultSet(rs);
+            db.closeStmt(stmt);
+            db.closeConn(conn);
         }
         return o;
     }
@@ -72,9 +65,10 @@ public class MysqlHelper implements SqlHelper {
         if(sql.toUpperCase().indexOf("SELECT")<0){
             return null;
         }
-        Connection conn = DB.getConn(connString);
-        Statement stmt = DB.getStmt(conn);
-        ResultSet rs = DB.query(stmt, sql);
+        DB db = getDB();
+        Connection conn = db.getConn();
+        Statement stmt = db.getStmt(conn);
+        ResultSet rs = db.query(stmt, sql);
         //DB.closeResultSet(rs);
         //DB.closeStmt(stmt);
         //DB.closeConn(conn);
@@ -85,25 +79,27 @@ public class MysqlHelper implements SqlHelper {
     // <param name="sqls">SQL语句数组</param>
     @Override
     public void executeWithTransaction(String[] sqls) {
-        Connection conn = DB.getConn(connString);
-        Statement stmt = DB.getStmt(conn);
-        DB.executeBatch(stmt,sqls);
-        DB.closeStmt(stmt);
-        DB.closeConn(conn);
+        DB db = getDB();
+        Connection conn = db.getConn();
+        Statement stmt = db.getStmt(conn);
+        db.executeBatch(stmt, sqls);
+        db.closeStmt(stmt);
+        db.closeConn(conn);
     }
 
     // 开始事物，执行多条更新语句
     // <param name="sqls">SQL语句列表</param>
     @Override
     public void executeWithTransaction(List<String> sqls) {
-        Connection conn = DB.getConn(connString);
-        Statement stmt = DB.getStmt(conn);
+        DB db = getDB();
+        Connection conn = db.getConn();
+        Statement stmt = db.getStmt(conn);
         String[] sqlArr = new String[sqls.size()];
         for(int i = 0;i<sqlArr.length;i++)
             sqlArr[i] = sqls.get(i);
-        DB.executeBatch(stmt,sqlArr);
-        DB.closeStmt(stmt);
-        DB.closeConn(conn);
+        db.executeBatch(stmt, sqlArr);
+        db.closeStmt(stmt);
+        db.closeConn(conn);
     }
 
     // 插入记录，并返回自动编号
@@ -112,11 +108,12 @@ public class MysqlHelper implements SqlHelper {
     public int insertGetID(String insertSql) {
         if(insertSql.toUpperCase().indexOf("INSERT")<0)
             return 0;
-        Connection conn = DB.getConn(connString);
-        Statement stmt = DB.getStmt(conn);
-        int generatedKey = DB.updateGetAuto(stmt,insertSql);
-        DB.closeStmt(stmt);
-        DB.closeConn(conn);
+        DB db = getDB();
+        Connection conn = db.getConn();
+        Statement stmt = db.getStmt(conn);
+        int generatedKey = db.updateGetAuto(stmt, insertSql);
+        db.closeStmt(stmt);
+        db.closeConn(conn);
         return generatedKey;
     }
 
@@ -125,28 +122,29 @@ public class MysqlHelper implements SqlHelper {
     public boolean executeExsit(String selectSql) {
         if(selectSql.toUpperCase().indexOf("SELECT")<0)
             return false;
-        Connection conn = DB.getConn(connString);
-        Statement stmt = DB.getStmt(conn);
-        ResultSet rs = DB.query(stmt,selectSql);
+        DB db = getDB();
+        Connection conn = db.getConn();
+        Statement stmt = db.getStmt(conn);
+        ResultSet rs = db.query(stmt, selectSql);
         try {
             if(rs.next()){
-                DB.closeResultSet(rs);
-                DB.closeStmt(stmt);
-                DB.closeConn(conn);
+                db.closeResultSet(rs);
+                db.closeStmt(stmt);
+                db.closeConn(conn);
                 return true;
             }
             else{
-                DB.closeResultSet(rs);
-                DB.closeStmt(stmt);
-                DB.closeConn(conn);
+                db.closeResultSet(rs);
+                db.closeStmt(stmt);
+                db.closeConn(conn);
                 return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            DB.closeResultSet(rs);
-            DB.closeStmt(stmt);
-            DB.closeConn(conn);
+            db.closeResultSet(rs);
+            db.closeStmt(stmt);
+            db.closeConn(conn);
         }
         return false;
     }
@@ -156,8 +154,9 @@ public class MysqlHelper implements SqlHelper {
     // <param name="fields">字段列表</param>
     @Override
     public int insertGetID(String TbName, List<MyTableField> fields) {
-        Connection conn = DB.getConn(connString);
-        Statement stmt = DB.getStmt(conn);
+        DB db = getDB();
+        Connection conn = db.getConn();
+        Statement stmt = db.getStmt(conn);
         String sql = "insert into "+TbName+"(";
         for(int i=0;i<fields.size();i++){
             if(i==0)
@@ -176,14 +175,14 @@ public class MysqlHelper implements SqlHelper {
         }
         sql += ")";
         System.out.println(sql);
-        int i = DB.updateGetAuto(stmt,sql);
-        DB.closeStmt(stmt);
-        DB.closeConn(conn);
+        int i = db.updateGetAuto(stmt, sql);
+        db.closeStmt(stmt);
+        db.closeConn(conn);
         return i;
     }
 
     @Override
     public String getConnectionString() {
-        return connString;
+        return DB.connString;
     }
 }
