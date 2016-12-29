@@ -1,4 +1,4 @@
-package org.whut.meterManagement.smsmeterservice;
+package org.whut.meterManagement.smsmeterservice.service_entity;
 
 import org.whut.meterManagement.sqldatalib.StdUtils;
 

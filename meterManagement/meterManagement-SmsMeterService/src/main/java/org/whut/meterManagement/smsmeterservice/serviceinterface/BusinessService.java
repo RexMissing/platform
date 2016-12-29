@@ -1,4 +1,6 @@
-package org.whut.meterManagement.smsmeterservice;
+package org.whut.meterManagement.smsmeterservice.serviceinterface;
+
+import org.whut.meterManagement.smsmeterservice.service_entity.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
