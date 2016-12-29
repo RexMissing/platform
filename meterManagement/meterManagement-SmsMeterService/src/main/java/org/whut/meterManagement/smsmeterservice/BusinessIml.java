@@ -1,9 +1,17 @@
 package org.whut.meterManagement.smsmeterservice;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.whut.meterManagement.meterSettlement.CheckAndSettlement;
 import org.whut.meterManagement.meterSettlement.SettleResult;
 import org.whut.meterManagement.sqldatalib.StdUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -82,46 +90,42 @@ public class BusinessIml implements BusinessService {
             }
             // TODO
             //String SNO = ConfigurationManager.AppSettings["ServerNo"];
-            StringBuffer stringBuffer = new StringBuffer();
+            String sno = "";
+            StringBuffer sb = new StringBuffer();
             SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
             String[] SMSs = new String[3]; //0:开通;1:更改服务号码;2:更改透支方式
 
-            boolean brst = busiSvr.openUser(userID, meterID, strategyID, money, sdt, cbr, stringBuffer);
+            boolean brst = busiSvr.openUser(userID, meterID, strategyID, money, sdt, cbr, sb);
             if (!brst) {
 //                wr.ErDes = Sismsid;
 //                wr.bResult = false;
                 wr.setBResult(false);
-                wr.setErDes(stringBuffer);
+                wr.setErDes(sb);
                 return wr;
             }
             // TODO
-            //SMSs[0] = busiSvr.getCommandStr(stringBuffer);
-
-            // TODO
-            //brst = busiSvr.setServerNo(MeterID, SNO, stringBuffer);
+            //SMSs[0] = busiSvr.getCommandStr(sb);
+            brst = busiSvr.setServerNo(meterID, sno, sb.delete(0, sb.length()));
             if (!brst) {
 //                wr.bResult = false;
 //                wr.ErDes = Sismsid;
                 wr.setBResult(false);
-                wr.setErDes(stringBuffer);
+                wr.setErDes(sb);
                 return wr;
             }
             // TODO
-            //SMSs[1] = busiSvr.getCommandStr(stringBuffer);
-
-
+            //SMSs[1] = busiSvr.getCommandStr(sb);
             //更改透支方式
-            // TODO
-            //brst = busiSvr.overdraftStyle(userID, OverdraftStyle, stringBuffer);
+            brst = busiSvr.overdraftStyle(userID, overdraftStyle, sb.delete(0, sb.length()));
             if (!brst) {
 //                wr.bResult = false;
 //                wr.ErDes = Sismsid;
                 wr.setBResult(false);
-                wr.setErDes(stringBuffer);
+                wr.setErDes(sb);
                 return wr;
             }
             // TODO
-            //SMSs[2] = busiSvr.getCommandStr(stringBuffer);
+            //SMSs[2] = busiSvr.getCommandStr(sb);
 
             //icdata = WS_IcData.buildWrite(cardID, SMSs);
             WS_IcData.buildWrite(cardID, SMSs, icdata);
@@ -142,14 +146,14 @@ public class BusinessIml implements BusinessService {
             return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        StringBuffer sb = new StringBuffer();
         for (int i = 0; i < userIDs.size(); i++) {
-            StringBuffer sb = new StringBuffer();
             WResult wr = new WResult();
 //            wr.ID = UserIDs[i];
 //            wr.BResult = busiSvr.ReadMeter(UserIDs[i], er);
 //            wr.ErDes = er;
             wr.setID(userIDs.get(i));
-            wr.setBResult(busiSvr.readMeter(userIDs.get(i), sb));
+            wr.setBResult(busiSvr.readMeter(userIDs.get(i), sb.delete(0, sb.length())));
             wr.setErDes(sb);
 
             wrList.add(wr);
@@ -171,14 +175,14 @@ public class BusinessIml implements BusinessService {
             return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        StringBuffer sb = new StringBuffer();
         for (int i = 0; i < userIDs.size(); i++) {
-            StringBuffer sb = new StringBuffer();
             WResult wr = new WResult();
 //            wr.ID = UserIDs[i];
 //            wr.BResult = busiSvr.ReadMeter(UserIDs[i], DT, er);
 //            wr.ErDes = er;
             wr.setID(userIDs.get(i));
-            wr.setBResult(busiSvr.readMeter(userIDs.get(i), dt, sb));
+            wr.setBResult(busiSvr.readMeter(userIDs.get(i), dt, sb.delete(0, sb.length())));
             wr.setErDes(sb);
 
             wrList.add(wr);
@@ -200,11 +204,11 @@ public class BusinessIml implements BusinessService {
             return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        StringBuffer sb = new StringBuffer();
         for (int i = 0; i < userIDs.size(); i++) {
-            StringBuffer sb = new StringBuffer();
             WResult wr = new WResult();
             wr.setID(userIDs.get(i));
-            wr.setBResult(busiSvr.valveControl(userIDs.get(i), mode, sb));
+            wr.setBResult(busiSvr.valveControl(userIDs.get(i), mode, sb.delete(0, sb.length())));
             wr.setErDes(sb);
 
             wrList.add(wr);
@@ -226,11 +230,11 @@ public class BusinessIml implements BusinessService {
             return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        StringBuffer sb = new StringBuffer();
         for (int i = 0; i < userIDs.size(); i++) {
-            StringBuffer sb = new StringBuffer();
             WResult wr = new WResult();
             wr.setID(userIDs.get(i));
-            wr.setBResult(busiSvr.closeValveAtTime(userIDs.get(i), atTime, sb));
+            wr.setBResult(busiSvr.closeValveAtTime(userIDs.get(i), atTime, sb.delete(0, sb.length())));
             wr.setErDes(sb);
 
             wrList.add(wr);
@@ -251,12 +255,11 @@ public class BusinessIml implements BusinessService {
             return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        StringBuffer sb = new StringBuffer();
         for (int i = 0; i < userIDs.size(); i++) {
-            StringBuffer sb = new StringBuffer();
             WResult wr = new WResult();
             wr.setID(userIDs.get(i));
-            // TODO
-            //wr.setBResult(busiSvr.checkMeterTime(userIDs.get(i), sb));
+            wr.setBResult(busiSvr.checkMeterTime(userIDs.get(i), sb.delete(0, sb.length())));
             wr.setErDes(sb);
 
             wrList.add(wr);
@@ -282,8 +285,7 @@ public class BusinessIml implements BusinessService {
         } else {
             StringBuffer sb = new StringBuffer();
             SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
-            // TODO
-            //wr.setBResult(busiSvr.MeterUseSet(userID, sum, cur, pre, mode, sb));
+            wr.setBResult(busiSvr.meterUseSet(userID, sum, cur, pre, mode, sb));
             wr.setErDes(sb);
         }
         return wr;
@@ -556,11 +558,10 @@ public class BusinessIml implements BusinessService {
         if (!wr.VerOP(op)) {
             return wr;
         }
-        //WS_IcData ic = WS_IcData.ParseRead(IcRead);
+
         StringBuffer sb = new StringBuffer();
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
-        // TODO
-        //wr.setBResult(busiSvr.reWriteIC(sismsid, cardID, sb));
+        wr.setBResult(busiSvr.reWriteIC(sismsid, cardID, sb));
         wr.setErDes(sb);
         if (wr.isBResult()) {
             WS_IcData.buildWrite(cardID, sb.toString(), icdata);
@@ -665,12 +666,11 @@ public class BusinessIml implements BusinessService {
             return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        StringBuffer sb = new StringBuffer();
         for (int i = 0; i < userIDs.size(); i++) {
-            StringBuffer sb = new StringBuffer();
             WResult wr = new WResult();
             wr.setID(userIDs.get(i));
-            // TODO
-            //wr.setBResult(busiSvr.meterSetCBR(userIDs.get(i), cbr, sb));
+            wr.setBResult(busiSvr.meterSetCBR(userIDs.get(i), cbr, sb.delete(0, sb.length())));
             wr.setErDes(sb);
             wrList.add(wr);
         }
@@ -691,12 +691,11 @@ public class BusinessIml implements BusinessService {
             return wrList;
         }
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
+        StringBuffer sb = new StringBuffer();
         for (int i = 0; i < userIDs.size(); i++) {
-            StringBuffer sb = new StringBuffer();
             WResult wr = new WResult();
             wr.setID(userIDs.get(i));
-            // TODO
-            //wr.setBResult(busiSvr.overdraftStyle(userIDs.get(i), overdraftStyle, sb));
+            wr.setBResult(busiSvr.overdraftStyle(userIDs.get(i), overdraftStyle, sb.delete(0, sb.length())));
             wr.setErDes(sb);
             wrList.add(wr);
         }
@@ -879,8 +878,7 @@ public class BusinessIml implements BusinessService {
     @Override
     public WResult operatorResetPassword(WS_Operator op, WS_Operator target) {
         WResult wr = new WResult();
-        if (!wr.VerOP(op))
-        {
+        if (!wr.VerOP(op)) {
             return wr;
         }
         wr.setBResult(target.defaultPassword());
@@ -894,8 +892,52 @@ public class BusinessIml implements BusinessService {
     /// <param name="efile">excel文件对象</param>
     /// <returns></returns>
     @Override
-    public WResult importMeterFile(WS_Operator op, ExcelFile efile) {
-        return null;
+    public WResult importMeterFile(WS_Operator op, ExcelFile exfile) {
+        WResult wr = new WResult();
+        if (!wr.VerOP(op))
+        {
+            return wr;
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append("文件格式不正确，无法导入。");
+        wr.setErDes(sb);
+        try
+        {
+            ByteArrayInputStream stream = new ByteArrayInputStream(exfile.getF_stream());
+            HSSFWorkbook workbook = new HSSFWorkbook(stream);
+            //获取第一个sheet
+            HSSFSheet sheet = workbook.getSheetAt(0);
+            //获取sheet的首行
+            HSSFRow headRow = sheet.getRow(0);
+            //获取列数
+            int cellCount = headRow.getLastCellNum();
+            if (cellCount<4)
+            {
+                wr.setBResult(false);
+                return wr;
+            }
+            //获取行数
+            int rowCount = sheet.getPhysicalNumberOfRows();
+            List<WS_Meter> wmList = new ArrayList<WS_Meter>();
+            for (int i = 2; i <= rowCount; i++)
+            {
+                WS_Meter wm = new WS_Meter();
+                wm.setMeterID(sheet.getRow(i - 1).getCell(0).getStringCellValue());
+                wm.setSim(sheet.getRow(i - 1).getCell(1).getStringCellValue());
+                wm.setIcCID(sheet.getRow(i - 1).getCell(2).getStringCellValue());
+                wm.setKey(sheet.getRow(i - 1).getCell(3).getStringCellValue());
+                wmList.add(wm);
+            }
+
+            wr.setErDes(sb.delete(0, sb.length()).append(WS_Meter.Import(wmList)));
+            return wr;
+        }
+        catch (Exception ex)
+        {
+            wr.setBResult(false);
+            wr.setErDes(sb.delete(0, sb.length()).append(ex.getMessage()));
+            return wr;
+        }
     }
 
     /// <summary>
@@ -906,6 +948,52 @@ public class BusinessIml implements BusinessService {
     /// <returns></returns>
     @Override
     public WResult downloadMeterTemplate(WS_Operator op, ExcelFile exfile) {
-        return null;
+        WResult wr = new WResult();
+        if (!wr.VerOP(op)) {
+            //exfile = null;
+            return wr;
+        }
+
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("表具资料");
+        HSSFRow headRow = sheet.createRow(0);
+
+        HSSFCellStyle style = workbook.createCellStyle();
+        style.setFillBackgroundColor(HSSFColor.BLUE.index);
+
+        headRow.createCell(0).setCellValue("表具编号");
+        headRow.getCell(0).setCellStyle(style);
+        headRow.createCell(1).setCellValue("通讯号码");
+        headRow.createCell(2).setCellValue("ICCID");
+        headRow.createCell(3).setCellValue("出厂密钥");
+
+        exfile = new ExcelFile();
+        exfile.setF_name("表具资料模板.xls");
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try {
+            workbook.write(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*exfile.f_len = (int) stream.Length;
+        exfile.f_stream = new byte[exfile.f_len];
+        stream.Seek(0, SeekOrigin.Begin);
+        stream.Read(exfile.f_stream, 0, exfile.f_len);*/
+
+        exfile.setF_len(stream.size());
+        /*exfile.setF_stream(new byte[exfile.getF_len()]);
+        stream.write(exfile.getF_stream(), 0, exfile.getF_len());*/
+        exfile.setF_stream(stream.toByteArray());
+
+        try {
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return wr;
     }
+
 }

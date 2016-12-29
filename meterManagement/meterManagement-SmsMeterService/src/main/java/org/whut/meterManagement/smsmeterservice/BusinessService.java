@@ -93,7 +93,7 @@ public interface BusinessService {
     WResult operatorResetPassword(WS_Operator op, WS_Operator target);
 
     
-    WResult importMeterFile(WS_Operator op, ExcelFile efile);
+    WResult importMeterFile(WS_Operator op, ExcelFile exfile);
 
     
     WResult downloadMeterTemplate(WS_Operator op,ExcelFile exfile);

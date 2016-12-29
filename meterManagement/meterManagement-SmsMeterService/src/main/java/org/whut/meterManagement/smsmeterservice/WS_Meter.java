@@ -73,6 +73,10 @@ public class WS_Meter {
         this.key = key;
     }
 
+
+    public WS_Meter() {
+    }
+
     public WS_Meter(String mid, boolean M) {
         ResultSet rs;
         if (M) {
