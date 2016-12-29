@@ -1,4 +1,4 @@
-package org.whut.meterManagement.smsmeterservice.entity;
+package org.whut.meterManagement.smsmeterservice.corebusiness_entity;
 
 import org.whut.meterManagement.database.DB;
 import org.whut.meterManagement.sqldatalib.SqlHelper;
