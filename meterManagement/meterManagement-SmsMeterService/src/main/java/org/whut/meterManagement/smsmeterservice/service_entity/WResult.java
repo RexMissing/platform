@@ -78,6 +78,8 @@ public class WResult {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        StdUtils.getSqlh().getDB().closeConn(rs);
         return bResult;
     }
         

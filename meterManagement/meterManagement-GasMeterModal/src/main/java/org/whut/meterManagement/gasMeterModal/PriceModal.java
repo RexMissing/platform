@@ -1,6 +1,6 @@
 package org.whut.meterManagement.gasMeterModal;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by chenfu on 2016/12/27.
@@ -18,7 +18,7 @@ public class PriceModal {
     private int a2;
     private int a3;
     private int cycleLen;
-    private Timestamp startDate;
+    private Date startDate;
 
     public int getID() {
         return ID;
@@ -92,11 +92,11 @@ public class PriceModal {
         this.cycleLen = cycleLen;
     }
 
-    public Timestamp getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 

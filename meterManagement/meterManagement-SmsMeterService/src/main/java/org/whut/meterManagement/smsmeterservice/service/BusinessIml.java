@@ -49,8 +49,7 @@ public class BusinessIml implements BusinessService {
         SMSBusiness busi = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
         boolean brst = busi.openUser(userID, meterID, strategyID, money, sdt, cbr, sb);
         if (brst) {
-            // TODO  SendSmsCommand
-            //wr.setBResult(busi.sendSmsCommand(sb));
+            wr.setBResult(busi.sendSmsCommand(sb.toString()));
         } else {
             wr.setErDes(sb);
         }
@@ -106,8 +105,7 @@ public class BusinessIml implements BusinessService {
                 wr.setErDes(sb);
                 return wr;
             }
-            // TODO
-            //SMSs[0] = busiSvr.getCommandStr(sb);
+            SMSs[0] = busiSvr.getCommandStr(sb.toString());
             brst = busiSvr.setServerNo(meterID, sno, sb.delete(0, sb.length()));
             if (!brst) {
 //                wr.bResult = false;
@@ -116,8 +114,7 @@ public class BusinessIml implements BusinessService {
                 wr.setErDes(sb);
                 return wr;
             }
-            // TODO
-            //SMSs[1] = busiSvr.getCommandStr(sb);
+            SMSs[1] = busiSvr.getCommandStr(sb.toString());
             //更改透支方式
             brst = busiSvr.overdraftStyle(userID, overdraftStyle, sb.delete(0, sb.length()));
             if (!brst) {
@@ -127,11 +124,11 @@ public class BusinessIml implements BusinessService {
                 wr.setErDes(sb);
                 return wr;
             }
-            // TODO
-            //SMSs[2] = busiSvr.getCommandStr(sb);
+            SMSs[2] = busiSvr.getCommandStr(sb.toString());
 
             //icdata = WS_IcData.buildWrite(cardID, SMSs);
             WS_IcData.buildWrite(cardID, SMSs, icdata);
+            StdUtils.getSqlh().getDB().closeConn(rs);
         }
         return wr;
     }
@@ -312,8 +309,7 @@ public class BusinessIml implements BusinessService {
 
             boolean brst = busiSvr.charge(userID, money, sb);
             if (brst) {
-                // TODO
-                //wr.setBResult(busiSvr.sendSmsCommand(sb));
+                wr.setBResult(busiSvr.sendSmsCommand(sb.toString()));
             } else {
                 wr.setBResult(false);
                 wr.setErDes(sb);
@@ -365,13 +361,14 @@ public class BusinessIml implements BusinessService {
         boolean brst = busiSvr.charge(userID, money, sb.delete(0, sb.length()));
         if (brst) {
             //icdata = WS_IcData.buildWrite(cardID, SMS);
-            // TODO
-//            String SMS = busiSvr.getCommandStr(sb);
-//            WS_IcData.buildWrite(cardID, SMS, icdata);
+            String SMS = busiSvr.getCommandStr(sb.toString());
+            WS_IcData.buildWrite(cardID, SMS, icdata);
             wr.setBResult(true);
         } else {
             wr.setErDes(sb);
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return wr;
     }
 
@@ -419,8 +416,7 @@ public class BusinessIml implements BusinessService {
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
         boolean brst = busiSvr.setPrice(userID, saleID, schDT, isAtTime, sb);
         if (brst) {
-            // TODO
-            //wr.setBResult(busiSvr.sendSmsCommand(sb));
+            wr.setBResult(busiSvr.sendSmsCommand(sb.toString()));
         } else {
             wr.setBResult(false);
             wr.setErDes(sb);
@@ -476,13 +472,13 @@ public class BusinessIml implements BusinessService {
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
         boolean brst = busiSvr.setPrice(userID, saleID, schDT, isAtTime, stringBuffer);
         if (brst) {
-            // TODO
-//            String SMS = busiSvr.getCommandStr(stringBuffer);
-//            WS_IcData.buildWrite(cardID, SMS, icdata);
+            String SMS = busiSvr.getCommandStr(stringBuffer.toString());
+            WS_IcData.buildWrite(cardID, SMS, icdata);
             wr.setBResult(true);
         } else {
             wr.setErDes(stringBuffer);
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
 
         return wr;
     }
@@ -512,8 +508,7 @@ public class BusinessIml implements BusinessService {
             while (rs.next()) {
                 if (busiSvr.setPrice(rs.getInt(1), newSaleID, schDT, isAtTime, sb.delete(0, sb.length()))) {
                     cnt_Succ++;
-                    // TODO
-                    //busiSvr.sendSmsCommand(sb);
+                    busiSvr.sendSmsCommand(sb.toString());
                 } else {
                     cnt_Fail++;
                 }
@@ -524,6 +519,7 @@ public class BusinessIml implements BusinessService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
 
         return wr;
     }
@@ -541,8 +537,7 @@ public class BusinessIml implements BusinessService {
             return wr;
         } else {
             SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
-            // TODO
-            //wr.setBResult(busiSvr.sendSmsCommand(sismsid));
+            wr.setBResult(busiSvr.sendSmsCommand(sismsid));
         }
         return wr;
     }
@@ -644,9 +639,8 @@ public class BusinessIml implements BusinessService {
         SMSBusiness busiSvr = new SMSBusiness(op.getOpID(), StdUtils.getSqlh());
         StringBuffer sb = new StringBuffer();
         if (busiSvr.openMeter(userID, newMeterID, updateMoney, chargeMoney, bzql, szql, sb)) {
-            // TODO
-//            String SMS = busiSvr.getCommandStr(sb);
-//            WS_IcData.buildWrite(cardID, SMS, icdata);
+            String SMS = busiSvr.getCommandStr(sb.toString());
+            WS_IcData.buildWrite(cardID, SMS, icdata);
             wr.setBResult(true);
         } else {
             wr.setBResult(false);

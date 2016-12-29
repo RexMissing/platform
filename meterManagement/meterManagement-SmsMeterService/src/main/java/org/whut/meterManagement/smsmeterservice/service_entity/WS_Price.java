@@ -140,6 +140,7 @@ public class WS_Price {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
     }
 
     public static List<WS_Price> getAll() {
@@ -161,6 +162,8 @@ public class WS_Price {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return wpList;
     }
 

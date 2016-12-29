@@ -96,6 +96,7 @@ public class WS_Meter {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
     }
 
     public static List<WS_Meter> getMeters(Date bDt, Date eDt) {
@@ -111,6 +112,8 @@ public class WS_Meter {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return wmList;
     }
 

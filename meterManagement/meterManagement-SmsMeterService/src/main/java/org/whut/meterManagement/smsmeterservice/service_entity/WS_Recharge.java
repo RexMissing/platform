@@ -1,6 +1,7 @@
 package org.whut.meterManagement.smsmeterservice.service_entity;
 
-import org.whut.meterManagement.sqldatalib.StdUtils;
+
+import org.whut.meterManagement.sqldatalib.sqlhelper.StdUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -121,6 +122,8 @@ public class WS_Recharge {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return wrList;
     }
 
@@ -147,6 +150,8 @@ public class WS_Recharge {
         } catch (SQLException e1) {
             e1.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return wrList;
     }
 }

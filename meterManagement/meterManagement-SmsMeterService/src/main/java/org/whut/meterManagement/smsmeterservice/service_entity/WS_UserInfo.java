@@ -200,7 +200,7 @@ public class WS_UserInfo {
             e.printStackTrace();
             userID = 0;
         }
-
+        StdUtils.getSqlh().getDB().closeConn(rs);
     }
 
     public static List<WS_UserInfo> getUsers(int type, String keyvalue) {
@@ -242,6 +242,8 @@ public class WS_UserInfo {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return wuList;
     }
 
@@ -292,6 +294,8 @@ public class WS_UserInfo {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return wuList;
     }
 
@@ -308,6 +312,8 @@ public class WS_UserInfo {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return wuList;
     }
 

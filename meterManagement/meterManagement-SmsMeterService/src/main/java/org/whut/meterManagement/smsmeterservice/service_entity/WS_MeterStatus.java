@@ -75,6 +75,7 @@ public class WS_MeterStatus {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        StdUtils.getSqlh().getDB().closeConn(rs);
     }
     
 }

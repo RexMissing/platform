@@ -5,6 +5,7 @@ import org.whut.meterManagement.gasMeterModal.GasMeterRun;
 import org.whut.meterManagement.gasMeterModal.MeterStatModal;
 import org.whut.meterManagement.gasMeterModal.PriceModal;
 import org.whut.meterManagement.sqldatalib.sqlhelper.SqlHelper;
+import org.whut.meterManagement.sqldatalib.sqlhelper.StdUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -124,6 +125,8 @@ public class CheckAndSettlement {
         }
         sqlhelper.executeWithTransaction(sqls);
         sr.setResult(true);
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return sr;
     }
 
@@ -215,6 +218,8 @@ public class CheckAndSettlement {
             sr.setDescription("Y," + Sismsid);
         }
         sr.setResult(true);
+        StdUtils.getSqlh().getDB().closeConn(rs);
+
         return sr;
     }
 

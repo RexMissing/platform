@@ -8,13 +8,10 @@ public class StdUtils {
     private static SqlHelper sqlh;
 
     public static SqlHelper getSqlh() {
-        if (sqlh==null)
-        {
+        if (sqlh == null) {
             //return new MysqlHelper("jdbc:");
             return new MysqlHelper();
-        }
-        else
-        {
+        } else {
             return sqlh;
         }
     }
