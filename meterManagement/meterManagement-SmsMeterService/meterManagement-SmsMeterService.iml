@@ -14,5 +14,7 @@
     <orderEntry type="module" module-name="meterManagement-MeterSettlement" />
     <orderEntry type="module" module-name="meterManagement-SQLDataLib" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi:3.8" level="project" />
+    <orderEntry type="module" module-name="meterManagement-util" />
+    <orderEntry type="module" module-name="meterManagement-SmsMeterLib" />
   </component>
 </module>

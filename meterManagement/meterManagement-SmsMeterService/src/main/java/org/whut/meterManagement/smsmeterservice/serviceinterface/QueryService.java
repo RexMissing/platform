@@ -1,4 +1,4 @@
-package org.whut.meterManagement.smsmeterservice;
+package org.whut.meterManagement.smsmeterservice.serviceinterface;
 
 /**
  * Created by chenfu on 2016/12/29.
