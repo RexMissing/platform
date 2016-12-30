@@ -14,10 +14,12 @@ import java.util.List;
  * Created by zhang_minzhong on 2016/12/22.
  */
 public class MysqlHelper implements SqlHelper {
+
     public DB getDB(){
         DB db = new MySQLDB();
         return db;
     }
+
     // 执行数据库更新语句
     // <param name="updateSql">SQL语句(Insert,Update或Delete)</param>
     // <returns>更新行数</returns>
