@@ -1,32 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/base/CommandFrame.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/base/FrameParam.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/enums/FrameDirection.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/enums/FrameResult.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/enums/ParamType.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/enums/ValveCtrStyle.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/frames/Recharge.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/frames/SMC.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/frames/SetPrice.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/frames/SetServer.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/frames/ToUserState.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/receive/CFunction.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/receive/MeterStatus.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/receive/PDAInfo.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/receive/ReceiveFrame.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/main/java/org/whut/meterManagement/smsmeterlib/send/SendFrame.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/test/java/com/test/Test.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/test/java/com/test/TestReceiveFrame.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/src/test/java/com/test/TestSendFrame.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterService/src/main/java/org/whut/meterManagement/smsmeterservice/corebusiness/SMSBusiness.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-aes/src/main/java/org/whut/meterManagement/aes256/AES.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-aes/src/main/java/org/whut/meterManagement/aes256/AES256.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-aes/src/main/java/org/whut/meterManagement/aes256/AES256Context.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-aes/src/test/java/com/test/JDKAES256Util.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-aes/src/test/java/com/test/Main.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-util/src/main/java/org/whut/meterManagement/date/DateUtil.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/meterManagement/meterManagement-util/src/main/java/org/whut/meterManagement/hex/Hex.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-aes/src/main/java/org/whut/meterFrameManagement/aes256/AES.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-aes/src/main/java/org/whut/meterFrameManagement/aes256/AES256.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-aes/src/main/java/org/whut/meterFrameManagement/aes256/AES256Context.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/base/CommandFrame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/base/FrameParam.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/enums/FrameDirection.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/enums/FrameResult.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/enums/ParamType.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/enums/ValveCtrStyle.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/frames/FrameFactory.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/frames/ToUserState.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/receive/CFunction.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/receive/MeterStatus.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/receive/PDAInfo.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/receive/ReceiveFrame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/send/SendFrame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/test/java/Test.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/test/java/TestReceiveFrame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/test/java/TestSendFrame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-util/src/main/java/org/whut/meterFrameManagement/util/date/DateUtil.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-util/src/main/java/org/whut/meterFrameManagement/util/hex/Hex.java" charset="UTF-8" />
   </component>
 </project>
