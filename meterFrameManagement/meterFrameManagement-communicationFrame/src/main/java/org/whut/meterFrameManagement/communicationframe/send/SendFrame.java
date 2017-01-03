@@ -418,7 +418,7 @@ public class SendFrame extends CommandFrame {
         byte[] frame = ByteFrame();
         byte[] key = getKey(sKey);
 
-       System.out.print("加密前帧字节数组：");
+       System.out.print("加密前帧字节数组（不含68h,16h）：");
         for(int i=0;i<frame.length;i++){
             System.out.print(frame[i]+" ");
         }

@@ -41,7 +41,7 @@ public class ServerStartListener implements ServletContextListener {
 //        platformMessageMonitorRegistry.registerMonitor(new ActiveMQTopic(Constants.SENSOR_QUEUE_DESTINATION));
         sensorMessageListener = (SensorMessageListener) springContext.getBean("sensorMessageListener");
         sensorMessageListener.register(new ActiveMQQueue(Constants.SENSOR_QUEUE_DESTINATION));
-        logger.info("nioServer is stated!");
+        logger.info("nioServer is started!");
     }
 
             //tomcat关闭时，关闭线程，释放端口

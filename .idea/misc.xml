@@ -39,6 +39,7 @@
     <file type="web" url="file://$PROJECT_DIR$/dubboDemo/dubboDemoProviderWeb" />
     <file type="web" url="file://$PROJECT_DIR$/inspectManagement/inspectAdminWeb" />
     <file type="web" url="file://$PROJECT_DIR$/inspectManagement/inspectManagementWeb" />
+    <file type="web" url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagementWeb" />
     <file type="web" url="file://$PROJECT_DIR$/realtimeMonitor/realtimeMonitorWeb" />
     <file type="web" url="file://$PROJECT_DIR$/rentManagement/rentManagementWeb" />
     <file type="web" url="file://$PROJECT_DIR$/riskManagement/riskManagementWeb" />

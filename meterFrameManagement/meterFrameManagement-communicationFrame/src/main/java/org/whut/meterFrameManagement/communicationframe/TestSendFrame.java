@@ -1,4 +1,4 @@
-
+package org.whut.meterFrameManagement.communicationframe;
 //import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
 
 import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
@@ -28,13 +28,7 @@ public class TestSendFrame {
     }
 
     public static byte[] getSendFrame() {
-        String keyStr = "";
-        for (int i = 1; i <= 16; i++) {
-            String temp = Integer.toHexString(i);
-            if (temp.length() < 2)
-                temp = "0" + temp;
-            keyStr += temp;
-        }
+        String keyStr = getKeyString();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date d = null;
         try {
@@ -57,6 +51,22 @@ public class TestSendFrame {
         //message = SMC.getChangeOverdraftFrame("1049721501423", keyStr, (byte) 1, 0, 0);
         //message = SMC.getChangeServerNoFrame("1049721501423", keyStr, (byte) 1, "13237109543", 0);
         //message = SMC.getValveControlFrame("1049721501423", keyStr, (byte) 1, ValveCtrStyle.定时关闭, timestamp, 0);
+        System.out.print("加密后帧字节数组（含68h,16h）：");
+        for(int i=0;i<message.length;i++){
+            System.out.print(Byte.toUnsignedInt(message[i])+" ");
+        }
+        System.out.println();
         return message;
+    }
+
+    public static String getKeyString(){
+        String keyStr = "";
+        for (int i = 1; i <= 16; i++) {
+            String temp = Integer.toHexString(i);
+            if (temp.length() < 2)
+                temp = "0" + temp;
+            keyStr += temp;
+        }
+        return keyStr;
     }
 }
