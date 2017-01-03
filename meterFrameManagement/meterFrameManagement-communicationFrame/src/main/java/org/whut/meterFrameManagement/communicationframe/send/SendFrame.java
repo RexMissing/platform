@@ -35,8 +35,6 @@ public class SendFrame extends CommandFrame {
     }
 
     //构造方法
-
-
     public SendFrame() {
         super();
         frmDirection = FrameDirection.REQUEST;

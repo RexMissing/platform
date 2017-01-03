@@ -78,19 +78,21 @@ public class CommandFrame {
                 rst = "允许表具开启阀门";
                 break;
             case 0x02:
-                rst = "更新表具编号";
+                rst = "";
                 break;
             case 0x03:
                 rst = "关闭表具阀门";
                 break;
             case 0x04:
-                rst = "更新表内剩余气量";
+                //rst = "更新表内剩余气量";
+                rst = "";
                 break;
             case 0x05:
                 rst = "读取表具数据";
                 break;
             case 0x06:
-                rst = "更新表内总用气量";
+                //rst = "更新表内总用气量";
+                rst = "设置表具周期量";
                 break;
             case 0x07:
                 rst = "设置收费模式";
@@ -99,7 +101,7 @@ public class CommandFrame {
                 rst = "更新单价";
                 break;
             case 0x09:
-                rst = "读取任意表具数据";
+                rst = "";
                 break;
             case 0x0A:
                 rst = "更新表内可用金额";
@@ -114,37 +116,37 @@ public class CommandFrame {
                 rst = "设置表内服务器通讯号码";
                 break;
             case 0x0E:
-                rst = "";
+                rst = "报告换表数据";
                 break;
             case 0x0F:
-                rst = "";
+                rst = "设置服务器IP以及端口号";
                 break;
             case 0x10:
-                rst = "";
+                rst = "设置心跳包频率";
                 break;
             case 0x11:
-                rst = "";
+                rst = "心跳包";
                 break;
             case 0x12:
-                rst = "";
+                rst = "设置中继器所辖表具";
                 break;
             case 0x13:
-                rst = "";
+                rst = "报告设备安装地理定位信息(PDA)";
                 break;
             case 0x14:
-                rst = "";
+                rst = "报告设备安装地点(PDA)";
                 break;
             case 0x15:
-                rst = "";
+                rst = "报告表具所属中继器(PDA)";
                 break;
             case 0x16:
-                rst = "";
+                rst = "设置密钥";
                 break;
             case 0x17:
-                rst = "";
+                rst = "报告设备SIM卡号(PDA)";
                 break;
             case 0x18:
-                rst = "";
+                rst = "撤销中继器所辖表具";
                 break;
             case 0x19:
                 rst = "表具上报电池电压变化";
@@ -210,10 +212,10 @@ public class CommandFrame {
                 rst = "报告表具恢复正常(PDA)";
                 break;
             case 0x2E:
-                rst = "";
+                rst = "通知（移动设备）现场设备通信状态";
                 break;
             case 0x2F:
-                rst = "";
+                rst = "通知设备服务器密钥";
                 break;
             case 0x30:
                 rst = "表具更换SIM卡上报(PDA)";
