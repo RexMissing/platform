@@ -44,26 +44,12 @@
     <file type="web" url="file://$PROJECT_DIR$/riskManagement/riskManagementWeb" />
     <file type="web" url="file://$PROJECT_DIR$/trackSystem/trackSystemWeb" />
   </component>
-  <component name="IdProvider" IDEtalkID="4820F0922D75E73486613206E0FEE83A" />
+  <component name="IdProvider" IDEtalkID="79DFF34A94240600807168AE78F87730" />
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
-    </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/meterManagement/meterManagement-GasMeterModal/pom.xml" />
-        <option value="$PROJECT_DIR$/meterManagement/meterManagement-MeterSettlement/pom.xml" />
-        <option value="$PROJECT_DIR$/meterManagement/meterManagement-SQLDataLib/pom.xml" />
-        <option value="$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterLib/pom.xml" />
-        <option value="$PROJECT_DIR$/meterManagement/meterManagement-SmsMeterService/pom.xml" />
-        <option value="$PROJECT_DIR$/meterManagement/meterManagement-aes/pom.xml" />
-        <option value="$PROJECT_DIR$/meterManagement/meterManagement-business/pom.xml" />
-        <option value="$PROJECT_DIR$/meterManagement/meterManagement-util/pom.xml" />
-        <option value="$PROJECT_DIR$/meterManagement/meterManagementWeb/pom.xml" />
-        <option value="$PROJECT_DIR$/meterManagement/pom.xml" />
-      </set>
     </option>
   </component>
   <component name="ProjectDictionaryState">

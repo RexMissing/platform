@@ -103,7 +103,7 @@ public class ReceiveFrame extends CommandFrame {
         //帧ID FrameID
         try {
             int begin = 18 + dataStr.length();
-            frameID = (byte) Integer.parseInt(frameStr.substring(begin,  begin + 2), 16);
+            frameID = (byte) Integer.parseInt(frameStr.substring(begin, begin + 2), 16);
         } catch (Exception e) {
             return false;
         }
@@ -112,7 +112,7 @@ public class ReceiveFrame extends CommandFrame {
         try {
             int begin = 20 + dataStr.length();
             CS = Integer.valueOf(frameStr.substring(begin, begin + 2), 16);
-            System.out.println("校验和："+CS);
+            System.out.println("校验和：" + CS);
         } catch (Exception e) {
             return false;
         }
@@ -173,7 +173,7 @@ public class ReceiveFrame extends CommandFrame {
      *
      * @param SMS  短信内容
      * @param sKey 表具密钥
-     * @return  成功解析帧，返回true，失败返回false
+     * @return 成功解析帧，返回true，失败返回false
      */
     public boolean ParseFrom(String SMS, String sKey) {
         //System.out.println(SMS);
@@ -228,12 +228,12 @@ public class ReceiveFrame extends CommandFrame {
     public boolean ParseFrom(byte[] frame, String sKey) {
         //帧头判断
         int len = frame.length;
-        if (frame==null||(len<2)||(frame[0]!=0x68)||(frame[len-1]!=0x16)) {
+        if (frame == null || (len < 2) || (frame[0] != 0x68) || (frame[len - 1] != 0x16)) {
             return false;
         }
-        byte[] keyParts = new byte[frame.length-2];
-        for(int i = 0;i < keyParts.length;i++){
-            keyParts[i] = frame[i+1];
+        byte[] keyParts = new byte[frame.length - 2];
+        for (int i = 0; i < keyParts.length; i++) {
+            keyParts[i] = frame[i + 1];
         }
         //解密
         byte[] key = getKey(sKey);
@@ -252,7 +252,7 @@ public class ReceiveFrame extends CommandFrame {
         //将解密后的明文转换为16进制可见字符串帧
         String str = "h";
         //命令码和数据长度域
-        byte[] funcAndLen = Arrays.copyOfRange(buff,0,2);
+        byte[] funcAndLen = Arrays.copyOfRange(buff, 0, 2);
         str += Hex.BytesToHexString(funcAndLen);
         //表号
         for (int i = 2; i < 15; i++) {
@@ -265,6 +265,5 @@ public class ReceiveFrame extends CommandFrame {
         //调用ParseFrom函数，解析帧
         return ParseFrom(str);
     }
-
 
 }
