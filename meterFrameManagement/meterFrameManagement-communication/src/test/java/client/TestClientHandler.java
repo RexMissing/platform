@@ -1,10 +1,15 @@
 package client;
 
+import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.whut.meterFrameManagement.aes256.AES;
+import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
+import org.whut.meterFrameManagement.communicationframe.test.TestSendFrame;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,30 +28,34 @@ public class TestClientHandler extends IoHandlerAdapter {
 
     @Override
     public void messageReceived(IoSession arg0, Object message) throws Exception {
-        byte[] receiveBytes = message.toString().getBytes(Charset.forName("utf-8"));
+        byte[] receiveBytes = ((IoBuffer)message).array();
         System.out.print("客户端收到：");
         for (int i=0;i<receiveBytes.length;i++){
             System.out.print(Byte.toUnsignedInt(receiveBytes[i])+" ");
         }
         System.out.println();
+        ReceiveFrame rf = new ReceiveFrame();
+        rf.ParseFrom(receiveBytes,TestSendFrame.getKeyString());
+        System.out.println("表号：" + rf.getMeterID());
+        System.out.println("帧id:"+rf.getFrameID());
     }
 
     @Override
     public void messageSent(IoSession arg0, Object message) throws Exception {
         // TODO Auto-generated method stub
-        System.out.println("client发送信息"+message.toString());
+        System.out.println("客户端发送信息："+message.toString());
     }
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         // TODO Auto-generated method stub
-        System.out.println("client与:"+session.getRemoteAddress().toString()+"断开连接");
+        System.out.println("客户端与:"+session.getRemoteAddress().toString()+"断开连接");
     }
 
     @Override
     public void sessionCreated(IoSession session) throws Exception {
         // TODO Auto-generated method stub
-        System.out.println("client与:"+session.getRemoteAddress().toString()+"建立连接");
+        System.out.println("客户端与:"+session.getRemoteAddress().toString()+"建立连接");
     }
 
     @Override

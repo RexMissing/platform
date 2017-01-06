@@ -21,13 +21,15 @@ public class ResponseDecoder extends CumulativeProtocolDecoder {
 
     @Override
     protected boolean doDecode(IoSession ioSession, IoBuffer ioBuffer, ProtocolDecoderOutput protocolDecoderOutput) throws Exception {
+        System.out.println("doDecode方法");
         int count = ioBuffer.remaining();
         byte[] bytes = new byte[count];
         for(int i = 0;ioBuffer.hasRemaining();i++){
             bytes[i] = ioBuffer.get();
         }
-        String s = new String(bytes,Charset.forName("utf-8"));
-        protocolDecoderOutput.write(s);
+        //String s = new String(bytes,Charset.forName("utf-8"));
+        IoBuffer buffer = IoBuffer.wrap(bytes);
+        protocolDecoderOutput.write(buffer);
         return true;
     }
 }

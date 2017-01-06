@@ -180,7 +180,7 @@ public class FrameFactory {
         if (atDT != null) {
             long millisecond = atDT.getTime() - DateUtil.createDate("2000-01-01 00:00:00").getTime();
             millisecond = millisecond / 1000;
-            sf.setFuncCode((byte) 0x1F);
+            sf.setFuncCode((byte) 0x2B);
             sf.addParam((int) millisecond, 4);
         } else {
             sf.setFuncCode((byte) 0x08);
@@ -403,7 +403,7 @@ public class FrameFactory {
      * @param timeCorrection 时间修正值
      * @return
      */
-    public static byte[] getCommunicationUpCycleFrame(String meterID, int qdzq, String key, byte frameID, int timeCorrection) {
+    public static byte[] getCommunicationUpCycleFrame(String meterID,String key, byte frameID,int qdzq,int timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x22);
         sf.setMeterID(meterID);
@@ -491,7 +491,8 @@ public class FrameFactory {
         return sf.ProcFrame(key);
     }
 
-    //更改表具每月抄表日
+    //更改表具每月抄表日(设置周期读表时间)
+    // cbr:1个字节定期读表时间
     public static byte[] getMeterSetCBRFrame(String meterID, String key, byte frameID, int timeCorrection, int cbr) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
@@ -623,4 +624,67 @@ public class FrameFactory {
         return sf.ProcFrame(key);
     }
 
+
+
+    //以下方法做回传测试
+    public static byte[] getAllowOpenValveBackFrame(String meterID, String keyStr, byte frameID) {
+        SendFrame sf = new SendFrame();
+        sf.setMeterID(meterID);
+        sf.setFuncCode((byte)0x81);
+        sf.setFrameID(frameID);
+        sf.addParam(2,1);
+        return  sf.ProcFrame(keyStr);
+
+    }
+
+    public static byte[] getMeterDataBackFrame(String meterID, String keyStr, byte frameID, double syje, int zyql,int xtztzj) {
+        SendFrame sf = new SendFrame();
+        sf.setMeterID(meterID);
+        sf.setFuncCode((byte)0x85);
+        sf.setFrameID(frameID);
+        sf.addParam(syje,4);
+        sf.addParam(zyql,4);
+        sf.addParam(xtztzj,1);
+        sf.addParam(0,1);//保留字节
+        return sf.ProcFrame(keyStr);
+    }
+
+    public static byte[] getUnifiedReturnFrame(String meterID, String keyStr, byte frameID, double remainMoney, int zyql, byte xtztzj,
+                                               int syyql, double currentPrice, int ql1, int ql2, int ql3, int currentMonthCount,
+                                               long xtsj, long dssj, int N, int code1, int fID1, int code2, int fID2, int code3, int fID3,
+                                               int code4, int fID4, int code5, int fID5, int code6, int fID6, int code7, int fID7, int code8, int fID8) {
+        SendFrame sf = new SendFrame();
+        sf.setMeterID(meterID);
+        sf.setFuncCode((byte)0x3E);
+        sf.setFrameID(frameID);
+        sf.addParam(remainMoney,4);
+        sf.addParam(zyql,4);
+        sf.addParam(xtztzj,1);
+        sf.addParam(syyql,2);
+        sf.addParam(currentPrice,2);
+        sf.addParam(ql1,2);
+        sf.addParam(ql2,2);
+        sf.addParam(ql3,2);
+        sf.addParam(currentMonthCount,2);
+        sf.addParam((int)(xtsj/1000),4);
+        sf.addParam((int)(dssj/1000),4);
+        sf.addParam(N,1);
+        sf.addParam(code1, 1);
+        sf.addParam(fID1,1);
+        sf.addParam(code2,1);
+        sf.addParam(fID2,1);
+        sf.addParam(code3,1);
+        sf.addParam(fID3,1);
+        sf.addParam(code4,1);
+        sf.addParam(fID4,1);
+        sf.addParam(code5,1);
+        sf.addParam(fID5,1);
+        sf.addParam(code6,1);
+        sf.addParam(fID6,1);
+        sf.addParam(code7,1);
+        sf.addParam(fID7,1);
+        sf.addParam(code8,1);
+        sf.addParam(fID8,1);
+        return sf.ProcFrame(keyStr);
+    }
 }

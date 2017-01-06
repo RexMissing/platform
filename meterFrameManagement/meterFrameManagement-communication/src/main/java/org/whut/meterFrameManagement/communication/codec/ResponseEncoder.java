@@ -21,14 +21,9 @@ public class ResponseEncoder extends ProtocolEncoderAdapter {
 
     @Override
     public void encode(IoSession ioSession, Object o, ProtocolEncoderOutput protocolEncoderOutput) throws Exception {
-        logger.info("encode方法");
-        String s = o.toString();
-        byte[] bytes = s.getBytes(Charset.forName("utf-8"));
-        /*logger.info("发送的字节：");
-        for(int i=0;i<bytes.length;i++){
-            System.out.print(Byte.toUnsignedInt(bytes[i])+" ");
-        }
-        System.out.println();*/
+        System.out.print("encode方法");
+        IoBuffer buffer = (IoBuffer)o;
+        byte[] bytes = buffer.array();
         IoBuffer ioBuffer = IoBuffer.allocate(bytes.length);
         ioBuffer.put(bytes);
         ioBuffer.flip();

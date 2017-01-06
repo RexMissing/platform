@@ -5,6 +5,7 @@ import org.whut.meterFrameManagement.communicationframe.base.CommandFrame;
 import org.whut.meterFrameManagement.communicationframe.base.FrameParam;
 import org.whut.meterFrameManagement.communicationframe.enums.FrameDirection;
 import org.whut.meterFrameManagement.communicationframe.enums.FrameResult;
+import org.whut.meterFrameManagement.util.hex.Hex;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public class SendFrame extends CommandFrame {
     // <returns>生成结果，等于0表示执行失败，否则返回帧字节list长度</returns>
     protected int MakeBuff(List<Byte> buff)
     {
-        byte[] tmpA = new byte[64];
+        byte[] tmpA = new byte[128];
         tmpA[0] = 0x68;
         tmpA[1] = (byte)(funcCode + (frmDirection.ordinal()) * 128 + (frmResult.ordinal()) * 64);
         //长度L
@@ -147,7 +148,6 @@ public class SendFrame extends CommandFrame {
                    // System.out.println(iva);
                     //String stmp = iva.ToString("X" + (fp.getByteLen() * 2).ToString());
                     String stmp = Integer.toHexString(iva);
-
                     while(stmp.length()<fp.getByteLen()*2){
                         stmp = "0"+stmp;
                     }
@@ -418,12 +418,13 @@ public class SendFrame extends CommandFrame {
 
        System.out.print("加密前帧字节数组（不含68h,16h）：");
         for(int i=0;i<frame.length;i++){
-            System.out.print(frame[i]+" ");
+            System.out.print(Byte.toUnsignedInt(frame[i])+" ");
         }
         System.out.println("字节长度："+frame.length);
+        System.out.println("16进制形式："+ Hex.BytesToHexString(frame));
         System.out.print("密钥：");
         for(int i=0;i<key.length;i++){
-            System.out.print(key[i]+" ");
+            System.out.print(Byte.toUnsignedInt(key[i])+" ");
         }
         System.out.println();
 
@@ -440,6 +441,13 @@ public class SendFrame extends CommandFrame {
         for(int i=1;i<ret_buff.length-1;i++){
             ret_buff[i] = buff[i-1];
         }
+
+        System.out.print("加密后帧字节数组（含68h,16h）：");
+        for(int i=0;i<ret_buff.length;i++){
+            System.out.print(Byte.toUnsignedInt(ret_buff[i])+" ");
+        }
+        System.out.println();
+
         return ret_buff;
     }
 }

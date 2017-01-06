@@ -1,15 +1,20 @@
 package org.whut.meterFrameManagement.communication.server;
 
+import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.session.IdleStatus;
+import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.whut.meterFrameManagement.communication.codec.DataCodecFactory;
-import org.whut.platform.fundamental.config.FundamentalConfigProvider;
+import org.whut.meterFrameManagement.communicationframe.test.TestSendFrame;
 import org.whut.platform.fundamental.logger.PlatformLogger;
 
 import java.net.InetSocketAddress;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Created by zhang_minzhong on 2017/1/3.
@@ -17,14 +22,15 @@ import java.net.InetSocketAddress;
 public class FrameServer implements Runnable {
 
     public static final PlatformLogger logger = PlatformLogger.getLogger(FrameServer.class);
+    private static IoAcceptor acceptor;
 
     @Override
     public void run() {
-        String portString = FundamentalConfigProvider.get("meterFrame.port");
+        String portString = "6868";//FundamentalConfigProvider.get("meterFrame.port");
         logger.info("socket server listen:"+portString);
         int port = Integer.parseInt(portString);
         try{
-            IoAcceptor acceptor = new NioSocketAcceptor(1);
+            acceptor = new NioSocketAcceptor(1);
             // 添加一个日志过滤器
             acceptor.getFilterChain().addLast("logger", new LoggingFilter());
             // 添加一个编码过滤器
@@ -38,8 +44,41 @@ public class FrameServer implements Runnable {
             // 绑定一个监听端口
             acceptor.bind(new InetSocketAddress(port));
         }catch (Exception e){
-            logger.error(e.getMessage());
+            //logger.error(e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 向每个客户端发送消息
+     */
+    public static void sendMessage(byte funCode){
+
+        IoSession session;
+        Map<Long,IoSession> conMap = acceptor.getManagedSessions();
+        Iterator<Long> iterator = conMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            long key = iterator.next();
+            session = conMap.get(key);
+            byte[] bytes = TestSendFrame.getSendFrame(funCode);
+            IoBuffer ioBuffer = IoBuffer.wrap(bytes);
+            session.write(ioBuffer);
+        }
+    }
+    public static void main(String[] args) {
+        FrameServer frameServer = new FrameServer();
+        frameServer.run();
+        while(true){
+            System.out.print("输入命令码：");
+            Scanner scanner = new Scanner(System.in);
+            String s = scanner.nextLine();
+            byte funCode = 0;
+            try {
+                funCode = (byte)Integer.parseInt(s,16);
+            }catch (Exception e){
+                continue;
+            }
+            sendMessage(funCode);
         }
     }
 }

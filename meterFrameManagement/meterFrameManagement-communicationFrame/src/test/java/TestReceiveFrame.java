@@ -1,4 +1,4 @@
-import org.whut.meterFrameManagement.communicationframe.TestSendFrame;
+import org.whut.meterFrameManagement.communicationframe.test.TestSendFrame;
 import org.whut.meterFrameManagement.communicationframe.receive.MeterStatus;
 import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
 
@@ -8,7 +8,7 @@ import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
 public class TestReceiveFrame {
 //123
     public static void main(String[] args) {
-        byte[] sendFrame = TestSendFrame.getSendFrame();
+        byte[] sendFrame = TestSendFrame.getSendFrame((byte)0x23);
         //System.out.println("加密后的字符串："+sendFrame);
         String keyStr = "";
         for(int i=1;i<=16;i++){

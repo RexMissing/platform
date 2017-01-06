@@ -19,7 +19,7 @@ import java.util.List;
 /// </summary>
 public class ReceiveFrame extends CommandFrame {
 
-    protected String dataStr;//帧中的数据域字符串
+    protected String dataStr;//帧中的数据区域字符串，不含表号
     private List<CFunction> aryFunc;//存统一回传帧中的命令码和帧id
     private int funcCount;//统一回传帧包含的帧的数量
     public MeterStatus MeterST;//表具状态数据对象
@@ -63,6 +63,7 @@ public class ReceiveFrame extends CommandFrame {
     成功解析帧，返回true，失败返回false
      */
     public boolean ParseFrom(String frameStr) {
+        System.out.println("16进制字符串帧："+frameStr);
         //帧头判断
         if (!frameStr.substring(0, 1).toUpperCase().equals("H")) {
             return false;
@@ -97,8 +98,8 @@ public class ReceiveFrame extends CommandFrame {
         meterID = frameStr.substring(5, 18);
         //数据区域
         dataStr = frameStr.substring(18, 18 + (dataLen - 14) * 2);
-        System.out.print("数据字符串(不包含表号和帧id)：" + dataStr + "  ");
-        System.out.println("长度：" + (dataLen - 14) * 2);
+        //System.out.print("数据字符串(不包含表号和帧id)：" + dataStr + "  ");
+        //System.out.println("长度：" + (dataLen - 14) * 2);
 
         //帧ID FrameID
         try {
