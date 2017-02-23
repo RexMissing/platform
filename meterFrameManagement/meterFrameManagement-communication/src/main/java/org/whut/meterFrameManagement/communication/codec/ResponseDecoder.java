@@ -21,7 +21,7 @@ public class ResponseDecoder extends CumulativeProtocolDecoder {
 
     @Override
     protected boolean doDecode(IoSession ioSession, IoBuffer ioBuffer, ProtocolDecoderOutput protocolDecoderOutput) throws Exception {
-        System.out.println("doDecode方法");
+        //System.out.println("doDecode方法");
         int count = ioBuffer.remaining();
         byte[] bytes = new byte[count];
         for(int i = 0;ioBuffer.hasRemaining();i++){

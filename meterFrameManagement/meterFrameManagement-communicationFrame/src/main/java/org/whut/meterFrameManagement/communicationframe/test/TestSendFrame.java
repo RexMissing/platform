@@ -3,35 +3,20 @@ package org.whut.meterFrameManagement.communicationframe.test;
 import org.whut.meterFrameManagement.communicationframe.enums.ValveCtrStyle;
 import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
 import org.whut.meterFrameManagement.util.date.DateUtil;
-import org.whut.meterFrameManagement.util.hex.Hex;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by zhang_minzhong on 2016/12/13.
  */
 public class TestSendFrame {
-    public static void main(String[] args) {
-
-        byte[] bytes = getSendFrame((byte)0x23);
-        System.out.print("加密后的字节数组：");
-        for(int i=0;i<bytes.length;i++){
-            System.out.print(Byte.toUnsignedInt(bytes[i])+" ");
-        }
-        System.out.println();
-        System.out.print("16进制可显示字符串形式：");
-        String s = Hex.BytesToHexString(bytes);
-        System.out.println(s);
-
-    }
-
     public static byte[] getSendFrame(byte funCode) {
         String keyStr = getKeyString();
-        Timestamp timestamp = DateUtil.createDate("2016-9-1 00:00:00");
+        Date date = DateUtil.createDate("2016-9-1 00:00:00");
         byte[] sendBytes = new byte[0];
         switch (funCode){
             case 0x01:
-                sendBytes = FrameFactory.getValveControlFrame("1049721501423", keyStr, (byte) 1, ValveCtrStyle.允许开启, null, 0);
+                sendBytes = FrameFactory.getValveControlFrame("1049721501423", keyStr, (byte) 1, ValveCtrStyle.允许开启, null, 123);
                 break;
             case 0x02:
                 break;
@@ -47,15 +32,15 @@ public class TestSendFrame {
                 sendBytes = FrameFactory.getMeterDataFrame("1049721501423", keyStr, (byte) 1, null,180000);
                 break;
             case 0x06:
-                sendBytes = FrameFactory.getMeterUseSetFrame("1049721501423",keyStr,(byte)1,600,200,300,(byte)2);
+                sendBytes = FrameFactory.getMeterUseSetFrame("1049721501423",keyStr,(byte)1,(byte)0,600,(byte)0,200,(byte)0,300,(byte)0,23450,180000);
                 break;
             case 0x07:
-                sendBytes = FrameFactory.getSetChargingModeFrame("1049721501423",keyStr,(byte)1,180000);
+                sendBytes = FrameFactory.getSetChargingModeFrame("1049721501423",keyStr,(byte)1,(byte)0xDF);
                 break;
             case 0x08:
                 //rst = "更新单价";
                 sendBytes = FrameFactory.getChangePriceFrame("1049721501423", keyStr, (byte) 1, (double) 2, 2.5, (double) 3, 3.5,
-                        200, 300, 400, timestamp, (byte) 30, null, 0);
+                        200, 300, 400, date, (byte) 30, null, 0);
                 break;
             case 0x09:
                 //rst = "";
@@ -131,14 +116,14 @@ public class TestSendFrame {
                 break;
             case 0x1E:
                 //rst = "设置表具定时抄表时间";
-                sendBytes = FrameFactory.getMeterDataFrame("1049721501423",keyStr,(byte)1,timestamp,0);
+                sendBytes = FrameFactory.getMeterDataFrame("1049721501423",keyStr,(byte)1,date,0);
                 break;
             case 0x1F:
                 //rst = "设置表具定时更新单价";
                 break;
             case 0x20:
                 //rst = "设置表具定时关闭阀门";
-                sendBytes = FrameFactory.getValveControlFrame("1049721501423", keyStr, (byte) 1, ValveCtrStyle.强制关闭, timestamp, 0);
+                sendBytes = FrameFactory.getValveControlFrame("1049721501423", keyStr, (byte) 1, ValveCtrStyle.定时关闭, date, 0);
                 break;
             case 0x21:
                 //rst = "设置表具透支模式";
@@ -152,7 +137,7 @@ public class TestSendFrame {
                 //rst = "表具开通";
                 sendBytes = FrameFactory.getMeterOpenFrame("1049721501423", keyStr, (byte) 1, (double) 1000,
                         (double) 2, (double) 2.5, (double) 3, (double) 3.5, 200, 300, 400,
-                        keyStr, timestamp, (byte) 30, (byte) 28, 200, 450);;
+                        keyStr, date, (byte) 30, (byte) 28, 200, 450);;
                 break;
             case 0x24:
                 //rst = "表具开通";
@@ -163,11 +148,11 @@ public class TestSendFrame {
                 break;
             case 0x26:
                 //rst = "读取表具定时抄表数据";
-                sendBytes = FrameFactory.getTimerDataFrame("1049721501423", keyStr, (byte) 1,timestamp,0);
+                sendBytes = FrameFactory.getTimerDataFrame("1049721501423", keyStr, (byte) 1,date,0);
                 break;
             case 0x27:
                 //rst = "读取表具定时更新单价数据";
-                sendBytes = FrameFactory.getTimerDataOfChangePriceFrame("1049721501423", keyStr, (byte) 1,timestamp,0);
+                sendBytes = FrameFactory.getTimerDataOfChangePriceFrame("1049721501423", keyStr, (byte) 1,date,0);
                 break;
             case 0x28:
                 //rst = "清除表具故障标识";
@@ -179,11 +164,10 @@ public class TestSendFrame {
                 break;
             case 0x2A:
                 //rst = "表具校准时间";
-                sendBytes = FrameFactory.getChangePriceFrame("1049721501423", keyStr, (byte) 1, (double) 2, 2.5, (double) 3, 3.5,
-                        200, 300, 400, timestamp, (byte) 30, DateUtil.createDate("2016-12-22 00:00:00"), 0);
-                break;
+
             case 0x2B:
-                //rst = "报告表具安装单编号(PDA)";
+                sendBytes = FrameFactory.getChangePriceFrame("1049721501423", keyStr, (byte) 1, (double) 2, 2.5, (double) 3, 3.5,
+                        200, 300, 400, date, (byte) 30, DateUtil.createDate("2016-12-22 00:00:00"), 0);
                 break;
             case 0x2C:
                 //rst = "报告安装SIM卡序号(PDA)";
@@ -209,6 +193,39 @@ public class TestSendFrame {
         return sendBytes;
     }
 
+    public static List<Map<String,byte[]>> getFrames(){
+        List<Map<String,byte[]>> list = new ArrayList<Map<String, byte[]>>();
+        Map<String,byte[]> map1 = new HashMap<String, byte[]>();
+        Map<String,byte[]> map2 = new HashMap<String, byte[]>();
+        Map<String,byte[]> map3 = new HashMap<String, byte[]>();
+        Map<String,byte[]> map4 = new HashMap<String, byte[]>();
+        Map<String,byte[]> map5 = new HashMap<String, byte[]>();
+        Map<String,byte[]> map6 = new HashMap<String, byte[]>();
+        map1.put("1049721501423",TestSendFrame.getSendFrame((byte)0x01));
+        map2.put("1049721501423",TestSendFrame.getSendFrame((byte)0x05));
+        map3.put("1049721501423",TestSendFrame.getSendFrame((byte)0x06));
+        map4.put("1049721501423",TestSendFrame.getSendFrame((byte)0x2B));
+        map5.put("1049721501423",TestSendFrame.getSendFrame((byte)0x0A));
+        map6.put("1049721501423",TestSendFrame.getSendFrame((byte)0x23));
+        list.add(map1);
+        list.add(map2);
+        list.add(map3);
+        list.add(map4);
+        list.add(map5);
+        list.add(map6);
+        return list;
+    }
+    public static String getKeyString(){
+        String keyStr = "";
+        for (int i = 1; i <= 16; i++) {
+            String temp = Integer.toHexString(i);
+            if (temp.length() < 2)
+                temp = "0" + temp;
+            keyStr += temp;
+        }
+        return keyStr;
+    }
+
     //回传测试
     public static byte[] getReceiveFrame(byte funCode){
         String keyStr  =getKeyString();
@@ -231,16 +248,5 @@ public class TestSendFrame {
                 break;
         }
         return receiveBytes;
-    }
-
-    public static String getKeyString(){
-        String keyStr = "";
-        for (int i = 1; i <= 16; i++) {
-            String temp = Integer.toHexString(i);
-            if (temp.length() < 2)
-                temp = "0" + temp;
-            keyStr += temp;
-        }
-        return keyStr;
     }
 }

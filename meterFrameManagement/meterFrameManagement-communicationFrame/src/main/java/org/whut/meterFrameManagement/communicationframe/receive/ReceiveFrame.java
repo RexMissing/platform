@@ -14,9 +14,7 @@ import java.util.List;
  * Created by chenfu on 2016/12/9.
  */
 
-/// <summary>
-/// 帧解析类，解析收到的字符串帧
-/// </summary>
+// 帧解析类，解析收到的字符串帧
 public class ReceiveFrame extends CommandFrame {
 
     protected String dataStr;//帧中的数据区域字符串，不含表号
@@ -65,7 +63,7 @@ public class ReceiveFrame extends CommandFrame {
     public boolean ParseFrom(String frameStr) {
         System.out.println("16进制字符串帧："+frameStr);
         //帧头判断
-        if (!frameStr.substring(0, 1).toUpperCase().equals("H")) {
+        if (!frameStr.substring(0,1).toUpperCase().equals("H")) {
             return false;
         }
         //取得命令码
@@ -74,7 +72,7 @@ public class ReceiveFrame extends CommandFrame {
         } catch (Exception e) {
             return false;
         }
-        //取得数据区域长度
+        //取得数据区域长度(L)
         int dataLen;
         //如果为统一回传帧，dataLen直接等于=0x3C
         if (funcCode == 0x3E) {
@@ -88,7 +86,7 @@ public class ReceiveFrame extends CommandFrame {
         }
         //判断截止码是否为16
         try {
-            if (!frameStr.substring(dataLen * 2 - 6, dataLen * 2 - 4).equals("16")) {
+            if (!frameStr.substring(dataLen * 2 - 6, dataLen * 2 - 4).equals("16")) {//
                 return false;
             }
         } catch (Exception e) {
@@ -169,35 +167,9 @@ public class ReceiveFrame extends CommandFrame {
         PDA.getFromStr(dataStr, funcCode);
     }
 
-    /**
-     * 对字符串帧进行解析，将解析后数据放到对象字段，同时可判断帧是否合法
-     *
-     * @param SMS  短信内容
-     * @param sKey 表具密钥
-     * @return 成功解析帧，返回true，失败返回false
-     */
-    public boolean ParseFrom(String SMS, String sKey) {
-        //System.out.println(SMS);
-        //帧头判断
-        if (!SMS.substring(0, 1).toUpperCase().equals("H")) {
-            return false;
-        }
-        //取得数据长度，L：加密字符串的长度，
-        // 加密字符串："h"+加密后的buff字节数组的length+加密后的buff（1变成个字节变成2个16进制字符）+"16"
-        //加密部分：从从命令码开始到校验码结束
-        String str = SMS.substring(1, 3);
-        int L = Integer.valueOf(str, 16);
-        //System.out.println(L);
-        //判断截止字符串 16
-        if (!SMS.substring(L * 2 + 3, L * 2 + 5).equals("16")) {
-            return false;
-        }
-        //取得加密字符串
-        str = SMS.substring(3, 3 + L * 2);
-        byte[] frame = new byte[L];
-        for (int i = 0; i < L; i++) {
-            frame[i] = (byte) Integer.parseInt(str.substring(i * 2, i * 2 + 2), 16);
-        }
+    //对帧字节数组进行解析，将解析后的数据放到对象字段，同时可以判断帧是否合法
+    public boolean ParseFrom(byte[] frame, String sKey) {
+
         //解密
         byte[] key = getKey(sKey);
         byte[] buff = new byte[0];
@@ -206,63 +178,26 @@ public class ReceiveFrame extends CommandFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-       /* System.out.print("解密后帧字节数组：");
+        /*System.out.print("解密后帧字节数组：");
         for(int i=0;i<buff.length;i++){
-            System.out.print(buff[i]+" ");
-        }
-        System.out.println("字节长度："+buff.length);*/
-
-        //将解密后的明文转换为先前版本的字符串帧
-        str = "h" + Hex.encode2(buff[0]) + Hex.encode2(buff[1]);
-        for (int i = 2; i < 15; i++) {
-            str += (char) buff[i];
-        }
-        for (int i = 15; i < buff.length; i++) {
-            str += Hex.encode2(buff[i]);
-        }
-        str += "16";
-        //调用ParseFrom函数，解析帧
-        return ParseFrom(str);
-    }
-
-    //对帧字节数组进行解析，将解析后的数据放到对象字段，同时可以判断帧是否合法
-    public boolean ParseFrom(byte[] frame, String sKey) {
-        //帧头判断
-        int len = frame.length;
-        if (frame == null || (len < 2) || (frame[0] != 0x68) || (frame[len - 1] != 0x16)) {
-            return false;
-        }
-        byte[] keyParts = new byte[frame.length - 2];
-        for (int i = 0; i < keyParts.length; i++) {
-            keyParts[i] = frame[i + 1];
-        }
-        //解密
-        byte[] key = getKey(sKey);
-        byte[] buff = new byte[0];
-        try {
-            buff = AES.decrypt(keyParts, key);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-       /* System.out.print("解密后帧字节数组：");
-        for(int i=0;i<buff.length;i++){
-            System.out.print(buff[i]+" ");
+            System.out.print(Byte.toUnsignedInt(buff[i])+" ");
         }
         System.out.println("字节长度："+buff.length);*/
 
         //将解密后的明文转换为16进制可见字符串帧
+
+        //起始码
         String str = "h";
-        //命令码和数据长度域
-        byte[] funcAndLen = Arrays.copyOfRange(buff, 0, 2);
+        //命令码，数据长度域
+        byte[] funcAndLen = Arrays.copyOfRange(buff, 1, 3);
         str += Hex.BytesToHexString(funcAndLen);
         //表号
-        for (int i = 2; i < 15; i++) {
+        for (int i = 3; i < 16; i++) {
             str += (char) buff[i];
         }
         //表号之后部分
-        byte[] afterMeterId = Arrays.copyOfRange(buff, 15, buff.length);
+        byte[] afterMeterId = Arrays.copyOfRange(buff, 16, buff.length);
         str += Hex.BytesToHexString(afterMeterId);
-        str += "16";
         //调用ParseFrom函数，解析帧
         return ParseFrom(str);
     }

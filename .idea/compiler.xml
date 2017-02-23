@@ -72,7 +72,6 @@
         <module name="meterFrameManagement-communication" />
         <module name="meterFrameManagement-communicationFrame" />
         <module name="meterFrameManagement-util" />
-        <module name="meterFrameManagementWeb" />
         <module name="realtimeMonitor-business-algorithm" />
         <module name="realtimeMonitor-business-communication" />
         <module name="realtimeMonitor-business-dataTest" />

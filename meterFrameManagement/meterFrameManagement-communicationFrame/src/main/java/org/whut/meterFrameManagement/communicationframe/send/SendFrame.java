@@ -15,9 +15,7 @@ import java.util.List;
  * Created by zhang_minzhong on 2016/12/13.
  */
 
-/// <summary>
-/// 发送命令帧类型，用于组成发送短信命令帧
-/// </summary>
+// 发送命令帧类型，用于组成发送短信命令帧
 public class SendFrame extends CommandFrame {
     private boolean V2 = false;
     private long timeCorrection;//表具时间调整值
@@ -42,11 +40,9 @@ public class SendFrame extends CommandFrame {
         frmResult = FrameResult.SUCCESS;
     }
 
-    /// <summary>
-    /// 加入整数类型区域，用于生成帧
-    /// </summary>
-    /// <param name="value">整数值</param>
-    /// <param name="len">在帧中的长度</param>
+    // 加入整数类型区域，用于生成帧
+    // <param name="value">整数值</param>
+    // <param name="len">在帧中的长度</param>
     public void addParam(int value, int len)
     {
         FrameParam fp = new FrameParam();
@@ -54,16 +50,13 @@ public class SendFrame extends CommandFrame {
         ParamList.add(fp);
     }
 
-    /// <summary>
-    /// 加入整数类型区域，是否按照字节间100进制的方式转换
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="len"></param>
-    /// <param name="sjz">false:不转换，同AddParam(int,int)方法，true转换，将输入整数转换个len长度的字节数组，每个字节间100倍数关系</param>
+    // 加入整数类型区域，是否按照字节间100进制的方式转换
+    // <param name="sjz">false:不转换，同AddParam(int,int)方法，true转换，将输入整数转换len个长度的字节数组，每个字节间100倍数关系</param>
     public void addParam(int value, int len, boolean sjz)
     {
         if (sjz)
         {
+            //System.out.println(value);
             byte[] d = new byte[len];
             Integer v = value;
             String str = v.toString();
@@ -83,11 +76,9 @@ public class SendFrame extends CommandFrame {
         }
     }
 
-    /// <summary>
-    /// 加入浮点数区域，用与生成帧
-    /// </summary>
-    /// <param name="value">浮点数值</param>
-    /// <param name="len">在帧中的长度</param>
+    // 加入浮点数区域，用与生成帧
+    // <param name="value">浮点数值</param>
+    // <param name="len">在帧中的长度</param>
     public void addParam(double value, int len)
     {
         FrameParam fp = new FrameParam();
@@ -95,10 +86,8 @@ public class SendFrame extends CommandFrame {
         ParamList.add(fp);
     }
 
-    /// <summary>
-    /// 加入字符串区域，用于生成帧
-    /// </summary>
-    /// <param name="str">字符串值</param>
+    // 加入字符串区域，用于生成帧
+    // <param name="str">字符串值</param>
     public void addParam(String str)
     {
         FrameParam fp = new FrameParam();
@@ -290,120 +279,14 @@ public class SendFrame extends CommandFrame {
             b[0] = 0;
             return b;
         }
-        byte[] rst = new byte[buff.size() - 2];
-        for (int i = 1; i < buff.size() - 1; i++)
-            rst[i - 1] = buff.get(i);
+        byte[] rst = new byte[buff.size()];
+        for (int i = 0; i < buff.size(); i++)
+            rst[i] = buff.get(i);
         return rst;
     }
 
-    /// 生成帧命令字符串
-    public boolean ProcFrame(StringBuffer SMS)
-    {
-        //SMS.append("");
-        if (funcCode == 0)
-        {
-            return false;
-        }
-        if (meterID == "")
-        {
-            return false;
-        }
-
-        //byte[] buff = null;
-        List<Byte> buff = new ArrayList<Byte>();
-        if (MakeBuff(buff) == 0)
-        {
-            return false;
-        }
-
-        //开始对帧字节数组进行处理，生成字符串帧
-        SMS.append("h");  //帧头
-        String s1 = Integer.toHexString(Byte.toUnsignedInt(buff.get(1)));
-        String s2 = Integer.toHexString(Byte.toUnsignedInt(buff.get(2)));
-        if(s1.length()<2)
-            s1 = "0"+s1;
-        if(s2.length()<2)
-            s2 = "0"+s2;
-        SMS.append(s1+s2); //+= buff[1].ToString("X2") + buff[2].ToString("X2"); //帧命令码F与数据长度L
-        for (int i = 3; i < 16; i++)
-        {
-            int k = Byte.toUnsignedInt(buff.get(i));//SMS += Convert.ToChar(buff[i]);
-            char c = (char)k;
-            SMS.append(c);
-
-        }
-        for (int i = 16; i < buff.size(); i++)
-        {
-            String s = Integer.toHexString(Byte.toUnsignedInt(buff.get(i)));
-            if(s.length()<2){
-                s = "0"+s;
-            }
-            SMS.append(s);
-        }
-        return true;
-    }
-
-    // 生成帧命令字符串，带加密
-    public boolean ProcFrame(StringBuffer SMS,String sKey) {
-        //SMS.append("");
-        if (funcCode == 0)
-        {
-            return false;
-        }
-        if (meterID == "")
-        {
-            return false;
-        }
-
-        byte[] frame = ByteFrame();
-        byte[] key = getKey(sKey);
-
-       /*System.out.print("加密前帧字节数组：");
-        for(int i=0;i<frame.length;i++){
-            System.out.print(frame[i]+" ");
-        }
-        System.out.println("字节长度："+frame.length);
-        System.out.print("密钥：");
-        for(int i=0;i<key.length;i++){
-            System.out.print(key[i]+" ");
-        }
-        System.out.println();*/
-
-        //加密
-        byte[] buff = new byte[0];
-        try {
-            buff = AES.encrypt(frame, key);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        //生成字符串
-        SMS.append("h");
-        String buffLen = Integer.toHexString(buff.length);
-        if(buffLen.length()<2)
-            buffLen = "0" + buffLen;
-        buffLen.toUpperCase();
-        SMS.append(buffLen);
-        //System.out.print("加密字符串：");
-        for (int i = 0; i < buff.length; i++)
-        {
-            //SMS = SMS + buff[i].ToString("x2").ToUpper();
-            String s = Integer.toHexString(Byte.toUnsignedInt(buff[i])).toUpperCase();
-            if(s.length()<2) {
-                s = "0" + s;
-            }
-            //System.out.print(s);
-            SMS.append(s);
-        }
-        //System.out.println();
-        SMS.append("16");
-        //System.out.println("加密后的字符串: " + SMS.toString());
-        return true;
-    }
-
-    /// 生成帧字节数组，带加密
+    // 生成帧字节数组，带加密
     public byte[] ProcFrame(String sKey) {
-        //SMS.append("");
         if (funcCode == 0)
         {
             return new byte[0];
@@ -416,12 +299,12 @@ public class SendFrame extends CommandFrame {
         byte[] frame = ByteFrame();
         byte[] key = getKey(sKey);
 
-       System.out.print("加密前帧字节数组（不含68h,16h）：");
+       System.out.print("加密前帧字节数组：");
         for(int i=0;i<frame.length;i++){
             System.out.print(Byte.toUnsignedInt(frame[i])+" ");
         }
-        System.out.println("字节长度："+frame.length);
-        System.out.println("16进制形式："+ Hex.BytesToHexString(frame));
+        System.out.println("，字节长度："+frame.length);
+        System.out.println("16进制形式："+ Hex.BytesToHexString(frame).toUpperCase());
         System.out.print("密钥：");
         for(int i=0;i<key.length;i++){
             System.out.print(Byte.toUnsignedInt(key[i])+" ");
@@ -435,19 +318,14 @@ public class SendFrame extends CommandFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        byte[] ret_buff = new byte[buff.length+2];
-        ret_buff[0] = 0x68;
-        ret_buff[ret_buff.length-1] = 0x16;
-        for(int i=1;i<ret_buff.length-1;i++){
-            ret_buff[i] = buff[i-1];
-        }
-
-        System.out.print("加密后帧字节数组（含68h,16h）：");
-        for(int i=0;i<ret_buff.length;i++){
-            System.out.print(Byte.toUnsignedInt(ret_buff[i])+" ");
+        System.out.print("加密后帧字节数组：");
+        for(int i=0;i<buff.length;i++){
+            System.out.print(Byte.toUnsignedInt(buff[i])+" ");
         }
         System.out.println();
-
-        return ret_buff;
+        System.out.println();
+        return buff;
     }
+
+
 }

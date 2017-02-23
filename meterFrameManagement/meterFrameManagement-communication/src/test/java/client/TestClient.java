@@ -29,7 +29,7 @@ public class TestClient {
         connector.getFilterChain().addLast( "logger", new LoggingFilter() );
         connector.getFilterChain().addLast( "codec", new ProtocolCodecFilter( new DataCodecFactory()));
         connector.setHandler(new TestClientHandler());
-        ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.27.13.113",6868));
+        ConnectFuture connectFuture = connector.connect(new InetSocketAddress("127.0.0.1",3535));
         //等待建立连接
         connectFuture.awaitUninterruptibly();
         IoSession session = connectFuture.getSession();
@@ -49,7 +49,8 @@ public class TestClient {
                 continue;
             }
             byte [] bytes = TestSendFrame.getReceiveFrame(funCode);
-            session.write(IoBuffer.wrap(bytes));
+            if(bytes.length>0)
+                session.write(IoBuffer.wrap(bytes));
         }
         connector.dispose();
         System.out.println("断开");

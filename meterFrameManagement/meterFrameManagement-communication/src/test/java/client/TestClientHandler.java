@@ -33,11 +33,6 @@ public class TestClientHandler extends IoHandlerAdapter {
         for (int i=0;i<receiveBytes.length;i++){
             System.out.print(Byte.toUnsignedInt(receiveBytes[i])+" ");
         }
-        System.out.println();
-        ReceiveFrame rf = new ReceiveFrame();
-        rf.ParseFrom(receiveBytes,TestSendFrame.getKeyString());
-        System.out.println("表号：" + rf.getMeterID());
-        System.out.println("帧id:"+rf.getFrameID());
     }
 
     @Override

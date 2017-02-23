@@ -52,6 +52,12 @@
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-business/pom.xml" />
+        <option value="$PROJECT_DIR$/meterFrameManagement/meterFrameManagementWeb/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectDictionaryState">
     <dictionary name="chenfu" />

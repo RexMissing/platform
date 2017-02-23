@@ -18,7 +18,6 @@
         <module>trackSystem</module>
         <module>deviceManagement</module>
         <module>dubboDemo</module>
-        <module>meterManagement</module>
         <module>meterFrameManagement</module>
         <!--<module>auth</module>-->
     </modules>

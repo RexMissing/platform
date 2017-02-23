@@ -74,4 +74,18 @@ public class Hex {
         return s;
     }
 
+    //将16进制字符串转成字节数组，2个字符一个字节,len:数组长度
+    public static byte[] hexStringToBytes(String s,int len){
+        if(s==null)
+            return new byte[0];
+        while(s.length()/2<len){
+            s = "0" + s;
+        }
+        System.out.println(s);
+        byte[] bytes = new byte[s.length()/2];
+        for(int i=0;i<bytes.length;i++){
+            bytes[i] = (byte)Integer.parseInt(s.substring(i*2,i*2+2),16);
+        }
+        return bytes;
+    }
 }

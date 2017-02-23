@@ -31,7 +31,7 @@ public class FrameFactory {
     /// <param name="atDT">定时时间</param>
     /// <param name="tmCorrection">时间修正值</param>
     /// <returns>帧命令字符串</returns>
-    public static byte[] getValveControlFrame(String meterID, String key, byte frameID, ValveCtrStyle vcs, Date atDT, int tmCorrection) {
+    public static byte[] getValveControlFrame(String meterID, String key, byte frameID, ValveCtrStyle vcs, Date atDT, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setFrameID(frameID);
@@ -54,7 +54,7 @@ public class FrameFactory {
             default:
                 break;
         }
-        sf.setTimeCorrection(tmCorrection);
+        sf.setTimeCorrection(timeCorrection);
 
         return sf.ProcFrame(key);
     }
@@ -64,7 +64,7 @@ public class FrameFactory {
     // <param name="key">表具秘钥</param>
     // <param name="frameID">帧ID</param>
     // <param name="tmCorrection">时间修正值</param>
-    public static byte[] getMeterDataFrame(String meterID, String key, byte frameID, Date date, int timeCorrection) {
+    public static byte[] getMeterDataFrame(String meterID, String key, byte frameID, Date date, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setTimeCorrection(timeCorrection);
@@ -85,13 +85,23 @@ public class FrameFactory {
         return sf.ProcFrame(key);
     }
 
-    // 设置表具周期量，包括本周期量和上周期量
-    public static byte[] getMeterUseSetFrame(String meterID, String key, byte frameID, int sum, int cur, int pre, byte mode) {
+    // 设置表具内的运行气量，包括本周期量和上周期量
+    public static byte[] getMeterUseSetFrame(String meterID, String key, byte frameID,byte czfs1, int zyql,byte czfs2, int bzq,
+                                             byte czfs3,int szq,byte fs,int lszqyl,long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setFuncCode((byte) 0x06);
         sf.setFrameID(frameID);
-        if ((mode / 4) > 0) {
+        sf.addParam(czfs1,1);
+        sf.addParam(zyql,4,true);
+        sf.addParam(czfs2,1);
+        sf.addParam(bzq,2,true);
+        sf.addParam(czfs3,1);
+        sf.addParam(szq,2,true);
+        sf.addParam(fs,1);
+        sf.addParam(lszqyl,24,true);
+        sf.setTimeCorrection(timeCorrection);
+        /*if ((mode / 4) > 0) {
             sf.addParam(2, 1);
             sf.addParam(sum, 4, true);
         } else {
@@ -126,7 +136,7 @@ public class FrameFactory {
                 sf.addParam(1, 1);
                 sf.addParam(pre * -1, 2, true);
             }
-        }
+        }*/
         //byte[] frame = sf.ProcFrame(meterKey);
         return sf.ProcFrame(key);
     }
@@ -136,19 +146,16 @@ public class FrameFactory {
      * @param meterID
      * @param key
      * @param frameID
-     * @param timeCorrection
+     * @param sfms
      * @return
      */
-    public static byte[] getSetChargingModeFrame(String meterID, String key, byte frameID, int timeCorrection) {
+    public static byte[] getSetChargingModeFrame(String meterID, String key,byte frameID,byte sfms) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x07);
         sf.setMeterID(meterID);
         sf.setFrameID(frameID);
-        sf.setTimeCorrection(timeCorrection);
-        // SFMS：收费模式，DFH（预收费）、20H（非预收费）
-        int sfms = Byte.toUnsignedInt((byte) 0xDF);
-        sf.addParam(sfms, 1);
-
+        // sfms：收费模式，DFH（预收费）、20H（非预收费）
+        sf.addParam(Byte.toUnsignedInt(sfms),1);
         return sf.ProcFrame(key);
     }
 
@@ -172,7 +179,7 @@ public class FrameFactory {
     /// <returns></returns>
     public static byte[] getChangePriceFrame(String meterID, String key, byte frameID, double p0,
                                              double p1, double p2, double p3, int a1, int a2, int a3,
-                                             Date beginDT, byte clen, Date atDT, int timeCorrection) {
+                                             Date beginDT, byte clen, Date atDT, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setFrameID(frameID);
@@ -213,7 +220,7 @@ public class FrameFactory {
     /// <param name="money">充值金额，可为负数</param>
     /// <param name="tmCorrection">时间修正值</param>
     /// <returns></returns>
-    public static byte[] getChangeMoneyFrame(String meterID, String key, byte frameID, double money, int timeCorrection) {
+    public static byte[] getChangeMoneyFrame(String meterID, String key, byte frameID, double money, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setFrameID(frameID);
@@ -236,7 +243,7 @@ public class FrameFactory {
 
     // 服务号码变更
     // N:第几个短信平台号码
-    public static byte[] getSetServerNoFrame(String meterID, String key, byte frameID, int timeCorrection, int N, String serverNo) {
+    public static byte[] getSetServerNoFrame(String meterID, String key, byte frameID, long timeCorrection, int N, String serverNo) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x0D);
         sf.setMeterID(meterID);
@@ -259,7 +266,7 @@ public class FrameFactory {
      * @param timeCorrection 时间修正值
      * @return
      */
-    public static byte[] getSetIPAndPortFrame(String meterID, String key, byte frameID, String serverIP, String serverPort, int timeCorrection) {
+    public static byte[] getSetIPAndPortFrame(String meterID, String key, byte frameID, String serverIP, String serverPort, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x0F);
         sf.setMeterID(meterID);
@@ -281,7 +288,7 @@ public class FrameFactory {
      * @param timeCorrection 时间修正值
      * @return
      */
-    public static byte[] getSetBeatHeartRateFrame(String meterID, String key, byte frameID, int rate, int timeCorrection) {
+    public static byte[] getSetBeatHeartRateFrame(String meterID, String key, byte frameID, int rate, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x10);
         sf.setMeterID(meterID);
@@ -301,7 +308,7 @@ public class FrameFactory {
      * @param timeCorrection
      * @return
      */
-    public static byte[] getSetBeatHeartFrame(String meterID, String key, byte frameID, int timeCorrection) {
+    public static byte[] getSetBeatHeartFrame(String meterID, String key, byte frameID, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x11);
         sf.setMeterID(meterID);
@@ -321,7 +328,7 @@ public class FrameFactory {
      * @param timeCorrection 时间修正值
      * @return
      */
-    public static byte[] getSetMeter2ConcentratorFrame(String concentratorID, String meterID, String key, byte frameID, int timeCorrection) {
+    public static byte[] getSetMeter2ConcentratorFrame(String concentratorID, String meterID, String key, byte frameID, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x12);
         sf.setMeterID(concentratorID);
@@ -341,7 +348,7 @@ public class FrameFactory {
      * @param timeCorrection
      * @return
      */
-    public static byte[] getSetKeyFrame(String meterID, String key, byte frameID, int timeCorrection) {
+    public static byte[] getSetKeyFrame(String meterID, String key, byte frameID, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x16);
         sf.setMeterID(meterID);
@@ -362,7 +369,7 @@ public class FrameFactory {
      * @param timeCorrection
      * @return
      */
-    public static byte[] getRecallMeter2ConcentratorFrame(String concentratorID, String meterID, String key, byte frameID, int timeCorrection) {
+    public static byte[] getRecallMeter2ConcentratorFrame(String concentratorID, String meterID, String key, byte frameID, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x18);
         sf.setMeterID(concentratorID);
@@ -382,12 +389,12 @@ public class FrameFactory {
     /// <param name="style">透支方式。0：10元，1：3天，2：无限</param>
     /// <param name="tmCorrection">时间修正值</param>
     /// <returns></returns>
-    public static byte[] getChangeOverdraftFrame(String meterID, String key, byte frameID, int style, int tmCorrection) {
+    public static byte[] getChangeOverdraftFrame(String meterID, String key, byte frameID, int style, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setFuncCode((byte) 0x21);
         sf.setFrameID(frameID);
-        sf.setTimeCorrection(tmCorrection);
+        sf.setTimeCorrection(timeCorrection);
         sf.addParam(style, 1);
 
         return sf.ProcFrame(key);
@@ -403,7 +410,7 @@ public class FrameFactory {
      * @param timeCorrection 时间修正值
      * @return
      */
-    public static byte[] getCommunicationUpCycleFrame(String meterID,String key, byte frameID,int qdzq,int timeCorrection) {
+    public static byte[] getCommunicationUpCycleFrame(String meterID,String key, byte frameID,int qdzq,long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x22);
         sf.setMeterID(meterID);
@@ -480,7 +487,7 @@ public class FrameFactory {
      * @param timeCorrection
      * @return
      */
-    public static byte[] getSetMeter2UserModeFrame(String meterID, String key, byte frameID, double yqdj, int timeCorrection) {
+    public static byte[] getSetMeter2UserModeFrame(String meterID, String key, byte frameID, double yqdj, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x24);
         sf.setMeterID(meterID);
@@ -493,7 +500,7 @@ public class FrameFactory {
 
     //更改表具每月抄表日(设置周期读表时间)
     // cbr:1个字节定期读表时间
-    public static byte[] getMeterSetCBRFrame(String meterID, String key, byte frameID, int timeCorrection, int cbr) {
+    public static byte[] getMeterSetCBRFrame(String meterID, String key, byte frameID, long timeCorrection, int cbr) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setFuncCode((byte) 0x25);
@@ -514,7 +521,7 @@ public class FrameFactory {
      * @param timeCorrection
      * @return
      */
-    public static byte[] getTimerDataFrame(String meterID, String key, byte frameID, Date atDT, int timeCorrection) {
+    public static byte[] getTimerDataFrame(String meterID, String key, byte frameID, Date atDT, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x26);
         sf.setMeterID(meterID);
@@ -537,7 +544,7 @@ public class FrameFactory {
      * @param timeCorrection 时间修正值
      * @return
      */
-    public static byte[] getTimerDataOfChangePriceFrame(String meterID, String key, byte frameID, Date atDT, int timeCorrection) {
+    public static byte[] getTimerDataOfChangePriceFrame(String meterID, String key, byte frameID, Date atDT, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x27);
         sf.setMeterID(meterID);
@@ -559,7 +566,7 @@ public class FrameFactory {
      * @param timeCorrection
      * @return
      */
-    public static byte[] getClearErrorMarkFrame(String meterID, String key, byte frameID, int timeCorrection) {
+    public static byte[] getClearErrorMarkFrame(String meterID, String key, byte frameID, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x28);
         sf.setMeterID(meterID);
@@ -570,7 +577,7 @@ public class FrameFactory {
     }
 
     // 读取历史阶梯周期使用量
-    public static byte[] getReadCycleInfoFrame(String meterID, String key, byte frameID, int timeCorrection) {
+    public static byte[] getReadCycleInfoFrame(String meterID, String key, byte frameID, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setFuncCode((byte) 0x29);
@@ -591,7 +598,7 @@ public class FrameFactory {
      * @param timeCorrection
      * @return
      */
-    public static byte[] getNotifyTXZTFrame(String mobileID, String meterID, String key, byte frameID, int txzt, int timeCorrection) {
+    public static byte[] getNotifyTXZTFrame(String mobileID, String meterID, String key, byte frameID, int txzt, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x2E);
         sf.setMeterID(mobileID);
@@ -623,6 +630,7 @@ public class FrameFactory {
 
         return sf.ProcFrame(key);
     }
+
 
 
 
