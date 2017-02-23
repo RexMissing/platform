@@ -38,7 +38,7 @@ public class FrameServer implements Runnable {
             acceptor.getFilterChain().addLast("mycodec",
                     new ProtocolCodecFilter(new DataCodecFactory()));
 
-            acceptor.getFilterChain().addLast("mythreadpool",new ExecutorFilter(100));
+            acceptor.getFilterChain().addLast("mythreadpool",new ExecutorFilter());
             // 绑定业务处理器,这段代码要在acceptor.bind()方法之前执行，因为绑定套接字之后就不能再做这些准备
             acceptor.setHandler(new FrameServerHandler());
             // 设置读取数据的缓冲区大小
