@@ -20,13 +20,12 @@ import java.util.Scanner;
 /**
  * Created by zhang_minzhong on 2017/1/3.
  */
-public class FrameServer implements Runnable {
+public class FrameServer  {
 
     //public static final PlatformLogger logger = PlatformLogger.getLogger(FrameServer.class);
     //private static IoAcceptor acceptor;
 
-    @Override
-    public void run() {
+    public void listen() {
         int port = 3535;//FundamentalConfigProvider.get("meterFrame.port");
         //logger.info("socket server listen:"+portString);
         System.out.println("socket server listen:"+port);
@@ -43,7 +42,7 @@ public class FrameServer implements Runnable {
             acceptor.setHandler(new FrameServerHandler());
             // 设置读取数据的缓冲区大小
             acceptor.getSessionConfig().setReadBufferSize(2048);
-            acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 120);
+            acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 10);
             // 绑定一个监听端口
             acceptor.bind(new InetSocketAddress(port));
         }catch (Exception e){
@@ -73,7 +72,7 @@ public class FrameServer implements Runnable {
     }*/
     public static void main(String[] args) {
         FrameServer frameServer = new FrameServer();
-        frameServer.run();
+        frameServer.listen();
         /*while(true){
             System.out.print("输入命令码：");
             Scanner scanner = new Scanner(System.in);

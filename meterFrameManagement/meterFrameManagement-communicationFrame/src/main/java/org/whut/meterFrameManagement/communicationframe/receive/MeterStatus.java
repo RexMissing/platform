@@ -3,6 +3,7 @@ package org.whut.meterFrameManagement.communicationframe.receive;
 import org.whut.meterFrameManagement.util.date.DateUtil;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +23,7 @@ public class MeterStatus {
     private double price;//当前使用气价
     private byte xtzt;//系统状态字节
 
-    private Timestamp meterTime;//表具时间
+    private Date meterTime;//表具时间
 
     private int amount1;
     private int amount2;
@@ -131,7 +132,7 @@ public class MeterStatus {
         this.remainMoney = remainMoney;
     }
 
-    public Timestamp getMeterTime() {
+    public Date getMeterTime() {
         return meterTime;
     }
 

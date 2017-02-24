@@ -11,7 +11,8 @@ import java.util.Date;
  * Created by zhang_minzhong on 2016/12/20.
  */
 public class DateUtil {
-    public static Timestamp createDate(String s){
+    //根据日期字符串产生Date对象
+    public static Date createDate(String s){
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
@@ -20,8 +21,7 @@ public class DateUtil {
             System.out.println("日起产生出错！");
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        Timestamp timestamp = new Timestamp(date.getTime());
-        return timestamp;
+        return date;
     }
 
     /**

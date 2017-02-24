@@ -73,6 +73,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 response[7] = 0x16;
                 IoBuffer ioBuffer = IoBuffer.wrap(response);
                 session.write(ioBuffer);
+                session.closeOnFlush();
             }
             if(Byte.toUnsignedInt(request[1]) == 0xA2){//查询
                 boolean flag = false;
@@ -167,6 +168,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 response[2] = 0x16;
                 IoBuffer ioBuffer = IoBuffer.wrap(response);
                 session.write(ioBuffer);
+                session.closeOnFlush();
             }
         }
     }
@@ -192,8 +194,8 @@ public class FrameServerHandler extends IoHandlerAdapter {
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
         //logger.info("server-服务端进入空闲状态...");
-        System.out.println("server - 服务端进入空闲状态...");
-        session.closeNow();
+        System.out.println("server - session id="+session.getId()+" 进入空闲状态...");
+        //session.closeNow();
     }
 
     @Override

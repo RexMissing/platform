@@ -34,25 +34,84 @@ public class TestClient {
         connectFuture.awaitUninterruptibly();
         IoSession session = connectFuture.getSession();
         System.out.println("连接成功");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String meterID = "1049721501423";
+        byte[] request;
+        System.out.print("输入请求命令：");
         Scanner scanner = new Scanner(System.in);
-        boolean quit = false;
-        while(!quit){
-            System.out.print("输入回传命令码：");
-            String s = scanner.nextLine();
-            //session.write(s);
-            if(s.equalsIgnoreCase("quit"))
-                quit = true;
-            byte funCode = 0;
-            try {
-                funCode = (byte)Integer.parseInt(s,16);
-            }catch (Exception e){
-                continue;
+        String s1 = scanner.nextLine();
+        byte requestCode = 0;
+        try {
+            requestCode = (byte)Integer.parseInt(s1,16);
+        }catch (Exception e){
+        }
+        while (!s1.trim().equalsIgnoreCase("quit")){
+            if (session.isClosing())
+                break;
+            switch (requestCode){
+                case (byte)0xA1:
+                    request = new byte[16];
+                    request[0] = 0x68;
+                    request[1] = (byte)0xA1;
+                    for(int i=0;i<meterID.length();i++){
+                        request[i+2] = (byte)meterID.charAt(i);
+                    }
+                    request[15] = 0x16;
+                    IoBuffer ioBuffer = IoBuffer.wrap(request);
+                    session.write(ioBuffer);
+
+                    break;
+                case (byte)0xA2:
+                    request = new byte[16];
+                    request[0] = 0x68;
+                    request[1] = (byte)0xA2;
+                    for(int i=0;i<meterID.length();i++){
+                        request[i+2] = (byte)meterID.charAt(i);
+                    }
+                    request[15] = 0x16;
+                    ioBuffer = IoBuffer.wrap(request);
+                    session.write(ioBuffer);
+                    break;
+                case (byte)0xA3:
+                    System.out.print("输入回传命令码：");
+                    String s2 = scanner.nextLine();
+                    byte funCode = 0;
+                    funCode = (byte)Integer.parseInt(s2,16);
+                    byte [] bytes = TestSendFrame.getReceiveFrame(funCode);
+                    request = new byte[bytes.length+17];
+                    request[0] = 0x68;
+                    request[1] = (byte)0xA3;
+                    for(int i=0;i<meterID.length();i++){
+                        request[i+2] = (byte)meterID.charAt(i);
+                    }
+                    request[15] = (byte)bytes.length;
+                    for(int i=0;i<bytes.length;i++){
+                        request[i+16] = bytes[i];
+                    }
+                    request[request.length-1] = 0x16;
+                    if(bytes.length>0)
+                        session.write(IoBuffer.wrap(request));
+                    break;
+                default:
+                    break;
             }
-            byte [] bytes = TestSendFrame.getReceiveFrame(funCode);
-            if(bytes.length>0)
-                session.write(IoBuffer.wrap(bytes));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.print("输入请求命令：");
+            scanner = new Scanner(System.in);
+            s1 = scanner.nextLine();
+            try {
+                requestCode = (byte)Integer.parseInt(s1,16);
+            }catch (Exception e){
+            }
         }
         connector.dispose();
-        System.out.println("断开");
     }
 }
