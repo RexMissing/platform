@@ -8,9 +8,12 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.whut.meterFrameManagement.communication.codec.DataCodecFactory;
-import org.whut.meterFrameManagement.communicationframe.test.TestSendFrame;
+import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
+import org.whut.meterFrameManagement.communicationframe.test.FrameStore;
+import org.whut.meterFrameManagement.util.date.DateUtil;
 
 import java.net.InetSocketAddress;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -21,18 +24,21 @@ import java.util.Scanner;
  * To change this template use File | Settings | File Templates.
  */
 public class TestClient {
-    public static void main(String[] args) {
-        /*for(int i=0;i<100;i++){
-            new Thread(new ClientTread(i)).start();
-        }*/
+    public static void connect(){
         IoConnector connector = new NioSocketConnector();
         connector.getFilterChain().addLast( "logger", new LoggingFilter() );
         connector.getFilterChain().addLast( "codec", new ProtocolCodecFilter( new DataCodecFactory()));
         connector.setHandler(new TestClientHandler());
         ConnectFuture connectFuture = connector.connect(new InetSocketAddress("127.0.0.1",3535));
-        //等待建立连接
-        connectFuture.awaitUninterruptibly();
-        IoSession session = connectFuture.getSession();
+        System.out.println("等待建立连接......");
+        IoSession session = null;
+        try {
+            connectFuture.awaitUninterruptibly();
+            session = connectFuture.getSession();
+        }catch (Exception e){
+            System.out.println("连接失败");
+            System.exit(0);
+        }
         System.out.println("连接成功");
         try {
             Thread.sleep(1000);
@@ -81,7 +87,7 @@ public class TestClient {
                     String s2 = scanner.nextLine();
                     byte funCode = 0;
                     funCode = (byte)Integer.parseInt(s2,16);
-                    byte [] bytes = TestSendFrame.getReceiveFrame(funCode);
+                    byte [] bytes = getReceiveFrame(funCode);
                     request = new byte[bytes.length+17];
                     request[0] = 0x68;
                     request[1] = (byte)0xA3;
@@ -113,5 +119,41 @@ public class TestClient {
             }
         }
         connector.dispose();
+    }
+    public static void main(String[] args) {
+        /*for(int i=0;i<100;i++){
+            new Thread(new ClientTread(i)).start();
+        }*/
+        TestClient.connect();
+    }
+
+    //回传测试
+    public static byte[] getReceiveFrame(byte funCode){
+        String keyStr = "";
+        for (int i = 1; i <= 16; i++) {
+            String temp = Integer.toHexString(i);
+            if (temp.length() < 2)
+                temp = "0" + temp;
+            keyStr += temp;
+        }
+        byte[] receiveBytes = new byte[0];
+        switch (funCode){
+            case (byte)0x81:
+                receiveBytes = FrameFactory.getAllowOpenValveBackFrame("1049721501423", keyStr, (byte) 1);
+                break;
+            case (byte)0x85:
+                receiveBytes = FrameFactory.getMeterDataBackFrame("1049721501423",keyStr,(byte)1,234.5,400,2);
+                break;
+            case 0x3E:
+                Date xtsj = new Date();
+                Date begin = DateUtil.createDate("2000-01-01 00:00:00");
+                long sub = xtsj.getTime() - begin.getTime();
+                receiveBytes = FrameFactory.getUnifiedReturnFrame("1049721501423",keyStr,(byte)1,123.4,500,(byte)7,300,2.0,200,250,300,200,
+                        sub, sub+1800000,3,129,1,130,2,131,3,0,0,0,0,0,0,0,0,0,0);
+                break;
+            default:
+                break;
+        }
+        return receiveBytes;
     }
 }

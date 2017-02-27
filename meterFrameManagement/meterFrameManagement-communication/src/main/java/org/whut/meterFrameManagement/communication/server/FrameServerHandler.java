@@ -6,7 +6,7 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.whut.meterFrameManagement.communicationframe.receive.CFunction;
 import org.whut.meterFrameManagement.communicationframe.receive.MeterStatus;
-import org.whut.meterFrameManagement.communicationframe.test.TestSendFrame;
+import org.whut.meterFrameManagement.communicationframe.test.FrameStore;
 import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
 import org.whut.meterFrameManagement.util.date.DateUtil;
 
@@ -16,9 +16,8 @@ import java.util.*;
  * Created by zhang_minzhong on 2017/1/3.
  */
 public class FrameServerHandler extends IoHandlerAdapter {
-
     //public static final PlatformLogger logger = PlatformLogger.getLogger(FrameServerHandler.class);
-    private List<Map<String,byte[]>> list = TestSendFrame.getFrames();//new ArrayList<Map<String, byte[]>>();
+    private List<Map<String,byte[]>> list = FrameStore.list;//new ArrayList<Map<String, byte[]>>();
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
@@ -124,7 +123,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                   解析帧
                 */
                 ReceiveFrame rf =  new ReceiveFrame();
-                rf.ParseFrom(command,TestSendFrame.getKeyString());
+                rf.ParseFrom(command, FrameStore.getKeyString());
                 int funCode = Byte.toUnsignedInt(rf.getFuncCode());
                 System.out.println("命令码：" + Integer.toHexString(funCode));
                 System.out.println("表号："+rf.getMeterID());

@@ -627,7 +627,6 @@ public class FrameFactory {
         sf.setFrameID(frameID);
         sf.addParam(Byte.toUnsignedInt(style), 1);
         sf.addParam(Math.abs(secTS), 4);
-
         return sf.ProcFrame(key);
     }
 

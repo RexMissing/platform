@@ -4,15 +4,9 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-import org.whut.meterFrameManagement.aes256.AES;
-import org.whut.meterFrameManagement.communicationframe.receive.CFunction;
-import org.whut.meterFrameManagement.communicationframe.receive.MeterStatus;
-import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
-import org.whut.meterFrameManagement.communicationframe.test.TestSendFrame;
 import org.whut.meterFrameManagement.util.date.DateUtil;
 import org.whut.meterFrameManagement.util.hex.Hex;
 
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -65,6 +59,7 @@ public class TestClientHandler extends IoHandlerAdapter {
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         System.out.println("客户端与:"+session.getRemoteAddress().toString()+"断开连接");
+        System.exit(0);
     }
 
     @Override

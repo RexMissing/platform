@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>发送指令</title>
+    <link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="easyui/demo/demo.css">
+    <script type="text/javascript" src="easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body>
+
+<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+    <form id="ff" method="post">
+        <div style="margin-bottom:20px">
+            <select class="easyui-combobox" id="meterID" label="表号" style="width:100%">
+                <option value="1">1049721501423</option>
+            </select>
+        </div>
+        <div style="margin-bottom:20px">
+            <select class="easyui-combobox" id="funCode" label="命令码" style="width:100%">
+                <option value="01">允许开启燃气表阀门</option>
+                <option value="03">临时关闭燃气表阀门</option>
+                <option value="05">及时读取指定燃气表数据</option>
+                <option value="06">设置表具内运行气量</option>
+                <option value="07">设置收费模式</option>
+                <option value="08">及时变更价格</option>
+                <option value="0A">变更金额</option>
+                <option value="0C">强制关闭燃气表阀门</option>
+                <option value="0D">变更服务号码</option>
+                <option value="0F">设置服务器IP以及端口号</option>
+                <option value="10">设置心跳包频率</option>
+                <option value="11">发送心跳包</option>
+                <option value="12">设置集中器所辖表具</option>
+                <option value="16">设置密钥</option>
+                <option value="18">撤销中继器所辖表具</option>
+                <option value="1E">定时读取指定燃气表数据</option>
+                <option value="20">定时关闭燃气表阀门</option>
+                <option value="21">更改透支方式</option>
+                <option value="22">设置表具通讯模块启动周期</option>
+                <option value="23">表具开通</option>
+                <option value="25">更改表具每月抄表日(设置周期读表时间)</option>
+                <option value="26">读表具定时数据</option>
+                <option value="27">读表具定时更新单价时数据</option>
+                <option value="28">清除表具出错标志</option>
+                <option value="29">读取历史阶梯周期使用量</option>
+                <option value="2B">定时变更价格</option>
+                <option value="2E">通知（移动设备）现场设备通信状态</option>
+            </select>
+        </div>
+    </form>
+</div>
+<div style="margin:20px 0;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="send()">发送</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">Clear</a>
+</div>
+<script>
+    function send() {
+        var meterID = $("#meterID").text();
+        var funCode = $("#funCode").val();
+        var data = {
+            meterID:meterID,
+            funCode:funCode
+        };
+        $.post("rs/frame/sendFrame",data,callBack,"json");
+    }
+    function callBack(data){
+        alert(data.result);
+    }
+    function clearForm() {
+        $('#ff').form('clear');
+    }
+</script>
+</body>
+</html>

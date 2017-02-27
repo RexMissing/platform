@@ -122,6 +122,7 @@ public class ReceiveFrame extends CommandFrame {
         }
 
         //对命令码进行分解；命令码说明： D7：传送方向，1表示回传，0表示起始帧；；D6:执行结果，0表示正常；1表示异常; D5-D0:功能码
+
         int itmp = Byte.toUnsignedInt(funcCode) / 0x40;
         if (itmp == 0) {
             frmDirection = FrameDirection.REQUEST;

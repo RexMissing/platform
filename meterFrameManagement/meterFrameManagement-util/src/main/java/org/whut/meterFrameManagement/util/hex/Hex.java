@@ -74,7 +74,12 @@ public class Hex {
         return s;
     }
 
-    //将16进制字符串转成字节数组，2个字符一个字节,len:数组长度
+    /**
+     * 将16进制字符串转成字节数组，2个字符一个字节,len:数组长度
+     * @param s
+     * @param len
+     * @return
+     */
     public static byte[] hexStringToBytes(String s,int len){
         if(s==null)
             return new byte[0];

@@ -16,7 +16,7 @@
         <module>meterFrameManagement-communicationFrame</module>
         <module>meterFrameManagement-util</module>
         <module>meterFrameManagement-communication</module>
+        <module>meterFrameManagement-business</module>
+        <module>meterFrameManagementWeb</module>
     </modules>
-
-
 </project>
