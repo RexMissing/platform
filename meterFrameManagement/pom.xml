@@ -18,5 +18,7 @@
         <module>meterFrameManagement-communication</module>
         <module>meterFrameManagement-business</module>
         <module>meterFrameManagementWeb</module>
+        <module>meterFrameManagement-MQ</module>
+        <module>meterFrameManagement-protocol</module>
     </modules>
 </project>

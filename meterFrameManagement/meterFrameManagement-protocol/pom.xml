@@ -9,9 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>meterFrameManagement-util</artifactId>
+    <artifactId>meterFrameManagement-protocol</artifactId>
 
-    <dependencies>
 
-    </dependencies>
 </project>

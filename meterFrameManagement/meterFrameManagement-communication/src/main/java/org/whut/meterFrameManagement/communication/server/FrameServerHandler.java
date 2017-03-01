@@ -6,9 +6,10 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.whut.meterFrameManagement.communicationframe.receive.CFunction;
 import org.whut.meterFrameManagement.communicationframe.receive.MeterStatus;
-import org.whut.meterFrameManagement.communicationframe.test.FrameStore;
+import org.whut.meterFrameManagement.communicationframe.store.SendFrameRepository;
 import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
 import org.whut.meterFrameManagement.util.date.DateUtil;
+import org.whut.meterFrameManagement.communicationframe.query.ReceiveFrameStore;
 
 import java.util.*;
 
@@ -17,7 +18,7 @@ import java.util.*;
  */
 public class FrameServerHandler extends IoHandlerAdapter {
     //public static final PlatformLogger logger = PlatformLogger.getLogger(FrameServerHandler.class);
-    private List<Map<String,byte[]>> list = FrameStore.list;//new ArrayList<Map<String, byte[]>>();
+    private List<Map<String,byte[]>> list = SendFrameRepository.sendList;//new ArrayList<Map<String, byte[]>>();
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
@@ -123,11 +124,12 @@ public class FrameServerHandler extends IoHandlerAdapter {
                   解析帧
                 */
                 ReceiveFrame rf =  new ReceiveFrame();
-                rf.ParseFrom(command, FrameStore.getKeyString());
+                rf.ParseFrom(command, SendFrameRepository.getKeyString());
+                ReceiveFrameStore.write(rf);
                 int funCode = Byte.toUnsignedInt(rf.getFuncCode());
                 System.out.println("命令码：" + Integer.toHexString(funCode));
                 System.out.println("表号："+rf.getMeterID());
-                System.out.println("帧id:"+rf.getFrameID());
+                System.out.println("帧id:"+Byte.toUnsignedInt(rf.getFrameID()));
                 System.out.println("传送方向："+rf.getFrmDirection());
                 System.out.println("帧的执行结果："+rf.getFrmResult());
                 MeterStatus meterStatus = rf.MeterST;
@@ -137,7 +139,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 System.out.println("计量传感器错："+meterStatus.getCGGZ());
                 System.out.println("透支标志："+meterStatus.getTZZT());
                 System.out.println("系统数据错："+meterStatus.getXTSJC());
-                if(funCode==0x05||funCode==0x06||funCode==0x08||funCode==0x09||funCode==0x10||funCode==0x26||funCode==0x27) {
+                if(funCode==0x3E||funCode==0x05||funCode==0x06||funCode==0x08||funCode==0x09||funCode==0x10||funCode==0x26||funCode==0x27) {
                     System.out.println("剩余金额：" + meterStatus.getRemainMoney());
                     System.out.println("表止码：" + meterStatus.getMeterRead());
                 }
@@ -157,7 +159,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                     List<CFunction> codeList = rf.getAryFunc();
                     for(int i=0;i<codeList.size();i++){
                         CFunction cFunction = codeList.get(i);
-                        System.out.println("命令码：" + Integer.toHexString(Byte.toUnsignedInt(cFunction.getCode())) + "，" + "帧id：" + cFunction.getFid());
+                        System.out.println("命令码：" + Integer.toHexString(Byte.toUnsignedInt(cFunction.getCode())) + "，" + "帧id：" + Byte.toUnsignedInt(cFunction.getFid()));
                     }
                 }
 

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>meterFrameManagement-business</artifactId>
+    <artifactId>meterFrameManagement-MQ</artifactId>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -23,9 +23,7 @@
             </plugin>
         </plugins>
     </build>
-
     <dependencies>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -50,28 +48,27 @@
             <version>4.0.2.RELEASE</version>
         </dependency>
 
-        <!-- jersey -->
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-jms -->
         <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet</artifactId>
-            <version>2.5.1</version>
-        </dependency>
-        <!-- spring jersey -->
-        <dependency>
-            <groupId>org.glassfish.jersey.ext</groupId>
-            <artifactId>jersey-spring3</artifactId>
-            <version>2.5.1</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <version>4.0.2.RELEASE</version>
         </dependency>
 
         <dependency>
-            <groupId>platform</groupId>
-            <artifactId>meterFrameManagement-communicationFrame</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>5.7.0</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-pool -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-pool</artifactId>
+            <version>5.7.0</version>
+        </dependency>
         <dependency>
             <groupId>platform</groupId>
-            <artifactId>meterFrameManagement-business</artifactId>
+            <artifactId>fundamental-logger</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -79,17 +76,15 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.12</version>
         </dependency>
-
-        <dependency>
-            <groupId>platform</groupId>
-            <artifactId>meterFrameManagement-MQ</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>platform</groupId>
             <artifactId>meterFrameManagement-protocol</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>platform</groupId>
+            <artifactId>meterFrameManagement-communicationFrame</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-
 </project>

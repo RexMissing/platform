@@ -11,16 +11,8 @@
             <element id="module-output" name="meterFrameManagement-communication" />
           </element>
           <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.0.1" />
-          <element id="archive" name="fundamental-logger-1.0-SNAPSHOT.jar">
-            <element id="module-output" name="fundamental-logger" />
-          </element>
-          <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.0.7" />
-          <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.0.7" />
-          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.1" />
-          <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.7.1" />
-          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.1" />
-          <element id="library" level="project" name="Maven: org.logback-extensions:logback-ext-spring:0.1.1" />
           <element id="library" level="project" name="Maven: org.apache.mina:mina-core:2.0.15" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.1" />
           <element id="archive" name="meterFrameManagement-communicationFrame-1.0-SNAPSHOT.jar">
             <element id="module-output" name="meterFrameManagement-communicationFrame" />
           </element>
@@ -41,9 +33,9 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-context:4.0.2.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.0.2.RELEASE" />
           <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.0.2.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.0.2.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-web:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.0.2.RELEASE" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet:2.5.1" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet-core:2.5.1" />
           <element id="library" level="project" name="Maven: org.glassfish.hk2.external:javax.inject:2.2.0-b21" />
@@ -72,6 +64,38 @@
           <element id="library" level="project" name="Maven: org.glassfish.hk2:class-model:2.2.0-b21" />
           <element id="library" level="project" name="Maven: junit:junit:4.3.1" />
           <element id="library" level="project" name="Maven: org.glassfish.hk2:spring-bridge:2.2.0-b21" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.12" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.12" />
+          <element id="archive" name="meterFrameManagement-MQ-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="meterFrameManagement-MQ" />
+          </element>
+          <element id="library" level="project" name="Maven: org.springframework:spring-jms:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.apache.activemq:activemq-core:5.7.0" />
+          <element id="library" level="project" name="Maven: org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1" />
+          <element id="library" level="project" name="Maven: org.apache.activemq:kahadb:5.7.0" />
+          <element id="library" level="project" name="Maven: org.apache.activemq.protobuf:activemq-protobuf:1.1" />
+          <element id="library" level="project" name="Maven: org.fusesource.mqtt-client:mqtt-client:1.3" />
+          <element id="library" level="project" name="Maven: org.fusesource.hawtdispatch:hawtdispatch-transport:1.11" />
+          <element id="library" level="project" name="Maven: org.fusesource.hawtdispatch:hawtdispatch:1.11" />
+          <element id="library" level="project" name="Maven: org.fusesource.hawtbuf:hawtbuf:1.9" />
+          <element id="library" level="project" name="Maven: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" />
+          <element id="library" level="project" name="Maven: commons-net:commons-net:3.1" />
+          <element id="library" level="project" name="Maven: org.jasypt:jasypt:1.9.0" />
+          <element id="library" level="project" name="Maven: org.apache.activemq:activemq-pool:5.7.0" />
+          <element id="library" level="project" name="Maven: org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec:1.0.1" />
+          <element id="library" level="project" name="Maven: commons-pool:commons-pool:1.6" />
+          <element id="archive" name="fundamental-logger-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="fundamental-logger" />
+          </element>
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.0.7" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.0.7" />
+          <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.7.1" />
+          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.1" />
+          <element id="library" level="project" name="Maven: org.logback-extensions:logback-ext-spring:0.1.1" />
+          <element id="archive" name="meterFrameManagement-protocol-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="meterFrameManagement-protocol" />
+          </element>
         </element>
       </element>
       <element id="directory" name="META-INF">

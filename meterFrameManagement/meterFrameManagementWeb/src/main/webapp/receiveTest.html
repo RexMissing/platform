@@ -1,0 +1,66 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>回传数据</title>
+    <meta charset="UTF-8"/>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+
+    <script src="lib/ligerUI/js/plugins/ligerDrag.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerMessageBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerButton.js" type="text/javascript"></script>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            $("#query").ligerButton();
+        });
+        function query(){
+
+            $.post("rs/frame/getReceiveData",null,getCallBack,"json");
+        }
+        function getCallBack(data){
+            var gridData = {};
+            gridData.Rows = data;
+            $("#maingrid").ligerGrid({
+                columns: [
+                    { display: '表号', name: 'meterID', align: 'left',minWidth: 60 },
+                    { display: '命令码', name: 'funCode', minWidth: 30 },
+                    { display: '帧id', name: 'frameID', minWidth: 30 },
+                    { display: '传送方向', name: 'direction',minWidth:60 },
+                    { display: '执行结果', name: 'frameResult',minWidth:60 },
+                    { display: '系统状态字节', name: 'xtztzj',minWidth:100 },
+                    { display: '阀门位置', name: 'fmwz',minWidth:60 },
+                    { display: '阀门位置错误', name: 'fmcw',minWidth:100 },
+                    { display: '传感错误', name: 'cggz',minWidth:60 },
+                    { display: '透支状态', name: 'tzzt',minWidth:60 },
+                    { display: '系统数据错', name: 'xtsjc',minWidth:60 },
+                    { display: '剩余金额', name: 'remainMoney',minWidth:60 },
+                    { display: '表止码', name: 'meterRead',minWidth:60 },
+                    { display: '上月用气总量', name: 'preSumAmount',minWidth:100 },
+                    { display: '当前使用气价', name: 'price',minWidth:100 },
+                    { display: '分段气量1', name: 'amount1',minWidth:60 },
+                    { display: '分段气量2', name: 'amount2',minWidth:60 },
+                    { display: '分段气量3', name: 'amount3',minWidth:60 },
+                    { display: '本月已用气量', name: 'sumAmount',minWidth:100 },
+                    { display: '表具时间', name: 'meterTime',minWidth:200 },
+                    { display: '执行命令个数', name: 'funCount',minWidth:100 }
+                ], data:gridData,  height:300,pageSize:10 ,rownumbers:true
+            });
+        }
+    </script>
+</head>
+<body style="padding:10px">
+<div><button id="query" onclick="query()">查询</button></div>
+<div id="maingrid" style="margin-top:50px"></div>
+
+</body>
+</html>
+    

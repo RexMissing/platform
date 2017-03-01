@@ -1,7 +1,6 @@
 package org.whut.meterFrameManagement.communication.listener;
 
 import org.whut.meterFrameManagement.communication.server.FrameServer;
-import org.whut.platform.fundamental.logger.PlatformLogger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -10,7 +9,6 @@ import javax.servlet.ServletContextListener;
  * Created by zhang_minzhong on 2017/2/26.
  */
 public class FrameStartListener implements ServletContextListener {
-    private static final PlatformLogger logger = PlatformLogger.getLogger(FrameStartListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {

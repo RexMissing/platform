@@ -1,4 +1,4 @@
-package org.whut.meterFrameManagement.communicationframe.test;
+package org.whut.meterFrameManagement.communicationframe.store;
 
 import org.whut.meterFrameManagement.communicationframe.enums.ValveCtrStyle;
 import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
@@ -9,23 +9,34 @@ import java.util.*;
 /**
  * Created by zhang_minzhong on 2016/12/13.
  */
-public class FrameStore {
+public class SendFrameRepository {
 
-    //用于存储指令的测试list
-    public static List<Map<String,byte[]>> list = new ArrayList<Map<String, byte[]>>();
+    //用于存储json数据的list
+    public static List<String> jsonList = new ArrayList<String>();
+    //用于存储发送指令的测试list
+    public static List<Map<String,byte[]>> sendList = new ArrayList<Map<String, byte[]>>();
 
-    public static boolean sotre(String meterID, String funCode) {
-        try{
+
+    public static boolean makeSendFrame() {
+        sendList.removeAll(sendList);
+        for(int i=0;i<jsonList.size();i++){
+            String jsonString = jsonList.get(i);
+
+            //TODO
+
+        }
+        /*try{
             byte command = (byte)Integer.parseInt(funCode,16);
-            byte[] bytes = FrameStore.getSendFrame(meterID,command);
+            byte[] bytes = SendFrameRepository.getSendFrame(meterID, command);
             Map<String,byte[]> map = new HashMap<String, byte[]>();
             map.put(meterID,bytes);
-            list.add(map);
+            sendList.add(map);
             return true;
         }catch (Exception e){
             System.out.println("指令存储失败");
             return false;
-        }
+        }*/
+        return false;
     }
 
     public static byte[] getSendFrame(String meterID,byte funCode) {

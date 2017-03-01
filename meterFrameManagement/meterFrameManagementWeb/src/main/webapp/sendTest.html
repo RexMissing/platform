@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>发送数据</title>
+    <meta charset="UTF-8"/>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="lib/ligerUI/skins/Gray2014/css/all.css" rel="stylesheet" />
+    <script src="lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+
+    <script src="lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDrag.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerMessageBox.js" type="text/javascript"></script>
+
+    <script src="lib/ligerUI/js/ligerui.all.js"></script>
+    <script src="lib/ligerUI/js/plugins/ligerForm.js"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js"></script>
+
+    <script src="lib/ligerUI/js/plugins/ligerButton.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#form1").ligerForm();
+            $("#btn").ligerButton();
+        });
+        function send() {
+            var meterID = $("#meterID").text();
+            var funCode = $("#funCode").val();
+            var data = {
+                meterID:meterID,
+                funCode:funCode
+            };
+            $.post("rs/frame/allowValveOpen",data,callBack,"json");
+        }
+        function callBack(data){
+            //alert(data.result);
+            var result = data.result;
+            alert(result);
+        }
+    </script>
+    <style type="text/css">
+        body
+        {
+            padding-left:10px;
+            font-size:13px;
+        }
+        h1
+        {
+            font-size:20px;
+            font-family:Verdana;
+        }
+        h4
+        {
+            font-size:16px;
+            margin-top:25px;
+            margin-bottom:10px;
+        }
+        .description h3
+        {
+            color:#CC0000;
+            font-size:16px;
+            margin:0 30px 10px 0px;
+            padding:45px 0 8px;
+            border-bottom:solid 1px #888;
+        }
+        td {
+            padding: 5px;
+        }
+    </style>
+
+</head>
+<body style="padding:10px">
+<h1>测试</h1>
+<div id="form1" >
+    <table>
+        <tr>
+            <td>
+                表号：
+            </td>
+            <td>
+                <select id="meterID" name="depart" validate="{required:true}">
+                    <option value="1" selected="selected">1049721501423</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                命令码：
+            </td>
+            <td>
+                <select id="funCode" name="depart" validate="{required:true}">
+                    <option value="01" selected="selected">(01)允许开启燃气表阀门</option>
+                    <!--<option value="03">(03)临时关闭燃气表阀门</option>
+                    <option value="05">(05)及时读取指定燃气表数据</option>
+                    <option value="06">(06)设置表具内运行气量</option>
+                    <option value="07">(07)设置收费模式</option>
+                    <option value="08">(08)及时变更价格</option>
+                    <option value="0A">(0A)变更金额</option>
+                    <option value="0C">(0C)强制关闭燃气表阀门</option>
+                    <option value="0D">(0D)变更服务号码</option>
+                    <option value="0F">(0F)设置服务器IP以及端口号</option>
+                    <option value="10">(10)设置心跳包频率</option>
+                    <option value="11">(11)发送心跳包</option>
+                    <option value="12">(12)设置集中器所辖表具</option>
+                    <option value="16">(16)设置密钥</option>
+                    <option value="18">(18)撤销中继器所辖表具</option>
+                    <option value="1E">(1E)定时读取指定燃气表数据</option>
+                    <option value="20">(20)定时关闭燃气表阀门</option>
+                    <option value="21">(21)更改透支方式</option>
+                    <option value="22">(22)设置表具通讯模块启动周期</option>
+                    <option value="23">(23)表具开通</option>
+                    <option value="25">(25)更改表具每月抄表日(设置周期读表时间)</option>
+                    <option value="26">(26)读表具定时数据</option>
+                    <option value="27">(27)读表具定时更新单价时数据</option>
+                    <option value="28">(28)清除表具出错标志</option>
+                    <option value="29">(29)读取历史阶梯周期使用量</option>
+                    <option value="2B">(2B)定时变更价格</option>
+                    <option value="2E">(2E)通知（移动设备）现场设备通信状态</option>-->
+                </select>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <button id="btn" onclick="send()">发送</button>
+</div>
+</body>
+</html>

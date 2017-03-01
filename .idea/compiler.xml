@@ -72,6 +72,9 @@
         <module name="meterFrameManagement-business" />
         <module name="meterFrameManagement-communication" />
         <module name="meterFrameManagement-communicationFrame" />
+        <module name="meterFrameManagement-entity" />
+        <module name="meterFrameManagement-MQ" />
+        <module name="meterFrameManagement-protocol" />
         <module name="meterFrameManagement-util" />
         <module name="meterFrameManagementWeb" />
         <module name="realtimeMonitor-business-algorithm" />
@@ -112,6 +115,7 @@
       <module name="fundamental-message" target="1.6" />
       <module name="meterFrameManagement-business" target="1.6" />
       <module name="meterFrameManagement-communication" target="1.6" />
+      <module name="meterFrameManagement-MQ" target="1.6" />
       <module name="realtimeMonitor-business-communication" target="1.6" />
       <module name="realtimeMonitor-business-dataTest" target="1.6" />
       <module name="realtimeMonitor-business-message" target="1.6" />

@@ -4,9 +4,6 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.whut.platform.fundamental.logger.PlatformLogger;
-
-import java.nio.charset.Charset;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,8 +13,6 @@ import java.nio.charset.Charset;
  * To change this template use File | Settings | File Templates.
  */
 public class ResponseDecoder extends CumulativeProtocolDecoder {
-
-    private static final PlatformLogger logger = PlatformLogger.getLogger(ResponseDecoder.class);
 
     @Override
     protected boolean doDecode(IoSession ioSession, IoBuffer ioBuffer, ProtocolDecoderOutput protocolDecoderOutput) throws Exception {
