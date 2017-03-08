@@ -9,7 +9,10 @@ import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.whut.meterFrameManagement.communication.codec.DataCodecFactory;
 import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
+import org.whut.meterFrameManagement.communicationframe.key.MeterID;
+import org.whut.meterFrameManagement.communicationframe.send.SendFrameRepository;
 import org.whut.meterFrameManagement.util.date.DateUtil;
+import org.whut.meterFrameManagement.util.hex.Hex;
 
 import java.net.InetSocketAddress;
 import java.util.Date;
@@ -44,7 +47,7 @@ public class TestClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String meterID = "1049721501423";
+        //String meterID = "0120151000088";
         byte[] request;
         System.out.print("输入请求命令：");
         Scanner scanner = new Scanner(System.in);
@@ -62,8 +65,8 @@ public class TestClient {
                     request = new byte[16];
                     request[0] = 0x68;
                     request[1] = (byte)0xA1;
-                    for(int i=0;i<meterID.length();i++){
-                        request[i+2] = (byte)meterID.charAt(i);
+                    for(int i=0;i< MeterID.METERID.length();i++){
+                        request[i+2] = (byte)MeterID.METERID.charAt(i);
                     }
                     request[15] = 0x16;
                     IoBuffer ioBuffer = IoBuffer.wrap(request);
@@ -74,8 +77,8 @@ public class TestClient {
                     request = new byte[16];
                     request[0] = 0x68;
                     request[1] = (byte)0xA2;
-                    for(int i=0;i<meterID.length();i++){
-                        request[i+2] = (byte)meterID.charAt(i);
+                    for(int i=0;i<MeterID.METERID.length();i++){
+                        request[i+2] = (byte)MeterID.METERID.charAt(i);
                     }
                     request[15] = 0x16;
                     ioBuffer = IoBuffer.wrap(request);
@@ -90,8 +93,8 @@ public class TestClient {
                     request = new byte[bytes.length+17];
                     request[0] = 0x68;
                     request[1] = (byte)0xA3;
-                    for(int i=0;i<meterID.length();i++){
-                        request[i+2] = (byte)meterID.charAt(i);
+                    for(int i=0;i<MeterID.METERID.length();i++){
+                        request[i+2] = (byte)MeterID.METERID.charAt(i);
                     }
                     request[15] = (byte)bytes.length;
                     for(int i=0;i<bytes.length;i++){
@@ -105,7 +108,7 @@ public class TestClient {
                     break;
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -128,27 +131,13 @@ public class TestClient {
 
     //回传测试
     public static byte[] getReceiveFrame(byte funCode){
-        String keyStr = "";
-        for (int i = 1; i <= 16; i++) {
-            String temp = Integer.toHexString(i);
-            if (temp.length() < 2)
-                temp = "0" + temp;
-            keyStr += temp;
-        }
+        //String keyStr = SendFrameRepository.getKeyString();
         byte[] receiveBytes = new byte[0];
         switch (funCode){
-            case (byte)0x81:
-                receiveBytes = FrameFactory.getAllowOpenValveBackFrame("1049721501423", keyStr, (byte) 1);
-                break;
-            case (byte)0x85:
-                receiveBytes = FrameFactory.getMeterDataBackFrame("1049721501423",keyStr,(byte)1,234.5,400,2);
-                break;
+
             case 0x3E:
-                Date xtsj = new Date();
-                Date begin = DateUtil.createDate("2000-01-01 00:00:00");
-                long sub = xtsj.getTime() - begin.getTime();
-                receiveBytes = FrameFactory.getUnifiedReturnFrame("1049721501423",keyStr,(byte)1,123.4,500,(byte)7,300,2.0,200,250,300,200,
-                        sub, sub+1800000,3,129,1,130,2,131,3,0,0,0,0,0,0,0,0,0,0);
+                String s = "6C4E41C8833CEB9F8E44328CC2E02D0179C988F599E836363740C5897611F3D015963D812E0242539C9D0E934536B5DE5B11C495632EEDB0611B0962ABE37A82";
+                receiveBytes = Hex.hexStringToBytes(s, s.length() / 2);
                 break;
             default:
                 break;

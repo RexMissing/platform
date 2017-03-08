@@ -84,12 +84,12 @@ public class AES {
         //    }
         //}
         //return allbuff;
-       /* System.out.print("allbuff：");
+        /*System.out.print("allbuff：");
         for(int i=0;i<allbuff.length;i++){
             System.out.print(Byte.toUnsignedInt(allbuff[i]) + " ");
         }
         System.out.println();*/
-        int L = Byte.toUnsignedInt(allbuff[2]) + 5;
+        int L = Byte.toUnsignedInt(allbuff[1]) + 3;
         if (L > allbuff.length)
         {
             L = allbuff.length;

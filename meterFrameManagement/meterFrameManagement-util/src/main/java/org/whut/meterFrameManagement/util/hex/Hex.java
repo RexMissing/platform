@@ -71,7 +71,7 @@ public class Hex {
                 tempStr = "0" + tempStr;
             s += tempStr;
         }
-        return s;
+        return s.toUpperCase();
     }
 
     /**
@@ -86,7 +86,6 @@ public class Hex {
         while(s.length()/2<len){
             s = "0" + s;
         }
-        System.out.println(s);
         byte[] bytes = new byte[s.length()/2];
         for(int i=0;i<bytes.length;i++){
             bytes[i] = (byte)Integer.parseInt(s.substring(i*2,i*2+2),16);

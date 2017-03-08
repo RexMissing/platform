@@ -50,22 +50,21 @@
             </list>
         </property>
     </bean>
+    <!--<bean id="testProducer" class="org.whut.platform.fundamental.activemq.test.TestProducer">
+        <property name="pooledMessageProducer" ref="pooledMessageProducer"/>
+    </bean>
 
-    <!--<bean id="testProducer" class="org.whut.platform.fundamental.activemq.test.TestProducer">-->
-        <!--<property name="pooledMessageProducer" ref="pooledMessageProducer"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="testListener" class="org.whut.platform.fundamental.activemq.test.TestListener"-->
-    <!--init-method="start" destroy-method="stop" scope="prototype">-->
-        <!--<property name="myConnectionFactory" ref="consumerConnectionFactory" />-->
-        <!--<property name="brokers">-->
-            <!--<list>-->
-                <!--<value>localhostA</value>-->
-                <!--<value>localhostB</value>-->
-                <!--&lt;!&ndash;<value>localhostC</value>&ndash;&gt;-->
-            <!--</list>-->
-        <!--</property>-->
-    <!--</bean>-->
+    <bean id="testListener" class="org.whut.platform.fundamental.activemq.test.TestListener"
+    init-method="start" destroy-method="stop" scope="prototype">
+        <property name="myConnectionFactory" ref="consumerConnectionFactory" />
+        <property name="brokers">
+            <list>
+                <value>localhostA</value>
+                &lt;!&ndash;<value>localhostB</value>&ndash;&gt;
+                &lt;!&ndash;<value>localhostC</value>&ndash;&gt;
+            </list>
+        </property>
+    </bean>-->
 
     <bean id="sessionFactoryConfig" class="org.whut.platform.fundamental.activemq.config.SessionFactoryConfig">
         <property name="BROKER_NAMES">

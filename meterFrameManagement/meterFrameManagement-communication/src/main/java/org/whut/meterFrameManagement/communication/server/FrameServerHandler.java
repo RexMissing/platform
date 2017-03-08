@@ -4,12 +4,13 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.whut.meterFrameManagement.communicationframe.key.TestKey;
 import org.whut.meterFrameManagement.communicationframe.receive.CFunction;
 import org.whut.meterFrameManagement.communicationframe.receive.MeterStatus;
-import org.whut.meterFrameManagement.communicationframe.store.SendFrameRepository;
+import org.whut.meterFrameManagement.communicationframe.send.SendFrameRepository;
 import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
 import org.whut.meterFrameManagement.util.date.DateUtil;
-import org.whut.meterFrameManagement.communicationframe.query.ReceiveFrameStore;
+import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrameRepository;
 
 import java.util.*;
 
@@ -18,7 +19,8 @@ import java.util.*;
  */
 public class FrameServerHandler extends IoHandlerAdapter {
     //public static final PlatformLogger logger = PlatformLogger.getLogger(FrameServerHandler.class);
-    private List<Map<String,byte[]>> list = SendFrameRepository.sendList;//new ArrayList<Map<String, byte[]>>();
+    private List<Map<String,byte[]>> sendList = SendFrameRepository.sendList;//new ArrayList<Map<String, byte[]>>();
+    private  List<String> jsonList = SendFrameRepository.jsonList;
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
@@ -45,8 +47,8 @@ public class FrameServerHandler extends IoHandlerAdapter {
             for(int i=0;i<13;i++){
                 meterId += (char)request[2+i];
             }
-            System.out.println("表号："+meterId);
-            System.out.println("指令剩余条数："+list.size());
+            System.out.println("查询表号："+meterId);
+
             if(Byte.toUnsignedInt(request[1]) == 0xA1){//签到
                 byte[] response = new byte[8];
                 response[0] = 0x68;
@@ -76,29 +78,35 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 session.closeOnFlush();
             }
             if(Byte.toUnsignedInt(request[1]) == 0xA2){//查询
+                SendFrameRepository.makeSendFrame();//启动服务器时用
+                System.out.println("指令剩余条数：" + sendList.size());
                 boolean flag = false;
-                for(int i = 0;i<list.size();i++){
-                    Map<String,byte[]> map = list.get(i);
-                    Iterator<Map.Entry<String,byte[]>> iterator = map.entrySet().iterator();
-                    while(iterator.hasNext()){
-                        Map.Entry<String,byte[]> entry = iterator.next();
-                        String key = entry.getKey();
-                        byte[] bytes = entry.getValue();
-                        if(meterId.equals(key)) {
-                            byte[] response = new byte[bytes.length+4];
-                            response[0] = 0x68;
-                            response[1] = (byte)0xA2;
-                            response[2] = (byte)bytes.length;
-                            response[response.length-1] = 0x16;
-                            for(int j=0;j<bytes.length;j++){
-                                response[j+3] = bytes[j];;
-                            }
-                            IoBuffer ioBuffer = IoBuffer.wrap(response);
-                            session.write(ioBuffer);
-                            list.remove(map);
-                            flag = true;
-                            break;
+                for(int i = 0;i<sendList.size();i++){
+                    Map.Entry<String,byte[]> entry = sendList.get(i).entrySet().iterator().next();
+                    String jsonString = entry.getKey();//启动服务器时用
+                    String sendMeterID = SendFrameRepository.getMeterID(jsonString);//启动服务器时用
+                    //String sendMeterID = entry.getKey();//直接启动main方法时用
+                    byte[] bytes = entry.getValue();
+                    if(meterId.equals(sendMeterID)) {
+                        byte[] response = new byte[bytes.length+4];
+                        response[0] = 0x68;
+                        response[1] = (byte)0xA2;
+                        response[2] = (byte)bytes.length;
+                        response[response.length-1] = 0x16;
+                        for(int j=0;j<bytes.length;j++){
+                            response[j+3] = bytes[j];;
                         }
+                        IoBuffer ioBuffer = IoBuffer.wrap(response);
+                        session.write(ioBuffer);
+
+                        //启动服务器时用
+                        for(int j=0;j<jsonList.size();i++){
+                            if(jsonList.get(j) == jsonString){//必须用==
+                                jsonList.remove(jsonString);
+                                break;
+                            }
+                        }
+                        flag = true;
                     }
                     if(flag){
                         break;
@@ -124,14 +132,15 @@ public class FrameServerHandler extends IoHandlerAdapter {
                   解析帧
                 */
                 ReceiveFrame rf =  new ReceiveFrame();
-                rf.ParseFrom(command, SendFrameRepository.getKeyString());
-                ReceiveFrameStore.write(rf);
-                int funCode = Byte.toUnsignedInt(rf.getFuncCode());
+                rf.ParseFrom(command, TestKey.KEYSTR);
+                ReceiveFrameRepository.write(rf);
+
+               int funCode = Byte.toUnsignedInt(rf.getFuncCode());
                 System.out.println("命令码：" + Integer.toHexString(funCode));
                 System.out.println("表号："+rf.getMeterID());
                 System.out.println("帧id:"+Byte.toUnsignedInt(rf.getFrameID()));
                 System.out.println("传送方向："+rf.getFrmDirection());
-                System.out.println("帧的执行结果："+rf.getFrmResult());
+                System.out.println("帧的回传结果："+rf.getFrmResult());
                 MeterStatus meterStatus = rf.MeterST;
                 System.out.println("系统状态字节："+meterStatus.getXtzt());
                 System.out.println("阀门位置："+meterStatus.getFMWZ());
@@ -143,23 +152,22 @@ public class FrameServerHandler extends IoHandlerAdapter {
                     System.out.println("剩余金额：" + meterStatus.getRemainMoney());
                     System.out.println("表止码：" + meterStatus.getMeterRead());
                 }
-                if(funCode==0x29){
-
-                }
                 if(funCode==0x3E){
                     System.out.println("以下为统一回传帧中额外数据");
-                    System.out.println("上月用气总量："+meterStatus.getPresumamount());
-                    System.out.println("当前使用气价："+meterStatus.getPrice());
-                    System.out.println("分段气量1："+meterStatus.getAmount1());
-                    System.out.println("分段气量2："+meterStatus.getAmount2());
-                    System.out.println("分段气量3："+meterStatus.getAmount3());
-                    System.out.println("本月已用气量："+meterStatus.getSumamount());
+                    System.out.println("上周期量："+meterStatus.getPresumamount());
+                    System.out.println("单价："+meterStatus.getPrice());
+                    System.out.println("阶梯起始1："+meterStatus.getAmount1());
+                    System.out.println("阶梯起始2："+meterStatus.getAmount2());
+                    System.out.println("阶梯起始3："+meterStatus.getAmount3());
+                    System.out.println("本周期量："+meterStatus.getSumamount());
                     System.out.println("表具时间："+meterStatus.getMeterTime());
                     System.out.println("执行的命令数："+rf.getFuncCount());
                     List<CFunction> codeList = rf.getAryFunc();
                     for(int i=0;i<codeList.size();i++){
                         CFunction cFunction = codeList.get(i);
-                        System.out.println("命令码：" + Integer.toHexString(Byte.toUnsignedInt(cFunction.getCode())) + "，" + "帧id：" + Byte.toUnsignedInt(cFunction.getFid()));
+                        System.out.println("命令码：" + Integer.toHexString(Byte.toUnsignedInt(cFunction.getCode()))
+                                + "，" + "帧id：" + Byte.toUnsignedInt(cFunction.getFid())
+                        +"，"+"是否执行成功："+cFunction.isSuccess());
                     }
                 }
 

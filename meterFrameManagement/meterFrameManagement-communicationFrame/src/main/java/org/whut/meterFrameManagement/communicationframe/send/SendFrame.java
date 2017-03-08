@@ -299,29 +299,37 @@ public class SendFrame extends CommandFrame {
         byte[] frame = ByteFrame();
         byte[] key = getKey(sKey);
 
-       System.out.print("加密前帧字节数组：");
+       System.out.print("加密前帧字节数组(含\"68\",\"16\")：");
         for(int i=0;i<frame.length;i++){
             System.out.print(Byte.toUnsignedInt(frame[i])+" ");
         }
         System.out.println("，字节长度："+frame.length);
         System.out.println("16进制形式："+ Hex.BytesToHexString(frame).toUpperCase());
-        System.out.print("密钥：");
+        System.out.print("密钥字节数组：");
         for(int i=0;i<key.length;i++){
             System.out.print(Byte.toUnsignedInt(key[i])+" ");
         }
         System.out.println();
 
+        //除掉68和16在加密
+        byte[] bytes = new byte[frame.length-2];
+        for(int i=0;i<bytes.length;i++){
+            bytes[i] = frame[i+1];
+        }
         //加密
         byte[] buff = new byte[0];
         try {
-            buff = AES.encrypt(frame, key);
+            buff = AES.encrypt(bytes, key);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.print("加密后帧字节数组：");
+        System.out.print("加密后帧字节数组(加密部分不含\"68\",\"16\")：");
         for(int i=0;i<buff.length;i++){
             System.out.print(Byte.toUnsignedInt(buff[i])+" ");
         }
+        System.out.println(" ,长度："+buff.length);
+        String hexStr = Hex.BytesToHexString(buff);
+        System.out.println("加密后16进制帧字符串："+hexStr.toUpperCase());
         System.out.println();
         System.out.println();
         return buff;

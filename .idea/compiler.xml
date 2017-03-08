@@ -74,7 +74,6 @@
         <module name="meterFrameManagement-communicationFrame" />
         <module name="meterFrameManagement-entity" />
         <module name="meterFrameManagement-MQ" />
-        <module name="meterFrameManagement-protocol" />
         <module name="meterFrameManagement-util" />
         <module name="meterFrameManagementWeb" />
         <module name="realtimeMonitor-business-algorithm" />

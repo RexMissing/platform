@@ -7,8 +7,10 @@ import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.whut.meterFrameManagement.communication.codec.DataCodecFactory;
+import org.whut.meterFrameManagement.communicationframe.send.SendFrameRepository;
 
 import java.net.InetSocketAddress;
+import java.util.Scanner;
 
 /**
  * Created by zhang_minzhong on 2017/1/3.
@@ -48,39 +50,15 @@ public class FrameServer implements Runnable  {
         }
     }
 
-    /**
-     * 向每个客户端发送消息
-     */
-    /*public static void sendMessage(byte funCode){
-
-        IoSession session;
-        Map<Long,IoSession> conMap = acceptor.getManagedSessions();
-        Iterator<Long> iterator = conMap.keySet().iterator();
-        System.out.println("session个数："+conMap.size());
-        while (iterator.hasNext()) {
-            long key = iterator.next();
-            session = conMap.get(key);
-            byte[] bytes = TestSendFrame.getSendFrame(funCode);
-            if(bytes.length>0){
-                IoBuffer ioBuffer = IoBuffer.wrap(bytes);
-                session.write(ioBuffer);
-            }
-        }
-    }*/
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         FrameServer frameServer = new FrameServer();
         frameServer.listen();
-        /*while(true){
+        while(true){
             System.out.print("输入命令码：");
             Scanner scanner = new Scanner(System.in);
             String s = scanner.nextLine();
-            byte funCode = 0;
-            try {
-                funCode = (byte)Integer.parseInt(s,16);
-            }catch (Exception e){
-                continue;
-            }
-            sendMessage(funCode);
-        }*/
-    }
+            SendFrameRepository.setSendList(s);
+
+        }
+    }*/
 }

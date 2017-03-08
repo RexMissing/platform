@@ -33,13 +33,13 @@ public class CFunction {
     }
 
     public boolean isSuccess() {
-        if((Byte.toUnsignedInt(code)/0x40)==0)
+        if((Byte.toUnsignedInt(code)/0x40)%2==0)
             return true;
         else
             return false;
     }
 
-    /*public void setSuccess(boolean success) {
+    public void setSuccess(boolean success) {
         this.success = success;
-    }*/
+    }
 }

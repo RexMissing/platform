@@ -61,7 +61,7 @@ public class ReceiveFrame extends CommandFrame {
     成功解析帧，返回true，失败返回false
      */
     public boolean ParseFrom(String frameStr) {
-        System.out.println("16进制字符串帧："+frameStr);
+        System.out.println("(加上\"h\"和\"16\")："+frameStr);
         //帧头判断
         if (!frameStr.substring(0,1).toUpperCase().equals("H")) {
             return false;
@@ -86,17 +86,18 @@ public class ReceiveFrame extends CommandFrame {
         }
         //判断截止码是否为16
         try {
-            if (!frameStr.substring(dataLen * 2 - 6, dataLen * 2 - 4).equals("16")) {//
+            if (!frameStr.substring(frameStr.length()-2).equals("16")) {//
                 return false;
             }
         } catch (Exception e) {
+            System.out.println("Exception");
             return false;
         }
         //表具编号（或设备编号）
         meterID = frameStr.substring(5, 18);
         //数据区域
         dataStr = frameStr.substring(18, 18 + (dataLen - 14) * 2);
-        //System.out.print("数据字符串(不包含表号和帧id)：" + dataStr + "  ");
+        System.out.print("数据字符串(不包含表号和帧id)：" + dataStr + "  ");
         //System.out.println("长度：" + (dataLen - 14) * 2);
 
         //帧ID FrameID
@@ -123,17 +124,18 @@ public class ReceiveFrame extends CommandFrame {
 
         //对命令码进行分解；命令码说明： D7：传送方向，1表示回传，0表示起始帧；；D6:执行结果，0表示正常；1表示异常; D5-D0:功能码
 
-        int itmp = Byte.toUnsignedInt(funcCode) / 0x40;
-        if (itmp == 0) {
+        int itmp = Byte.toUnsignedInt(funcCode) / 0x40;//命令码D7，D6位
+        if (itmp == 0) {//D7,D6均为0
             frmDirection = FrameDirection.REQUEST;
             frmResult = FrameResult.SUCCESS;
-        } else if (itmp == 2) {
+        } else if (itmp == 2) {//D7为1，D6为0
             frmDirection = FrameDirection.REPLY;
             frmResult = FrameResult.SUCCESS;
-        } else if (itmp == 3) {
+        } else if (itmp == 3) {//D7为1，D6为1
             frmDirection = FrameDirection.REPLY;
             frmResult = FrameResult.FAIL;
         }
+        //去掉D7，D6两位
         funcCode = (byte) (Byte.toUnsignedInt(funcCode) % 64);
 
         ParseDataStr(); //对数据域进行解析
@@ -153,6 +155,10 @@ public class ReceiveFrame extends CommandFrame {
                 CFunction cf = new CFunction();
                 cf.setCode((byte) Integer.parseInt(dataStr.substring(60 + i * 4, 62 + i * 4), 16));
                 cf.setFid((byte) Integer.parseInt(dataStr.substring(62 + i * 4, 64 + i * 4), 16));
+                if(cf.isSuccess())
+                    cf.setSuccess(true);
+                else
+                    cf.setSuccess(false);
                 aryFunc.add(cf);
             }
         }
@@ -179,26 +185,28 @@ public class ReceiveFrame extends CommandFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*System.out.print("解密后帧字节数组：");
+        System.out.print("解密后帧字节数组：");
         for(int i=0;i<buff.length;i++){
             System.out.print(Byte.toUnsignedInt(buff[i])+" ");
         }
-        System.out.println("字节长度："+buff.length);*/
+        System.out.println();
+        System.out.println("16进制："+Hex.BytesToHexString(buff));
+        System.out.println();
 
         //将解密后的明文转换为16进制可见字符串帧
-
         //起始码
         String str = "h";
         //命令码，数据长度域
-        byte[] funcAndLen = Arrays.copyOfRange(buff, 1, 3);
+        byte[] funcAndLen = Arrays.copyOfRange(buff, 0, 2);
         str += Hex.BytesToHexString(funcAndLen);
         //表号
-        for (int i = 3; i < 16; i++) {
+        for (int i = 2; i < 15; i++) {
             str += (char) buff[i];
         }
-        //表号之后部分
-        byte[] afterMeterId = Arrays.copyOfRange(buff, 16, buff.length);
-        str += Hex.BytesToHexString(afterMeterId);
+        //表号之后"16"之前的部分
+        byte[] s = Arrays.copyOfRange(buff, 15, buff.length);
+        str += Hex.BytesToHexString(s);
+        str += "16";
         //调用ParseFrom函数，解析帧
         return ParseFrom(str);
     }

@@ -3,6 +3,7 @@ package org.whut.meterFrameManagement.communicationframe.receive;
 import org.whut.meterFrameManagement.util.date.DateUtil;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -62,7 +63,7 @@ public class MeterStatus {
 
     // 表具剩余金额。
     public double getRemainMoney() {
-        if ((Byte.toUnsignedInt(xtzt) / 64) % 2 == 1) {
+        if ((Byte.toUnsignedInt(xtzt) / 64) % 2 == 1) {//透支
             return remainMoney * -1;
         } else {
             return remainMoney;
@@ -194,34 +195,35 @@ public class MeterStatus {
         remainMoney += Integer.parseInt(dataStr.substring(2, 4), 16) * 100;
         remainMoney += Integer.parseInt(dataStr.substring(4, 6), 16);
         remainMoney += Integer.parseInt(dataStr.substring(6, 8), 16) * 0.01;
+        remainMoney = (double) Math.round(remainMoney*100)/100;
 
-        /*meterRead += Integer.parseInt(dataStr.substring(8, 10), 16) * 1000000;
+        meterRead += Integer.parseInt(dataStr.substring(8, 10), 16) * 1000000;
         meterRead += Integer.parseInt(dataStr.substring(10, 12), 16) * 1000;
         meterRead += Integer.parseInt(dataStr.substring(12, 14), 16) * 100;
-        meterRead += Integer.parseInt(dataStr.substring(14, 16), 16);*/
-        meterRead += Integer.parseInt(dataStr.substring(8,16),16);
+        meterRead += Integer.parseInt(dataStr.substring(14, 16), 16);
+        //meterRead += Integer.parseInt(dataStr.substring(8,16),16);
         xtzt = (byte) Integer.parseInt(dataStr.substring(16, 18), 16);
 
         if (dataStr.length() >= 92) { //数据字符串包含46个字节数据,统一回传帧数据
             price += Integer.parseInt(dataStr.substring(22, 24), 16);
-            price += Integer.parseInt(dataStr.substring(24, 26), 16) * 0.01;
-
-            /*amount1 += Integer.parseInt(dataStr.substring(26, 28), 16) * 100;
-            amount1 += Integer.parseInt(dataStr.substring(28, 30), 16);*/
-            amount1 = Integer.parseInt(dataStr.substring(26,30),16);
-            /*amount2 += Integer.parseInt(dataStr.substring(30, 32), 16) * 100;
-            amount2 += Integer.parseInt(dataStr.substring(32, 34), 16);*/
-            amount2 = Integer.parseInt(dataStr.substring(30,34),16);
-            /*amount3 += Integer.parseInt(dataStr.substring(34, 36), 16) * 100;
-            amount3 += Integer.parseInt(dataStr.substring(36, 38), 16);*/
-            amount3 = Integer.parseInt(dataStr.substring(34,38),16);
-            /*sumamount += Integer.parseInt(dataStr.substring(38, 40), 16) * 100;
-            sumamount += Integer.parseInt(dataStr.substring(40, 42), 16);*/
-            sumamount = Integer.parseInt(dataStr.substring(38,42),16);
+            price += Integer.parseInt(dataStr.substring(24, 26), 16)*0.01;
+            price = (double)Math.round(price*100)/100;
+            amount1 += Integer.parseInt(dataStr.substring(26, 28), 16) * 100;
+            amount1 += Integer.parseInt(dataStr.substring(28, 30), 16);
+            //amount1 = Integer.parseInt(dataStr.substring(26,30),16);
+            amount2 += Integer.parseInt(dataStr.substring(30, 32), 16) * 100;
+            amount2 += Integer.parseInt(dataStr.substring(32, 34), 16);
+            //amount2 = Integer.parseInt(dataStr.substring(30,34),16);
+            amount3 += Integer.parseInt(dataStr.substring(34, 36), 16) * 100;
+            amount3 += Integer.parseInt(dataStr.substring(36, 38), 16);
+            //amount3 = Integer.parseInt(dataStr.substring(34,38),16);
+            sumamount += Integer.parseInt(dataStr.substring(38, 40), 16) * 100;
+            sumamount += Integer.parseInt(dataStr.substring(40, 42), 16);
+            //sumamount = Integer.parseInt(dataStr.substring(38,42),16);
             //上月用气量
-            /*presumamount += Integer.parseInt(dataStr.substring(18, 20), 16) * 100;
-            presumamount += Integer.parseInt(dataStr.substring(20, 22), 16);*/
-            presumamount = Integer.parseInt(dataStr.substring(18,22),16);
+            presumamount += Integer.parseInt(dataStr.substring(18, 20), 16) * 100;
+            presumamount += Integer.parseInt(dataStr.substring(20, 22), 16);
+            //presumamount = Integer.parseInt(dataStr.substring(18,22),16);
             //取得表具时间
             Long longTime = Long.parseLong(dataStr.substring(42, 50), 16);
 

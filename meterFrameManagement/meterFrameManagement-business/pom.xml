@@ -70,11 +70,6 @@
         </dependency>
 
         <dependency>
-            <groupId>platform</groupId>
-            <artifactId>meterFrameManagement-business</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.12</version>
@@ -83,11 +78,6 @@
         <dependency>
             <groupId>platform</groupId>
             <artifactId>meterFrameManagement-MQ</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>platform</groupId>
-            <artifactId>meterFrameManagement-protocol</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

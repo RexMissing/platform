@@ -21,9 +21,9 @@ public class TestMain {
                 + "\\fundamental\\fundamental-activemq\\src\\main\\resources\\META-INF\\spring\\activemq-applicationContext.xml");
 
         TestProducer producer = (TestProducer) context.getBean("testProducer");
-
         for(int i=0;i<6;i++) {
             TestListener listener = (TestListener) context.getBean("testListener");
+            Thread.sleep(1000*1000);
             listener.register(new Queue() {
                 @Override
                 public String getQueueName() throws JMSException {

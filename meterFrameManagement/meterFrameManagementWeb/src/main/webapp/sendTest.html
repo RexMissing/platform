@@ -24,13 +24,95 @@
             $("#btn").ligerButton();
         });
         function send() {
-            var meterID = $("#meterID").text();
+            var meterID = $("#meterID").val();
             var funCode = $("#funCode").val();
+            var meterKey = $("#meterKey").val();
             var data = {
                 meterID:meterID,
-                funCode:funCode
+                funCode:funCode,
+                meterKey:meterKey
             };
-            $.post("rs/frame/allowValveOpen",data,callBack,"json");
+            switch (funCode){
+                case "01":
+                    $.post("rs/frame/allowValveOpen",data,callBack,"json");
+                    break;
+                case "03":
+                    $.post("rs/frame/temporaryClose",data,callBack,"json");
+                    break;
+                case "05":
+                    $.post("rs/frame/immediatelyRead",data,callBack,"json");
+                    break;
+                case "06":
+                    $.post("rs/frame/setRunTimeGas",data,callBack,"json");
+                    break;
+                case "07":
+                    $.post("rs/frame/setChargeMode",data,callBack,"json");
+                    break;
+                case "08":
+                    $.post("rs/frame/changePrice",data,callBack,"json");
+                    break;
+                case "0A":
+                    $.post("rs/frame/changeMoney",data,callBack,"json");
+                    break;
+                case "0C":
+                    $.post("rs/frame/forceClose",data,callBack,"json");
+                    break;
+                case "0D":
+                    $.post("rs/frame/changeServerNum",data,callBack,"json");
+                    break;
+                case "0F":
+                    $.post("rs/frame/setIPAndPort",data,callBack,"json");
+                    break;
+                case "10":
+                    $.post("rs/frame/SetBeatHeartRate",data,callBack,"json");
+                    break;
+                case "11":
+                    $.post("rs/frame/setBeatHeart",data,callBack,"json");
+                    break;
+                case "12":
+                    $.post("rs/frame/setMeter2Concentrator",data,callBack,"json");
+                    break;
+                case "16":
+                    $.post("rs/frame/setKey",data,callBack,"json");
+                    break;
+                case "18":
+                    $.post("rs/frame/recallMeter2Concentrator",data,callBack,"json");
+                    break;
+                case "1E":
+                    $.post("rs/frame/regularRead",data,callBack,"json");
+                    break;
+                case "20":
+                    $.post("rs/frame/timingClose",data,callBack,"json");
+                    break;
+                case "21":
+                    $.post("rs/frame/changeOverdraft",data,callBack,"json");
+                    break;
+                case "22":
+                    $.post("rs/frame/setStartCycle",data,callBack,"json");
+                    break;
+                case "23":
+                    $.post("rs/frame/meterOpen",data,callBack,"json");
+                    break;
+                case "25":
+                    $.post("rs/frame/setCBR",data,callBack,"json");
+                    break;
+                case "26":
+                    $.post("rs/frame/readMeterTimer",data,callBack,"json");
+                    break;
+                case "27":
+                    $.post("rs/frame/getTimerDataOfChangePrice",data,callBack,"json");
+                    break;
+                case "29":
+                    $.post("rs/frame/readCycleInfo",data,callBack,"json");
+                    break;
+                case "2B":
+                    $.post("rs/frame/changePriceAtTime",data,callBack,"json");
+                    break;
+                case "2E":
+                    $.post("rs/frame/notifyTXZT",data,callBack,"json");
+                    break;
+            }
+
         }
         function callBack(data){
             //alert(data.result);
@@ -78,12 +160,20 @@
                 表号：
             </td>
             <td>
-                <select id="meterID" name="depart" validate="{required:true}">
-                    <option value="1" selected="selected">1049721501423</option>
-                </select>
+                <input id="meterID"  name="meterID" type="text" class="ui-textbox"  />
+                <!-- <select id="meterID" name="depart" validate="{required:true}">
+                     <option value="1" selected="selected">1049721501423</option>
+                 </select>-->
             </td>
         </tr>
-
+        <tr>
+            <td>
+                密钥：
+            </td>
+            <td>
+                <input id="meterKey"  name="meterKey" type="text" class="ui-textbox"  />
+            </td>
+        </tr>
         <tr>
             <td>
                 命令码：
@@ -91,7 +181,7 @@
             <td>
                 <select id="funCode" name="depart" validate="{required:true}">
                     <option value="01" selected="selected">(01)允许开启燃气表阀门</option>
-                    <!--<option value="03">(03)临时关闭燃气表阀门</option>
+                    <option value="03">(03)临时关闭燃气表阀门</option>
                     <option value="05">(05)及时读取指定燃气表数据</option>
                     <option value="06">(06)设置表具内运行气量</option>
                     <option value="07">(07)设置收费模式</option>
@@ -113,10 +203,9 @@
                     <option value="25">(25)更改表具每月抄表日(设置周期读表时间)</option>
                     <option value="26">(26)读表具定时数据</option>
                     <option value="27">(27)读表具定时更新单价时数据</option>
-                    <option value="28">(28)清除表具出错标志</option>
                     <option value="29">(29)读取历史阶梯周期使用量</option>
                     <option value="2B">(2B)定时变更价格</option>
-                    <option value="2E">(2E)通知（移动设备）现场设备通信状态</option>-->
+                    <option value="2E">(2E)通知（移动设备）现场设备通信状态</option>
                 </select>
             </td>
         </tr>

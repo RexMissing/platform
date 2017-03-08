@@ -16,6 +16,11 @@ import javax.jms.Message;
  */
 public class TestListener extends PooledMessageConsumerBase {
     @Override
+    public void register(Destination destination) {
+        receiveMessage(destination);
+    }
+
+    @Override
     public void onMessage(Message message) {
         if (message instanceof ActiveMQTextMessage) {
             try {
@@ -27,8 +32,5 @@ public class TestListener extends PooledMessageConsumerBase {
 //        super.onMessage(message);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    @Override
-    public void register(Destination destination) {
-       receiveMessage(destination);
-    }
+
 }

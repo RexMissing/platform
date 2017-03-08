@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Test {
     public static void main(String[] args) {
-        String s = "00022232";
+       /* String s = "00022232";
         byte[] aBytes = Hex.hexStringToBytes(s,4);
         System.out.println(aBytes[aBytes.length-1]);
         int b = 0;
@@ -18,6 +18,6 @@ public class Test {
             b+=Byte.toUnsignedInt(aBytes[i])*(1000000/k);
             k*=100;
         }
-        System.out.println(b);
+        System.out.println(b);*/
     }
 }

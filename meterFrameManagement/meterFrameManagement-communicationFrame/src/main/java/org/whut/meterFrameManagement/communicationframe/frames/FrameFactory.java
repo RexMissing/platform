@@ -633,7 +633,7 @@ public class FrameFactory {
 
 
 
-    //以下方法做回传测试
+    /*//以下方法做回传测试
     public static byte[] getAllowOpenValveBackFrame(String meterID, String keyStr, byte frameID) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
@@ -693,5 +693,5 @@ public class FrameFactory {
         sf.addParam(code8,1);
         sf.addParam(fID8,1);
         return sf.ProcFrame(keyStr);
-    }
+    }*/
 }

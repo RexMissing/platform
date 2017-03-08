@@ -31,11 +31,11 @@
             gridData.Rows = data;
             $("#maingrid").ligerGrid({
                 columns: [
-                    { display: '表号', name: 'meterID', align: 'left',minWidth: 60 },
+                    { display: '表号', name: 'meterID', align: 'left',minWidth: 200 },
                     { display: '命令码', name: 'funCode', minWidth: 30 },
                     { display: '帧id', name: 'frameID', minWidth: 30 },
                     { display: '传送方向', name: 'direction',minWidth:60 },
-                    { display: '执行结果', name: 'frameResult',minWidth:60 },
+                    { display: '回传帧结果', name: 'frameResult',minWidth:60 },
                     { display: '系统状态字节', name: 'xtztzj',minWidth:100 },
                     { display: '阀门位置', name: 'fmwz',minWidth:60 },
                     { display: '阀门位置错误', name: 'fmcw',minWidth:100 },
@@ -44,7 +44,7 @@
                     { display: '系统数据错', name: 'xtsjc',minWidth:60 },
                     { display: '剩余金额', name: 'remainMoney',minWidth:60 },
                     { display: '表止码', name: 'meterRead',minWidth:60 },
-                    { display: '上月用气总量', name: 'preSumAmount',minWidth:100 },
+                    { display: '上周期量', name: 'preSumAmount',minWidth:100 },
                     { display: '当前使用气价', name: 'price',minWidth:100 },
                     { display: '分段气量1', name: 'amount1',minWidth:60 },
                     { display: '分段气量2', name: 'amount2',minWidth:60 },
