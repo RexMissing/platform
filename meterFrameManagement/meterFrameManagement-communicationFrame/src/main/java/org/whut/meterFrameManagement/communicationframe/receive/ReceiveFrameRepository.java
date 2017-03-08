@@ -72,9 +72,9 @@ public class ReceiveFrameRepository {
                 int id = Byte.toUnsignedInt(cFunction.getFid());
                 funCodeFrameId.setFrameId(id);
                 if(cFunction.isSuccess())
-                    funCodeFrameId.setSuccessOrFail("SCCESS");
+                    funCodeFrameId.setSuccessOrFail("成功");
                 else
-                    funCodeFrameId.setSuccessOrFail("FAIL");
+                    funCodeFrameId.setSuccessOrFail("失败");
                 funList.add(funCodeFrameId);
             }
 

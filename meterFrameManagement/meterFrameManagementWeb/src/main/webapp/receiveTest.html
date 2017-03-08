@@ -21,14 +21,15 @@
     <script type="text/javascript">
         $(function(){
             $("#query").ligerButton();
+            $("#subDiv").hide();
         });
         function query(){
 
             $.post("rs/frame/getReceiveData",null,getCallBack,"json");
         }
         function getCallBack(data){
-            var gridData = {};
-            gridData.Rows = data;
+            var maingridData = {};
+            maingridData.Rows = data;
             $("#maingrid").ligerGrid({
                 columns: [
                     { display: '表号', name: 'meterID', align: 'left',minWidth: 200 },
@@ -52,15 +53,43 @@
                     { display: '本月已用气量', name: 'sumAmount',minWidth:100 },
                     { display: '表具时间', name: 'meterTime',minWidth:200 },
                     { display: '执行命令个数', name: 'funCount',minWidth:100 }
-                ], data:gridData,  height:300,pageSize:10 ,rownumbers:true
+                ], data:maingridData,  height:200,pageSize:10 ,rownumbers:true
             });
+
+            var commandgridData = {};
+            //commandgridData.Rows = getListFromJSON(data);
+            $("#commandgrid").ligerGrid({
+                columns: [
+                    { display: '命令码', name: 'funCode', minWidth: 30 },
+                    { display: '帧id', name: 'frameId', minWidth: 30 },
+                    { display: '执行结果', name: 'successOrFail',minWidth:60 }
+                ], data:commandgridData,  height:300,width:300,pageSize:8 ,rownumbers:true
+            });
+            $("#subDiv").show();
         }
+
+        /*function getListFromJSON(data){
+            var array = {};
+            for(var i in data){
+                if(Array.isArray(data[i])){
+                    array = data[i];
+                    break;
+                }
+            }
+            alert(array[1].funCode);
+            return array;
+        }*/
+
     </script>
 </head>
 <body style="padding:10px">
-<div><button id="query" onclick="query()">查询</button></div>
-<div id="maingrid" style="margin-top:50px"></div>
-
+<h1>测试解析统一回传数据</h1>
+<div style="margin-top: 30px"><button id="query" onclick="query()">查询</button></div>
+<div id="maingrid" style="margin-top:30px"></div>
+<div id="subDiv"  style="margin-top: 30px">
+    <div><h3>执行结果</h3></div>
+    <div id="commandgrid"></div>
+</div>
 </body>
 </html>
     

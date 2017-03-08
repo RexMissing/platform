@@ -57,7 +57,7 @@ public class 测试回传数据 {
                 CFunction cFunction = codeList.get(i);
                 System.out.println("命令码：" + Integer.toHexString(Byte.toUnsignedInt(cFunction.getCode()))
                         + "，" + "帧id：" + Byte.toUnsignedInt(cFunction.getFid())
-                +",SUCCESS:"+cFunction.isSuccess());
+                +",执行结果："+(cFunction.isSuccess()?"成功":"失败"));
             }
         }
     }
