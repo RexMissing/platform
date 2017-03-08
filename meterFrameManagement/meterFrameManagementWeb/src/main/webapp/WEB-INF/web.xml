@@ -18,7 +18,7 @@
 
     <listener>
         <description>activMQ消息监听启动</description>
-        <listener-class>org.whut.meterFrameManagement.mq.send.SendMessageReceiverStartListener</listener-class>
+        <listener-class>org.whut.meterFrameManagement.MQ.send.SendMessageReceiverStartListener</listener-class>
     </listener>
 
     <servlet>

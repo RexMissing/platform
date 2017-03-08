@@ -1,4 +1,4 @@
-package org.whut.meterFrameManagement.mq.queue;
+package org.whut.meterFrameManagement.MQ.queue;
 
 /**
  * Created by zhang_minzhong on 2017/3/2.

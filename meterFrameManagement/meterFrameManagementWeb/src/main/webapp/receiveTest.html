@@ -57,7 +57,7 @@
             });
 
             var commandgridData = {};
-            //commandgridData.Rows = getListFromJSON(data);
+            commandgridData.Rows = data[0].list;//getListFromJSON(data);
             $("#commandgrid").ligerGrid({
                 columns: [
                     { display: '命令码', name: 'funCode', minWidth: 30 },

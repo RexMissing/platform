@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.whut.meterFrameManagement.communicationframe.entity.*;
 import org.whut.meterFrameManagement.communicationframe.receive.ReceiveData;
 import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrameRepository;
-import org.whut.meterFrameManagement.mq.send.SendProducer;
+import org.whut.meterFrameManagement.MQ.send.SendProducer;
 import org.whut.meterFrameManagement.util.date.DateUtil;
 
 import javax.ws.rs.*;
