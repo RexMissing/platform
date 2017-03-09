@@ -4,15 +4,15 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-import org.whut.meterFrameManagement.communicationframe.key.TestKey;
-import org.whut.meterFrameManagement.communicationframe.receive.CFunction;
-import org.whut.meterFrameManagement.communicationframe.receive.MeterStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.whut.meterFrameManagement.MQ.receive.ReceiveProducer;
 import org.whut.meterFrameManagement.communicationframe.send.SendFrameRepository;
-import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
 import org.whut.meterFrameManagement.util.date.DateUtil;
-import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrameRepository;
+import org.whut.meterFrameManagement.util.hex.Hex;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhang_minzhong on 2017/1/3.
@@ -21,6 +21,9 @@ public class FrameServerHandler extends IoHandlerAdapter {
     //public static final PlatformLogger logger = PlatformLogger.getLogger(FrameServerHandler.class);
     private List<Map<String,byte[]>> sendList = SendFrameRepository.sendList;//new ArrayList<Map<String, byte[]>>();
     private  List<String> jsonList = SendFrameRepository.jsonList;
+
+    @Autowired
+    private ReceiveProducer receiveProducer;
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
@@ -128,10 +131,15 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 for(int i=0;i<command.length;i++){
                     command[i] = request[i+16];
                 }
+
+                // 测试，只有表具发过来的回传帧进队列
+                String mqMessage = Hex.BytesToHexString(command);
+                receiveProducer.dispatchMessage(mqMessage);
+
                 /*
                   解析帧
                 */
-                ReceiveFrame rf =  new ReceiveFrame();
+                /*ReceiveFrame rf =  new ReceiveFrame();
                 rf.ParseFrom(command, TestKey.KEYSTR);
                 ReceiveFrameRepository.write(rf);
 
@@ -169,7 +177,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                                 + "，" + "帧id：" + Byte.toUnsignedInt(cFunction.getFid())
                         +"，"+"是否执行成功："+cFunction.isSuccess());
                     }
-                }
+                }*/
 
                 byte[] response = new byte[3];
                 response[0] = 0x68;

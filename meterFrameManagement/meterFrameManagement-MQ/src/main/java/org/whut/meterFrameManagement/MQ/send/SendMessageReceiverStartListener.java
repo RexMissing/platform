@@ -1,8 +1,8 @@
-package org.whut.meterFrameManagement.mq.send;
+package org.whut.meterFrameManagement.MQ.send;
 
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.whut.meterFrameManagement.mq.queue.QueueName;
+import org.whut.meterFrameManagement.MQ.queue.QueueName;
 
 import javax.jms.JMSException;
 import javax.jms.Queue;

@@ -1,13 +1,11 @@
-package org.whut.meterFrameManagement.mq.send;
+package org.whut.meterFrameManagement.MQ.send;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
-import org.whut.meterFrameManagement.mq.queue.QueueName;
+import org.whut.meterFrameManagement.MQ.queue.QueueName;
 import org.whut.platform.fundamental.activemq.api.PooledMessageDispatcher;
 import org.whut.platform.fundamental.activemq.api.PooledMessageProducer;
 
-import javax.jms.Destination;
 import javax.jms.MessageNotWriteableException;
-import javax.jms.ObjectMessage;
 
 /**
  * Created by zhang_minzhong on 2017/3/2.

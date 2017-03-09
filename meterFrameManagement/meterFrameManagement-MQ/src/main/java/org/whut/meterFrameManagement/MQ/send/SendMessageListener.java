@@ -1,4 +1,4 @@
-package org.whut.meterFrameManagement.mq.send;
+package org.whut.meterFrameManagement.MQ.send;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.whut.meterFrameManagement.communicationframe.send.SendFrameRepository;

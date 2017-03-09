@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-aes/src/main/java/org/whut/meterFrameManagement/aes256/AES.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-aes/src/main/java/org/whut/meterFrameManagement/aes256/AES256.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-aes/src/main/java/org/whut/meterFrameManagement/aes256/AES256Context.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communication/src/main/resources/META-INF/spring/mina-applicationContext.xml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/base/CommandFrame.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/base/FrameParam.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/src/main/java/org/whut/meterFrameManagement/communicationframe/enums/FrameDirection.java" charset="UTF-8" />

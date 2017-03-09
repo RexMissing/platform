@@ -4,7 +4,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.whut.meterFrameManagement.communicationframe.entity.*;
 import org.whut.meterFrameManagement.communicationframe.enums.ValveCtrStyle;
 import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
-import org.whut.meterFrameManagement.communicationframe.key.MeterID;
 import org.whut.meterFrameManagement.communicationframe.key.TestKey;
 import org.whut.meterFrameManagement.util.date.DateUtil;
 

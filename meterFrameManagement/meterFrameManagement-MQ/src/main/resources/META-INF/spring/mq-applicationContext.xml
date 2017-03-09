@@ -7,13 +7,32 @@
          http://www.springframework.org/schema/context/spring-context-3.0.xsd
      http://www.springframework.org/schema/beans
      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-<!--<import resource="activemq-applicationContext.xml"/>-->
-    <bean id="sendProducer" class="org.whut.meterFrameManagement.mq.send.SendProducer" >
+    <!--<import resource="activemq-applicationContext.xml"/>-->
+    <bean id="sendProducer" class="org.whut.meterFrameManagement.MQ.send.SendProducer" >
         <property name="pooledMessageProducer" ref="pooledMessageProducer"/>
     </bean>
 
-    <bean id="sendMessageListener" class="org.whut.meterFrameManagement.mq.send.SendMessageListener"
+    <bean id="sendMessageListener" class="org.whut.meterFrameManagement.MQ.send.SendMessageListener"
           init-method="start" destroy-method="stop" scope="prototype" >
+        <property name="myConnectionFactory" ref="consumerConnectionFactory" />
+        <property name="brokers">
+            <list>
+                <value>localhostA</value>
+                <!--<value>localhostB</value>-->
+                <!--&lt;!&ndash;<value>localhostC</value>&ndash;&gt;-->
+            </list>
+        </property>
+    </bean>
+
+
+
+    <!--表具回传给服务器的帧进消息队列-->
+    <bean id="receiveProducer" class="org.whut.meterFrameManagement.MQ.receive.ReceiveProducer">
+        <property name="pooledMessageProducer" ref="pooledMessageProducer"/>
+    </bean>
+
+    <bean id="receiveMessageListener" class="org.whut.meterFrameManagement.MQ.receive.ReceiveMessageListener"
+          init-method="start" destroy-method="stop" scope="prototype">
         <property name="myConnectionFactory" ref="consumerConnectionFactory" />
         <property name="brokers">
             <list>

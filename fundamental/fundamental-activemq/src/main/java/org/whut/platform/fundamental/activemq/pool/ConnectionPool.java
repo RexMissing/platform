@@ -8,7 +8,6 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.

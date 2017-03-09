@@ -10,5 +10,4 @@
 
     <context:annotation-config></context:annotation-config>
     <context:component-scan base-package="org.whut.meterFrameManagement.business.web"></context:component-scan>
-
 </beans>

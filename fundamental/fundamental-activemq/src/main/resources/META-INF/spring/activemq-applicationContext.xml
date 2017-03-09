@@ -98,7 +98,7 @@
         <property name="sessionFactoryConfig" ref="sessionFactoryConfig"/>
     </bean>
 
-    <!--<bean id="testListener" class="org.whut.platform.fundamental.activemq.test.TestSessionListener">-->
-        <!--<property name="sessionPool" ref="sessionPool"/>-->
-    <!--</bean>-->
+    <!--<bean id="testListener" class="org.whut.platform.fundamental.activemq.test.TestSessionListener">
+        <property name="sessionPool" ref="sessionPool"/>
+    </bean>-->
 </beans>
