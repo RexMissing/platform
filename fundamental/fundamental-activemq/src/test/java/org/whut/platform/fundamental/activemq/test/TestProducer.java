@@ -1,9 +1,11 @@
 package org.whut.platform.fundamental.activemq.test;
 
+import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.whut.platform.fundamental.activemq.api.PooledMessageDispatcher;
 import org.whut.platform.fundamental.activemq.api.PooledMessageProducer;
 
+import javax.jms.Message;
 import javax.jms.MessageNotWriteableException;
 
 /**
