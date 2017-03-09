@@ -54,9 +54,9 @@ public class ReceiveFrameRepository {
         if(funCode==0x3E){
             receiveData.setPreSumAmount(meterStatus.getPresumamount());//上周期量
             receiveData.setPrice(meterStatus.getPrice());//单价
-            receiveData.setAmount1(meterStatus.getAmount1());//分段气量1
-            receiveData.setAmount2(meterStatus.getAmount2());//分段气量2
-            receiveData.setAmount3(meterStatus.getAmount3());//分段气量3
+            receiveData.setAmount1(meterStatus.getAmount1());//阶梯起始1
+            receiveData.setAmount2(meterStatus.getAmount2());//阶梯起始2
+            receiveData.setAmount3(meterStatus.getAmount3());//阶梯起始3
             receiveData.setSumAmount(meterStatus.getSumamount());//本周期量
             receiveData.setMeterTime(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(meterStatus.getMeterTime()));//表具时间
             receiveData.setFunCount(rf.getFuncCount());//执行命令数
@@ -72,9 +72,9 @@ public class ReceiveFrameRepository {
                 int id = Byte.toUnsignedInt(cFunction.getFid());
                 funCodeFrameId.setFrameId(id);
                 if(cFunction.isSuccess())
-                    funCodeFrameId.setSuccessOrFail("SCCESS");
+                    funCodeFrameId.setSuccessOrFail("成功");
                 else
-                    funCodeFrameId.setSuccessOrFail("FAIL");
+                    funCodeFrameId.setSuccessOrFail("失败");
                 funList.add(funCodeFrameId);
             }
 

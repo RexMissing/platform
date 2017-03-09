@@ -21,14 +21,17 @@
     <script type="text/javascript">
         $(function(){
             $("#query").ligerButton();
+            $("#subDiv").hide();
         });
         function query(){
-
+            $("#subDiv").hide();
             $.post("rs/frame/getReceiveData",null,getCallBack,"json");
         }
+        var backData;
         function getCallBack(data){
-            var gridData = {};
-            gridData.Rows = data;
+            backData = data;
+            var maingridData = {};
+            maingridData.Rows = data;
             $("#maingrid").ligerGrid({
                 columns: [
                     { display: '表号', name: 'meterID', align: 'left',minWidth: 200 },
@@ -46,21 +49,44 @@
                     { display: '表止码', name: 'meterRead',minWidth:60 },
                     { display: '上周期量', name: 'preSumAmount',minWidth:100 },
                     { display: '当前使用气价', name: 'price',minWidth:100 },
-                    { display: '分段气量1', name: 'amount1',minWidth:60 },
-                    { display: '分段气量2', name: 'amount2',minWidth:60 },
-                    { display: '分段气量3', name: 'amount3',minWidth:60 },
+                    { display: '阶梯起始1', name: 'amount1',minWidth:60 },
+                    { display: '阶梯起始2', name: 'amount2',minWidth:60 },
+                    { display: '阶梯起始3', name: 'amount3',minWidth:60 },
                     { display: '本月已用气量', name: 'sumAmount',minWidth:100 },
                     { display: '表具时间', name: 'meterTime',minWidth:200 },
-                    { display: '执行命令个数', name: 'funCount',minWidth:100 }
-                ], data:gridData,  height:300,pageSize:10 ,rownumbers:true
+                    { display: '执行命令个数', name: 'funCount',minWidth:100 },
+                    { display: '操作', isSort: false, minWidth: 120, render: function (rowdata, rowindex, value) {
+                        var h = "<a href='javascript:getCommand(" + rowindex + ")'>查看执行命令</a> ";
+                        return h;
+                    }
+                    }
+                ], data:maingridData,  height:200,pageSize:10 ,rownumbers:true
             });
         }
+
+        function getCommand(index){
+            var commandgridData = {};
+            commandgridData.Rows = backData[index].list;//getListFromJSON(data);
+            $("#commandgrid").ligerGrid({
+                columns: [
+                    { display: '命令码', name: 'funCode', minWidth: 30 },
+                    { display: '帧id', name: 'frameId', minWidth: 30 },
+                    { display: '执行结果', name: 'successOrFail',minWidth:60 }
+                ], data:commandgridData,  height:300,width:300,pageSize:8 ,rownumbers:true
+            });
+            $("#subDiv").show();
+        }
+
     </script>
 </head>
 <body style="padding:10px">
-<div><button id="query" onclick="query()">查询</button></div>
-<div id="maingrid" style="margin-top:50px"></div>
-
+<h1>测试解析统一回传数据</h1>
+<div style="margin-top: 30px"><button id="query" onclick="query()">查询</button></div>
+<div id="maingrid" style="margin-top:30px"></div>
+<div id="subDiv"  style="margin-top: 30px">
+    <div><h3>执行结果</h3></div>
+    <div id="commandgrid"></div>
+</div>
 </body>
 </html>
     

@@ -27,12 +27,6 @@ public class SendMessageListener extends PooledMessageConsumerBase {
                 sendMessage = ((ActiveMQTextMessage)message).getText();
                 String s = new String(sendMessage);
                 SendFrameRepository.jsonList.add(s);
-                /*ObjectMapper objectMapper = new ObjectMapper();
-            ValveControl valveControl = objectMapper.readValue(sendMessage, ValveControl.class);
-            System.out.println(valveControl.getMeterID()+","
-                    + Byte.toUnsignedInt(valveControl.getFunCode())+","
-                    +valveControl.getFrameID()+"," +valveControl.getKey()+","+valveControl.getType()+","
-                    +valveControl.getAtDT()+","+valveControl.getTimeCorrection());*/
             } catch (JMSException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }

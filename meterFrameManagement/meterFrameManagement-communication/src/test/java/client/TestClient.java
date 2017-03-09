@@ -43,7 +43,7 @@ public class TestClient {
         }
         System.out.println("连接成功");
         try {
-            Thread.sleep(1000);
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -108,7 +108,7 @@ public class TestClient {
                     break;
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

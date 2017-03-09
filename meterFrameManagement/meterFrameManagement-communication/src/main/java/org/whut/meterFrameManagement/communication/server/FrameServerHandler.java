@@ -51,7 +51,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 meterId += (char)request[2+i];
             }
             System.out.println("查询表号："+meterId);
-
+            System.out.println();
             if(Byte.toUnsignedInt(request[1]) == 0xA1){//签到
                 byte[] response = new byte[8];
                 response[0] = 0x68;

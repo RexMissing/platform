@@ -4,6 +4,7 @@ package org.whut.meterFrameManagement.communicationframe.receive;
  * Created by zhang_minzhong on 2017/2/28.
  */
 public class FunCodeFrameId {
+
     private String funCode;
     private int frameId;
     private String successOrFail;
