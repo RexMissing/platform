@@ -23,7 +23,7 @@
           class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
           init-method="bind" destroy-method="dispose">
         <property name="defaultLocalAddress" value=":3535"/>
-        <property name="handler" ref="SampleHandler"/>
+        <property name="handler" ref="frameServerHandler"/>
         <property name="filterChainBuilder" ref="filterChainBuilder"/>
         <property name="reuseAddress" value="true"/>
     </bean>
@@ -35,9 +35,8 @@
     </bean>
 
     <!-- 定义服务器的handler -->
-    <bean id="SampleHandler" class="org.whut.meterFrameManagement.communication.server.FrameServerHandler">
+    <bean id="frameServerHandler" class="org.whut.meterFrameManagement.communication.server.FrameServerHandler">
     </bean>
-
 
     <bean id="executorFilter"
           class="org.apache.mina.filter.executor.ExecutorFilter"/>
@@ -66,5 +65,4 @@
             </map>
         </property>
     </bean>
-
 </beans>

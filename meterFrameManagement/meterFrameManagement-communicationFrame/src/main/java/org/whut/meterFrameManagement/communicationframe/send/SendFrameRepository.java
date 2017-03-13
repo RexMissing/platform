@@ -13,7 +13,7 @@ import java.util.*;
 public class SendFrameRepository {
 
     //用于存储json数据的list
-    public static List<String> jsonList = new ArrayList<String>();
+    public static List<String> jsonList = Collections.synchronizedList(new ArrayList<String>());
     //用于存储发送指令的测试list
     public static List<Map<String,byte[]>> sendList = new ArrayList<Map<String, byte[]>>();
 
@@ -105,7 +105,8 @@ public class SendFrameRepository {
                         ChangeMoneyParam changeMoneyParam = objectMapper.readValue(jsonString,ChangeMoneyParam.class);
                         sendBytes = FrameFactory.getChangeMoneyFrame(changeMoneyParam.getMeterID()
                                 ,changeMoneyParam.getKey(),changeMoneyParam.getFrameID()
-                                ,changeMoneyParam.getMoney(),changeMoneyParam.getTimeCorrection());
+                                ,changeMoneyParam.getMoney(),changeMoneyParam.getCzfs()
+                                ,changeMoneyParam.getHxbj(),changeMoneyParam.getTimeCorrection());
                         map = new HashMap<String, byte[]>();
                         map.put(jsonString,sendBytes);
                         sendList.add(map);
@@ -178,10 +179,10 @@ public class SendFrameRepository {
                     case 0x16:
                         sendBytes = new byte[0];
                         objectMapper = new ObjectMapper();
-                        SetBeatHeartParam setBeatHeartParam = objectMapper.readValue(jsonString,SetBeatHeartParam.class);
-                        sendBytes = FrameFactory.getSetKeyFrame(setBeatHeartParam.getMeterID(),
-                                setBeatHeartParam.getKey(),setBeatHeartParam.getFrameID(),
-                                setBeatHeartParam.getTimeCorrection());
+                        SetKeyParam setKeyParam = objectMapper.readValue(jsonString,SetKeyParam.class);
+                        sendBytes = FrameFactory.getSetKeyFrame(setKeyParam.getMeterID(),
+                                setKeyParam.getKey(),setKeyParam.getnKey(),setKeyParam.getFrameID(),
+                                setKeyParam.getTimeCorrection());
                         map = new HashMap<String, byte[]>();
                         map.put(jsonString,sendBytes);
                         sendList.add(map);

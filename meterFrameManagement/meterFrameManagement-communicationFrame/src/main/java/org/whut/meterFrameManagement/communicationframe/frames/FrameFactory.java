@@ -211,31 +211,44 @@ public class FrameFactory {
         return sf.ProcFrame(key);
     }
 
-    /// <summary>
-    /// 变更金额帧
-    /// </summary>
-    /// <param name="resid">表具编号</param>
-    /// <param name="key">表具秘钥</param>
-    /// <param name="fid">充值ID</param>
-    /// <param name="money">充值金额，可为负数</param>
-    /// <param name="tmCorrection">时间修正值</param>
-    /// <returns></returns>
-    public static byte[] getChangeMoneyFrame(String meterID, String key, byte frameID, double money, long timeCorrection) {
+
+    //变更金额帧
+    // <param name="resid">表具编号</param>
+    // <param name="key">表具秘钥</param>
+    // <param name="fid">充值ID</param>
+    // <param name="money">充值金额，可为负数</param>
+    //czfs
+    // <param name="tmCorrection">时间修正值</param>
+    // <returns></returns>
+
+    /**
+     *
+     * @param meterID 表具编号
+     * @param key 表具秘钥
+     * @param frameID 帧id
+     * @param money 充值金额，可为负数
+     * @param czfs 操作方式
+     * @param hxbj 核销标记
+     * @param timeCorrection
+     * @return
+     */
+    public static byte[] getChangeMoneyFrame(String meterID, String key, byte frameID, double money,int czfs,int hxbj, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setFrameID(frameID);
         sf.setFuncCode((byte) 0x0A);
         double dMon;
-        int czfs = 0;
+        //int czfs = 0;
         if (money > 0) {
             dMon = money;
-            czfs = 0;
+            //czfs = 0;
         } else {
             dMon = money * -1;
-            czfs = 1;
+            //czfs = 1;
         }
         sf.addParam(dMon, 4);
         sf.addParam(czfs, 1);
+        sf.addParam(hxbj,1);
         sf.setTimeCorrection(timeCorrection);
         //byte[] frame = sf.ProcFrame(key);
         return sf.ProcFrame(key);
@@ -249,7 +262,7 @@ public class FrameFactory {
         sf.setMeterID(meterID);
         sf.setFrameID(frameID);
         sf.setTimeCorrection(timeCorrection);
-        sf.addParam(1, 1);
+        sf.addParam(N, 1);
         sf.addParam(serverNo);
         //byte[] frame = sf.ProcFrame(key);
         return sf.ProcFrame(key);
@@ -272,8 +285,14 @@ public class FrameFactory {
         sf.setMeterID(meterID);
         sf.setFrameID(frameID);
         sf.setTimeCorrection(timeCorrection);
-        sf.addParam(serverIP);
-        sf.addParam(serverPort);
+        byte[] ipBytes = new byte[4];
+        String[] strArr = serverIP.split("\\.");
+        for(int i=0;i<4;i++){
+            ipBytes[i] = (byte) Integer.parseInt(strArr[i]);
+        }
+        sf.addParam(ipBytes);
+        int port = Integer.parseInt(serverPort);
+        sf.addParam(port,2);
 
         return sf.ProcFrame(key);
     }
@@ -342,20 +361,21 @@ public class FrameFactory {
     /**
      * 设置密钥
      *
-     * @param meterID
-     * @param key
-     * @param frameID
+     * @param meterID 表号
+     * @param key 密钥
+     * @param nkey 新密钥
+     * @param frameID 帧id
      * @param timeCorrection
      * @return
      */
-    public static byte[] getSetKeyFrame(String meterID, String key, byte frameID, long timeCorrection) {
+    public static byte[] getSetKeyFrame(String meterID, String key, String nkey,byte frameID, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setFuncCode((byte) 0x16);
         sf.setMeterID(meterID);
         sf.setFrameID(frameID);
         sf.setTimeCorrection(timeCorrection);
-        sf.addParam(key);
-
+        byte[] nByteKey = getKeyBytes(nkey);
+        sf.addParam(nByteKey);
         return sf.ProcFrame(key);
     }
 
@@ -447,7 +467,7 @@ public class FrameFactory {
                                            String nkey, Date beginDT, byte clen, byte cbr, int bzql, int szql) {
         //String strResult = "";
         //生成新密钥数组
-        byte[] bKey = getKeyBytes(nkey);
+        byte[] nByteKey = getKeyBytes(nkey);
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterId);
         sf.setFuncCode((byte) 0x23);
@@ -460,7 +480,7 @@ public class FrameFactory {
         sf.addParam(p3, 2);
         sf.addParam(a3, 2, true);
         sf.addParam(money, 4);
-        sf.addParam(bKey);
+        sf.addParam(nByteKey);
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(beginDT.getTime());
         //System.out.println(c.get(Calendar.MONTH)+1);

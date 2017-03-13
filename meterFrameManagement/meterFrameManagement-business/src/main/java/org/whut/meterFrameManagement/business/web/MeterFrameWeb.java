@@ -216,6 +216,8 @@ public class MeterFrameWeb {
         cmp.setFrameID((byte) 1);
         cmp.setKey(meterKey);
         cmp.setMoney(1234.5);
+        cmp.setCzfs(0);
+        cmp.setHxbj(0);
         cmp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -396,16 +398,17 @@ public class MeterFrameWeb {
         if(meterID.length()!=13)
             return "{\"result\":\"表号不正确\"}";
         funCode = funCode.trim();
-        SetBeatHeartParam setBeatHeartParam = new SetBeatHeartParam();
-        setBeatHeartParam.setMeterID(meterID);
-        setBeatHeartParam.setFunCode(funCode);
-        setBeatHeartParam.setFrameID((byte) 1);
-        setBeatHeartParam.setKey(meterKey);
-        setBeatHeartParam.setTimeCorrection(123);
+        SetKeyParam setKeyParam = new SetKeyParam();
+        setKeyParam.setMeterID(meterID);
+        setKeyParam.setFunCode(funCode);
+        setKeyParam.setFrameID((byte) 1);
+        setKeyParam.setKey(meterKey);
+        setKeyParam.setnKey(meterKey);
+        setKeyParam.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
         try {
-            s = objectMapper.writeValueAsString(setBeatHeartParam);
+            s = objectMapper.writeValueAsString(setKeyParam);
             sendProducer.dispatchMessage(s);
         } catch (Exception e) {
             return "{\"result\":\"指令发送失败\"}";

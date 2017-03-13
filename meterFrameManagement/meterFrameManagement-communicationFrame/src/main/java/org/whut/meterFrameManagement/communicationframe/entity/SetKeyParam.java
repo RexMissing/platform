@@ -1,18 +1,14 @@
 package org.whut.meterFrameManagement.communicationframe.entity;
 
-import java.util.Date;
-
 /**
- * Created by zhang_minzhong on 2017/3/7.
+ * Created by zhang_minzhong on 2017/3/10.
  */
-public class ChangeMoneyParam {
+public class SetKeyParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private double money;
-    private int czfs;
-    private int hxbj;
+    private String nKey;
     private long timeCorrection;
 
     public byte getFrameID() {
@@ -47,28 +43,12 @@ public class ChangeMoneyParam {
         this.meterID = meterID;
     }
 
-    public double getMoney() {
-        return money;
+    public String getnKey() {
+        return nKey;
     }
 
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
-    public int getCzfs() {
-        return czfs;
-    }
-
-    public void setCzfs(int czfs) {
-        this.czfs = czfs;
-    }
-
-    public int getHxbj() {
-        return hxbj;
-    }
-
-    public void setHxbj(int hxbj) {
-        this.hxbj = hxbj;
+    public void setnKey(String nKey) {
+        this.nKey = nKey;
     }
 
     public long getTimeCorrection() {

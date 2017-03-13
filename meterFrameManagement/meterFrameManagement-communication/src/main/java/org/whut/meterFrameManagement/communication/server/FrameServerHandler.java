@@ -18,9 +18,6 @@ import java.util.Map;
  * Created by zhang_minzhong on 2017/1/3.
  */
 public class FrameServerHandler extends IoHandlerAdapter {
-    //public static final PlatformLogger logger = PlatformLogger.getLogger(FrameServerHandler.class);
-    private List<Map<String,byte[]>> sendList = SendFrameRepository.sendList;//new ArrayList<Map<String, byte[]>>();
-    private  List<String> jsonList = SendFrameRepository.jsonList;
 
     @Autowired
     private ReceiveProducer receiveProducer;
@@ -38,7 +35,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
-        //System.out.println("messageReceived方法线程id："+Thread.currentThread().getId()+"，名称："+Thread.currentThread().getName());
+       //System.out.println("messageReceived方法线程id："+Thread.currentThread().getId()+"，名称："+Thread.currentThread().getName());
         byte[] request = ((IoBuffer)message).array();
         System.out.print("服务端收到：");
         for(int i = 0;i<request.length;i++){
@@ -82,6 +79,8 @@ public class FrameServerHandler extends IoHandlerAdapter {
             }
             if(Byte.toUnsignedInt(request[1]) == 0xA2){//查询
                 SendFrameRepository.makeSendFrame();//启动服务器时用
+                List<Map<String,byte[]>> sendList = SendFrameRepository.sendList;
+                List<String> jsonList = SendFrameRepository.jsonList;
                 System.out.println("指令剩余条数：" + sendList.size());
                 boolean flag = false;
                 for(int i = 0;i<sendList.size();i++){
