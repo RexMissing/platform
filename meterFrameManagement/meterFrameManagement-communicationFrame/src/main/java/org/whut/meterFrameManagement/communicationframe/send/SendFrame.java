@@ -331,7 +331,6 @@ public class SendFrame extends CommandFrame {
         String hexStr = Hex.BytesToHexString(buff);
         System.out.println("加密后16进制帧字符串："+hexStr.toUpperCase());
         System.out.println();
-        System.out.println();
         return buff;
     }
 

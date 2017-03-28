@@ -81,6 +81,9 @@
                 case "1E":
                     $.post("rs/frame/regularRead",data,callBack,"json");
                     break;
+                case "1F":
+                    $.post("rs/frame/changePriceAtTime",data,callBack,"json");
+                    break;
                 case "20":
                     $.post("rs/frame/timingClose",data,callBack,"json");
                     break;
@@ -105,9 +108,8 @@
                 case "29":
                     $.post("rs/frame/readCycleInfo",data,callBack,"json");
                     break;
-                case "2B":
-                    $.post("rs/frame/changePriceAtTime",data,callBack,"json");
-                    break;
+
+
                 case "2E":
                     $.post("rs/frame/notifyTXZT",data,callBack,"json");
                     break;
@@ -180,32 +182,35 @@
             </td>
             <td>
                 <select id="funCode" name="depart" validate="{required:true}">
-                    <option value="01" selected="selected">(01)允许开启燃气表阀门</option>
-                    <option value="03">(03)临时关闭燃气表阀门</option>
-                    <option value="05">(05)及时读取指定燃气表数据</option>
-                    <option value="06">(06)设置表具内运行气量</option>
-                    <option value="07">(07)设置收费模式</option>
-                    <option value="08">(08)及时变更价格</option>
-                    <option value="0A">(0A)变更金额</option>
-                    <option value="0C">(0C)强制关闭燃气表阀门</option>
-                    <option value="0D">(0D)变更服务号码</option>
+                    <option value="01" selected="selected">(01)燃气表开门命令</option>
+                    <option value="03">(03)燃气表关门命令</option>
+                    <option value="05">(05)读燃气命令</option>
+                    <option value="06">(06)更新总用气量命令</option>
+                   <!-- <option value="07">(07)设置收费模式</option>-->
+                    <option value="08">(08)更新单价命令</option>
+                    <option value="0A">(0A)更新气款命令</option>
+                    <option value="0C">(0C)燃气表停气关门命令</option>
+                   <!-- <option value="0D">(0D)变更服务号码</option>
                     <option value="0F">(0F)设置服务器IP以及端口号</option>
                     <option value="10">(10)设置心跳包频率</option>
                     <option value="11">(11)发送心跳包</option>
-                    <option value="12">(12)设置集中器所辖表具</option>
-                    <option value="16">(16)设置密钥</option>
-                    <option value="18">(18)撤销中继器所辖表具</option>
-                    <option value="1E">(1E)定时读取指定燃气表数据</option>
-                    <option value="20">(20)定时关闭燃气表阀门</option>
+                    <option value="12">(12)设置集中器所辖表具</option>-->
+                    <option value="16">(16)更新密钥</option>
+                    <!--<option value="18">(18)撤销中继器所辖表具</option>-->
+                    <option value="1E">(1E)定时抄表</option>
+
+                    <option value="1F">(1F)定时更新单价</option>
+
+                    <option value="20">(20)定时关阀 </option>
                     <option value="21">(21)更改透支方式</option>
-                    <option value="22">(22)设置表具通讯模块启动周期</option>
-                    <option value="23">(23)表具开通</option>
-                    <option value="25">(25)更改表具每月抄表日(设置周期读表时间)</option>
-                    <option value="26">(26)读表具定时数据</option>
-                    <option value="27">(27)读表具定时更新单价时数据</option>
-                    <option value="29">(29)读取历史阶梯周期使用量</option>
-                    <option value="2B">(2B)定时变更价格</option>
-                    <option value="2E">(2E)通知（移动设备）现场设备通信状态</option>
+                    <option value="22">(22)设置表具短信模块启动周</option>
+                    <option value="23">(23)开通命令</option>
+                    <option value="25">(25)周期读表</option>
+                    <option value="26">(26)读定时读表数据</option>
+                    <option value="27">(27)读定时更新单价数据</option>
+                    <option value="29">(29)读表上历史用量</option>
+                   <!-- <option value="2B">(2B)定时变更价格</option>
+                    <option value="2E">(2E)通知（移动设备）现场设备通信状态</option>-->
                 </select>
             </td>
         </tr>

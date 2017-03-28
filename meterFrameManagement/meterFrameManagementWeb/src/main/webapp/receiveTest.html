@@ -34,33 +34,33 @@
             maingridData.Rows = data;
             $("#maingrid").ligerGrid({
                 columns: [
-                    { display: '表号', name: 'meterID', align: 'left',minWidth: 200 },
+                    { display: '表号', name: 'meterID',minWidth: 120 },
                     { display: '命令码', name: 'funCode', minWidth: 30 },
                     { display: '帧id', name: 'frameID', minWidth: 30 },
                     { display: '传送方向', name: 'direction',minWidth:60 },
                     { display: '回传帧结果', name: 'frameResult',minWidth:60 },
                     { display: '系统状态字节', name: 'xtztzj',minWidth:100 },
                     { display: '阀门位置', name: 'fmwz',minWidth:60 },
-                    { display: '阀门位置错误', name: 'fmcw',minWidth:100 },
+                    { display: '阀门位置错', name: 'fmcw',minWidth:60 },
                     { display: '传感错误', name: 'cggz',minWidth:60 },
                     { display: '透支状态', name: 'tzzt',minWidth:60 },
                     { display: '系统数据错', name: 'xtsjc',minWidth:60 },
                     { display: '剩余金额', name: 'remainMoney',minWidth:60 },
                     { display: '表止码', name: 'meterRead',minWidth:60 },
-                    { display: '上周期量', name: 'preSumAmount',minWidth:100 },
+                    { display: '上周期量', name: 'preSumAmount',minWidth:60 },
                     { display: '当前使用气价', name: 'price',minWidth:100 },
                     { display: '阶梯起始1', name: 'amount1',minWidth:60 },
                     { display: '阶梯起始2', name: 'amount2',minWidth:60 },
                     { display: '阶梯起始3', name: 'amount3',minWidth:60 },
                     { display: '本月已用气量', name: 'sumAmount',minWidth:100 },
-                    { display: '表具时间', name: 'meterTime',minWidth:200 },
+                    { display: '表具时间', name: 'meterTime',minWidth:150 },
                     { display: '执行命令个数', name: 'funCount',minWidth:100 },
                     { display: '操作', isSort: false, minWidth: 120, render: function (rowdata, rowindex, value) {
                         var h = "<a href='javascript:getCommand(" + rowindex + ")'>查看执行命令</a> ";
                         return h;
                     }
                     }
-                ], data:maingridData,  height:200,pageSize:10 ,rownumbers:true
+                ], data:maingridData,  height:400,pageSize:10 ,rownumbers:true
             });
         }
 
@@ -72,7 +72,7 @@
                     { display: '命令码', name: 'funCode', minWidth: 30 },
                     { display: '帧id', name: 'frameId', minWidth: 30 },
                     { display: '执行结果', name: 'successOrFail',minWidth:60 }
-                ], data:commandgridData,  height:300,width:300,pageSize:8 ,rownumbers:true
+                ], data:commandgridData,  height:150,width:300,pageSize:8 ,rownumbers:true
             });
             $("#subDiv").show();
         }

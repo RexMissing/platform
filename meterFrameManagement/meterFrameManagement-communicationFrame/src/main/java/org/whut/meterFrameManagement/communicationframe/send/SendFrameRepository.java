@@ -1,7 +1,7 @@
 package org.whut.meterFrameManagement.communicationframe.send;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.whut.meterFrameManagement.communicationframe.entity.*;
+import org.whut.meterFrameManagement.communicationframe.convert.*;
 import org.whut.meterFrameManagement.communicationframe.enums.ValveCtrStyle;
 import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
 
@@ -15,7 +15,7 @@ public class SendFrameRepository {
     //用于存储json数据的list
     public static List<String> jsonList = Collections.synchronizedList(new ArrayList<String>());
     //用于存储发送指令的测试list
-    public static List<Map<String,byte[]>> sendList = new ArrayList<Map<String, byte[]>>();
+    public static List<Map<String,byte[]>> sendList = Collections.synchronizedList(new ArrayList<Map<String, byte[]>>());
 
 
     /**
@@ -69,6 +69,11 @@ public class SendFrameRepository {
                         sendBytes = new byte[0];
                         objectMapper = new ObjectMapper();
                         RunTimeGasParam rgp = objectMapper.readValue(jsonString,RunTimeGasParam.class);
+                        byte[] lszqyl = rgp.getLszqyl();
+                        for(int k=0;k<lszqyl.length;k++){
+                            System.out.print(lszqyl[k]+" ");
+                        }
+                        System.out.println();
                         sendBytes = FrameFactory.getMeterUseSetFrame(rgp.getMeterID(),rgp.getKey()
                                 ,rgp.getFrameID(),rgp.getCzfs1(),rgp.getZyql(),rgp.getCzfs2(),rgp.getBzq()
                                 ,rgp.getCzfs3(),rgp.getSzq(),rgp.getFs(),rgp.getLszqyl()
@@ -212,6 +217,21 @@ public class SendFrameRepository {
                         map.put(jsonString,sendBytes);
                         sendList.add(map);
                         break;
+                    case 0x1F:
+                        sendBytes = new byte[0];
+                        objectMapper = new ObjectMapper();
+                        ChangePriceParam changePriceParam = objectMapper.readValue(jsonString,ChangePriceParam.class);
+                        sendBytes = FrameFactory.getChangePriceFrame(
+                                changePriceParam.getMeterID(),changePriceParam.getKey()
+                                ,changePriceParam.getFrameID(),changePriceParam.getP0()
+                                ,changePriceParam.getP1(),changePriceParam.getP2(),changePriceParam.getP3()
+                                ,changePriceParam.getA1(),changePriceParam.getA2(),changePriceParam.getA3()
+                                ,changePriceParam.getBeginDT(),changePriceParam.getClen()
+                                ,changePriceParam.getAtDT(),changePriceParam.getTimeCorrection());
+                        map = new HashMap<String, byte[]>();
+                        map.put(jsonString,sendBytes);
+                        sendList.add(map);
+                        break;
                     case 0x20:
                         sendBytes = new byte[0];
                         objectMapper = new ObjectMapper();
@@ -316,21 +336,7 @@ public class SendFrameRepository {
                         map.put(jsonString,sendBytes);
                         sendList.add(map);
                         break;
-                    case 0x2B:
-                        sendBytes = new byte[0];
-                        objectMapper = new ObjectMapper();
-                        ChangePriceParam changePriceParam = objectMapper.readValue(jsonString,ChangePriceParam.class);
-                        sendBytes = FrameFactory.getChangePriceFrame(
-                                changePriceParam.getMeterID(),changePriceParam.getKey()
-                                ,changePriceParam.getFrameID(),changePriceParam.getP0()
-                                ,changePriceParam.getP1(),changePriceParam.getP2(),changePriceParam.getP3()
-                                ,changePriceParam.getA1(),changePriceParam.getA2(),changePriceParam.getA3()
-                                ,changePriceParam.getBeginDT(),changePriceParam.getClen()
-                                ,changePriceParam.getAtDT(),changePriceParam.getTimeCorrection());
-                        map = new HashMap<String, byte[]>();
-                        map.put(jsonString,sendBytes);
-                        sendList.add(map);
-                        break;
+
                     case 0x2E:
                         sendBytes = new byte[0];
                         objectMapper = new ObjectMapper();

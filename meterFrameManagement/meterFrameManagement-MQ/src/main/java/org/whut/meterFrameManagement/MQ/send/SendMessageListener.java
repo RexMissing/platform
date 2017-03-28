@@ -25,8 +25,8 @@ public class SendMessageListener extends PooledMessageConsumerBase {
             try {
                 System.out.println(this.getMessageConsumer() + "  服务器收到json：" + ((ActiveMQTextMessage)message).getText());
                 sendMessage = ((ActiveMQTextMessage)message).getText();
-                String s = new String(sendMessage);
-                SendFrameRepository.jsonList.add(s);
+                //String s = new String(sendMessage);
+                SendFrameRepository.jsonList.add(sendMessage);
             } catch (JMSException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
