@@ -72,6 +72,7 @@
         <module name="meterFrameManagement-business" />
         <module name="meterFrameManagement-communication" />
         <module name="meterFrameManagement-communicationFrame" />
+        <module name="meterFrameManagement-db" />
         <module name="meterFrameManagement-entity" />
         <module name="meterFrameManagement-MQ" />
         <module name="meterFrameManagement-util" />

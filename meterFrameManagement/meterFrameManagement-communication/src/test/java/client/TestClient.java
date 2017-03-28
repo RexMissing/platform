@@ -8,14 +8,9 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.whut.meterFrameManagement.communication.codec.DataCodecFactory;
-import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
 import org.whut.meterFrameManagement.communicationframe.key.MeterID;
-import org.whut.meterFrameManagement.communicationframe.send.SendFrameRepository;
-import org.whut.meterFrameManagement.util.date.DateUtil;
-import org.whut.meterFrameManagement.util.hex.Hex;
 
 import java.net.InetSocketAddress;
-import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -31,7 +26,7 @@ public class TestClient {
         connector.getFilterChain().addLast( "logger", new LoggingFilter() );
         connector.getFilterChain().addLast( "codec", new ProtocolCodecFilter( new DataCodecFactory()));
         connector.setHandler(new TestClientHandler());
-        ConnectFuture connectFuture = connector.connect(new InetSocketAddress("127.0.0.1",3535));
+        ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.27.6.212",6601));
         System.out.println("等待建立连接......");
         IoSession session = null;
         try {
@@ -136,8 +131,8 @@ public class TestClient {
         switch (funCode){
 
             case 0x3E:
-                String s = "6C4E41C8833CEB9F8E44328CC2E02D0179C988F599E836363740C5897611F3D015963D812E0242539C9D0E934536B5DE5B11C495632EEDB0611B0962ABE37A82";
-                receiveBytes = Hex.hexStringToBytes(s, s.length() / 2);
+                //String s = "6C4E41C8833CEB9F8E44328CC2E02D0179C988F599E836363740C5897611F3D015963D812E0242539C9D0E934536B5DE5B11C495632EEDB0611B0962ABE37A82";
+                //receiveBytes = Hex.hexStringToBytes(s, s.length() / 2);
                 break;
             default:
                 break;

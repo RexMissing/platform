@@ -1,4 +1,4 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
  * Created by zhang_minzhong on 2017/3/7.

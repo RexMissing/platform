@@ -1,19 +1,14 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
-
-import java.util.Date;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
- * Created by zhang_minzhong on 2017/3/1.
+ * Created by zhang_minzhong on 2017/3/7.
  */
-
-public class SetBeatHeartRateParam {
+public class ChargeModeParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private int rate;
-    private long timeCorrection;
-
+    private byte sfms;
 
     public byte getFrameID() {
         return frameID;
@@ -47,20 +42,11 @@ public class SetBeatHeartRateParam {
         this.meterID = meterID;
     }
 
-    public int getRate() {
-        return rate;
+    public byte getSfms() {
+        return sfms;
     }
 
-    public void setRate(int rate) {
-        this.rate = rate;
+    public void setSfms(byte sfms) {
+        this.sfms = sfms;
     }
-
-    public long getTimeCorrection() {
-        return timeCorrection;
-    }
-
-    public void setTimeCorrection(long timeCorrection) {
-        this.timeCorrection = timeCorrection;
-    }
-
 }

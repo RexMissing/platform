@@ -1,4 +1,4 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
  * Created by zhang_minzhong on 2017/3/7.
@@ -15,7 +15,7 @@ public class RunTimeGasParam {
     private byte czfs3;
     private int szq;
     private byte fs;
-    private int lszqyl;
+    private byte[] lszqyl;
     private long timeCorrection;
 
     public int getBzq() {
@@ -82,11 +82,11 @@ public class RunTimeGasParam {
         this.key = key;
     }
 
-    public int getLszqyl() {
+    public byte[] getLszqyl() {
         return lszqyl;
     }
 
-    public void setLszqyl(int lszqyl) {
+    public void setLszqyl(byte[] lszqyl) {
         this.lszqyl = lszqyl;
     }
 

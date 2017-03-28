@@ -1,25 +1,15 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
-
-import java.util.Date;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
- * Created by zhang_minzhong on 2017/3/7.
+ * Created by zhang_minzhong on 2017/3/10.
  */
-public class ReadMeterTimerParam {
+public class SetKeyParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private Date atDT;
+    private String nKey;
     private long timeCorrection;
-
-    public Date getAtDT() {
-        return atDT;
-    }
-
-    public void setAtDT(Date atDT) {
-        this.atDT = atDT;
-    }
 
     public byte getFrameID() {
         return frameID;
@@ -51,6 +41,14 @@ public class ReadMeterTimerParam {
 
     public void setMeterID(String meterID) {
         this.meterID = meterID;
+    }
+
+    public String getnKey() {
+        return nKey;
+    }
+
+    public void setnKey(String nKey) {
+        this.nKey = nKey;
     }
 
     public long getTimeCorrection() {

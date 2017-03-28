@@ -1,29 +1,26 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 import java.util.Date;
 
 /**
  * Created by zhang_minzhong on 2017/3/7.
  */
-public class MeterOpenParam {
+public class ChangePriceParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private double money;
-    double p0;
+    private double p0;
     private double p1;
     private double p2;
     private double p3;
     private int a1;
     private int a2;
     private int a3;
-    private String nkey;
     private Date beginDT;
     private byte clen;
-    private byte cbr;
-    private int bzql;
-    private int szql;
+    private Date atDT;
+    private long timeCorrection;
 
     public int getA1() {
         return a1;
@@ -49,28 +46,20 @@ public class MeterOpenParam {
         this.a3 = a3;
     }
 
+    public Date getAtDT() {
+        return atDT;
+    }
+
+    public void setAtDT(Date atDT) {
+        this.atDT = atDT;
+    }
+
     public Date getBeginDT() {
         return beginDT;
     }
 
     public void setBeginDT(Date beginDT) {
         this.beginDT = beginDT;
-    }
-
-    public int getBzql() {
-        return bzql;
-    }
-
-    public void setBzql(int bzql) {
-        this.bzql = bzql;
-    }
-
-    public byte getCbr() {
-        return cbr;
-    }
-
-    public void setCbr(byte cbr) {
-        this.cbr = cbr;
     }
 
     public byte getClen() {
@@ -113,22 +102,6 @@ public class MeterOpenParam {
         this.meterID = meterID;
     }
 
-    public double getMoney() {
-        return money;
-    }
-
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
-    public String getNkey() {
-        return nkey;
-    }
-
-    public void setNkey(String nkey) {
-        this.nkey = nkey;
-    }
-
     public double getP0() {
         return p0;
     }
@@ -161,11 +134,11 @@ public class MeterOpenParam {
         this.p3 = p3;
     }
 
-    public int getSzql() {
-        return szql;
+    public long getTimeCorrection() {
+        return timeCorrection;
     }
 
-    public void setSzql(int szql) {
-        this.szql = szql;
+    public void setTimeCorrection(long timeCorrection) {
+        this.timeCorrection = timeCorrection;
     }
 }

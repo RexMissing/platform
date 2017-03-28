@@ -34,6 +34,8 @@ public class ReceiveMessageListener extends PooledMessageConsumerBase {
             for (byte b : command) {
                 System.out.print(Byte.toUnsignedInt(b) + " ");
             }
+            System.out.println();
+            System.out.println();
             // 测试，解析回传帧，并将表具发过来的帧保存在List中
             ReceiveFrame rf =  new ReceiveFrame();
             rf.ParseFrom(command, TestKey.KEYSTR);

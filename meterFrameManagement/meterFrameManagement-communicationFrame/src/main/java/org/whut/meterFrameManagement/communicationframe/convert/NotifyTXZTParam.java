@@ -1,14 +1,15 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
- * Created by zhang_minzhong on 2017/3/10.
+ * Created by zhang_minzhong on 2017/3/7.
  */
-public class SetKeyParam {
+public class NotifyTXZTParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private String nKey;
+    private String mobileID;
+    private int txzt;
     private long timeCorrection;
 
     public byte getFrameID() {
@@ -43,12 +44,12 @@ public class SetKeyParam {
         this.meterID = meterID;
     }
 
-    public String getnKey() {
-        return nKey;
+    public String getMobileID() {
+        return mobileID;
     }
 
-    public void setnKey(String nKey) {
-        this.nKey = nKey;
+    public void setMobileID(String mobileID) {
+        this.mobileID = mobileID;
     }
 
     public long getTimeCorrection() {
@@ -57,5 +58,13 @@ public class SetKeyParam {
 
     public void setTimeCorrection(long timeCorrection) {
         this.timeCorrection = timeCorrection;
+    }
+
+    public int getTxzt() {
+        return txzt;
+    }
+
+    public void setTxzt(int txzt) {
+        this.txzt = txzt;
     }
 }

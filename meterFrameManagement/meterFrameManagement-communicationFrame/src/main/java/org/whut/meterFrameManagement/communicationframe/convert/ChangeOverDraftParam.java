@@ -1,14 +1,15 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
- * Created by zhang_minzhong on 2017/3/7.
+ * Created by zhang_minzhong on 2017/3/1.
  */
-public class StartCycleParam {
+
+public class ChangeOverDraftParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private int qdzq;
+    private int type;
     private long timeCorrection;
 
     public byte getFrameID() {
@@ -43,19 +44,19 @@ public class StartCycleParam {
         this.meterID = meterID;
     }
 
-    public int getQdzq() {
-        return qdzq;
-    }
-
-    public void setQdzq(int qdzq) {
-        this.qdzq = qdzq;
-    }
-
     public long getTimeCorrection() {
         return timeCorrection;
     }
 
     public void setTimeCorrection(long timeCorrection) {
         this.timeCorrection = timeCorrection;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

@@ -1,16 +1,17 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
- * Created by zhang_minzhong on 2017/3/7.
+ * Created by zhang_minzhong on 2017/3/1.
  */
-public class NotifyTXZTParam {
+
+public class SetBeatHeartRateParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private String mobileID;
-    private int txzt;
+    private int rate;
     private long timeCorrection;
+
 
     public byte getFrameID() {
         return frameID;
@@ -44,12 +45,12 @@ public class NotifyTXZTParam {
         this.meterID = meterID;
     }
 
-    public String getMobileID() {
-        return mobileID;
+    public int getRate() {
+        return rate;
     }
 
-    public void setMobileID(String mobileID) {
-        this.mobileID = mobileID;
+    public void setRate(int rate) {
+        this.rate = rate;
     }
 
     public long getTimeCorrection() {
@@ -60,11 +61,4 @@ public class NotifyTXZTParam {
         this.timeCorrection = timeCorrection;
     }
 
-    public int getTxzt() {
-        return txzt;
-    }
-
-    public void setTxzt(int txzt) {
-        this.txzt = txzt;
-    }
 }

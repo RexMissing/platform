@@ -1,15 +1,14 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
  * Created by zhang_minzhong on 2017/3/7.
  */
-public class SetIPAndPortParam {
+public class StartCycleParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private String serverIP;
-    private String serverPort;
+    private int qdzq;
     private long timeCorrection;
 
     public byte getFrameID() {
@@ -44,20 +43,12 @@ public class SetIPAndPortParam {
         this.meterID = meterID;
     }
 
-    public String getServerIP() {
-        return serverIP;
+    public int getQdzq() {
+        return qdzq;
     }
 
-    public void setServerIP(String serverIP) {
-        this.serverIP = serverIP;
-    }
-
-    public String getServerPort() {
-        return serverPort;
-    }
-
-    public void setServerPort(String serverPort) {
-        this.serverPort = serverPort;
+    public void setQdzq(int qdzq) {
+        this.qdzq = qdzq;
     }
 
     public long getTimeCorrection() {

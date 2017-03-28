@@ -3,11 +3,10 @@ package org.whut.meterFrameManagement.business.web;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.whut.meterFrameManagement.communicationframe.entity.*;
+import org.whut.meterFrameManagement.communicationframe.convert.*;
 import org.whut.meterFrameManagement.communicationframe.receive.ReceiveData;
 import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrameRepository;
 import org.whut.meterFrameManagement.MQ.send.SendProducer;
-import org.whut.meterFrameManagement.util.date.DateUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -25,6 +24,7 @@ public class MeterFrameWeb {
     @Autowired
     private SendProducer sendProducer;
 
+    //01
     @POST
     @Path("/allowValveOpen")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -53,6 +53,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //03
     @POST
     @Path("/temporaryClose")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -81,6 +82,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //05
     @POST
     @Path("/immediatelyRead")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -107,6 +109,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //06
     @POST
     @Path("/setRunTimeGas")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -120,14 +123,14 @@ public class MeterFrameWeb {
         rgp.setFunCode(funCode);
         rgp.setFrameID((byte) 1);
         rgp.setKey(meterKey);
-        rgp.setCzfs1((byte) 2);
-        rgp.setZyql(345);
-        rgp.setCzfs2((byte) 0);
-        rgp.setBzq(100);
-        rgp.setCzfs3((byte) 0);
-        rgp.setSzq(200);
+        rgp.setCzfs1((byte) 0);
+        rgp.setZyql(100);
+        rgp.setCzfs2((byte) 2);
+        rgp.setBzq(20);
+        rgp.setCzfs3((byte) 2);
+        rgp.setSzq(30);
         rgp.setFs((byte) 0);
-        rgp.setLszqyl(567);
+        rgp.setLszqyl(new byte[24]);
         rgp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -140,6 +143,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //07
     @POST
     @Path("/setChargeMode")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -165,6 +169,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //08
     @POST
     @Path("/changePrice")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -180,14 +185,14 @@ public class MeterFrameWeb {
         cpp.setKey(meterKey);
         //(double) 2, 2.5, (double) 3, 3.5,
         //200, 300, 400, date, (byte) 30, null,
-        cpp.setP0(2);
-        cpp.setP1(2.5);
-        cpp.setP2(3);
-        cpp.setP3(3.5);
-        cpp.setA1(200);
-        cpp.setA2(300);
-        cpp.setA3(400);
-        cpp.setBeginDT(DateUtil.createDate("2016-9-1 00:00:00"));
+        cpp.setP0(2.7);
+        cpp.setP1(3.1);
+        cpp.setP2(3.5);
+        cpp.setP3(3.8);
+        cpp.setA1(20);
+        cpp.setA2(30);
+        cpp.setA3(40);
+        cpp.setBeginDT(new Date());
         cpp.setClen((byte) 30);
         cpp.setAtDT(null);
         cpp.setTimeCorrection(123);
@@ -202,6 +207,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //0A
     @POST
     @Path("/changeMoney")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -213,10 +219,10 @@ public class MeterFrameWeb {
         ChangeMoneyParam cmp = new ChangeMoneyParam();
         cmp.setMeterID(meterID);
         cmp.setFunCode(funCode);
-        cmp.setFrameID((byte) 1);
+        cmp.setFrameID((byte) 7);
         cmp.setKey(meterKey);
-        cmp.setMoney(1234.5);
-        cmp.setCzfs(0);
+        cmp.setMoney(200);
+        cmp.setCzfs(2);
         cmp.setHxbj(0);
         cmp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -230,7 +236,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
-
+    //0C
     @POST
     @Path("/forceClose")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -258,6 +264,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //0D
     @POST
     @Path("/changeServerNum")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -285,6 +292,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //0F
     @POST
     @Path("/setIPAndPort")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -312,7 +320,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
-
+    //10
     @POST
     @Path("/SetBeatHeartRate")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -339,6 +347,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //11
     @POST
     @Path("/setBeatHeart")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -364,6 +373,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //12
     @POST
     @Path("/setMeter2Concentrator")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -390,6 +400,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //16
     @POST
     @Path("/setKey")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -401,7 +412,7 @@ public class MeterFrameWeb {
         SetKeyParam setKeyParam = new SetKeyParam();
         setKeyParam.setMeterID(meterID);
         setKeyParam.setFunCode(funCode);
-        setKeyParam.setFrameID((byte) 1);
+        setKeyParam.setFrameID((byte) 2);
         setKeyParam.setKey(meterKey);
         setKeyParam.setnKey(meterKey);
         setKeyParam.setTimeCorrection(123);
@@ -416,6 +427,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //18
     @POST
     @Path("/recallMeter2Concentrator")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -442,6 +454,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //1E
     @POST
     @Path("/regularRead")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -453,9 +466,9 @@ public class MeterFrameWeb {
         ReadMeterParam readMeterParam = new ReadMeterParam();
         readMeterParam.setMeterID(meterID);
         readMeterParam.setFunCode(funCode);
-        readMeterParam.setFrameID((byte) 1);
+        readMeterParam.setFrameID((byte) 5);
         readMeterParam.setKey(meterKey);
-        readMeterParam.setDate(new Date());
+        readMeterParam.setDate(new Date(new Date().getTime()+120000));
         readMeterParam.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -468,6 +481,45 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //1F
+    @POST
+    @Path("/changePriceAtTime")
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    public String changePriceAtTime(@FormParam("meterID")String meterID,@FormParam("funCode")String funCode,@FormParam("meterKey")String meterKey){
+        meterID = meterID.trim();
+        if(meterID.length()!=13)
+            return "{\"result\":\"表号不正确\"}";
+        funCode = funCode.trim();
+        ChangePriceParam cpp = new ChangePriceParam();
+        cpp.setMeterID(meterID);
+        cpp.setFunCode(funCode);
+        cpp.setFrameID((byte) 8);
+        cpp.setKey(meterKey);
+        //(double) 2, 2.5, (double) 3, 3.5,
+        //200, 300, 400, date, (byte) 30, null,
+        cpp.setP0(2.7);
+        cpp.setP1(3);
+        cpp.setP2(3.5);
+        cpp.setP3(4.5);
+        cpp.setA1(25);
+        cpp.setA2(35);
+        cpp.setA3(45);
+        cpp.setBeginDT(new Date(new Date().getTime()+120000));
+        cpp.setClen((byte) 30);
+        cpp.setAtDT(new Date(new Date().getTime()+90000));
+        cpp.setTimeCorrection(123);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String s = "[]";
+        try {
+            s = objectMapper.writeValueAsString(cpp);
+            sendProducer.dispatchMessage(s);
+        } catch (Exception e) {
+            return "{\"result\":\"指令发送失败\"}";
+        }
+        return "{\"result\":\"指令发送成功\"}";
+    }
+
+    //20
     @POST
     @Path("/timingClose")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -479,10 +531,10 @@ public class MeterFrameWeb {
         ValveControlParam vcp = new ValveControlParam();
         vcp.setMeterID(meterID);
         vcp.setFunCode(funCode);
-        vcp.setFrameID((byte) 1);
+        vcp.setFrameID((byte) 5);
         vcp.setKey(meterKey);
         vcp.setType(4);//4定时关阀门
-        vcp.setAtDT(new Date());
+        vcp.setAtDT(new Date(new Date().getTime()+90000));
         vcp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -495,6 +547,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //21
     @POST
     @Path("/changeOverdraft")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -521,6 +574,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //22
     @POST
     @Path("/setStartCycle")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -547,6 +601,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //23
     @POST
     @Path("/meterOpen")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -585,6 +640,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //25
     @POST
     @Path("/setCBR")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -611,6 +667,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //26
     @POST
     @Path("/readMeterTimer")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -624,7 +681,7 @@ public class MeterFrameWeb {
         rmtp.setFunCode(funCode);
         rmtp.setFrameID((byte) 1);
         rmtp.setKey(meterKey);
-        rmtp.setAtDT(new Date());
+        rmtp.setAtDT(new Date(new Date().getTime()+90000));
         rmtp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -637,6 +694,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //27
     @POST
     @Path("/getTimerDataOfChangePrice")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -663,6 +721,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
+    //29
     @POST
     @Path("/readCycleInfo")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -688,43 +747,7 @@ public class MeterFrameWeb {
         return "{\"result\":\"指令发送成功\"}";
     }
 
-    @POST
-    @Path("/changePriceAtTime")
-    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
-    public String changePriceAtTime(@FormParam("meterID")String meterID,@FormParam("funCode")String funCode,@FormParam("meterKey")String meterKey){
-        meterID = meterID.trim();
-        if(meterID.length()!=13)
-            return "{\"result\":\"表号不正确\"}";
-        funCode = funCode.trim();
-        ChangePriceParam cpp = new ChangePriceParam();
-        cpp.setMeterID(meterID);
-        cpp.setFunCode(funCode);
-        cpp.setFrameID((byte) 1);
-        cpp.setKey(meterKey);
-        //(double) 2, 2.5, (double) 3, 3.5,
-        //200, 300, 400, date, (byte) 30, null,
-        cpp.setP0(2);
-        cpp.setP1(2.5);
-        cpp.setP2(3);
-        cpp.setP3(3.5);
-        cpp.setA1(200);
-        cpp.setA2(300);
-        cpp.setA3(400);
-        cpp.setBeginDT(DateUtil.createDate("2016-9-1 00:00:00"));
-        cpp.setClen((byte) 30);
-        cpp.setAtDT(new Date());
-        cpp.setTimeCorrection(123);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String s = "[]";
-        try {
-            s = objectMapper.writeValueAsString(cpp);
-            sendProducer.dispatchMessage(s);
-        } catch (Exception e) {
-            return "{\"result\":\"指令发送失败\"}";
-        }
-        return "{\"result\":\"指令发送成功\"}";
-    }
-
+    //2E
     @POST
     @Path("/notifyTXZT")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -764,9 +787,9 @@ public class MeterFrameWeb {
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
         try {
-            System.out.println("list长度："+list.size());
+            //System.out.println("list长度："+list.size());
             s = objectMapper.writeValueAsString(list);
-            System.out.println(s);
+            //System.out.println(s);
         } catch (IOException e) {
             e.printStackTrace();
         }

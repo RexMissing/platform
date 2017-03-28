@@ -59,11 +59,15 @@ public class FrameFactory {
         return sf.ProcFrame(key);
     }
 
-    // 读取表具数据
-    // <param name="resid">表具编号</param>
-    // <param name="key">表具秘钥</param>
-    // <param name="frameID">帧ID</param>
-    // <param name="tmCorrection">时间修正值</param>
+    /**
+     *
+     * @param meterID 表具编号
+     * @param key 表具秘钥
+     * @param frameID 帧ID
+     * @param date 如果为null则为05命令，否则为1E命令
+     * @param timeCorrection 时间修正值
+     * @return
+     */
     public static byte[] getMeterDataFrame(String meterID, String key, byte frameID, Date date, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
@@ -87,7 +91,7 @@ public class FrameFactory {
 
     // 设置表具内的运行气量，包括本周期量和上周期量
     public static byte[] getMeterUseSetFrame(String meterID, String key, byte frameID,byte czfs1, int zyql,byte czfs2, int bzq,
-                                             byte czfs3,int szq,byte fs,int lszqyl,long timeCorrection) {
+                                             byte czfs3,int szq,byte fs,byte[] lszqyl,long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
         sf.setFuncCode((byte) 0x06);
@@ -99,7 +103,7 @@ public class FrameFactory {
         sf.addParam(czfs3,1);
         sf.addParam(szq,2,true);
         sf.addParam(fs,1);
-        sf.addParam(lszqyl,24,true);
+        sf.addParam(lszqyl);
         sf.setTimeCorrection(timeCorrection);
         /*if ((mode / 4) > 0) {
             sf.addParam(2, 1);
@@ -187,7 +191,7 @@ public class FrameFactory {
         if (atDT != null) {
             long millisecond = atDT.getTime() - DateUtil.createDate("2000-01-01 00:00:00").getTime();
             millisecond = millisecond / 1000;
-            sf.setFuncCode((byte) 0x2B);
+            sf.setFuncCode((byte) 0x1F);
             sf.addParam((int) millisecond, 4);
         } else {
             sf.setFuncCode((byte) 0x08);

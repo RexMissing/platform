@@ -50,7 +50,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
             System.out.println("查询表号："+meterId);
             System.out.println();
             if(Byte.toUnsignedInt(request[1]) == 0xA1){//签到
-                byte[] response = new byte[8];
+                byte[] response = new byte[7];
                 response[0] = 0x68;
                 response[1] = (byte)0xA1;
                 Date endDate = new Date();
@@ -66,13 +66,13 @@ public class FrameServerHandler extends IoHandlerAdapter {
                     String temp = hexStr.substring(i*2,i*2+2);
                     response[i+2] = (byte)Integer.parseInt(temp,16);
                 }
-                int cs = 0;
+                /*int cs = 0;
                 for(int i=0;i<6;i++){
                     cs += Byte.toUnsignedInt(response[i]);
                 }
                 cs%=256;
-                response[6] = (byte)cs;
-                response[7] = 0x16;
+                response[6] = (byte)cs;*/
+                response[6] = 0x16;
                 IoBuffer ioBuffer = IoBuffer.wrap(response);
                 session.write(ioBuffer);
                 session.closeOnFlush();
@@ -123,6 +123,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                     IoBuffer ioBuffer = IoBuffer.wrap(response);
                     session.write(ioBuffer);
                 }
+                session.closeOnFlush();
             }
             if(Byte.toUnsignedInt(request[1]) == 0xA3){//回传
                 int h = Byte.toUnsignedInt(request[15]);
@@ -130,54 +131,12 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 for(int i=0;i<command.length;i++){
                     command[i] = request[i+16];
                 }
-
-                // 测试，只有表具发过来的回传帧进队列
-                String mqMessage = Hex.BytesToHexString(command);
-                receiveProducer.dispatchMessage(mqMessage);
-
                 /*
                   解析帧
                 */
-                /*ReceiveFrame rf =  new ReceiveFrame();
-                rf.ParseFrom(command, TestKey.KEYSTR);
-                ReceiveFrameRepository.write(rf);
-
-               int funCode = Byte.toUnsignedInt(rf.getFuncCode());
-                System.out.println("命令码：" + Integer.toHexString(funCode));
-                System.out.println("表号："+rf.getMeterID());
-                System.out.println("帧id:"+Byte.toUnsignedInt(rf.getFrameID()));
-                System.out.println("传送方向："+rf.getFrmDirection());
-                System.out.println("帧的回传结果："+rf.getFrmResult());
-                MeterStatus meterStatus = rf.MeterST;
-                System.out.println("系统状态字节："+meterStatus.getXtzt());
-                System.out.println("阀门位置："+meterStatus.getFMWZ());
-                System.out.println("阀门位置错："+meterStatus.getFMCW());
-                System.out.println("计量传感器错："+meterStatus.getCGGZ());
-                System.out.println("透支标志："+meterStatus.getTZZT());
-                System.out.println("系统数据错："+meterStatus.getXTSJC());
-                if(funCode==0x3E||funCode==0x05||funCode==0x06||funCode==0x08||funCode==0x09||funCode==0x10||funCode==0x26||funCode==0x27) {
-                    System.out.println("剩余金额：" + meterStatus.getRemainMoney());
-                    System.out.println("表止码：" + meterStatus.getMeterRead());
-                }
-                if(funCode==0x3E){
-                    System.out.println("以下为统一回传帧中额外数据");
-                    System.out.println("上周期量："+meterStatus.getPresumamount());
-                    System.out.println("单价："+meterStatus.getPrice());
-                    System.out.println("阶梯起始1："+meterStatus.getAmount1());
-                    System.out.println("阶梯起始2："+meterStatus.getAmount2());
-                    System.out.println("阶梯起始3："+meterStatus.getAmount3());
-                    System.out.println("本周期量："+meterStatus.getSumamount());
-                    System.out.println("表具时间："+meterStatus.getMeterTime());
-                    System.out.println("执行的命令数："+rf.getFuncCount());
-                    List<CFunction> codeList = rf.getAryFunc();
-                    for(int i=0;i<codeList.size();i++){
-                        CFunction cFunction = codeList.get(i);
-                        System.out.println("命令码：" + Integer.toHexString(Byte.toUnsignedInt(cFunction.getCode()))
-                                + "，" + "帧id：" + Byte.toUnsignedInt(cFunction.getFid())
-                        +"，"+"是否执行成功："+cFunction.isSuccess());
-                    }
-                }*/
-
+                // 测试，只有表具发过来的回传帧进队列
+                String mqMessage = Hex.BytesToHexString(command);
+                receiveProducer.dispatchMessage(mqMessage);
                 byte[] response = new byte[3];
                 response[0] = 0x68;
                 response[1] = (byte)0xA3;
@@ -211,7 +170,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
         //logger.info("server-服务端进入空闲状态...");
         System.out.println("server - session id="+session.getId()+" 进入空闲状态...");
-        //session.closeNow();
+        session.closeNow();
     }
 
     @Override

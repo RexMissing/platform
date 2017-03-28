@@ -5,9 +5,6 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
-
-import java.nio.charset.Charset;
-
 /**
  * Created with IntelliJ IDEA.
  * User: zhang_minzhong

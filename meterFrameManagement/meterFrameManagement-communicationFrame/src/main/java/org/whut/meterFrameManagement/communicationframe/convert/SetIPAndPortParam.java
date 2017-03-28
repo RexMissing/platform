@@ -1,17 +1,15 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
-
-import java.util.Date;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
- * Created by zhang_minzhong on 2017/3/1.
+ * Created by zhang_minzhong on 2017/3/7.
  */
-
-public class Meter2ConcentratorParam {
+public class SetIPAndPortParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private String concentratorID;
+    private String serverIP;
+    private String serverPort;
     private long timeCorrection;
 
     public byte getFrameID() {
@@ -46,12 +44,20 @@ public class Meter2ConcentratorParam {
         this.meterID = meterID;
     }
 
-    public String getConcentratorID() {
-        return concentratorID;
+    public String getServerIP() {
+        return serverIP;
     }
 
-    public void setConcentratorID(String concentratorID) {
-        this.concentratorID = concentratorID;
+    public void setServerIP(String serverIP) {
+        this.serverIP = serverIP;
+    }
+
+    public String getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
     }
 
     public long getTimeCorrection() {
@@ -61,6 +67,4 @@ public class Meter2ConcentratorParam {
     public void setTimeCorrection(long timeCorrection) {
         this.timeCorrection = timeCorrection;
     }
-
-
 }

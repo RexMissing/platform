@@ -7,14 +7,13 @@ import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.whut.meterFrameManagement.communication.codec.DataCodecFactory;
-import org.whut.meterFrameManagement.communicationframe.send.SendFrameRepository;
 
 import java.net.InetSocketAddress;
-import java.util.Scanner;
 
 /**
  * Created by zhang_minzhong on 2017/1/3.
  */
+//用于main方法测试
 public class FrameServer implements Runnable  {
 
     //public static final PlatformLogger logger = PlatformLogger.getLogger(FrameServer.class);
@@ -25,7 +24,7 @@ public class FrameServer implements Runnable  {
     }
 
     public void listen() {
-        int port = 3535;//FundamentalConfigProvider.get("meterFrame.port");
+        int port = 6601;//FundamentalConfigProvider.get("meterFrame.port");
         //logger.info("socket server listen:"+portString);
         System.out.println("socket server listen:"+port);
         try{
@@ -50,7 +49,7 @@ public class FrameServer implements Runnable  {
         }
     }
 
-    /*public static void main(String[] args) {
+   /* public static void main(String[] args) {
         FrameServer frameServer = new FrameServer();
         frameServer.listen();
         while(true){

@@ -5,5 +5,5 @@ package org.whut.meterFrameManagement.communicationframe.key;
  */
 public class MeterID {
     //做测试用
-    public static final String METERID = "0120151000088";
+    public static final String METERID = "0120151212163";//0120151000088
 }

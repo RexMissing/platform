@@ -1,27 +1,16 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
-
-import java.util.Date;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
- * Created by zhang_minzhong on 2017/3/1.
+ * Created by zhang_minzhong on 2017/3/7.
  */
-
-public class ValveControlParam {
+public class ChangeServerNumParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private Date atDT;
-    private int type;
+    private int N;
+    private String serverNum;
     private long timeCorrection;
-
-    public Date getAtDT() {
-        return atDT;
-    }
-
-    public void setAtDT(Date atDT) {
-        this.atDT = atDT;
-    }
 
     public byte getFrameID() {
         return frameID;
@@ -55,19 +44,27 @@ public class ValveControlParam {
         this.meterID = meterID;
     }
 
+    public int getN() {
+        return N;
+    }
+
+    public void setN(int n) {
+        N = n;
+    }
+
+    public String getServerNum() {
+        return serverNum;
+    }
+
+    public void setServerNum(String serverNum) {
+        this.serverNum = serverNum;
+    }
+
     public long getTimeCorrection() {
         return timeCorrection;
     }
 
     public void setTimeCorrection(long timeCorrection) {
         this.timeCorrection = timeCorrection;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 }

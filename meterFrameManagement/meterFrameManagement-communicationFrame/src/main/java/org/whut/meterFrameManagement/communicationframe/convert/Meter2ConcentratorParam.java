@@ -1,17 +1,15 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
-
-import java.util.Date;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
  * Created by zhang_minzhong on 2017/3/1.
  */
 
-public class ChangeOverDraftParam {
+public class Meter2ConcentratorParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private int type;
+    private String concentratorID;
     private long timeCorrection;
 
     public byte getFrameID() {
@@ -46,6 +44,14 @@ public class ChangeOverDraftParam {
         this.meterID = meterID;
     }
 
+    public String getConcentratorID() {
+        return concentratorID;
+    }
+
+    public void setConcentratorID(String concentratorID) {
+        this.concentratorID = concentratorID;
+    }
+
     public long getTimeCorrection() {
         return timeCorrection;
     }
@@ -54,11 +60,5 @@ public class ChangeOverDraftParam {
         this.timeCorrection = timeCorrection;
     }
 
-    public int getType() {
-        return type;
-    }
 
-    public void setType(int type) {
-        this.type = type;
-    }
 }

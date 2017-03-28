@@ -1,15 +1,13 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 /**
  * Created by zhang_minzhong on 2017/3/7.
  */
-public class ChangeServerNumParam {
+public class SetBeatHeartParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private int N;
-    private String serverNum;
     private long timeCorrection;
 
     public byte getFrameID() {
@@ -42,22 +40,6 @@ public class ChangeServerNumParam {
 
     public void setMeterID(String meterID) {
         this.meterID = meterID;
-    }
-
-    public int getN() {
-        return N;
-    }
-
-    public void setN(int n) {
-        N = n;
-    }
-
-    public String getServerNum() {
-        return serverNum;
-    }
-
-    public void setServerNum(String serverNum) {
-        this.serverNum = serverNum;
     }
 
     public long getTimeCorrection() {

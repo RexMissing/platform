@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.meterFrameManagement.db.mapper.TReceiveMapper">
+    <select id="getReceiveFrame" parameterType="String" resultType="TReceive">
+        SELECT * FROM t_receive WHERE meterID = #{meterID};
+    </select>
+    <insert id="addReceiveFrame" parameterType="TReceive">
+        INSERT INTO t_receive(meterID,receiveFrame,receiveDate) VALUES(#{meterID},#{receiveFrame},#{receiveDate});
+    </insert>
+    <delete id="deleteReceiveFrame" parameterType="int">
+        DELETE FROM t_receive WHERE id = #{id};
+    </delete>
+</mapper>

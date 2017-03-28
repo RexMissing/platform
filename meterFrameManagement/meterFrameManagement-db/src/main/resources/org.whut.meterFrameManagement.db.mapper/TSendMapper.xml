@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.meterFrameManagement.db.mapper.TSendMapper">
+    <select id="getSendFrame" parameterType="String" resultType="TSend">
+        SELECT * FROM t_send WHERE meterID = #{meterID};
+    </select>
+    <insert id="addSendFrame" parameterType="TSend">
+        INSERT INTO t_send(meterID,sendFrame,sendDate) VALUES (#{meterID},#{sendFrame},#{sendDate});
+    </insert>
+    <delete id="deleteSendFrame" parameterType="int">
+        DELETE FROM t_receive WHERE id = #{id};
+    </delete>
+</mapper>
+

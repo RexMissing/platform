@@ -19,5 +19,6 @@
         <module>meterFrameManagement-business</module>
         <module>meterFrameManagementWeb</module>
         <module>meterFrameManagement-MQ</module>
+        <module>meterFrameManagement-db</module>
     </modules>
 </project>

@@ -1,19 +1,26 @@
-package org.whut.meterFrameManagement.communicationframe.entity;
+package org.whut.meterFrameManagement.communicationframe.convert;
 
 import java.util.Date;
 
 /**
  * Created by zhang_minzhong on 2017/3/7.
  */
-public class ChangeMoneyParam {
+
+public class ReadMeterParam {
     private String meterID;
     private String funCode;
     private byte frameID;
     private String key;
-    private double money;
-    private int czfs;
-    private int hxbj;
+    private Date date;
     private long timeCorrection;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public byte getFrameID() {
         return frameID;
@@ -45,30 +52,6 @@ public class ChangeMoneyParam {
 
     public void setMeterID(String meterID) {
         this.meterID = meterID;
-    }
-
-    public double getMoney() {
-        return money;
-    }
-
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
-    public int getCzfs() {
-        return czfs;
-    }
-
-    public void setCzfs(int czfs) {
-        this.czfs = czfs;
-    }
-
-    public int getHxbj() {
-        return hxbj;
-    }
-
-    public void setHxbj(int hxbj) {
-        this.hxbj = hxbj;
     }
 
     public long getTimeCorrection() {
