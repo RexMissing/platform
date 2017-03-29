@@ -16,8 +16,6 @@ import java.net.InetSocketAddress;
 //用于main方法测试
 public class FrameServer implements Runnable  {
 
-    //public static final PlatformLogger logger = PlatformLogger.getLogger(FrameServer.class);
-    //private static IoAcceptor acceptor;
     @Override
     public void run() {
         listen();

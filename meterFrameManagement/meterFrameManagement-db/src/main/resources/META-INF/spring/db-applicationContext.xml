@@ -14,7 +14,7 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
     <context:annotation-config></context:annotation-config>
-    <context:component-scan base-package="org.whut.meterFrameManagement.db.service"></context:component-scan>
+    <context:component-scan base-package="org.whut.meterFrameManagement.db.service,org.whut.meterFrameManagement.db.business"></context:component-scan>
 
     <!-- 使用apache的DBCP连接池 -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
@@ -41,14 +41,6 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="org.whut.meterFrameManagement.db.mapper" />
     </bean>
-    <!--<bean id="tSendMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.whut.meterFrameManagement.db.mapper.TSendMapper"></property>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-    </bean>
-    <bean id="tReceiveMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.whut.meterFrameManagement.db.mapper.TReceiveMapper"></property>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-    </bean>-->
 
     <!-- 事务管理器 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

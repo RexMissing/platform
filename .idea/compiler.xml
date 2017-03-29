@@ -115,6 +115,7 @@
       <module name="fundamental-message" target="1.6" />
       <module name="meterFrameManagement-business" target="1.6" />
       <module name="meterFrameManagement-communication" target="1.6" />
+      <module name="meterFrameManagement-db" target="1.6" />
       <module name="meterFrameManagement-MQ" target="1.6" />
       <module name="realtimeMonitor-business-communication" target="1.6" />
       <module name="realtimeMonitor-business-dataTest" target="1.6" />

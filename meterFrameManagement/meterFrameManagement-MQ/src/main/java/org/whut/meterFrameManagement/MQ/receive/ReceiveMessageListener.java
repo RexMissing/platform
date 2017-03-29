@@ -1,23 +1,30 @@
 package org.whut.meterFrameManagement.MQ.receive;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
-import org.whut.meterFrameManagement.communicationframe.key.TestKey;
-import org.whut.meterFrameManagement.communicationframe.receive.CFunction;
-import org.whut.meterFrameManagement.communicationframe.receive.MeterStatus;
-import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
-import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrameRepository;
+import org.whut.meterFrameManagement.db.business.ReceiveFrameBusiness;
 import org.whut.meterFrameManagement.util.hex.Hex;
 import org.whut.platform.fundamental.activemq.consumer.PooledMessageConsumerBase;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by chenfu on 2017/3/9.
  */
 public class ReceiveMessageListener extends PooledMessageConsumerBase {
+
+    private ReceiveFrameBusiness receiveFrameBusiness;
+
+    public ReceiveFrameBusiness getReceiveFrameBusiness() {
+        return receiveFrameBusiness;
+    }
+
+    public void setReceiveFrameBusiness(ReceiveFrameBusiness receiveFrameBusiness) {
+        this.receiveFrameBusiness = receiveFrameBusiness;
+    }
 
     @Override
     public void register(Destination destination) {
@@ -29,18 +36,24 @@ public class ReceiveMessageListener extends PooledMessageConsumerBase {
         String receiveMessage;
         try {
             receiveMessage = ((ActiveMQTextMessage) message).getText();
-            byte[] command = Hex.decode(receiveMessage);
-            System.out.print("队列消费的字节数组：");
-            for (byte b : command) {
-                System.out.print(Byte.toUnsignedInt(b) + " ");
+            byte[] request = Hex.hexStringToBytes(receiveMessage,receiveMessage.length()/2);
+            int h = Byte.toUnsignedInt(request[15]);
+            String meterId = "";
+            for(int i=0;i<13;i++){
+                meterId += (char)request[2+i];
             }
-            System.out.println();
-            System.out.println();
-            // 测试，解析回传帧，并将表具发过来的帧保存在List中
-            ReceiveFrame rf =  new ReceiveFrame();
-            rf.ParseFrom(command, TestKey.KEYSTR);
-            ReceiveFrameRepository.write(rf);
+            byte[] command = new byte[h];
+            for(int i=0;i<command.length;i++){
+                command[i] = request[i+16];
+            }
+            //将D1-Dh存到数据库
+            String receiveFrameString = Hex.BytesToHexString(command);
+            receiveFrameBusiness.addReceiveFrame(meterId,receiveFrameString,new Timestamp(new Date().getTime()));
 
+            //以下代码可以省略
+            /*ReceiveFrame rf =  new ReceiveFrame();
+            rf.ParseFrom(command, TestKey.KEYSTR);
+            //ReceiveFrameRepository.write(rf);
             int funCode = Byte.toUnsignedInt(rf.getFuncCode());
             System.out.println("命令码：" + Integer.toHexString(funCode));
             System.out.println("表号："+rf.getMeterID());
@@ -75,7 +88,7 @@ public class ReceiveMessageListener extends PooledMessageConsumerBase {
                             + "，" + "帧id：" + Byte.toUnsignedInt(cFunction.getFid())
                             +"，"+"是否执行成功："+cFunction.isSuccess());
                 }
-            }
+            }*/
 
         } catch (JMSException e) {
             e.printStackTrace();

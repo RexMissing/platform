@@ -1,4 +1,4 @@
-package org.whut.meterFrameManagement.communicationframe.receive;
+package org.whut.meterFrameManagement.business.web;
 
 /**
  * Created by zhang_minzhong on 2017/2/28.
