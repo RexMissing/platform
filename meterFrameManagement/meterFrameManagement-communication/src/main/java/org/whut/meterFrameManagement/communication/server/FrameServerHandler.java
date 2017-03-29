@@ -6,13 +6,13 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.whut.meterFrameManagement.MQ.receive.ReceiveProducer;
-import org.whut.meterFrameManagement.communicationframe.send.SendFrameRepository;
+import org.whut.meterFrameManagement.db.business.SendFrameBusiness;
+import org.whut.meterFrameManagement.db.entity.TSend;
 import org.whut.meterFrameManagement.util.date.DateUtil;
 import org.whut.meterFrameManagement.util.hex.Hex;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zhang_minzhong on 2017/1/3.
@@ -21,6 +21,8 @@ public class FrameServerHandler extends IoHandlerAdapter {
 
     @Autowired
     private ReceiveProducer receiveProducer;
+    @Autowired
+    private SendFrameBusiness sendFrameBusiness;
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
@@ -78,43 +80,26 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 session.closeOnFlush();
             }
             if(Byte.toUnsignedInt(request[1]) == 0xA2){//查询
-                SendFrameRepository.makeSendFrame();//启动服务器时用
-                List<Map<String,byte[]>> sendList = SendFrameRepository.sendList;
-                List<String> jsonList = SendFrameRepository.jsonList;
-                System.out.println("指令剩余条数：" + sendList.size());
-                boolean flag = false;
-                for(int i = 0;i<sendList.size();i++){
-                    Map.Entry<String,byte[]> entry = sendList.get(i).entrySet().iterator().next();
-                    String jsonString = entry.getKey();//启动服务器时用
-                    String sendMeterID = SendFrameRepository.getMeterID(jsonString);//启动服务器时用
-                    //String sendMeterID = entry.getKey();//直接启动main方法时用
-                    byte[] bytes = entry.getValue();
-                    if(meterId.equals(sendMeterID)) {
-                        byte[] response = new byte[bytes.length+4];
-                        response[0] = 0x68;
-                        response[1] = (byte)0xA2;
-                        response[2] = (byte)bytes.length;
-                        response[response.length-1] = 0x16;
-                        for(int j=0;j<bytes.length;j++){
-                            response[j+3] = bytes[j];;
-                        }
-                        IoBuffer ioBuffer = IoBuffer.wrap(response);
-                        session.write(ioBuffer);
-
-                        //启动服务器时用
-                        for(int j=0;j<jsonList.size();i++){
-                            if(jsonList.get(j) == jsonString){//必须用==
-                                jsonList.remove(jsonString);
-                                break;
-                            }
-                        }
-                        flag = true;
+                List<TSend> tSendList = sendFrameBusiness.getSendFrame(meterId);
+                System.out.println("指令剩余条数：" + tSendList.size());
+                if(tSendList.size()>0){
+                    TSend tSend = tSendList.get(0);
+                    String sendString = tSend.getSendFrame();
+                    byte[] bytes = new byte[sendString.length()/2];
+                    bytes = Hex.hexStringToBytes(sendString,bytes.length);
+                    byte[] response = new byte[bytes.length+4];
+                    response[0] = 0x68;
+                    response[1] = (byte)0xA2;
+                    response[2] = (byte)bytes.length;
+                    response[response.length-1] = 0x16;
+                    for(int j=0;j<bytes.length;j++){
+                        response[j+3] = bytes[j];;
                     }
-                    if(flag){
-                        break;
-                    }
+                    IoBuffer ioBuffer = IoBuffer.wrap(response);
+                    session.write(ioBuffer);
+                    sendFrameBusiness.deleteSendFrame(tSend.getId());
                 }
-                if(flag == false){
+                else {
                     byte[] response = new byte[4];
                     response[0] = 0x68;
                     response[1] = (byte)0xA2;
@@ -126,17 +111,8 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 session.closeOnFlush();
             }
             if(Byte.toUnsignedInt(request[1]) == 0xA3){//回传
-                int h = Byte.toUnsignedInt(request[15]);
-                byte[] command = new byte[h];
-                for(int i=0;i<command.length;i++){
-                    command[i] = request[i+16];
-                }
-                /*
-                  解析帧
-                */
-                // 测试，只有表具发过来的回传帧进队列
-                String mqMessage = Hex.BytesToHexString(command);
-                receiveProducer.dispatchMessage(mqMessage);
+                String receiveMessage = Hex.BytesToHexString(request);
+                receiveProducer.dispatchMessage(receiveMessage);
                 byte[] response = new byte[3];
                 response[0] = 0x68;
                 response[1] = (byte)0xA3;

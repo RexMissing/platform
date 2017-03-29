@@ -6,11 +6,12 @@
     <select id="getSendFrame" parameterType="String" resultType="TSend">
         SELECT * FROM t_send WHERE meterID = #{meterID};
     </select>
-    <insert id="addSendFrame" parameterType="TSend">
-        INSERT INTO t_send(meterID,sendFrame,sendDate) VALUES (#{meterID},#{sendFrame},#{sendDate});
+    <insert id="addSendFrame" parameterType="map">
+        INSERT INTO t_send(meterID,sendFrame,sendDate) VALUES (#{meterID},#{frameString},#{timestamp});
+
     </insert>
     <delete id="deleteSendFrame" parameterType="int">
-        DELETE FROM t_receive WHERE id = #{id};
+        DELETE FROM t_send WHERE id = #{id};
     </delete>
 </mapper>
 

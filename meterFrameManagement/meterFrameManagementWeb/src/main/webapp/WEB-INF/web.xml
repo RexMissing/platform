@@ -11,17 +11,13 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    <!--<listener>
-        <description>Socket服务随web启动而启动</description>
-        <listener-class>org.whut.meterFrameManagement.communication.listener.FrameStartListener</listener-class>
-    </listener>-->
 
     <listener>
         <description>activMQ消息监听启动</description>
         <listener-class>org.whut.meterFrameManagement.MQ.send.SendMessageReceiverStartListener</listener-class>
     </listener>
     <listener>
-        <description>activMQ消息监听启动(表具回传帧进消息队列)</description>
+        <description>activMQ消息监听启动(表具回传数据进消息队列)</description>
         <listener-class>org.whut.meterFrameManagement.MQ.receive.ReceiveMsgConsumerStartListener</listener-class>
     </listener>
 

@@ -1,4 +1,4 @@
-package org.whut.meterFrameManagement.communicationframe.receive;
+package org.whut.meterFrameManagement.business.web;
 
 import org.whut.meterFrameManagement.communicationframe.enums.FrameDirection;
 import org.whut.meterFrameManagement.communicationframe.enums.FrameResult;

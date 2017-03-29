@@ -4,13 +4,19 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.whut.meterFrameManagement.communicationframe.convert.*;
-import org.whut.meterFrameManagement.communicationframe.receive.ReceiveData;
-import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrameRepository;
+import org.whut.meterFrameManagement.communicationframe.key.TestKey;
+import org.whut.meterFrameManagement.communicationframe.receive.*;
 import org.whut.meterFrameManagement.MQ.send.SendProducer;
+//import org.whut.meterFrameManagement.communicationframe.receive.ReceiveData;
+import org.whut.meterFrameManagement.db.business.ReceiveFrameBusiness;
+import org.whut.meterFrameManagement.db.entity.TReceive;
+import org.whut.meterFrameManagement.util.hex.Hex;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -126,7 +132,7 @@ public class MeterFrameWeb {
         rgp.setCzfs1((byte) 0);
         rgp.setZyql(100);
         rgp.setCzfs2((byte) 2);
-        rgp.setBzq(20);
+        rgp.setBzq(26);
         rgp.setCzfs3((byte) 2);
         rgp.setSzq(30);
         rgp.setFs((byte) 0);
@@ -777,18 +783,97 @@ public class MeterFrameWeb {
 
 
 
-
+    @Autowired
+    ReceiveFrameBusiness receiveFrameBusiness;
     //查询统一回传数据
     @POST
     @Path("/getReceiveData")
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     public String getReceiveData(){
-        List<ReceiveData> list = ReceiveFrameRepository.receiveList;
+        //List<ReceiveData> list = ReceiveFrameRepository.receiveList;
+        List<ReceiveData> showList = new ArrayList<ReceiveData>();
+        List<TReceive> receiveList = receiveFrameBusiness.getAllReceiveFrame();
+        for(int i=0;i<receiveList.size();i++){
+            String receiveString = receiveList.get(i).getReceiveFrame();
+            ReceiveFrame rf =  new ReceiveFrame();
+            byte[] command = Hex.hexStringToBytes(receiveString,receiveString.length()/2);
+            rf.ParseFrom(command, TestKey.KEYSTR);
+
+            ReceiveData receiveData = new ReceiveData();
+            receiveData.setMeterID(rf.getMeterID());//表号
+            int funCode = Byte.toUnsignedInt(rf.getFuncCode());
+            receiveData.setFunCode(Integer.toHexString(funCode));//命令码
+            receiveData.setFrameID(rf.getFrameID());//帧ID
+            receiveData.setDirection(rf.getFrmDirection());//传送方向
+            receiveData.setFrameResult(rf.getFrmResult());//回传帧结果
+            MeterStatus meterStatus = rf.MeterST;
+            receiveData.setXtztzj(Byte.toUnsignedInt(meterStatus.getXtzt()));//系统状态字节
+            //阀门位置
+            if(meterStatus.getFMWZ()==0)
+                receiveData.setFmwz("开门态");
+            else
+                receiveData.setFmwz("关门态");
+            //阀门位置错
+            if(meterStatus.getFMCW()==0)
+                receiveData.setFmcw("正常");
+            else
+                receiveData.setFmcw("出错");
+            //计量传感器错
+            if(meterStatus.getCGGZ()==0)
+                receiveData.setCggz("正常");
+            else
+                receiveData.setCggz("出错");
+            //透支标志
+            if(meterStatus.getTZZT()==0)
+                receiveData.setTzzt("正常");
+            else
+                receiveData.setTzzt("透支");
+            //系统数据
+            if(meterStatus.getXTSJC()==0)
+                receiveData.setXtsjc("正常");
+            else
+                receiveData.setXtsjc("出错");
+
+            if(funCode==0x3E||funCode==0x05||funCode==0x06||funCode==0x08||funCode==0x09||funCode==0x10||funCode==0x26||funCode==0x27) {
+                receiveData.setRemainMoney(meterStatus.getRemainMoney());//剩余金额
+                receiveData.setMeterRead(meterStatus.getMeterRead());//表止码
+            }
+            if(funCode==0x3E){
+                receiveData.setPreSumAmount(meterStatus.getPresumamount());//上周期量
+                receiveData.setPrice(meterStatus.getPrice());//单价
+                receiveData.setAmount1(meterStatus.getAmount1());//阶梯起始1
+                receiveData.setAmount2(meterStatus.getAmount2());//阶梯起始2
+                receiveData.setAmount3(meterStatus.getAmount3());//阶梯起始3
+                receiveData.setSumAmount(meterStatus.getSumamount());//本周期量
+                receiveData.setMeterTime(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(meterStatus.getMeterTime()));//表具时间
+                receiveData.setFunCount(rf.getFuncCount());//执行命令数
+                List<FunCodeFrameId> funList = new ArrayList<FunCodeFrameId>();
+
+                List<CFunction> codeList = rf.getAryFunc();
+                for(int j=0;j<codeList.size();j++){
+                    FunCodeFrameId funCodeFrameId = new FunCodeFrameId();
+                    CFunction cFunction = codeList.get(j);
+                    String temp = Integer.toHexString(Byte.toUnsignedInt(cFunction.getCode()));
+                    String s = temp.length()==1?("0"+temp):temp;
+                    funCodeFrameId.setFunCode(s);
+                    int id = Byte.toUnsignedInt(cFunction.getFid());
+                    funCodeFrameId.setFrameId(id);
+                    if(cFunction.isSuccess())
+                        funCodeFrameId.setSuccessOrFail("成功");
+                    else
+                        funCodeFrameId.setSuccessOrFail("失败");
+                    funList.add(funCodeFrameId);
+                }
+                receiveData.setList(funList);
+            }
+            showList.add(receiveData);
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
         try {
             //System.out.println("list长度："+list.size());
-            s = objectMapper.writeValueAsString(list);
+            s = objectMapper.writeValueAsString(showList);
             //System.out.println(s);
         } catch (IOException e) {
             e.printStackTrace();
