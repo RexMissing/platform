@@ -16,21 +16,19 @@ public class TSendService {
     @Autowired
     private TSendMapper tSendMapper;
 
-    public TSendMapper gettSendMapper() {
-        return tSendMapper;
-    }
-
-    public void settSendMapper(TSendMapper tSendMapper) {
-        this.tSendMapper = tSendMapper;
-    }
-
     public List<TSend> getSendFrame(String meterID){
         return tSendMapper.getSendFrame(meterID);
     }
-    public void addSendFrame(String meterID,String frameString,Timestamp timestamp){
-        tSendMapper.addSendFrame(meterID,frameString,timestamp);
+    public int getLastFrameID(String meterID, int funCode) {
+        return tSendMapper.getLastFrameID(meterID,funCode);
+    }
+    public void addSendFrame(TSend tSend){
+        tSendMapper.addSendFrame(tSend);
     }
     public void deleteSendFrame(int id){
         tSendMapper.deleteSendFrame(id);
+    }
+    public void updateSent(int id,boolean sent,Timestamp timestamp) {
+        tSendMapper.updateSent(id,sent,timestamp);
     }
 }

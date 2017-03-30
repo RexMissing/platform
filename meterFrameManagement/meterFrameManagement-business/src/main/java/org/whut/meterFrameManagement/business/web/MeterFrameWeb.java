@@ -227,7 +227,7 @@ public class MeterFrameWeb {
         cmp.setFunCode(funCode);
         cmp.setFrameID((byte) 7);
         cmp.setKey(meterKey);
-        cmp.setMoney(200);
+        cmp.setMoney(234);
         cmp.setCzfs(2);
         cmp.setHxbj(0);
         cmp.setTimeCorrection(123);
@@ -626,9 +626,9 @@ public class MeterFrameWeb {
         meterOpenParam.setP1(2.5);
         meterOpenParam.setP2(3);
         meterOpenParam.setP3(3.5);
-        meterOpenParam.setA1(200);
-        meterOpenParam.setA2(300);
-        meterOpenParam.setA3(400);
+        meterOpenParam.setA1(20);
+        meterOpenParam.setA2(30);
+        meterOpenParam.setA3(40);
         meterOpenParam.setNkey(meterKey);
         meterOpenParam.setBeginDT(new Date());
         meterOpenParam.setClen((byte) 30);
@@ -794,11 +794,10 @@ public class MeterFrameWeb {
         List<ReceiveData> showList = new ArrayList<ReceiveData>();
         List<TReceive> receiveList = receiveFrameBusiness.getAllReceiveFrame();
         for(int i=0;i<receiveList.size();i++){
-            String receiveString = receiveList.get(i).getReceiveFrame();
+            String receiveFrameString = receiveList.get(i).getReceiveFrame();
             ReceiveFrame rf =  new ReceiveFrame();
-            byte[] command = Hex.hexStringToBytes(receiveString,receiveString.length()/2);
+            byte[] command = Hex.hexStringToBytes(receiveFrameString,receiveFrameString.length()/2);
             rf.ParseFrom(command, TestKey.KEYSTR);
-
             ReceiveData receiveData = new ReceiveData();
             receiveData.setMeterID(rf.getMeterID());//表号
             int funCode = Byte.toUnsignedInt(rf.getFuncCode());

@@ -1,7 +1,6 @@
 package org.whut.meterFrameManagement.MQ.send;
 
 import org.apache.activemq.command.ActiveMQTextMessage;
-import org.whut.meterFrameManagement.communicationframe.send.SendFrameRepository;
 import org.whut.meterFrameManagement.db.business.SendFrameBusiness;
 import org.whut.platform.fundamental.activemq.consumer.PooledMessageConsumerBase;
 

@@ -26,12 +26,17 @@ public class SendFrameBusiness {
     public List<TSend> getSendFrame(String meterID){
         return tSendService.getSendFrame(meterID);
     }
-    public void addSendFrame(String meterID,String frameString,Timestamp timestamp){
-
-        tSendService.addSendFrame(meterID,frameString,timestamp);
+    public int getLastFrameID(String meterID,int funCode){
+        return tSendService.getLastFrameID(meterID,funCode);
+    }
+    public void addSendFrame(TSend tSend){
+        tSendService.addSendFrame(tSend);
     }
     public void deleteSendFrame(int id){
         tSendService.deleteSendFrame(id);
+    }
+    public void updateSent(int id,boolean sent) {
+        tSendService.updateSent(id,sent,new Timestamp(new Date().getTime()));
     }
 
     /**
@@ -44,6 +49,14 @@ public class SendFrameBusiness {
         String meterID = getMeterID(jsonString);
         System.out.println("表号："+meterID+"，命令码："+funCodeStr);
         int funCode = Integer.parseInt(funCodeStr,16);
+        int frameID = 1;
+        if(funCode==0X0A) {
+            frameID = getLastFrameID(meterID, funCode);
+            if(frameID>0)
+                frameID = frameID+1;
+            else
+                frameID = 1;
+        }
         byte[] sendBytes = new byte[0];
         String sendString = "";
         try {
@@ -52,27 +65,27 @@ public class SendFrameBusiness {
                     ObjectMapper objectMapper = new ObjectMapper();
                     ValveControlParam valveControlParam = objectMapper.readValue(jsonString,ValveControlParam.class);
                     sendBytes = FrameFactory.getValveControlFrame(valveControlParam.getMeterID()
-                            , valveControlParam.getKey(), valveControlParam.getFrameID()
+                            , valveControlParam.getKey(), (byte)frameID
                             , ValveCtrStyle.允许开启, null, valveControlParam.getTimeCorrection());
                     break;
                 case 0x03:
                     objectMapper = new ObjectMapper();
                     valveControlParam = objectMapper.readValue(jsonString,ValveControlParam.class);
                     sendBytes = FrameFactory.getValveControlFrame(valveControlParam.getMeterID()
-                            , valveControlParam.getKey(), valveControlParam.getFrameID()
+                            , valveControlParam.getKey(), (byte)frameID
                             ,ValveCtrStyle.临时关闭,null, valveControlParam.getTimeCorrection());
                     break;
                 case 0x05:
                     objectMapper = new ObjectMapper();
                     ReadMeterParam rmp = objectMapper.readValue(jsonString,ReadMeterParam.class);
                     sendBytes = FrameFactory.getMeterDataFrame(rmp.getMeterID(),rmp.getKey(),
-                            rmp.getFrameID(),rmp.getDate(),rmp.getTimeCorrection());
+                            (byte)frameID,rmp.getDate(),rmp.getTimeCorrection());
                     break;
                 case 0x06:
                     objectMapper = new ObjectMapper();
                     RunTimeGasParam rgp = objectMapper.readValue(jsonString,RunTimeGasParam.class);
                     sendBytes = FrameFactory.getMeterUseSetFrame(rgp.getMeterID(),rgp.getKey()
-                            ,rgp.getFrameID(),rgp.getCzfs1(),rgp.getZyql(),rgp.getCzfs2(),rgp.getBzq()
+                            ,(byte)frameID,rgp.getCzfs1(),rgp.getZyql(),rgp.getCzfs2(),rgp.getBzq()
                             ,rgp.getCzfs3(),rgp.getSzq(),rgp.getFs(),rgp.getLszqyl()
                             ,rgp.getTimeCorrection());
                     break;
@@ -80,13 +93,13 @@ public class SendFrameBusiness {
                     objectMapper = new ObjectMapper();
                     ChargeModeParam cmp = objectMapper.readValue(jsonString,ChargeModeParam.class);
                     sendBytes = FrameFactory.getSetChargingModeFrame(cmp.getMeterID(),cmp.getKey()
-                            ,cmp.getFrameID(),cmp.getSfms());
+                            ,(byte)frameID,cmp.getSfms());
                     break;
                 case 0x08:
                     objectMapper = new ObjectMapper();
                     ChangePriceParam cpp = objectMapper.readValue(jsonString,ChangePriceParam.class);
                     sendBytes = FrameFactory.getChangePriceFrame(cpp.getMeterID(),cpp.getKey()
-                            ,cpp.getFrameID(),cpp.getP0(),cpp.getP1(),cpp.getP2(),cpp.getP3()
+                            ,(byte)frameID,cpp.getP0(),cpp.getP1(),cpp.getP2(),cpp.getP3()
                             ,cpp.getA1(),cpp.getA2(),cpp.getA3(),cpp.getBeginDT(),cpp.getClen()
                             ,cpp.getAtDT(),cpp.getTimeCorrection());
                     break;
@@ -94,29 +107,29 @@ public class SendFrameBusiness {
                     objectMapper = new ObjectMapper();
                     ChangeMoneyParam changeMoneyParam = objectMapper.readValue(jsonString,ChangeMoneyParam.class);
                     sendBytes = FrameFactory.getChangeMoneyFrame(changeMoneyParam.getMeterID()
-                            ,changeMoneyParam.getKey(),changeMoneyParam.getFrameID()
+                            ,changeMoneyParam.getKey(),frameID
                             ,changeMoneyParam.getMoney(),changeMoneyParam.getCzfs()
-                            ,changeMoneyParam.getHxbj(),changeMoneyParam.getTimeCorrection());
+                            ,changeMoneyParam.getTimeCorrection());
                     break;
                 case 0x0C:
                     objectMapper = new ObjectMapper();
                     ValveControlParam vcp = objectMapper.readValue(jsonString,ValveControlParam.class);
                     sendBytes = FrameFactory.getValveControlFrame(vcp.getMeterID(),vcp.getKey()
-                            ,vcp.getFrameID(),ValveCtrStyle.强制关闭
+                            ,(byte)frameID,ValveCtrStyle.强制关闭
                             ,vcp.getAtDT(),vcp.getTimeCorrection());
                     break;
                 case 0x0D:
                     objectMapper = new ObjectMapper();
                     ChangeServerNumParam csnp = objectMapper.readValue(jsonString,ChangeServerNumParam.class);
                     sendBytes = FrameFactory.getSetServerNoFrame(csnp.getMeterID(),csnp.getKey()
-                            ,csnp.getFrameID(),csnp.getTimeCorrection(),csnp.getN()
+                            ,(byte)frameID,csnp.getTimeCorrection(),csnp.getN()
                             ,csnp.getServerNum());
                     break;
                 case 0x0F:
                     objectMapper = new ObjectMapper();
                     SetIPAndPortParam setIPPort = objectMapper.readValue(jsonString,SetIPAndPortParam.class);
                     sendBytes = FrameFactory.getSetIPAndPortFrame(setIPPort.getMeterID()
-                            ,setIPPort.getKey(),setIPPort.getFrameID()
+                            ,setIPPort.getKey(),(byte)frameID
                             ,setIPPort.getServerIP(),setIPPort.getServerPort()
                             ,setIPPort.getTimeCorrection());
                     break;
@@ -124,26 +137,26 @@ public class SendFrameBusiness {
                     objectMapper = new ObjectMapper();
                     SetBeatHeartRateParam sbhrp = objectMapper.readValue(jsonString,SetBeatHeartRateParam.class);
                     sendBytes = FrameFactory.getSetBeatHeartRateFrame(sbhrp.getMeterID(),sbhrp.getKey()
-                            ,sbhrp.getFrameID(),sbhrp.getRate(),sbhrp.getTimeCorrection());
+                            ,(byte)frameID,sbhrp.getRate(),sbhrp.getTimeCorrection());
                     break;
                 case 0x11:
                     objectMapper = new ObjectMapper();
                     SetBeatHeartParam sbhp = objectMapper.readValue(jsonString,SetBeatHeartParam.class);
                     sendBytes = FrameFactory.getSetBeatHeartFrame(sbhp.getMeterID(), sbhp.getKey()
-                            , sbhp.getFrameID(), sbhp.getTimeCorrection());
+                            , (byte)frameID, sbhp.getTimeCorrection());
                     break;
                 case 0x12:
                     objectMapper = new ObjectMapper();
                     Meter2ConcentratorParam m2cp = objectMapper.readValue(jsonString,Meter2ConcentratorParam.class);
                     sendBytes = FrameFactory.getSetMeter2ConcentratorFrame(m2cp.getConcentratorID()
                             ,m2cp.getMeterID(),m2cp.getKey()
-                            ,m2cp.getFrameID(),m2cp.getTimeCorrection());
+                            ,(byte)frameID,m2cp.getTimeCorrection());
                     break;
                 case 0x16:
                     objectMapper = new ObjectMapper();
                     SetKeyParam setKeyParam = objectMapper.readValue(jsonString,SetKeyParam.class);
                     sendBytes = FrameFactory.getSetKeyFrame(setKeyParam.getMeterID(),
-                            setKeyParam.getKey(),setKeyParam.getnKey(),setKeyParam.getFrameID(),
+                            setKeyParam.getKey(),setKeyParam.getnKey(),(byte)frameID,
                             setKeyParam.getTimeCorrection());
                     break;
                 case 0x18:
@@ -153,14 +166,14 @@ public class SendFrameBusiness {
                             meter2ConcentratorParam.getConcentratorID(),
                             meter2ConcentratorParam.getMeterID(),
                             meter2ConcentratorParam.getKey(),
-                            meter2ConcentratorParam.getFrameID(),
+                            (byte)frameID,
                             meter2ConcentratorParam.getTimeCorrection());
                     break;
                 case 0x1E:
                     objectMapper = new ObjectMapper();
                     ReadMeterParam readMeterParam = objectMapper.readValue(jsonString,ReadMeterParam.class);
                     sendBytes = FrameFactory.getMeterDataFrame(readMeterParam.getMeterID()
-                            ,readMeterParam.getKey(), readMeterParam.getFrameID()
+                            ,readMeterParam.getKey(), (byte)frameID
                             ,readMeterParam.getDate(),readMeterParam.getTimeCorrection());
                     break;
                 case 0x1F:
@@ -168,7 +181,7 @@ public class SendFrameBusiness {
                     ChangePriceParam changePriceParam = objectMapper.readValue(jsonString,ChangePriceParam.class);
                     sendBytes = FrameFactory.getChangePriceFrame(
                             changePriceParam.getMeterID(),changePriceParam.getKey()
-                            ,changePriceParam.getFrameID(),changePriceParam.getP0()
+                            ,(byte)frameID,changePriceParam.getP0()
                             ,changePriceParam.getP1(),changePriceParam.getP2(),changePriceParam.getP3()
                             ,changePriceParam.getA1(),changePriceParam.getA2(),changePriceParam.getA3()
                             ,changePriceParam.getBeginDT(),changePriceParam.getClen()
@@ -179,7 +192,8 @@ public class SendFrameBusiness {
                     ValveControlParam valveControlParam1 = objectMapper.readValue(jsonString,ValveControlParam.class);
                     sendBytes = FrameFactory.getValveControlFrame(valveControlParam1.getMeterID()
                             ,valveControlParam1.getKey()
-                            ,valveControlParam1.getFrameID(),ValveCtrStyle.定时关闭
+                            ,(byte)frameID
+                            ,ValveCtrStyle.定时关闭
                             ,valveControlParam1.getAtDT()
                             ,valveControlParam1.getTimeCorrection());
                     break;
@@ -187,7 +201,7 @@ public class SendFrameBusiness {
                     objectMapper = new ObjectMapper();
                     ChangeOverDraftParam codp = objectMapper.readValue(jsonString,ChangeOverDraftParam.class);
                     sendBytes = FrameFactory.getChangeOverdraftFrame(codp.getMeterID(),codp.getKey()
-                            ,codp.getFrameID(),codp.getType()
+                            ,(byte)frameID,codp.getType()
                             ,codp.getTimeCorrection());
                     break;
                 case 0x22:
@@ -196,7 +210,7 @@ public class SendFrameBusiness {
                     sendBytes = FrameFactory.getCommunicationUpCycleFrame(
                             startCycleParam.getMeterID(),
                             startCycleParam.getKey(),
-                            startCycleParam.getFrameID(),
+                            (byte)frameID,
                             startCycleParam.getQdzq(),
                             startCycleParam.getTimeCorrection());
                     break;
@@ -204,7 +218,7 @@ public class SendFrameBusiness {
                     objectMapper = new ObjectMapper();
                     MeterOpenParam meterOpenParam = objectMapper.readValue(jsonString,MeterOpenParam.class);
                     sendBytes = FrameFactory.getMeterOpenFrame(meterOpenParam.getMeterID()
-                            ,meterOpenParam.getKey(),meterOpenParam.getFrameID()
+                            ,meterOpenParam.getKey(),(byte)frameID
                             ,meterOpenParam.getMoney(),meterOpenParam.getP0()
                             ,meterOpenParam.getP1(),meterOpenParam.getP2()
                             ,meterOpenParam.getP3(),meterOpenParam.getA1()
@@ -217,14 +231,14 @@ public class SendFrameBusiness {
                     objectMapper = new ObjectMapper();
                     SetCBRParam setCBRParam = objectMapper.readValue(jsonString,SetCBRParam.class);
                     sendBytes = FrameFactory.getMeterSetCBRFrame(setCBRParam.getMeterID(),
-                            setCBRParam.getKey(),setCBRParam.getFrameID(),
+                            setCBRParam.getKey(),(byte)frameID,
                             setCBRParam.getTimeCorrection(),setCBRParam.getCbr());
                     break;
                 case 0x26:
                     objectMapper = new ObjectMapper();
                     ReadMeterTimerParam rmtp = objectMapper.readValue(jsonString,ReadMeterTimerParam.class);
                     sendBytes = FrameFactory.getTimerDataFrame(rmtp.getMeterID(),rmtp.getKey()
-                            ,rmtp.getFrameID(),rmtp.getAtDT()
+                            ,(byte)frameID,rmtp.getAtDT()
                             ,rmtp.getTimeCorrection());
                     break;
                 case 0x27:
@@ -233,7 +247,7 @@ public class SendFrameBusiness {
                     sendBytes = FrameFactory.getTimerDataOfChangePriceFrame(
                             readMeterTimerParam.getMeterID()
                             , readMeterTimerParam.getKey()
-                            , readMeterTimerParam.getFrameID()
+                            , (byte)frameID
                             , readMeterTimerParam.getAtDT()
                             , readMeterTimerParam.getTimeCorrection());
 
@@ -244,7 +258,7 @@ public class SendFrameBusiness {
                     sendBytes = FrameFactory.getReadCycleInfoFrame(
                             setBeatHeartParam1.getMeterID(),
                             setBeatHeartParam1.getKey(),
-                            setBeatHeartParam1.getFrameID(),
+                            (byte)frameID,
                             setBeatHeartParam1.getTimeCorrection());
                     break;
 
@@ -253,14 +267,21 @@ public class SendFrameBusiness {
                     NotifyTXZTParam nTXZTP = objectMapper.readValue(jsonString,NotifyTXZTParam.class);
                     sendBytes = FrameFactory.getNotifyTXZTFrame(nTXZTP.getMobileID()
                             ,nTXZTP.getMeterID(),nTXZTP.getKey()
-                            ,nTXZTP.getFrameID(),nTXZTP.getTxzt()
+                            ,(byte)frameID,nTXZTP.getTxzt()
                             ,nTXZTP.getTimeCorrection());
                     break;
                 default:
                     break;
             }
             sendString = Hex.BytesToHexString(sendBytes);
-            addSendFrame(meterID,sendString,new Timestamp(new Date().getTime()));
+            TSend tSend = new TSend();
+            tSend.setMeterID(meterID);
+            tSend.setFunCode(funCode);
+            tSend.setFrameID(frameID);
+            tSend.setSendFrame(sendString);
+            tSend.setSendDate(new Timestamp(new Date().getTime()));
+            tSend.setSent(false);
+            addSendFrame(tSend);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -290,4 +311,6 @@ public class SendFrameBusiness {
         String meterID = json.substring(meterIDIndex,meterIDIndex+13);
         return meterID;
     }
+
+
 }

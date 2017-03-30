@@ -19,6 +19,15 @@ import java.util.List;
 public class SendFrame extends CommandFrame {
     private boolean V2 = false;
     private long timeCorrection;//表具时间调整值
+    private int chargeFrameID;//0A充值命令的帧id做特殊处理
+
+    public int getChargeFrameID() {
+        return chargeFrameID;
+    }
+
+    public void setChargeFrameID(int chargeFrameID) {
+        this.chargeFrameID = chargeFrameID;
+    }
 
     public long getTimeCorrection() {
         return timeCorrection;
@@ -134,8 +143,6 @@ public class SendFrame extends CommandFrame {
                 case INT: //整数，将int类型转成16进制字符串（长度是int类型*2），再转成4个字节的对应字节数组
                     int iva=0;
                     iva = fp.GetValue(iva);
-                   // System.out.println(iva);
-                    //String stmp = iva.ToString("X" + (fp.getByteLen() * 2).ToString());
                     String stmp = Integer.toHexString(iva);
                     while(stmp.length()<fp.getByteLen()*2){
                         stmp = "0"+stmp;
@@ -242,10 +249,24 @@ public class SendFrame extends CommandFrame {
                 }
             }
         }
-        //帧ID
-        tmpA[2] += 1;
-        //System.out.println(tmpA[2]);
-        tmpA[pz] = frameID;
+        //如果是0A充值命令，则将chargeFrameID变成2个字节作为0A的帧id
+        if(funcCode == 0x0A){
+            tmpA[2] += 2;
+            String stmp = Integer.toHexString(chargeFrameID);
+            while(stmp.length()<4){
+                stmp = "0"+stmp;
+            }
+            String s1 = stmp.substring(0,2);
+            tmpA[pz] = (byte) Integer.parseInt(s1,16);
+            pz++;
+            String s2 = stmp.substring(2,4);
+            tmpA[pz] = (byte) Integer.parseInt(s2,16);
+        }else {
+            //帧ID
+            tmpA[2] += 1;
+            //System.out.println(tmpA[2]);
+            tmpA[pz] = frameID;
+        }
         //System.out.println(frameID);
         //计算校验和
         int cs = 0;
