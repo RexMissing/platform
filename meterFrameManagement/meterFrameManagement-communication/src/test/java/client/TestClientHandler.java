@@ -42,12 +42,6 @@ public class TestClientHandler extends IoHandlerAdapter {
                 Date date1 = new Date(end);
                 System.out.println("系统时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date1));
             }
-            if(Byte.toUnsignedInt(receiveBytes[1]) == 0xA2){
-
-            }
-            if(Byte.toUnsignedInt(receiveBytes[1]) == 0xA3) {
-
-            }
         }
     }
 

@@ -11,7 +11,6 @@ import org.whut.meterFrameManagement.communication.codec.DataCodecFactory;
 import org.whut.meterFrameManagement.communicationframe.key.MeterID;
 
 import java.net.InetSocketAddress;
-import java.util.Scanner;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,7 +25,32 @@ public class TestClient {
         connector.getFilterChain().addLast( "logger", new LoggingFilter() );
         connector.getFilterChain().addLast( "codec", new ProtocolCodecFilter( new DataCodecFactory()));
         connector.setHandler(new TestClientHandler());
-        ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.27.6.212",6601));
+        for (int i = 0; i < 20; i++) {
+            ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.27.6.212",6601));
+            System.out.println("等待建立连接......");
+            IoSession session = null;
+            try {
+                connectFuture.awaitUninterruptibly();
+                if (connectFuture.isConnected()) {
+                    System.out.println("连接成功");
+                    session = connectFuture.getSession();
+                    byte[] request = new byte[16];
+                    request[0] = 0x68;
+                    request[1] = (byte)0xA1;
+                    for (char c : MeterID.METERID.toCharArray()) {
+                        request[i+2] = (byte) c;
+                    }
+                    request[15] = 0x16;
+                    IoBuffer ioBuffer = IoBuffer.wrap(request);
+                    session.write(ioBuffer);
+
+                }
+            }catch (Exception e){
+                System.out.println("连接失败");
+                System.exit(0);
+            }
+        }
+        /*ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.27.6.212",6601));
         System.out.println("等待建立连接......");
         IoSession session = null;
         try {
@@ -114,7 +138,7 @@ public class TestClient {
                 requestCode = (byte)Integer.parseInt(s1,16);
             }catch (Exception e){
             }
-        }
+        }*/
         connector.dispose();
     }
     public static void main(String[] args) {
