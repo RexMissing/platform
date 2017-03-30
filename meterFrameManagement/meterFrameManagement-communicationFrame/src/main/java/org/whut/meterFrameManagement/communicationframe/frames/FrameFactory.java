@@ -229,18 +229,17 @@ public class FrameFactory {
      *
      * @param meterID 表具编号
      * @param key 表具秘钥
-     * @param frameID 帧id
+     * @param frameID 帧id，充值帧id为2个字节，取消核销标记
      * @param money 充值金额，可为负数
      * @param czfs 操作方式
-     * @param hxbj 核销标记
      * @param timeCorrection
      * @return
      */
-    public static byte[] getChangeMoneyFrame(String meterID, String key, byte frameID, double money,int czfs,int hxbj, long timeCorrection) {
+    public static byte[] getChangeMoneyFrame(String meterID, String key, int frameID, double money,int czfs, long timeCorrection) {
         SendFrame sf = new SendFrame();
         sf.setMeterID(meterID);
-        sf.setFrameID(frameID);
         sf.setFuncCode((byte) 0x0A);
+        sf.setChargeFrameID(frameID);
         double dMon;
         //int czfs = 0;
         if (money > 0) {
@@ -252,9 +251,7 @@ public class FrameFactory {
         }
         sf.addParam(dMon, 4);
         sf.addParam(czfs, 1);
-        sf.addParam(hxbj,1);
         sf.setTimeCorrection(timeCorrection);
-        //byte[] frame = sf.ProcFrame(key);
         return sf.ProcFrame(key);
     }
 
@@ -459,7 +456,7 @@ public class FrameFactory {
     /// <param name="a1">起始量1</param>
     /// <param name="a2">起始量2</param>
     /// <param name="a3">起始量3</param>
-    /// <param name="nkey">新秘钥</param>
+    /// <param name="nkey">新秘钥(长度为32的字符串)</param>
     /// <param name="beginDT">开通日期</param>
     /// <param name="clen">周期长度</param>
     /// <param name="cbr">抄表日</param>

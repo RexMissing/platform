@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface TSendMapper {
     public List<TSend> getSendFrame(String meterID);
-    public void addSendFrame(@Param("meterID")String meterID,@Param("frameString")String frameString,@Param("timestamp")Timestamp timestamp);
+    public Integer getLastFrameID(@Param("meterID")String meterID, @Param("funCode")int funCode);
+    public void addSendFrame(@Param("tSend")TSend tSend);
     public void deleteSendFrame(int id);
+    void updateSent(@Param("id")int id,@Param("sent")boolean sent,@Param("timestamp")Timestamp timestamp);
 }

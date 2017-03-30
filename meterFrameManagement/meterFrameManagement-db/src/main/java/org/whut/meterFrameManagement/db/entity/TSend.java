@@ -8,8 +8,28 @@ import java.sql.Timestamp;
 public class TSend {
     private int id;
     private String meterID;
+    private int funCode;
+    private int frameID;
     private String sendFrame;
     private Timestamp sendDate;
+    private boolean sent;
+    private Timestamp sentDate;
+
+    public int getFrameID() {
+        return frameID;
+    }
+
+    public void setFrameID(int frameID) {
+        this.frameID = frameID;
+    }
+
+    public int getFunCode() {
+        return funCode;
+    }
+
+    public void setFunCode(int funCode) {
+        this.funCode = funCode;
+    }
 
     public int getId() {
         return id;
@@ -27,6 +47,14 @@ public class TSend {
         this.meterID = meterID;
     }
 
+    public Timestamp getSendDate() {
+        return sendDate;
+    }
+
+    public void setSendDate(Timestamp sendDate) {
+        this.sendDate = sendDate;
+    }
+
     public String getSendFrame() {
         return sendFrame;
     }
@@ -35,11 +63,19 @@ public class TSend {
         this.sendFrame = sendFrame;
     }
 
-    public Timestamp getSendDate() {
-        return sendDate;
+    public boolean isSent() {
+        return sent;
     }
 
-    public void setSendDate(Timestamp sendDate) {
-        this.sendDate = sendDate;
+    public void setSent(boolean sent) {
+        this.sent = sent;
+    }
+
+    public Timestamp getSentDate() {
+        return sentDate;
+    }
+
+    public void setSentDate(Timestamp sentDate) {
+        this.sentDate = sentDate;
     }
 }

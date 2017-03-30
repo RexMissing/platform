@@ -80,7 +80,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                 session.closeOnFlush();
             }
             if(Byte.toUnsignedInt(request[1]) == 0xA2){//查询
-                List<TSend> tSendList = sendFrameBusiness.getSendFrame(meterId);
+                List<TSend> tSendList = sendFrameBusiness.getSendFrame(meterId);//查询还没执行的指令
                 System.out.println("指令剩余条数：" + tSendList.size());
                 if(tSendList.size()>0){
                     TSend tSend = tSendList.get(0);
@@ -97,7 +97,7 @@ public class FrameServerHandler extends IoHandlerAdapter {
                     }
                     IoBuffer ioBuffer = IoBuffer.wrap(response);
                     session.write(ioBuffer);
-                    sendFrameBusiness.deleteSendFrame(tSend.getId());
+                    sendFrameBusiness.updateSent(tSend.getId(),true);//设置为已执行
                 }
                 else {
                     byte[] response = new byte[4];

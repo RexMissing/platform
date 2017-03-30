@@ -18,13 +18,7 @@ public class ReceiveFrameBusiness {
     public List<TReceive> getAllReceiveFrame(){
         return tReceiveService.getAllReceiveFrame();
     }
-    public List<TReceive> getReceiveFrame(String meterID){
-        return tReceiveService.getReceiveFrame(meterID);
-    }
     public void addReceiveFrame(String meterID,String receiveString,Timestamp timestamp){
         tReceiveService.addReceiveFrame(meterID,receiveString,timestamp);
-    }
-    public void deleteReceiveFrame(int id){
-        tReceiveService.deleteReceiveFrame(id);
     }
 }
