@@ -6,10 +6,6 @@
     <select id="getKey" parameterType="String" resultType="String">
         SELECT framekey FROM t_framekey WHERE meterID = #{meterID};
     </select>
-    <insert id="add2DB" parameterType="map">
-        INSERT INTO t_framekey(meterID,framekey) VALUES (#{meterID},#{keyStr});
-
-    </insert>
     <update id="updatekey" parameterType="map">
         UPDATE t_framekey SET framekey = #{newKey} WHERE meterID = #{meterID};
     </update>

@@ -12,10 +12,6 @@ public class FrameKeyService {
     @Autowired
     private FrameKeyMapper frameKeyMapper;
 
-    public void add2DB(String meterID, String keyStr) {
-        frameKeyMapper.add2DB(meterID, keyStr);
-    }
-
     public String getKey(String meterID) {
         return frameKeyMapper.getKey(meterID);
     }

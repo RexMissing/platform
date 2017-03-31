@@ -8,15 +8,7 @@ import org.apache.ibatis.annotations.Param;
 public interface FrameKeyMapper {
 
     /**
-     * 将密钥保存到数据库中
-     *
-     * @param meterID 表号
-     * @param keyStr  密钥
-     */
-    public void add2DB(@Param("meterID")String meterID, @Param("keyStr")String keyStr);
-
-    /**
-     * 从数据库中取密钥
+     * 从数据库中取密钥（当前使用的密钥）
      *
      * @param meterID 表号
      * @return 密钥
@@ -24,7 +16,7 @@ public interface FrameKeyMapper {
     public String getKey(String meterID);
 
     /**
-     * 更新数据库中的密钥
+     * 更新表具当前使用的密钥
      *
      * @param meterID 表号
      * @param newKey  新密钥
