@@ -12,12 +12,16 @@ public class FrameKeyService {
     @Autowired
     private FrameKeyMapper frameKeyMapper;
 
-    public String getKey(String meterID) {
-        return frameKeyMapper.getKey(meterID);
+    public String getOldKey(String meterID) {
+        return frameKeyMapper.getOldKey(meterID);
     }
 
     public void updatekey(String meterID, String newKey) {
         frameKeyMapper.updatekey(meterID, newKey);
+    }
+
+    public String getNewKey(String meterID) {
+        return frameKeyMapper.getNewKey(meterID);
     }
 
 }

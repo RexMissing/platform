@@ -6,7 +6,8 @@ package org.whut.meterFrameManagement.db.entity;
 public class FrameKey {
     private int id;
     private String meterID;
-    private String keyStr;
+    private String oldKey;
+    private String newKey;
 
     public int getId() {
         return id;
@@ -16,12 +17,20 @@ public class FrameKey {
         this.id = id;
     }
 
-    public String getKeyStr() {
-        return keyStr;
+    public String getOldKey() {
+        return oldKey;
     }
 
-    public void setKeyStr(String keyStr) {
-        this.keyStr = keyStr;
+    public void setOldKey(String oldKey) {
+        this.oldKey = oldKey;
+    }
+
+    public String getNewKey() {
+        return newKey;
+    }
+
+    public void setNewKey(String newKey) {
+        this.newKey = newKey;
     }
 
     public String getMeterID() {

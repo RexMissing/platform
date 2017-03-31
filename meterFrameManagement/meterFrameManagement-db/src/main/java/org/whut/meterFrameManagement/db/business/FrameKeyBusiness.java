@@ -18,8 +18,12 @@ public class FrameKeyBusiness {
 
     private static String base = "abcdef0123456789";
 
-    public String getKey(String meterID) {
-        return frameKeyService.getKey(meterID);
+    public String getOldKey(String meterID) {
+        return frameKeyService.getOldKey(meterID);
+    }
+
+    public String getNewKey(String meterID) {
+        return frameKeyService.getNewKey(meterID);
     }
 
     public void updatekey(String meterID, String newKey) {

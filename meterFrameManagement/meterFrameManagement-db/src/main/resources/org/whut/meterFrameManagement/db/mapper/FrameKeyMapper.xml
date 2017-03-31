@@ -3,11 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.whut.meterFrameManagement.db.mapper.FrameKeyMapper">
-    <select id="getKey" parameterType="String" resultType="String">
-        SELECT framekey FROM t_framekey WHERE meterID = #{meterID};
+    <select id="getOldKey" parameterType="String" resultType="String">
+        SELECT oldKey FROM t_framekey WHERE meterID = #{meterID};
     </select>
     <update id="updatekey" parameterType="map">
-        UPDATE t_framekey SET framekey = #{newKey} WHERE meterID = #{meterID};
+        UPDATE t_framekey SET newKey = #{newKey} WHERE meterID = #{meterID};
     </update>
+    <select id="getNewKey" parameterType="String" resultType="String">
+        SELECT newKey FROM t_framekey WHERE meterID = #{meterID};
+    </select>
 </mapper>
 

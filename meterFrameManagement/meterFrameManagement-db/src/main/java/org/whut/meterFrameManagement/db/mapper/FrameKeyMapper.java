@@ -8,19 +8,27 @@ import org.apache.ibatis.annotations.Param;
 public interface FrameKeyMapper {
 
     /**
-     * 从数据库中取密钥（当前使用的密钥）
+     * 从数据库中取初始密钥
      *
      * @param meterID 表号
-     * @return 密钥
+     * @return 初始密钥
      */
-    public String getKey(String meterID);
+    public String getOldKey(String meterID);
 
     /**
-     * 更新表具当前使用的密钥
+     * 更新表具新密钥
      *
      * @param meterID 表号
      * @param newKey  新密钥
      */
-    public void updatekey(@Param("meterID")String meterID, @Param("newKey")String newKey);
+    public void updatekey(@Param("meterID") String meterID, @Param("newKey") String newKey);
+
+    /**
+     * 从数据库中取新密钥
+     *
+     * @param meterID 表号
+     * @return 新密钥
+     */
+    public String getNewKey(String meterID);
 
 }

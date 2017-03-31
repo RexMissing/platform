@@ -62,7 +62,12 @@ public class SendFrameBusiness {
         }
         byte[] sendBytes = new byte[0];
         String sendString = "";
-        String key = keyBusiness.getKey(meterID);
+        String key = "";
+        if (funCode == 0x23) { // 开通帧加密用初始密钥
+            key = keyBusiness.getOldKey(meterID);
+        } else {   // 其他帧加密用更新后的密钥
+            key = keyBusiness.getNewKey(meterID);
+        }
         try {
             switch (funCode){
                 case 0x01:
