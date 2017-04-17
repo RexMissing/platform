@@ -22,13 +22,13 @@ public class ReceiveData {
     private String xtsjc;
     private double remainMoney;
     private int meterRead;
-
+    private int sumAmount;
     private int preSumAmount;
+    private int[] lszqyl;
     private double price;
     private int amount1;
     private int amount2;
     private int amount3;
-    private int sumAmount;
     private String meterTime;
     private int funCount;
     private List<FunCodeFrameId> list;
@@ -127,6 +127,14 @@ public class ReceiveData {
 
     public void setList(List<FunCodeFrameId> list) {
         this.list = list;
+    }
+
+    public int[] getLszqyl() {
+        return lszqyl;
+    }
+
+    public void setLszqyl(int[] lszqyl) {
+        this.lszqyl = lszqyl;
     }
 
     public String getMeterID() {

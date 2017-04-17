@@ -64,7 +64,6 @@
       <module fileurl="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communication/meterFrameManagement-communication.iml" filepath="$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communication/meterFrameManagement-communication.iml" />
       <module fileurl="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/meterFrameManagement-communicationFrame.iml" filepath="$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-communicationFrame/meterFrameManagement-communicationFrame.iml" />
       <module fileurl="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-db/meterFrameManagement-db.iml" filepath="$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-db/meterFrameManagement-db.iml" />
-      <module fileurl="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-db/meterFrameManagement-db.iml" filepath="$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-db/meterFrameManagement-db.iml" />
       <module fileurl="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-util/meterFrameManagement-util.iml" filepath="$PROJECT_DIR$/meterFrameManagement/meterFrameManagement-util/meterFrameManagement-util.iml" />
       <module fileurl="file://$PROJECT_DIR$/meterFrameManagement/meterFrameManagementWeb/meterFrameManagementWeb.iml" filepath="$PROJECT_DIR$/meterFrameManagement/meterFrameManagementWeb/meterFrameManagementWeb.iml" />
       <module fileurl="file://$PROJECT_DIR$/platform.iml" filepath="$PROJECT_DIR$/platform.iml" />

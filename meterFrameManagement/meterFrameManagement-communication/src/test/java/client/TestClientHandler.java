@@ -4,9 +4,13 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+<<<<<<< HEAD
 import org.whut.meterFrameManagement.communicationframe.key.MeterID;
 import org.whut.meterFrameManagement.communicationframe.key.TestKey;
 import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
+=======
+import org.whut.meterFrameManagement.aes256.AES;
+>>>>>>> 4875370d3f95f5e9b262f025ddb2f356a2778e56
 import org.whut.meterFrameManagement.util.date.DateUtil;
 import org.whut.meterFrameManagement.util.hex.Hex;
 
@@ -40,6 +44,7 @@ public class TestClientHandler extends IoHandlerAdapter {
             System.out.print(Byte.toUnsignedInt(receiveBytes[i]) + " ");
         }
         System.out.println();
+<<<<<<< HEAD
         if (receiveBytes[0] == 0x68 && receiveBytes[receiveBytes.length - 1] == 0x16) {
             if (Byte.toUnsignedInt(receiveBytes[1]) == 0xA1) {
                 parseFrame(receiveBytes, (byte) 0xA1);
@@ -69,11 +74,18 @@ public class TestClientHandler extends IoHandlerAdapter {
         switch (funCode) {
             case (byte) 0xA1:
                 byte[] bytes = Arrays.copyOfRange(receiveBytes, 2, 6);
+=======
+        if(receiveBytes[0] == 0x68 && receiveBytes[receiveBytes.length-1] == 0x16){
+            int command = Byte.toUnsignedInt(receiveBytes[1]);
+            if(command == 0xA1){
+                byte[] bytes = Arrays.copyOfRange(receiveBytes,2,6);
+>>>>>>> 4875370d3f95f5e9b262f025ddb2f356a2778e56
                 String hex = Hex.BytesToHexString(bytes);
                 long sub = Long.parseLong(hex, 16);
                 Date date = DateUtil.createDate("2000-1-1 00:00:00");
                 long end = sub * 1000 + date.getTime();
                 Date date1 = new Date(end);
+<<<<<<< HEAD
                 System.out.println("系统时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date1));
                 break;
             case (byte) 0xA2:
@@ -137,6 +149,23 @@ public class TestClientHandler extends IoHandlerAdapter {
                 break;
             default:
                 break;
+=======
+                System.out.println("系统时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date1));
+            }
+            if(command == 0xA2&&receiveBytes[2]>0){
+                byte[] bytes = Arrays.copyOfRange(receiveBytes,3,receiveBytes.length-1);
+                String key = "77DD9400EEB5A0DADA40120151212163"+"77DD9400EEB5A0DADA40120151212163";
+                byte[] keyBytes = Hex.hexStringToBytes(key,key.length()/2);
+                byte[] result = AES.decrypt(bytes,keyBytes);
+                byte[] meterBytes = Arrays.copyOfRange(result,2,15);
+                StringBuffer meterID = new StringBuffer();
+                for(int i=0;i<meterBytes.length;i++)
+                    meterID.append((char)meterBytes[i]);
+                String resultString = "h"+Hex.BytesToHexString(result)+"16";
+                System.out.println("客户端解密后："+resultString);
+                System.out.println("表号："+meterID);
+            }
+>>>>>>> 4875370d3f95f5e9b262f025ddb2f356a2778e56
         }
     }
 

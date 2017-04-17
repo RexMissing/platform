@@ -52,15 +52,15 @@ public class ReceiveMessageListener extends PooledMessageConsumerBase {
 
             //以下代码可以省略
             /*ReceiveFrame rf =  new ReceiveFrame();
-            rf.ParseFrom(command, TestKey.KEYSTR);
-            //ReceiveFrameRepository.write(rf);
+            rf.ParseFrom(command,key);
+            MeterStatus meterStatus = rf.MeterST;
+
             int funCode = Byte.toUnsignedInt(rf.getFuncCode());
             System.out.println("命令码：" + Integer.toHexString(funCode));
-            System.out.println("表号："+rf.getMeterID());
+            System.out.println("表号：" + meterStatus.getMeterID());//rf.getMeterID()
             System.out.println("帧id:"+Byte.toUnsignedInt(rf.getFrameID()));
             System.out.println("传送方向："+rf.getFrmDirection());
             System.out.println("帧的回传结果："+rf.getFrmResult());
-            MeterStatus meterStatus = rf.MeterST;
             System.out.println("系统状态字节："+meterStatus.getXtzt());
             System.out.println("阀门位置："+meterStatus.getFMWZ());
             System.out.println("阀门位置错："+meterStatus.getFMCW());
@@ -74,19 +74,19 @@ public class ReceiveMessageListener extends PooledMessageConsumerBase {
             if(funCode==0x3E){
                 System.out.println("以下为统一回传帧中额外数据");
                 System.out.println("上周期量："+meterStatus.getPresumamount());
-                System.out.println("单价："+meterStatus.getPrice());
-                System.out.println("阶梯起始1："+meterStatus.getAmount1());
-                System.out.println("阶梯起始2："+meterStatus.getAmount2());
-                System.out.println("阶梯起始3："+meterStatus.getAmount3());
+                System.out.println("当前使用气价："+meterStatus.getPrice());
+                System.out.println("分段气量1："+meterStatus.getAmount1());
+                System.out.println("分段气量2："+meterStatus.getAmount2());
+                System.out.println("分段气量3："+meterStatus.getAmount3());
                 System.out.println("本周期量："+meterStatus.getSumamount());
-                System.out.println("表具时间："+meterStatus.getMeterTime());
+                System.out.println("表具时间："+new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(meterStatus.getMeterTime()));
                 System.out.println("执行的命令数："+rf.getFuncCount());
                 List<CFunction> codeList = rf.getAryFunc();
                 for(int i=0;i<codeList.size();i++){
                     CFunction cFunction = codeList.get(i);
                     System.out.println("命令码：" + Integer.toHexString(Byte.toUnsignedInt(cFunction.getCode()))
                             + "，" + "帧id：" + Byte.toUnsignedInt(cFunction.getFid())
-                            +"，"+"是否执行成功："+cFunction.isSuccess());
+                            +",执行结果："+(cFunction.isSuccess()?"成功":"失败"));
                 }
             }*/
 

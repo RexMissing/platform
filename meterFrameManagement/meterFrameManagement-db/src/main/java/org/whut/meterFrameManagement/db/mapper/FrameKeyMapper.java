@@ -21,7 +21,7 @@ public interface FrameKeyMapper {
      * @param meterID 表号
      * @param newKey  新密钥
      */
-    public void updatekey(@Param("meterID") String meterID, @Param("newKey") String newKey);
+    public void updateNewKey(@Param("meterID") String meterID, @Param("newKey") String newKey);
 
     /**
      * 从数据库中取新密钥
@@ -31,4 +31,5 @@ public interface FrameKeyMapper {
      */
     public String getNewKey(String meterID);
 
+    public void changeKey(@Param("meterID")String meterID,@Param("oldKey") String oldKey,@Param("newKey") String newKey);
 }

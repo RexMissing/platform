@@ -137,7 +137,6 @@ public class ReceiveFrame extends CommandFrame {
         }
         //去掉D7，D6两位
         funcCode = (byte) (Byte.toUnsignedInt(funcCode) % 64);
-
         ParseDataStr(); //对数据域进行解析
         return true;
     }
@@ -145,6 +144,7 @@ public class ReceiveFrame extends CommandFrame {
     private void ParseDataStr() {
         MeterST.setMeterID(meterID);
         MeterST.getFromStr(dataStr);
+
         if (funcCode == 0x3E) {
             //统一回传帧
             funcCount = Integer.parseInt(dataStr.substring(58, 60), 16);
@@ -190,7 +190,7 @@ public class ReceiveFrame extends CommandFrame {
             System.out.print(Byte.toUnsignedInt(buff[i])+" ");
         }
         System.out.println();
-        System.out.println("16进制："+Hex.BytesToHexString(buff));
+        System.out.println("16进制字符串："+Hex.BytesToHexString(buff));
 
         //将解密后的明文转换为16进制可见字符串帧
         //起始码

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.whut.meterFrameManagement.communicationframe.convert.*;
 import org.whut.meterFrameManagement.communicationframe.enums.ValveCtrStyle;
 import org.whut.meterFrameManagement.communicationframe.frames.FrameFactory;
+import org.whut.meterFrameManagement.communicationframe.key.KeyManager;
 import org.whut.meterFrameManagement.db.entity.TSend;
 import org.whut.meterFrameManagement.db.service.TSendService;
 import org.whut.meterFrameManagement.util.hex.Hex;
@@ -53,7 +54,7 @@ public class SendFrameBusiness {
         System.out.println("表号："+meterID+"，命令码："+funCodeStr);
         int funCode = Integer.parseInt(funCodeStr,16);
         int frameID = 1;
-        if(funCode==0X0A) {
+        if(funCode==0x0A||funCode==0x1F) {
             frameID = getLastFrameID(meterID, funCode);
             if(frameID>0)
                 frameID = frameID+1;
@@ -166,12 +167,12 @@ public class SendFrameBusiness {
                 case 0x16:
                     objectMapper = new ObjectMapper();
                     SetKeyParam setKeyParam = objectMapper.readValue(jsonString,SetKeyParam.class);
-                    String newKey1 = keyBusiness.createKeyStr(meterID);
+                    String newKey1 = KeyManager.createKeyStr();
                     sendBytes = FrameFactory.getSetKeyFrame(setKeyParam.getMeterID(),
                             key,newKey1,(byte)frameID,
                             setKeyParam.getTimeCorrection());
-                    // 更新密钥
-                    keyBusiness.updatekey(meterID, newKey1);
+                    // 修改密钥
+                    keyBusiness.updateNewKey(meterID, newKey1);
                     break;
                 case 0x18:
                     objectMapper = new ObjectMapper();
@@ -231,7 +232,7 @@ public class SendFrameBusiness {
                 case 0x23:
                     objectMapper = new ObjectMapper();
                     MeterOpenParam meterOpenParam = objectMapper.readValue(jsonString, MeterOpenParam.class);
-                    String newKey2 = keyBusiness.createKeyStr(meterID);
+                    String newKey2 = KeyManager.createKeyStr();
                     sendBytes = FrameFactory.getMeterOpenFrame(meterOpenParam.getMeterID()
                             ,key,(byte)frameID
                             ,meterOpenParam.getMoney(),meterOpenParam.getP0()
@@ -241,8 +242,8 @@ public class SendFrameBusiness {
                             ,newKey2,meterOpenParam.getBeginDT()
                             ,meterOpenParam.getClen(),meterOpenParam.getCbr()
                             ,meterOpenParam.getBzql(),meterOpenParam.getSzql());
-                    // 更新密钥
-                    keyBusiness.updatekey(meterID, newKey2);
+                    // 更新新密钥
+                    keyBusiness.updateNewKey(meterID, newKey2);
                     break;
                 case 0x25:
                     objectMapper = new ObjectMapper();
