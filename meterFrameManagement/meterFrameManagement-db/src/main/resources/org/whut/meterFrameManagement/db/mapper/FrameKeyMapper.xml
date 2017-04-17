@@ -6,11 +6,14 @@
     <select id="getOldKey" parameterType="String" resultType="String">
         SELECT oldKey FROM t_framekey WHERE meterID = #{meterID};
     </select>
-    <update id="updatekey" parameterType="map">
+    <update id="updateNewKey" parameterType="map">
         UPDATE t_framekey SET newKey = #{newKey} WHERE meterID = #{meterID};
     </update>
     <select id="getNewKey" parameterType="String" resultType="String">
         SELECT newKey FROM t_framekey WHERE meterID = #{meterID};
     </select>
+    <update id="changeKey" parameterType="map">
+        UPDATE t_framekey SET oldKey = #{oldKey},newKey = #{newKey} WHERE meterID = #{meterID};
+    </update>
 </mapper>
 

@@ -4,6 +4,7 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.whut.meterFrameManagement.aes256.AES;
 import org.whut.meterFrameManagement.util.date.DateUtil;
 import org.whut.meterFrameManagement.util.hex.Hex;
 
@@ -33,7 +34,8 @@ public class TestClientHandler extends IoHandlerAdapter {
         }
         System.out.println();
         if(receiveBytes[0] == 0x68 && receiveBytes[receiveBytes.length-1] == 0x16){
-            if(Byte.toUnsignedInt(receiveBytes[1]) == 0xA1){
+            int command = Byte.toUnsignedInt(receiveBytes[1]);
+            if(command == 0xA1){
                 byte[] bytes = Arrays.copyOfRange(receiveBytes,2,6);
                 String hex = Hex.BytesToHexString(bytes);
                 long sub = Long.parseLong(hex,16);
@@ -41,6 +43,19 @@ public class TestClientHandler extends IoHandlerAdapter {
                 long end = sub*1000 + date.getTime();
                 Date date1 = new Date(end);
                 System.out.println("系统时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date1));
+            }
+            if(command == 0xA2&&receiveBytes[2]>0){
+                byte[] bytes = Arrays.copyOfRange(receiveBytes,3,receiveBytes.length-1);
+                String key = "77DD9400EEB5A0DADA40120151212163"+"77DD9400EEB5A0DADA40120151212163";
+                byte[] keyBytes = Hex.hexStringToBytes(key,key.length()/2);
+                byte[] result = AES.decrypt(bytes,keyBytes);
+                byte[] meterBytes = Arrays.copyOfRange(result,2,15);
+                StringBuffer meterID = new StringBuffer();
+                for(int i=0;i<meterBytes.length;i++)
+                    meterID.append((char)meterBytes[i]);
+                String resultString = "h"+Hex.BytesToHexString(result)+"16";
+                System.out.println("客户端解密后："+resultString);
+                System.out.println("表号："+meterID);
             }
         }
     }

@@ -1,22 +1,22 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 50528
+Source Server         : DB
+Source Server Version : 50173
 Source Host           : localhost:3306
 Source Database       : meterframemanagement
 
 Target Server Type    : MYSQL
-Target Server Version : 50528
+Target Server Version : 50173
 File Encoding         : 65001
 
-Date: 2017-03-31 12:43:43
+Date: 2017-04-06 09:22:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `t_framekey`
+-- Table structure for t_framekey
 -- ----------------------------
 DROP TABLE IF EXISTS `t_framekey`;
 CREATE TABLE `t_framekey` (
@@ -33,7 +33,7 @@ CREATE TABLE `t_framekey` (
 INSERT INTO `t_framekey` VALUES ('1', '0120151212163', '640836FBC4A6FD68431AE03CF44C0232', '640836FBC4A6FD68431AE03CF44C0232');
 
 -- ----------------------------
--- Table structure for `t_receive`
+-- Table structure for t_receive
 -- ----------------------------
 DROP TABLE IF EXISTS `t_receive`;
 CREATE TABLE `t_receive` (
@@ -49,7 +49,7 @@ CREATE TABLE `t_receive` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `t_send`
+-- Table structure for t_send
 -- ----------------------------
 DROP TABLE IF EXISTS `t_send`;
 CREATE TABLE `t_send` (

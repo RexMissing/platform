@@ -249,16 +249,16 @@ public class SendFrame extends CommandFrame {
                 }
             }
         }
-        //如果是0A充值命令，则将chargeFrameID变成2个字节作为0A的帧id
+        //如果是0A充值命令，则将chargeFrameID变成2个字节作为0A的帧id，一个字节放到核销标记字节中，一个字节放到帧id中
         if(funcCode == 0x0A){
-            tmpA[2] += 2;
+            tmpA[2] += 1;
             String stmp = Integer.toHexString(chargeFrameID);
             while(stmp.length()<4){
                 stmp = "0"+stmp;
             }
             String s1 = stmp.substring(0,2);
-            tmpA[pz] = (byte) Integer.parseInt(s1,16);
-            pz++;
+            tmpA[21] = (byte) Integer.parseInt(s1,16);
+            //pz++;
             String s2 = stmp.substring(2,4);
             tmpA[pz] = (byte) Integer.parseInt(s2,16);
         }else {

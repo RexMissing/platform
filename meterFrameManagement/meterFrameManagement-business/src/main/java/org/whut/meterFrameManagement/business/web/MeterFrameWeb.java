@@ -4,10 +4,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.whut.meterFrameManagement.communicationframe.convert.*;
-import org.whut.meterFrameManagement.communicationframe.key.TestKey;
 import org.whut.meterFrameManagement.communicationframe.receive.*;
 import org.whut.meterFrameManagement.MQ.send.SendProducer;
-//import org.whut.meterFrameManagement.communicationframe.receive.ReceiveData;
 import org.whut.meterFrameManagement.db.business.FrameKeyBusiness;
 import org.whut.meterFrameManagement.db.business.ReceiveFrameBusiness;
 import org.whut.meterFrameManagement.db.entity.TReceive;
@@ -43,11 +41,9 @@ public class MeterFrameWeb {
         ValveControlParam valveControlParam = new ValveControlParam();
         valveControlParam.setMeterID(meterID);
         valveControlParam.setFunCode(funCode);
-        valveControlParam.setFrameID((byte) 1);
-        valveControlParam.setKey(meterKey);
-        System.out.println("密钥：" + meterKey);
+        //valveControlParam.setFrameID((byte) 1);
+        //valveControlParam.setKey(meterKey);
         valveControlParam.setAtDT(null);
-        valveControlParam.setType(1);//1允许开启
         valveControlParam.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -72,11 +68,9 @@ public class MeterFrameWeb {
         ValveControlParam valveControlParam = new ValveControlParam();
         valveControlParam.setMeterID(meterID);
         valveControlParam.setFunCode(funCode);
-        valveControlParam.setFrameID((byte) 1);
-        valveControlParam.setKey(meterKey);
-        System.out.println("密钥：" + meterKey);
+        //valveControlParam.setFrameID((byte) 1);
+        //valveControlParam.setKey(meterKey);
         valveControlParam.setAtDT(null);
-        valveControlParam.setType(2);//2临时关闭
         valveControlParam.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -101,8 +95,8 @@ public class MeterFrameWeb {
         ReadMeterParam readMeterParam = new ReadMeterParam();
         readMeterParam.setMeterID(meterID);
         readMeterParam.setFunCode(funCode);
-        readMeterParam.setFrameID((byte) 1);
-        readMeterParam.setKey(meterKey);
+        //readMeterParam.setFrameID((byte) 1);
+        //readMeterParam.setKey(meterKey);
         readMeterParam.setDate(null);
         readMeterParam.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -128,16 +122,22 @@ public class MeterFrameWeb {
         RunTimeGasParam rgp = new RunTimeGasParam();
         rgp.setMeterID(meterID);
         rgp.setFunCode(funCode);
-        rgp.setFrameID((byte) 1);
-        rgp.setKey(meterKey);
+        //rgp.setFrameID((byte) 1);
+        //rgp.setKey(meterKey);
         rgp.setCzfs1((byte) 0);
         rgp.setZyql(100);
         rgp.setCzfs2((byte) 2);
-        rgp.setBzq(26);
+        rgp.setBzq(47);
         rgp.setCzfs3((byte) 2);
-        rgp.setSzq(30);
+        rgp.setSzq(33);
         rgp.setFs((byte) 0);
-        rgp.setLszqyl(new byte[24]);
+        byte[] lszqyl = new byte[24];
+        lszqyl[0] = 12;
+        lszqyl[1] = 34;
+        lszqyl[2] = 56;
+        lszqyl[3] = 78;
+        lszqyl[4] = 90;
+        rgp.setLszqyl(lszqyl);
         rgp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -162,8 +162,8 @@ public class MeterFrameWeb {
         ChargeModeParam cmp = new ChargeModeParam();
         cmp.setMeterID(meterID);
         cmp.setFunCode(funCode);
-        cmp.setFrameID((byte) 1);
-        cmp.setKey(meterKey);
+        //cmp.setFrameID((byte) 1);
+        //cmp.setKey(meterKey);
         cmp.setSfms((byte)0xDF);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -188,10 +188,8 @@ public class MeterFrameWeb {
         ChangePriceParam cpp = new ChangePriceParam();
         cpp.setMeterID(meterID);
         cpp.setFunCode(funCode);
-        cpp.setFrameID((byte) 1);
-        cpp.setKey(meterKey);
-        //(double) 2, 2.5, (double) 3, 3.5,
-        //200, 300, 400, date, (byte) 30, null,
+        //cpp.setFrameID((byte) 1);
+        //cpp.setKey(meterKey);
         cpp.setP0(2.7);
         cpp.setP1(3.1);
         cpp.setP2(3.5);
@@ -226,11 +224,11 @@ public class MeterFrameWeb {
         ChangeMoneyParam cmp = new ChangeMoneyParam();
         cmp.setMeterID(meterID);
         cmp.setFunCode(funCode);
-        cmp.setFrameID((byte) 7);
-        cmp.setKey(meterKey);
-        cmp.setMoney(234);
+        //cmp.setFrameID((byte) 7);
+        //cmp.setKey(meterKey);
+        cmp.setMoney(450);
         cmp.setCzfs(2);
-        cmp.setHxbj(0);
+        //cmp.setHxbj(0);
         cmp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -255,9 +253,8 @@ public class MeterFrameWeb {
         ValveControlParam vcp = new ValveControlParam();
         vcp.setMeterID(meterID);
         vcp.setFunCode(funCode);
-        vcp.setFrameID((byte) 1);
-        vcp.setKey(meterKey);
-        vcp.setType(3);//3强制关阀门
+        //vcp.setFrameID((byte) 1);
+        //vcp.setKey(meterKey);
         vcp.setAtDT(null);
         vcp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -283,8 +280,8 @@ public class MeterFrameWeb {
         ChangeServerNumParam csnp = new ChangeServerNumParam();
         csnp.setMeterID(meterID);
         csnp.setFunCode(funCode);
-        csnp.setFrameID((byte) 1);
-        csnp.setKey(meterKey);
+        //csnp.setFrameID((byte) 1);
+        //csnp.setKey(meterKey);
         csnp.setN(1);
         csnp.setServerNum("1234567890123");
         csnp.setTimeCorrection(123);
@@ -311,8 +308,8 @@ public class MeterFrameWeb {
         SetIPAndPortParam setIPAndPortParam = new SetIPAndPortParam();
         setIPAndPortParam.setMeterID(meterID);
         setIPAndPortParam.setFunCode(funCode);
-        setIPAndPortParam.setFrameID((byte) 1);
-        setIPAndPortParam.setKey(meterKey);
+        //setIPAndPortParam.setFrameID((byte) 1);
+        //setIPAndPortParam.setKey(meterKey);
         setIPAndPortParam.setServerIP("127.0.0.1");
         setIPAndPortParam.setServerPort("64329");
         setIPAndPortParam.setTimeCorrection(123);
@@ -339,8 +336,8 @@ public class MeterFrameWeb {
         SetBeatHeartRateParam sbhrp = new SetBeatHeartRateParam();
         sbhrp.setMeterID(meterID);
         sbhrp.setFunCode(funCode);
-        sbhrp.setFrameID((byte) 1);
-        sbhrp.setKey(meterKey);
+        //sbhrp.setFrameID((byte) 1);
+        //sbhrp.setKey(meterKey);
         sbhrp.setRate(60);
         sbhrp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -366,8 +363,8 @@ public class MeterFrameWeb {
         SetBeatHeartParam sbhp = new SetBeatHeartParam();
         sbhp.setMeterID(meterID);
         sbhp.setFunCode(funCode);
-        sbhp.setFrameID((byte) 1);
-        sbhp.setKey(meterKey);
+        //sbhp.setFrameID((byte) 1);
+        //sbhp.setKey(meterKey);
         sbhp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -392,8 +389,8 @@ public class MeterFrameWeb {
         Meter2ConcentratorParam m2cp = new Meter2ConcentratorParam();
         m2cp.setMeterID(meterID);
         m2cp.setFunCode(funCode);
-        m2cp.setFrameID((byte) 1);
-        m2cp.setKey(meterKey);
+        //m2cp.setFrameID((byte) 1);
+        //m2cp.setKey(meterKey);
         m2cp.setConcentratorID("1023548697214");
         m2cp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -419,9 +416,9 @@ public class MeterFrameWeb {
         SetKeyParam setKeyParam = new SetKeyParam();
         setKeyParam.setMeterID(meterID);
         setKeyParam.setFunCode(funCode);
-        setKeyParam.setFrameID((byte) 2);
-        setKeyParam.setKey(meterKey);
-        setKeyParam.setnKey(meterKey);
+        //setKeyParam.setFrameID((byte) 2);
+        //setKeyParam.setKey(meterKey);
+        //setKeyParam.setnKey(meterKey);
         setKeyParam.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -446,8 +443,8 @@ public class MeterFrameWeb {
         Meter2ConcentratorParam meter2ConcentratorParam = new Meter2ConcentratorParam();
         meter2ConcentratorParam.setMeterID(meterID);
         meter2ConcentratorParam.setFunCode(funCode);
-        meter2ConcentratorParam.setFrameID((byte) 1);
-        meter2ConcentratorParam.setKey(meterKey);
+        //meter2ConcentratorParam.setFrameID((byte) 1);
+        //meter2ConcentratorParam.setKey(meterKey);
         meter2ConcentratorParam.setConcentratorID("1023548697214");
         meter2ConcentratorParam.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -473,8 +470,8 @@ public class MeterFrameWeb {
         ReadMeterParam readMeterParam = new ReadMeterParam();
         readMeterParam.setMeterID(meterID);
         readMeterParam.setFunCode(funCode);
-        readMeterParam.setFrameID((byte) 5);
-        readMeterParam.setKey(meterKey);
+        //readMeterParam.setFrameID((byte) 5);
+        //readMeterParam.setKey(meterKey);
         readMeterParam.setDate(new Date(new Date().getTime()+120000));
         readMeterParam.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -500,17 +497,15 @@ public class MeterFrameWeb {
         ChangePriceParam cpp = new ChangePriceParam();
         cpp.setMeterID(meterID);
         cpp.setFunCode(funCode);
-        cpp.setFrameID((byte) 8);
-        cpp.setKey(meterKey);
-        //(double) 2, 2.5, (double) 3, 3.5,
-        //200, 300, 400, date, (byte) 30, null,
-        cpp.setP0(2.7);
-        cpp.setP1(3);
-        cpp.setP2(3.5);
-        cpp.setP3(4.5);
-        cpp.setA1(25);
-        cpp.setA2(35);
-        cpp.setA3(45);
+        //cpp.setFrameID((byte) 8);
+        //cpp.setKey(meterKey);
+        cpp.setP0(2.8);
+        cpp.setP1(3.2);
+        cpp.setP2(3.7);
+        cpp.setP3(4.2);
+        cpp.setA1(26);
+        cpp.setA2(36);
+        cpp.setA3(46);
         cpp.setBeginDT(new Date(new Date().getTime()+120000));
         cpp.setClen((byte) 30);
         cpp.setAtDT(new Date(new Date().getTime()+90000));
@@ -538,9 +533,8 @@ public class MeterFrameWeb {
         ValveControlParam vcp = new ValveControlParam();
         vcp.setMeterID(meterID);
         vcp.setFunCode(funCode);
-        vcp.setFrameID((byte) 5);
-        vcp.setKey(meterKey);
-        vcp.setType(4);//4定时关阀门
+        //vcp.setFrameID((byte) 5);
+        //vcp.setKey(meterKey);
         vcp.setAtDT(new Date(new Date().getTime()+90000));
         vcp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -566,8 +560,8 @@ public class MeterFrameWeb {
         ChangeOverDraftParam codp = new ChangeOverDraftParam();
         codp.setMeterID(meterID);
         codp.setFunCode(funCode);
-        codp.setFrameID((byte) 1);
-        codp.setKey(meterKey);
+        //codp.setFrameID((byte) 1);
+        //codp.setKey(meterKey);
         codp.setType(1);//透支3天
         codp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -593,8 +587,8 @@ public class MeterFrameWeb {
         StartCycleParam startCycleParam = new StartCycleParam();
         startCycleParam.setMeterID(meterID);
         startCycleParam.setFunCode(funCode);
-        startCycleParam.setFrameID((byte) 1);
-        startCycleParam.setKey(meterKey);
+        //startCycleParam.setFrameID((byte) 1);
+        //startCycleParam.setKey(meterKey);
         startCycleParam.setQdzq(12);
         startCycleParam.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -620,8 +614,8 @@ public class MeterFrameWeb {
         MeterOpenParam meterOpenParam = new MeterOpenParam();
         meterOpenParam.setMeterID(meterID);
         meterOpenParam.setFunCode(funCode);
-        meterOpenParam.setFrameID((byte) 1);
-        meterOpenParam.setKey(meterKey);
+        //meterOpenParam.setFrameID((byte) 1);
+        //meterOpenParam.setKey(meterKey);
         meterOpenParam.setMoney(1000);
         meterOpenParam.setP0(2);
         meterOpenParam.setP1(2.5);
@@ -631,11 +625,11 @@ public class MeterFrameWeb {
         meterOpenParam.setA2(30);
         meterOpenParam.setA3(40);
         meterOpenParam.setNkey(meterKey);
-        meterOpenParam.setBeginDT(new Date());
+        meterOpenParam.setBeginDT(new Date(new Date().getTime()+120000));
         meterOpenParam.setClen((byte) 30);
         meterOpenParam.setCbr((byte) 28);
-        meterOpenParam.setBzql(200);
-        meterOpenParam.setSzql(450);
+        meterOpenParam.setBzql(10);
+        meterOpenParam.setSzql(55);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
         try {
@@ -659,8 +653,8 @@ public class MeterFrameWeb {
         SetCBRParam scbrp = new SetCBRParam();
         scbrp.setMeterID(meterID);
         scbrp.setFunCode(funCode);
-        scbrp.setFrameID((byte) 1);
-        scbrp.setKey(meterKey);
+        //scbrp.setFrameID((byte) 1);
+        //scbrp.setKey(meterKey);
         scbrp.setCbr(28);
         scbrp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -686,8 +680,8 @@ public class MeterFrameWeb {
         ReadMeterTimerParam rmtp = new ReadMeterTimerParam();
         rmtp.setMeterID(meterID);
         rmtp.setFunCode(funCode);
-        rmtp.setFrameID((byte) 1);
-        rmtp.setKey(meterKey);
+        //rmtp.setFrameID((byte) 1);
+        //rmtp.setKey(meterKey);
         rmtp.setAtDT(new Date(new Date().getTime()+90000));
         rmtp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -713,9 +707,9 @@ public class MeterFrameWeb {
         ReadMeterTimerParam rmtp = new ReadMeterTimerParam();
         rmtp.setMeterID(meterID);
         rmtp.setFunCode(funCode);
-        rmtp.setFrameID((byte) 1);
-        rmtp.setKey(meterKey);
-        rmtp.setAtDT(new Date());
+        //rmtp.setFrameID((byte) 1);
+        //rmtp.setKey(meterKey);
+        rmtp.setAtDT(new Date(new Date().getTime()+90000));
         rmtp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -740,8 +734,8 @@ public class MeterFrameWeb {
         SetBeatHeartParam sbhp = new SetBeatHeartParam();
         sbhp.setMeterID(meterID);
         sbhp.setFunCode(funCode);
-        sbhp.setFrameID((byte) 1);
-        sbhp.setKey(meterKey);
+        //sbhp.setFrameID((byte) 1);
+        //sbhp.setKey(meterKey);
         sbhp.setTimeCorrection(123);
         ObjectMapper objectMapper = new ObjectMapper();
         String s = "[]";
@@ -766,8 +760,8 @@ public class MeterFrameWeb {
         NotifyTXZTParam nTXZTP = new NotifyTXZTParam();
         nTXZTP.setMeterID(meterID);
         nTXZTP.setFunCode(funCode);
-        nTXZTP.setFrameID((byte)1);
-        nTXZTP.setKey(meterKey);
+        //nTXZTP.setFrameID((byte)1);
+        //nTXZTP.setKey(meterKey);
         nTXZTP.setMobileID("1234569870453");
         nTXZTP.setTxzt(0);
         nTXZTP.setTimeCorrection(123);
@@ -786,6 +780,8 @@ public class MeterFrameWeb {
 
     @Autowired
     ReceiveFrameBusiness receiveFrameBusiness;
+    @Autowired
+    FrameKeyBusiness frameKeyBusiness;
     //查询统一回传数据
     @POST
     @Path("/getReceiveData")
@@ -795,10 +791,12 @@ public class MeterFrameWeb {
         List<ReceiveData> showList = new ArrayList<ReceiveData>();
         List<TReceive> receiveList = receiveFrameBusiness.getAllReceiveFrame();
         for(int i=0;i<receiveList.size();i++){
+            String meterID = receiveList.get(i).getMeterID();
             String receiveFrameString = receiveList.get(i).getReceiveFrame();
             ReceiveFrame rf =  new ReceiveFrame();
             byte[] command = Hex.hexStringToBytes(receiveFrameString,receiveFrameString.length()/2);
-            rf.ParseFrom(command, TestKey.KEYSTR);
+            String key = frameKeyBusiness.getNewKey(meterID);
+            rf.ParseFrom(command, key);
             ReceiveData receiveData = new ReceiveData();
             receiveData.setMeterID(rf.getMeterID());//表号
             int funCode = Byte.toUnsignedInt(rf.getFuncCode());
@@ -834,9 +832,16 @@ public class MeterFrameWeb {
             else
                 receiveData.setXtsjc("出错");
 
-            if(funCode==0x3E||funCode==0x05||funCode==0x06||funCode==0x08||funCode==0x09||funCode==0x10||funCode==0x26||funCode==0x27) {
+            if(funCode==0x3E||funCode==0x29||funCode==0x05||funCode==0x06||funCode==0x08||funCode==0x09||funCode==0x10||funCode==0x26||funCode==0x27) {
                 receiveData.setRemainMoney(meterStatus.getRemainMoney());//剩余金额
                 receiveData.setMeterRead(meterStatus.getMeterRead());//表止码
+            }
+            if(funCode==0x29){
+
+                receiveData.setLszqyl(meterStatus.getLszqyl());//历史周期量
+                int[] a = receiveData.getLszqyl();
+                receiveData.setMeterTime(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(meterStatus.getMeterTime1()));
+                System.out.println(receiveData.getMeterTime());
             }
             if(funCode==0x3E){
                 receiveData.setPreSumAmount(meterStatus.getPresumamount());//上周期量

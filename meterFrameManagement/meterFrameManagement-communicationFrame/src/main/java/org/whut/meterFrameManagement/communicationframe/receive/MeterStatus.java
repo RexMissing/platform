@@ -31,11 +31,15 @@ public class MeterStatus {
     private int amount3;
     private int sumamount;//本月已用气总量
     private int presumamount;//上月用气总量
+    private int[] lszqyl;//历史周期量24个字节，29命令回传
+    private Date meterTime1;//29命令回传的表具时间
 
     // 构造方法
     public MeterStatus() {
         meterID = "";
         meterTime = DateUtil.createDate("2000-01-01 00:00:00");
+        meterTime1 = DateUtil.createDate("2000-01-01 00:00:00");
+        lszqyl = new int[24];
     }
 
     // 构造方法。重载1
@@ -181,6 +185,26 @@ public class MeterStatus {
         this.sumamount = sumamount;
     }
 
+    public int[] getLszqyl() {
+        return lszqyl;
+    }
+
+    public void setLszqyl(int[] lszqyl) {
+        this.lszqyl = lszqyl;
+    }
+
+    public void setMeterTime(Date meterTime) {
+        this.meterTime = meterTime;
+    }
+
+    public Date getMeterTime1() {
+        return meterTime1;
+    }
+
+    public void setMeterTime1(Date meterTime1) {
+        this.meterTime1 = meterTime1;
+    }
+
     public void getFromStr(String dataStr) {
         remainMoney = 0.0;
         meterRead = 0;
@@ -197,14 +221,21 @@ public class MeterStatus {
         remainMoney += Integer.parseInt(dataStr.substring(6, 8), 16) * 0.01;
         remainMoney = (double) Math.round(remainMoney*100)/100;
 
-        meterRead += Integer.parseInt(dataStr.substring(8, 10), 16) * 1000000;
-        meterRead += Integer.parseInt(dataStr.substring(10, 12), 16) * 1000;
+        meterRead += Integer.parseInt(dataStr.substring(8, 10), 16) * 100000;
+        meterRead += Integer.parseInt(dataStr.substring(10, 12), 16) * 10000;
         meterRead += Integer.parseInt(dataStr.substring(12, 14), 16) * 100;
         meterRead += Integer.parseInt(dataStr.substring(14, 16), 16);
         //meterRead += Integer.parseInt(dataStr.substring(8,16),16);
         xtzt = (byte) Integer.parseInt(dataStr.substring(16, 18), 16);
 
+        //29命令的回传和统一回传帧命令长度一样
         if (dataStr.length() >= 92) { //数据字符串包含46个字节数据,统一回传帧数据
+            for(int i=0;i<24;i++){//如果是29命令回传
+                lszqyl[i] = Integer.parseInt(dataStr.substring(i*2+16,i*2+18),16);
+            }
+            Long time = Long.parseLong(dataStr.substring(64, 72), 16);//如果是29命令回传
+            meterTime1.setTime(meterTime1.getTime() + time*1000);
+
             price += Integer.parseInt(dataStr.substring(22, 24), 16);
             price += Integer.parseInt(dataStr.substring(24, 26), 16)*0.01;
             price = (double)Math.round(price*100)/100;
@@ -217,22 +248,17 @@ public class MeterStatus {
             amount3 += Integer.parseInt(dataStr.substring(34, 36), 16) * 100;
             amount3 += Integer.parseInt(dataStr.substring(36, 38), 16);
             //amount3 = Integer.parseInt(dataStr.substring(34,38),16);
-            sumamount += Integer.parseInt(dataStr.substring(38, 40), 16) * 100;
+
+            sumamount += Integer.parseInt(dataStr.substring(38, 40), 16) * 100;//本周期量
             sumamount += Integer.parseInt(dataStr.substring(40, 42), 16);
             //sumamount = Integer.parseInt(dataStr.substring(38,42),16);
-            //上月用气量
-            presumamount += Integer.parseInt(dataStr.substring(18, 20), 16) * 100;
+
+            presumamount += Integer.parseInt(dataStr.substring(18, 20), 16) * 100;//上周期量
             presumamount += Integer.parseInt(dataStr.substring(20, 22), 16);
             //presumamount = Integer.parseInt(dataStr.substring(18,22),16);
             //取得表具时间
             Long longTime = Long.parseLong(dataStr.substring(42, 50), 16);
-
             meterTime.setTime(meterTime.getTime() + longTime*1000);
         }
     }
-
-    public static void main(String[] args) {
-        new MeterStatus();
-    }
-
 }

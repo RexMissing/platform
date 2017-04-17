@@ -7,10 +7,12 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
+import org.whut.meterFrameManagement.aes256.AES;
 import org.whut.meterFrameManagement.communication.codec.DataCodecFactory;
-import org.whut.meterFrameManagement.communicationframe.key.MeterID;
+import org.whut.meterFrameManagement.util.hex.Hex;
 
 import java.net.InetSocketAddress;
+import java.util.Scanner;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,12 +22,15 @@ import java.net.InetSocketAddress;
  * To change this template use File | Settings | File Templates.
  */
 public class TestClient {
+    //做测试用
+    public static final String METERID = "0120151212164";//0120151000088
+
     public static void connect(){
         IoConnector connector = new NioSocketConnector();
         connector.getFilterChain().addLast( "logger", new LoggingFilter() );
         connector.getFilterChain().addLast( "codec", new ProtocolCodecFilter( new DataCodecFactory()));
         connector.setHandler(new TestClientHandler());
-        for (int i = 0; i < 20; i++) {
+        /*for (int i = 0; i < 20; i++) {
             ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.27.6.212",6601));
             System.out.println("等待建立连接......");
             IoSession session = null;
@@ -37,7 +42,7 @@ public class TestClient {
                     byte[] request = new byte[16];
                     request[0] = 0x68;
                     request[1] = (byte)0xA1;
-                    for (char c : MeterID.METERID.toCharArray()) {
+                    for (char c : METERID.toCharArray()) {
                         request[i+2] = (byte) c;
                     }
                     request[15] = 0x16;
@@ -49,8 +54,8 @@ public class TestClient {
                 System.out.println("连接失败");
                 System.exit(0);
             }
-        }
-        /*ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.27.6.212",6601));
+        }*/
+        ConnectFuture connectFuture = connector.connect(new InetSocketAddress("127.0.0.1",6601));
         System.out.println("等待建立连接......");
         IoSession session = null;
         try {
@@ -84,8 +89,8 @@ public class TestClient {
                     request = new byte[16];
                     request[0] = 0x68;
                     request[1] = (byte)0xA1;
-                    for(int i=0;i< MeterID.METERID.length();i++){
-                        request[i+2] = (byte)MeterID.METERID.charAt(i);
+                    for(int i=0;i< METERID.length();i++){
+                        request[i+2] = (byte) METERID.charAt(i);
                     }
                     request[15] = 0x16;
                     IoBuffer ioBuffer = IoBuffer.wrap(request);
@@ -96,8 +101,8 @@ public class TestClient {
                     request = new byte[16];
                     request[0] = 0x68;
                     request[1] = (byte)0xA2;
-                    for(int i=0;i<MeterID.METERID.length();i++){
-                        request[i+2] = (byte)MeterID.METERID.charAt(i);
+                    for(int i=0;i<METERID.length();i++){
+                        request[i+2] = (byte) METERID.charAt(i);
                     }
                     request[15] = 0x16;
                     ioBuffer = IoBuffer.wrap(request);
@@ -112,8 +117,8 @@ public class TestClient {
                     request = new byte[bytes.length+17];
                     request[0] = 0x68;
                     request[1] = (byte)0xA3;
-                    for(int i=0;i<MeterID.METERID.length();i++){
-                        request[i+2] = (byte)MeterID.METERID.charAt(i);
+                    for(int i=0;i<METERID.length();i++){
+                        request[i+2] = (byte) METERID.charAt(i);
                     }
                     request[15] = (byte)bytes.length;
                     for(int i=0;i<bytes.length;i++){
@@ -138,7 +143,7 @@ public class TestClient {
                 requestCode = (byte)Integer.parseInt(s1,16);
             }catch (Exception e){
             }
-        }*/
+        }
         connector.dispose();
     }
     public static void main(String[] args) {
@@ -149,18 +154,27 @@ public class TestClient {
     }
 
     //回传测试
-    public static byte[] getReceiveFrame(byte funCode){
-        //String keyStr = SendFrameRepository.getKeyString();
-        byte[] receiveBytes = new byte[0];
+    public static byte[] getReceiveFrame(byte funCode) {
+        byte[] bytes = new byte[0];
         switch (funCode){
-
             case 0x3E:
-                //String s = "6C4E41C8833CEB9F8E44328CC2E02D0179C988F599E836363740C5897611F3D015963D812E0242539C9D0E934536B5DE5B11C495632EEDB0611B0962ABE37A82";
-                //receiveBytes = Hex.hexStringToBytes(s, s.length() / 2);
+                byte[] bytes1 = new byte[62];
+                bytes1[0] = 0x3E;
+                bytes1[1] = 0x3C;
+                for(int i=0;i<METERID.length();i++){
+                    bytes1[i+2] = (byte) METERID.charAt(i);
+                }
+                String keyString = "77DD9400EEB5A0DADA40120151212163"+"77DD9400EEB5A0DADA40120151212163";
+                byte[] key = Hex.hexStringToBytes(keyString,keyString.length()/2);
+                try {
+                    bytes = AES.encrypt(bytes1,key);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;
         }
-        return receiveBytes;
+        return bytes;
     }
 }

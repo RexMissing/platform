@@ -229,7 +229,7 @@ public class FrameFactory {
      *
      * @param meterID 表具编号
      * @param key 表具秘钥
-     * @param frameID 帧id，充值帧id为2个字节，取消核销标记
+     * @param frameID 帧id，充值帧id为2个字节（占用一个之前的核销标记字节），取消核销标记
      * @param money 充值金额，可为负数
      * @param czfs 操作方式
      * @param timeCorrection
@@ -251,6 +251,7 @@ public class FrameFactory {
         }
         sf.addParam(dMon, 4);
         sf.addParam(czfs, 1);
+        sf.addParam(0,1);//核销标记先占用1个字节，组帧的时候帧id2个字节中的一个字节覆盖该字节
         sf.setTimeCorrection(timeCorrection);
         return sf.ProcFrame(key);
     }

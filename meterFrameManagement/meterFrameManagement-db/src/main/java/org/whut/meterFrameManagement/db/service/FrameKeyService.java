@@ -16,12 +16,15 @@ public class FrameKeyService {
         return frameKeyMapper.getOldKey(meterID);
     }
 
-    public void updatekey(String meterID, String newKey) {
-        frameKeyMapper.updatekey(meterID, newKey);
+    public void updateNewKey(String meterID, String newKey) {
+        frameKeyMapper.updateNewKey(meterID, newKey);
     }
 
     public String getNewKey(String meterID) {
         return frameKeyMapper.getNewKey(meterID);
     }
 
+    public void changeKey(String meterID, String oldKey, String newKey) {
+        frameKeyMapper.changeKey(meterID,oldKey,newKey);
+    }
 }

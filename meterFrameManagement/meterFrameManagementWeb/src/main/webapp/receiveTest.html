@@ -28,11 +28,12 @@
             $.post("rs/frame/getReceiveData",null,getCallBack,"json");
         }
         var backData;
+        var gird1;
         function getCallBack(data){
             backData = data;
             var maingridData = {};
             maingridData.Rows = data;
-            $("#maingrid").ligerGrid({
+            grid1 = $("#maingrid").ligerGrid({
                 columns: [
                     { display: '表号', name: 'meterID',minWidth: 120 },
                     { display: '命令码', name: 'funCode', minWidth: 30 },
@@ -65,18 +66,33 @@
         }
 
         function getCommand(index){
+            var page = grid1.options.page;
+            var pageSize = grid1.options.pageSize;
             var commandgridData = {};
-            commandgridData.Rows = backData[index].list;//getListFromJSON(data);
-            $("#commandgrid").ligerGrid({
-                columns: [
-                    { display: '命令码', name: 'funCode', minWidth: 30 },
-                    { display: '帧id', name: 'frameId', minWidth: 30 },
-                    { display: '执行结果', name: 'successOrFail',minWidth:60 }
-                ], data:commandgridData,  height:150,width:300,pageSize:8 ,rownumbers:true
-            });
-            $("#subDiv").show();
+            commandgridData.Rows = backData[(page-1)*pageSize+index].list;//getListFromJSON(data);
+            //var lszqyl = new Array();
+            var lszqyl = backData[(page-1)*pageSize+index].lszqyl;
+            if(lszqyl==null){
+                $("#commandgrid").ligerGrid({
+                    columns: [
+                        { display: '命令码', name: 'funCode', minWidth: 30 },
+                        { display: '帧id', name: 'frameId', minWidth: 30 },
+                        { display: '执行结果', name: 'successOrFail',minWidth:60 }
+                    ], data:commandgridData,  height:150,width:300,pageSize:8 ,rownumbers:true
+                });
+                $("#command29").hide();
+                $("#subDiv").show();
+            }
+            else{
+                var str = "";
+                for(var k=0;k<lszqyl.length;k++){
+                    str += "第"+(k+1)+"周期量："+lszqyl[k]+" ";
+                }
+                $("#command29").html(str);
+                $("#subDiv").hide();
+                $("#command29").show();
+            }
         }
-
     </script>
 </head>
 <body style="padding:10px">
@@ -84,9 +100,9 @@
 <div style="margin-top: 30px"><button id="query" onclick="query()">查询</button></div>
 <div id="maingrid" style="margin-top:30px"></div>
 <div id="subDiv"  style="margin-top: 30px">
-    <div><h3>执行结果</h3></div>
     <div id="commandgrid"></div>
 </div>
+<div id="command29" style="margin-top: 30px"></div>
 </body>
 </html>
     
