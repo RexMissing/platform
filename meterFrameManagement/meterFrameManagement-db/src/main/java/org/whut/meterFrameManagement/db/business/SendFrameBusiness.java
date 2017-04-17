@@ -67,7 +67,9 @@ public class SendFrameBusiness {
             key = keyBusiness.getOldKey(meterID);
         } else {   // 其他帧加密用更新后的密钥
             key = keyBusiness.getNewKey(meterID);
+            //key = "8DD0BBDDAEC9E62AED70120151212163";
         }
+        System.out.println("密钥：" + key);
         try {
             switch (funCode){
                 case 0x01:

@@ -9,6 +9,7 @@ import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.whut.meterFrameManagement.communication.codec.DataCodecFactory;
 import org.whut.meterFrameManagement.communicationframe.key.MeterID;
+import org.whut.meterFrameManagement.util.hex.Hex;
 
 import java.net.InetSocketAddress;
 
@@ -20,37 +21,48 @@ import java.net.InetSocketAddress;
  * To change this template use File | Settings | File Templates.
  */
 public class TestClient {
-    public static void connect(){
-        IoConnector connector = new NioSocketConnector();
+
+    private static IoConnector connector;
+    private void init() {
+        connector = new NioSocketConnector();
+        connector.setConnectTimeoutMillis(30000);
         connector.getFilterChain().addLast( "logger", new LoggingFilter() );
-        connector.getFilterChain().addLast( "codec", new ProtocolCodecFilter( new DataCodecFactory()));
+        connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new DataCodecFactory()));
         connector.setHandler(new TestClientHandler());
-        for (int i = 0; i < 20; i++) {
-            ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.27.6.212",6601));
-            System.out.println("等待建立连接......");
+    }
+
+    public IoSession connect(){
+        /*int sum = 0;
+        for (int i = 0; i < 5000; i++) {
             IoSession session = null;
+            ConnectFuture connectFuture = connector.connect(new InetSocketAddress("127.0.0.1",6601));
             try {
+                System.out.println("等待建立连接......");
                 connectFuture.awaitUninterruptibly();
+                sum++;
                 if (connectFuture.isConnected()) {
-                    System.out.println("连接成功");
                     session = connectFuture.getSession();
                     byte[] request = new byte[16];
                     request[0] = 0x68;
                     request[1] = (byte)0xA1;
-                    for (char c : MeterID.METERID.toCharArray()) {
-                        request[i+2] = (byte) c;
+                    for(int j=0;j< MeterID.METERID.length();j++){
+                        request[j+2] = (byte)MeterID.METERID.charAt(j);
                     }
                     request[15] = 0x16;
                     IoBuffer ioBuffer = IoBuffer.wrap(request);
                     session.write(ioBuffer);
-
+                    *//*String str = "hello";
+                    byte[] bytes = str.getBytes();
+                    session.write(IoBuffer.wrap(bytes));*//*
                 }
             }catch (Exception e){
+                e.printStackTrace();
                 System.out.println("连接失败");
                 System.exit(0);
             }
         }
-        /*ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.27.6.212",6601));
+        System.out.println("成功建立" + sum + "个连接");*/
+        ConnectFuture connectFuture = connector.connect(new InetSocketAddress("127.0.0.1",6601));
         System.out.println("等待建立连接......");
         IoSession session = null;
         try {
@@ -66,8 +78,7 @@ public class TestClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //String meterID = "0120151000088";
-        byte[] request;
+        /*byte[] request;
         System.out.print("输入请求命令：");
         Scanner scanner = new Scanner(System.in);
         String s1 = scanner.nextLine();
@@ -90,7 +101,6 @@ public class TestClient {
                     request[15] = 0x16;
                     IoBuffer ioBuffer = IoBuffer.wrap(request);
                     session.write(ioBuffer);
-
                     break;
                 case (byte)0xA2:
                     request = new byte[16];
@@ -139,28 +149,39 @@ public class TestClient {
             }catch (Exception e){
             }
         }*/
-        connector.dispose();
+        return session;
     }
     public static void main(String[] args) {
-        /*for(int i=0;i<100;i++){
-            new Thread(new ClientTread(i)).start();
-        }*/
-        TestClient.connect();
+        TestClient client = new TestClient();
+        client.init();
+        IoSession session = client.connect();
+        byte[] request = new byte[16];
+        request[0] = 0x68;
+        request[1] = (byte)0xA1;
+        for(int i=0;i< MeterID.METERID.length();i++){
+            request[i+2] = (byte)MeterID.METERID.charAt(i);
+        }
+        request[15] = 0x16;
+        IoBuffer ioBuffer = IoBuffer.wrap(request);
+        session.write(ioBuffer);
     }
 
     //回传测试
     public static byte[] getReceiveFrame(byte funCode){
-        //String keyStr = SendFrameRepository.getKeyString();
         byte[] receiveBytes = new byte[0];
         switch (funCode){
-
             case 0x3E:
-                //String s = "6C4E41C8833CEB9F8E44328CC2E02D0179C988F599E836363740C5897611F3D015963D812E0242539C9D0E934536B5DE5B11C495632EEDB0611B0962ABE37A82";
-                //receiveBytes = Hex.hexStringToBytes(s, s.length() / 2);
+                String s = "6C4E41C8833CEB9F8E44328CC2E02D0179C988F599E836363740C5897611F3D015963D812E0242539C9D0E934536B5DE5B11C495632EEDB0611B0962ABE37A82";
+                receiveBytes = Hex.hexStringToBytes(s, s.length() / 2);
                 break;
             default:
                 break;
         }
         return receiveBytes;
+    }
+
+    // 断开连接
+    public void disconnect() {
+        connector.dispose();
     }
 }
