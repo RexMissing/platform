@@ -5,6 +5,7 @@ import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.whut.meterFrameManagement.aes256.AES;
@@ -23,17 +24,10 @@ import java.util.Date;
  */
 public class TestClient {
     //做测试用
-    public static final String METERID = "0120151212163";//0120151000088
-    private static IoConnector connector;
-    private void init() {
-        connector = new NioSocketConnector();
-        connector.setConnectTimeoutMillis(30000);
-        connector.getFilterChain().addLast( "logger", new LoggingFilter() );
-        connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new DataCodecFactory()));
-        connector.setHandler(new TestClientHandler());
-    }
-
-    public IoSession connect(){
+    //public static final String METERID = "0120151212163";//0120151000088
+    public static final String[] METERIDS = {"0120151212163", "0120151212164", "0120151212165", "0120151212166"};
+    //public static final String[] METERIDS = {"0120151212163", "0120151212164", "0120151212165"};
+    public IoSession connect(IoConnector connector){
         ConnectFuture connectFuture = connector.connect(new InetSocketAddress("10.138.83.25",6601));
         System.out.println("等待建立连接......");
         IoSession session = null;
@@ -41,6 +35,7 @@ public class TestClient {
             connectFuture.awaitUninterruptibly();
             session = connectFuture.getSession();
         }catch (Exception e){
+            e.printStackTrace();
             System.out.println("连接失败");
             System.exit(0);
         }
@@ -125,29 +120,36 @@ public class TestClient {
     }
     public static void main(String[] args) {
         TestClient client = new TestClient();
-        client.init();
-        IoSession session = client.connect();
-        byte[] request = new byte[16];
-        request[0] = 0x68;
-        request[1] = (byte)0xA1;
-        for(int i=0;i< METERID.length();i++){
-            request[i+2] = (byte)METERID.charAt(i);
+        for (String meterID : METERIDS) {
+            IoConnector connector = new NioSocketConnector();
+            connector.setConnectTimeoutMillis(15000);
+            connector.getFilterChain().addLast("logger", new LoggingFilter());
+            connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new DataCodecFactory()));
+            connector.getFilterChain().addLast("mythreadpool",new ExecutorFilter());
+            connector.setHandler(new TestClientHandler(meterID, connector));
+            IoSession session = client.connect(connector);
+            byte[] request = new byte[16];
+            request[0] = 0x68;
+            request[1] = (byte)0xA1;
+            for(int i=0;i< meterID.length();i++){
+                request[i+2] = (byte)meterID.charAt(i);
+            }
+            request[15] = 0x16;
+            IoBuffer ioBuffer = IoBuffer.wrap(request);
+            session.write(ioBuffer);
         }
-        request[15] = 0x16;
-        IoBuffer ioBuffer = IoBuffer.wrap(request);
-        session.write(ioBuffer);
     }
 
     //回传测试
-    public static byte[] getReceiveFrame(byte funCode) {
+    public static byte[] getReceiveFrame(byte funCode, String meterID) {
         byte[] bytes = new byte[0];
         switch (funCode){
             case 0x3E:
                 byte[] bytes1 = new byte[63];
                 bytes1[0] = 0x3E;
                 bytes1[1] = 0x3C;
-                for(int i=0;i<METERID.length();i++){
-                    bytes1[i+2] = (byte) METERID.charAt(i);
+                for(int i=0;i<meterID.length();i++){
+                    bytes1[i+2] = (byte) meterID.charAt(i);
                 }
                 // SYQL
                 bytes1[15] = 0;
@@ -231,10 +233,5 @@ public class TestClient {
                 break;
         }
         return bytes;
-    }
-
-    // 断开连接
-    public void disconnect() {
-        connector.dispose();
     }
 }

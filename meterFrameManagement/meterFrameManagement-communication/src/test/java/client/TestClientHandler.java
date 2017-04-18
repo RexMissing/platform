@@ -1,6 +1,7 @@
 package client;
 
 import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -22,9 +23,15 @@ import java.util.Date;
 public class TestClientHandler extends IoHandlerAdapter {
 
     //做测试用
-    public static final String METERID = "0120151212163";//0120151000088
+    public String METERID = "";//0120151000088
     // 关闭重连后，下一个请求命令
     private byte nextFunCode;
+
+    private IoConnector connector;
+    public TestClientHandler(String meterID, IoConnector connector) {
+        this.METERID = meterID;
+        this.connector = connector;
+    }
 
     @Override
     public void exceptionCaught(IoSession arg0, Throwable arg1)
@@ -86,7 +93,7 @@ public class TestClientHandler extends IoHandlerAdapter {
                     //String keyString = "640836FBC4A6FD68431AE03CF44C0232" + "640836FBC4A6FD68431AE03CF44C0232";
                     byte[] key = Hex.hexStringToBytes(keyString,keyString.length()/2);
                     try {
-                        System.out.println("表具收到的命令帧：" +Hex.BytesToHexString(AES.decrypt(bytes, key)));
+                        System.out.println("表具" + METERID + "收到的命令帧：" +Hex.BytesToHexString(AES.decrypt(bytes, key)));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -119,7 +126,7 @@ public class TestClientHandler extends IoHandlerAdapter {
                 session.write(ioBuffer);
                 break;
             case (byte) 0xA3:
-                byte[] bytes = TestClient.getReceiveFrame((byte) 0x3E);
+                byte[] bytes = TestClient.getReceiveFrame((byte) 0x3E, METERID);
                 request = new byte[bytes.length + 17];
                 request[0] = 0x68;
                 request[1] = (byte) 0xA3;
@@ -146,14 +153,14 @@ public class TestClientHandler extends IoHandlerAdapter {
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        System.out.println("客户端" + session.getId() + "与:" + session.getRemoteAddress().toString() + "断开连接");
+        System.out.println("客户端与服务器断开连接");
         TestClient client = new TestClient();
         if (nextFunCode == (byte) 0xAA) {
             System.out.println("通讯完成.");
-            client.disconnect();
+            connector.dispose();
         } else {
             // 重新连接
-            IoSession newSession = client.connect();
+            IoSession newSession = client.connect(connector);
             sendRequest(newSession, nextFunCode);
         }
     }
