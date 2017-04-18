@@ -4,13 +4,7 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-<<<<<<< HEAD
-import org.whut.meterFrameManagement.communicationframe.key.MeterID;
-import org.whut.meterFrameManagement.communicationframe.key.TestKey;
-import org.whut.meterFrameManagement.communicationframe.receive.ReceiveFrame;
-=======
 import org.whut.meterFrameManagement.aes256.AES;
->>>>>>> 4875370d3f95f5e9b262f025ddb2f356a2778e56
 import org.whut.meterFrameManagement.util.date.DateUtil;
 import org.whut.meterFrameManagement.util.hex.Hex;
 
@@ -27,6 +21,8 @@ import java.util.Date;
  */
 public class TestClientHandler extends IoHandlerAdapter {
 
+    //做测试用
+    public static final String METERID = "0120151212163";//0120151000088
     // 关闭重连后，下一个请求命令
     private byte nextFunCode;
 
@@ -44,7 +40,6 @@ public class TestClientHandler extends IoHandlerAdapter {
             System.out.print(Byte.toUnsignedInt(receiveBytes[i]) + " ");
         }
         System.out.println();
-<<<<<<< HEAD
         if (receiveBytes[0] == 0x68 && receiveBytes[receiveBytes.length - 1] == 0x16) {
             if (Byte.toUnsignedInt(receiveBytes[1]) == 0xA1) {
                 parseFrame(receiveBytes, (byte) 0xA1);
@@ -74,18 +69,11 @@ public class TestClientHandler extends IoHandlerAdapter {
         switch (funCode) {
             case (byte) 0xA1:
                 byte[] bytes = Arrays.copyOfRange(receiveBytes, 2, 6);
-=======
-        if(receiveBytes[0] == 0x68 && receiveBytes[receiveBytes.length-1] == 0x16){
-            int command = Byte.toUnsignedInt(receiveBytes[1]);
-            if(command == 0xA1){
-                byte[] bytes = Arrays.copyOfRange(receiveBytes,2,6);
->>>>>>> 4875370d3f95f5e9b262f025ddb2f356a2778e56
                 String hex = Hex.BytesToHexString(bytes);
                 long sub = Long.parseLong(hex, 16);
                 Date date = DateUtil.createDate("2000-1-1 00:00:00");
                 long end = sub * 1000 + date.getTime();
                 Date date1 = new Date(end);
-<<<<<<< HEAD
                 System.out.println("系统时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date1));
                 break;
             case (byte) 0xA2:
@@ -94,15 +82,14 @@ public class TestClientHandler extends IoHandlerAdapter {
                     System.out.println("服务器已无指令.");
                 } else {
                     bytes = Arrays.copyOfRange(receiveBytes, 3, 3 + returnInt);
-                    String hexStr = Hex.BytesToHexString(bytes);
-                    System.out.println("16进制加密命令帧串：" + hexStr);
-                    ReceiveFrame receiveFrame = new ReceiveFrame();
-                    receiveFrame.ParseFrom(bytes, TestKey.KEYSTR);
-                    System.out.println("表号：" + receiveFrame.getMeterID());
-                    System.out.println("命令码：" + Integer.toHexString(Byte.toUnsignedInt(receiveFrame.getFuncCode())));
-                    System.out.println("帧ID：" + receiveFrame.getFrameID());
-                    System.out.println("传送方向：" + receiveFrame.getFrmDirection());
-                    System.out.println("回传帧结果：" + receiveFrame.getFrmResult());
+                    String keyString = "77DD9400EEB5A0DADA40120151212163"+"77DD9400EEB5A0DADA40120151212163";
+                    //String keyString = "640836FBC4A6FD68431AE03CF44C0232" + "640836FBC4A6FD68431AE03CF44C0232";
+                    byte[] key = Hex.hexStringToBytes(keyString,keyString.length()/2);
+                    try {
+                        System.out.println("表具收到的命令帧：" +Hex.BytesToHexString(AES.decrypt(bytes, key)));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             default:
@@ -124,8 +111,8 @@ public class TestClientHandler extends IoHandlerAdapter {
                 request = new byte[16];
                 request[0] = 0x68;
                 request[1] = (byte) 0xA2;
-                for (int i = 0; i < MeterID.METERID.length(); i++) {
-                    request[i + 2] = (byte) MeterID.METERID.charAt(i);
+                for (int i = 0; i < METERID.length(); i++) {
+                    request[i + 2] = (byte) METERID.charAt(i);
                 }
                 request[15] = 0x16;
                 IoBuffer ioBuffer = IoBuffer.wrap(request);
@@ -136,8 +123,8 @@ public class TestClientHandler extends IoHandlerAdapter {
                 request = new byte[bytes.length + 17];
                 request[0] = 0x68;
                 request[1] = (byte) 0xA3;
-                for (int i = 0; i < MeterID.METERID.length(); i++) {
-                    request[i + 2] = (byte) MeterID.METERID.charAt(i);
+                for (int i = 0; i < METERID.length(); i++) {
+                    request[i + 2] = (byte) METERID.charAt(i);
                 }
                 request[15] = (byte) bytes.length;
                 for (int i = 0; i < bytes.length; i++) {
@@ -149,23 +136,6 @@ public class TestClientHandler extends IoHandlerAdapter {
                 break;
             default:
                 break;
-=======
-                System.out.println("系统时间："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date1));
-            }
-            if(command == 0xA2&&receiveBytes[2]>0){
-                byte[] bytes = Arrays.copyOfRange(receiveBytes,3,receiveBytes.length-1);
-                String key = "77DD9400EEB5A0DADA40120151212163"+"77DD9400EEB5A0DADA40120151212163";
-                byte[] keyBytes = Hex.hexStringToBytes(key,key.length()/2);
-                byte[] result = AES.decrypt(bytes,keyBytes);
-                byte[] meterBytes = Arrays.copyOfRange(result,2,15);
-                StringBuffer meterID = new StringBuffer();
-                for(int i=0;i<meterBytes.length;i++)
-                    meterID.append((char)meterBytes[i]);
-                String resultString = "h"+Hex.BytesToHexString(result)+"16";
-                System.out.println("客户端解密后："+resultString);
-                System.out.println("表号："+meterID);
-            }
->>>>>>> 4875370d3f95f5e9b262f025ddb2f356a2778e56
         }
     }
 
