@@ -22,22 +22,197 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="business-address" />
+        <module name="business-app" />
+        <module name="business-datarule" />
+        <module name="business-menu" />
+        <module name="business-user" />
+        <module name="deviceManagement-business-device" />
+        <module name="deviceManagement-business-maintain" />
+        <module name="deviceManagement-business-message" />
+        <module name="deviceManagement-business-project" />
+        <module name="deviceManagementWeb" />
+        <module name="dubboDemo-business-helloworld-api" />
+        <module name="dubboDemo-business-helloworld-consumer" />
+        <module name="dubboDemo-business-helloworld-impl" />
+        <module name="dubboDemoConsumerWeb" />
+        <module name="dubboDemoProviderWeb" />
+        <module name="fundamental-activemq" />
+        <module name="fundamental-algorithm" />
+        <module name="fundamental-androidCasClient" />
+        <module name="fundamental-command" />
+        <module name="fundamental-communication" />
+        <module name="fundamental-config" />
+        <module name="fundamental-datasource" />
+        <module name="fundamental-exception" />
+        <module name="fundamental-fileupload" />
+        <module name="fundamental-jxl" />
+        <module name="fundamental-logger" />
+        <module name="fundamental-map" />
+        <module name="fundamental-message" />
+        <module name="fundamental-mongoConnector" />
+        <module name="fundamental-orm" />
+        <module name="fundamental-redisConnector" />
+        <module name="fundamental-report" />
+        <module name="fundamental-sms" />
+        <module name="fundamental-util" />
+        <module name="fundamental-websocket" />
+        <module name="inspectAdminWeb" />
+        <module name="inspectManagement-business-configuration" />
+        <module name="inspectManagement-business-deptAndEmployee" />
+        <module name="inspectManagement-business-device" />
+        <module name="inspectManagement-business-inspectLocate" />
+        <module name="inspectManagement-business-inspectReport" />
+        <module name="inspectManagement-business-inspectResult" />
+        <module name="inspectManagement-business-inspectTable" />
+        <module name="inspectManagement-business-task" />
+        <module name="inspectManagement-business-user" />
+        <module name="inspectManagementWeb" />
+        <module name="meterFrameManagement-aes" />
+        <module name="meterFrameManagement-business" />
+        <module name="meterFrameManagement-communication" />
+        <module name="meterFrameManagement-communicationFrame" />
         <module name="meterFrameManagement-db" />
         <module name="meterFrameManagement-entity" />
+        <module name="meterFrameManagement-MQ" />
+        <module name="meterFrameManagement-util" />
+        <module name="meterFrameManagementWeb" />
+        <module name="realtimeMonitor-business-algorithm" />
+        <module name="realtimeMonitor-business-communication" />
+        <module name="realtimeMonitor-business-dataTest" />
+        <module name="realtimeMonitor-business-message" />
+        <module name="realtimeMonitor-business-monitor" />
+        <module name="realtimeMonitor-business-report" />
+        <module name="realtimeMonitorWeb" />
+        <module name="rentManagement-business-badDebt" />
+        <module name="rentManagement-business-contract" />
+        <module name="rentManagement-business-customer" />
+        <module name="rentManagement-business-deptAndEmployee" />
+        <module name="rentManagement-business-device" />
+        <module name="rentManagement-business-rentReport" />
+        <module name="rentManagement-business-stock" />
+        <module name="rentManagement-business-storehouse" />
+        <module name="rentManagement-business-supplier" />
+        <module name="rentManagement-business-transport" />
+        <module name="rentManagementWeb" />
+        <module name="riskManagement-business-craneInspectReport" />
+        <module name="riskManagement-business-craneType" />
+        <module name="riskManagement-business-map" />
+        <module name="riskManagement-business-report" />
+        <module name="riskManagement-business-riskcolor" />
+        <module name="riskManagement-business-riskmodel" />
+        <module name="riskManagementWeb" />
+        <module name="trackSystem-business-communication" />
+        <module name="trackSystem-business-device" />
+        <module name="trackSystem-business-group" />
+        <module name="trackSystem-business-trackRecord" />
+        <module name="trackSystemWeb" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.6">
+      <module name="business" target="1.5" />
+      <module name="business-address" target="1.5" />
+      <module name="business-app" target="1.5" />
+      <module name="business-datarule" target="1.5" />
+      <module name="business-menu" target="1.5" />
+      <module name="business-user" target="1.5" />
+      <module name="deviceManagement" target="1.5" />
+      <module name="deviceManagement-business" target="1.5" />
+      <module name="deviceManagement-business-device" target="1.5" />
+      <module name="deviceManagement-business-maintain" target="1.5" />
+      <module name="deviceManagement-business-message" target="1.5" />
+      <module name="deviceManagement-business-project" target="1.5" />
+      <module name="deviceManagementWeb" target="1.5" />
+      <module name="dubboDemo" target="1.5" />
+      <module name="dubboDemo-business" target="1.5" />
+      <module name="dubboDemo-business-helloworld" target="1.5" />
+      <module name="dubboDemo-business-helloworld-api" target="1.5" />
+      <module name="dubboDemo-business-helloworld-consumer" target="1.5" />
+      <module name="dubboDemo-business-helloworld-impl" target="1.5" />
+      <module name="dubboDemoConsumerWeb" target="1.5" />
+      <module name="dubboDemoProviderWeb" target="1.5" />
+      <module name="fundamental" target="1.5" />
       <module name="fundamental-activemq" target="1.6" />
+      <module name="fundamental-algorithm" target="1.5" />
+      <module name="fundamental-androidCasClient" target="1.5" />
+      <module name="fundamental-command" target="1.5" />
       <module name="fundamental-communication" target="1.6" />
+      <module name="fundamental-config" target="1.5" />
+      <module name="fundamental-datasource" target="1.5" />
+      <module name="fundamental-exception" target="1.5" />
+      <module name="fundamental-fileupload" target="1.5" />
+      <module name="fundamental-jxl" target="1.5" />
+      <module name="fundamental-logger" target="1.5" />
+      <module name="fundamental-map" target="1.5" />
       <module name="fundamental-message" target="1.6" />
-      <module name="meterFrameManagement-business" target="1.6" />
-      <module name="meterFrameManagement-communication" target="1.6" />
-      <module name="meterFrameManagement-db" target="1.6" />
-      <module name="meterFrameManagement-MQ" target="1.6" />
+      <module name="fundamental-mongoConnector" target="1.5" />
+      <module name="fundamental-orm" target="1.5" />
+      <module name="fundamental-redisConnector" target="1.5" />
+      <module name="fundamental-report" target="1.5" />
+      <module name="fundamental-sms" target="1.5" />
+      <module name="fundamental-util" target="1.5" />
+      <module name="fundamental-websocket" target="1.5" />
+      <module name="inspectAdminWeb" target="1.5" />
+      <module name="inspectManagement" target="1.5" />
+      <module name="inspectManagement-business" target="1.5" />
+      <module name="inspectManagement-business-configuration" target="1.5" />
+      <module name="inspectManagement-business-deptAndEmployee" target="1.5" />
+      <module name="inspectManagement-business-device" target="1.5" />
+      <module name="inspectManagement-business-inspectLocate" target="1.5" />
+      <module name="inspectManagement-business-inspectReport" target="1.5" />
+      <module name="inspectManagement-business-inspectResult" target="1.5" />
+      <module name="inspectManagement-business-inspectTable" target="1.5" />
+      <module name="inspectManagement-business-task" target="1.5" />
+      <module name="inspectManagement-business-user" target="1.5" />
+      <module name="inspectManagementWeb" target="1.5" />
+      <module name="meterFrameManagement" target="1.5" />
+      <module name="meterFrameManagement-aes" target="1.5" />
+      <module name="meterFrameManagement-business" target="1.5" />
+      <module name="meterFrameManagement-communication" target="1.5" />
+      <module name="meterFrameManagement-communicationFrame" target="1.5" />
+      <module name="meterFrameManagement-db" target="1.5" />
+      <module name="meterFrameManagement-MQ" target="1.5" />
+      <module name="meterFrameManagement-util" target="1.5" />
+      <module name="meterFrameManagementWeb" target="1.5" />
+      <module name="platform" target="1.5" />
+      <module name="realtimeMonitor" target="1.5" />
+      <module name="realtimeMonitor-business" target="1.5" />
+      <module name="realtimeMonitor-business-algorithm" target="1.5" />
       <module name="realtimeMonitor-business-communication" target="1.6" />
       <module name="realtimeMonitor-business-dataTest" target="1.6" />
       <module name="realtimeMonitor-business-message" target="1.6" />
+      <module name="realtimeMonitor-business-monitor" target="1.5" />
+      <module name="realtimeMonitor-business-report" target="1.5" />
+      <module name="realtimeMonitorWeb" target="1.5" />
+      <module name="rentManagement" target="1.5" />
+      <module name="rentManagement-business" target="1.5" />
+      <module name="rentManagement-business-badDebt" target="1.5" />
+      <module name="rentManagement-business-contract" target="1.5" />
+      <module name="rentManagement-business-customer" target="1.5" />
+      <module name="rentManagement-business-deptAndEmployee" target="1.5" />
+      <module name="rentManagement-business-device" target="1.5" />
+      <module name="rentManagement-business-rentReport" target="1.5" />
+      <module name="rentManagement-business-stock" target="1.5" />
+      <module name="rentManagement-business-storehouse" target="1.5" />
+      <module name="rentManagement-business-supplier" target="1.5" />
+      <module name="rentManagement-business-transport" target="1.5" />
+      <module name="rentManagementWeb" target="1.5" />
+      <module name="riskManagement" target="1.5" />
+      <module name="riskManagement-business" target="1.5" />
+      <module name="riskManagement-business-craneInspectReport" target="1.5" />
+      <module name="riskManagement-business-craneType" target="1.5" />
+      <module name="riskManagement-business-map" target="1.5" />
+      <module name="riskManagement-business-report" target="1.5" />
+      <module name="riskManagement-business-riskcolor" target="1.5" />
+      <module name="riskManagement-business-riskmodel" target="1.5" />
+      <module name="riskManagementWeb" target="1.5" />
+      <module name="trackSystem" target="1.5" />
+      <module name="trackSystem-business" target="1.5" />
       <module name="trackSystem-business-communication" target="1.6" />
+      <module name="trackSystem-business-device" target="1.5" />
+      <module name="trackSystem-business-group" target="1.5" />
+      <module name="trackSystem-business-trackRecord" target="1.5" />
+      <module name="trackSystemWeb" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

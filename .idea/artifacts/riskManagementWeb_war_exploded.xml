@@ -168,7 +168,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/riskManagement/riskManagementWeb/target/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/riskManagement/riskManagementWeb/target/riskManagementWeb-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="riskManagementWeb/web/Web" />
     </root>

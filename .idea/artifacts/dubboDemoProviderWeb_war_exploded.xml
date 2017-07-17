@@ -54,7 +54,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/dubboDemo/dubboDemoProviderWeb/target/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/dubboDemo/dubboDemoProviderWeb/target/dubboDemoProviderWeb/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="dubboDemoProviderWeb/web/Web" />
     </root>

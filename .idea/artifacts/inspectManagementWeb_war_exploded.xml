@@ -165,7 +165,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/inspectManagement/inspectManagementWeb/target/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/inspectManagement/inspectManagementWeb/target/inspectManagementWeb-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="inspectManagementWeb/web/Web" />
     </root>

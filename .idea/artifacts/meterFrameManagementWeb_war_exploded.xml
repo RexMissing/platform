@@ -112,7 +112,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/meterFrameManagement/meterFrameManagementWeb/target/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/meterFrameManagement/meterFrameManagementWeb/target/meterFrameManagementWeb-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="meterFrameManagementWeb/web/Web" />
     </root>
