@@ -14,6 +14,7 @@
     <file type="web" url="file://$PROJECT_DIR$/rentManagement/rentManagementWeb" />
     <file type="web" url="file://$PROJECT_DIR$/riskManagement/riskManagementWeb" />
     <file type="web" url="file://$PROJECT_DIR$/trackSystem/trackSystemWeb" />
+    <type id="Spring" />
   </component>
   <component name="IdProvider" IDEtalkID="25C218FFBFA6076AC5037415CC7C0B17" />
   <component name="MavenProjectsManager">
@@ -39,7 +40,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
