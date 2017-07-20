@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/dataManagement/dataManagement.iml" filepath="$PROJECT_DIR$/dataManagement/dataManagement.iml" />
       <module fileurl="file://$PROJECT_DIR$/dataManagement/dataManagement-business/dataManagement-business.iml" filepath="$PROJECT_DIR$/dataManagement/dataManagement-business/dataManagement-business.iml" />
       <module fileurl="file://$PROJECT_DIR$/dataManagement/dataManagement-business/dataManagement-business-dynamicDataSource/dataManagement-business-dynamicDataSource.iml" filepath="$PROJECT_DIR$/dataManagement/dataManagement-business/dataManagement-business-dynamicDataSource/dataManagement-business-dynamicDataSource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dataManagement/dataManagement-business/dataManagement-business-meterProduceData/dataManagement-business-meterProduceData.iml" filepath="$PROJECT_DIR$/dataManagement/dataManagement-business/dataManagement-business-meterProduceData/dataManagement-business-meterProduceData.iml" />
       <module fileurl="file://$PROJECT_DIR$/dataManagement/dataManagementWeb/dataManagementWeb.iml" filepath="$PROJECT_DIR$/dataManagement/dataManagementWeb/dataManagementWeb.iml" />
       <module fileurl="file://$PROJECT_DIR$/deviceManagement/deviceManagement.iml" filepath="$PROJECT_DIR$/deviceManagement/deviceManagement.iml" />
       <module fileurl="file://$PROJECT_DIR$/deviceManagement/deviceManagement-business/deviceManagement-business.iml" filepath="$PROJECT_DIR$/deviceManagement/deviceManagement-business/deviceManagement-business.iml" />

@@ -100,6 +100,9 @@
             <element id="module-output" name="dataManagement-business-dynamicDataSource" />
           </element>
           <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.7.4" />
+          <element id="archive" name="dataManagement-business-meterProduceData-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="dataManagement-business-meterProduceData" />
+          </element>
         </element>
       </element>
       <element id="directory" name="META-INF">

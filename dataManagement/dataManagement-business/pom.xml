@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>dataManagement-business-dynamicDataSource</module>
+        <module>dataManagement-business-meterProduceData</module>
     </modules>
 
 
