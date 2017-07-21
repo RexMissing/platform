@@ -9,8 +9,8 @@
             "delete":"rs/power/delete",
             "list":"rs/power/list"
         },
-        "outleak":{
-            "list":"rs/outleak/list",
+        "ocwalves":{
+            "list":"rs/ocwalves/list",
         },
         "user":{
             "add":"rs/user/add",

@@ -1,5 +1,6 @@
 package org.whut.dataManagement.business.meterProduceData.web;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.whut.dataManagement.business.meterProduceData.entity.OCWalves;
@@ -23,23 +24,27 @@ public class OCWalvesServiceWeb {
     @Autowired
     private OCWalvesService ocWalvesService;
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
-    @Path("list/{fvalvecode}")
-    @GET
-    public String list(@PathParam("fvalvecode")String fvalvecode)
+    @Path("/list")
+    @POST
+    public String list(@FormParam("fvalvecode")String fvalvecode)
     {
         if (fvalvecode == null) {
             return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.ERROR);
         }
-        List list;
-        try {
-            list = ocWalvesService.getListByCode(fvalvecode);
-        }
-        catch (Exception e)
+        List<OCWalves> list = ocWalvesService.getListByCode(fvalvecode);
+        List<OCWalves> ocWalvesList = new ArrayList<OCWalves>();
+        for(OCWalves ocWalves:list)
         {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.ERROR);
+            OCWalves subocwalves = new OCWalves();
+            subocwalves.setFvalvecode(ocWalves.getFvalvecode());
+            subocwalves.setFpressure(ocWalves.getFpressure());
+            subocwalves.setFrecord(ocWalves.getFrecord());
+            subocwalves.setFstate(ocWalves.getFstate());
+            ocWalvesList.add(subocwalves);
         }
-        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+        if (ocWalvesList.toArray().length==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(ocWalvesList,JsonResultUtils.Code.SUCCESS);
     }
 }

@@ -13,7 +13,7 @@
         <result property="fstate" column="FState"/>
     </resultMap>
 
-    <select id="getListByCode" parameterType="java.lang.String" resultType="OCWalves">
+    <select id="getListByCode" parameterType="java.lang.String" resultMap="ocwalvesResultMap">
         SELECT
         <include refid="ocwalves_fields"/>
         FROM tb_OCWalves
