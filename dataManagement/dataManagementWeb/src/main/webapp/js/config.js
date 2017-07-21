@@ -12,6 +12,9 @@
         "ocwalves":{
             "list":"rs/ocwalves/list",
         },
+        "walvesassembly":{
+            "list":"rs/walvesassembly/list",
+        },
         "user":{
             "add":"rs/user/add",
             "update":"rs/user/update",
