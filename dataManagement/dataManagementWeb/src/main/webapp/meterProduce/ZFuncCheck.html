@@ -19,16 +19,22 @@
         {
             g = manager = $("#maingrid").ligerGrid({
                 columns: [
-                    { display: '基表条形码',name: 'fvalvecode',width:"300",
+                    { display: '蓝焰条形码',name: 'fmetercode',width:"250",
                         editor: { type: 'text'}
                     },
-                    {display:'检测压力值',name:'fpressure',width:"300",
+                    {display:'成品表类型',name:'frid',width:"100",
                         editor:{type:'text'}
                     },
-                    {display:'气压检测结果',name:'frecord',width:"300",
+                    {display:'插入气量值',name:'finsertgas',width:"100",
                         editor:{type:'text'}
                     },
-                    {display:'外漏检测结论',name:'fstate', width:"300",
+                    {display:'故障描述',name:'fmdescribe', width:"250",
+                        editor:{type:'text'}
+                    },
+                    {display:'功能检测结论',name:'ftestresult', width:"150",
+                        editor:{type:'text'}
+                    },
+                    {display:'备注',name:'fremark', width:"250",
                         editor:{type:'text'}
                     },
                     { display: '操作', isSort: false, width: 120, render: function (rowdata, rowindex, value)
@@ -60,8 +66,8 @@
 
         $("#submitBtn").click(function(){
             var data={};
-            data.fvalvecode =$("#fvalvecode").val();
-            $.post($.URL.ocwalves.list,data,queryListCallback,"json");
+            data.fmetercode =$("#fmetercode").val();
+            $.post($.URL.zfunccheck.list,data,queryListCallback,"json");
         });
 
         function queryListCallback(data){
@@ -74,7 +80,7 @@
                 $.ligerDialog.error(data.message);
             }
         }
-        </script>
+    </script>
     <style type="text/css">
         .l-table-edit {}
         .l-table-edit-td{ padding:4px;}
@@ -88,8 +94,8 @@
 <div id="list">
     <table cellpadding="0" cellspacing="0" class="l-table-edit" >
         <tr>
-            <td align="right" class="l-table-edit-td">基表条形码:</td>
-            <td align="left" class="l-table-edit-td"><input name="fvalvecode" type="text" id="fvalvecode" ltype="text" /></td>
+            <td align="right" class="l-table-edit-td">蓝焰条形码:</td>
+            <td align="left" class="l-table-edit-td"><input name="fmetercode" type="text" id="fmetercode" ltype="text" /></td>
             <td align="right"><input type="button" value="查询" id="submitBtn" class="l-button l-button-submit" /></td>
         </tr>
     </table>

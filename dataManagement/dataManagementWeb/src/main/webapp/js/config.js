@@ -10,10 +10,13 @@
             "list":"rs/power/list"
         },
         "ocwalves":{
-            "list":"rs/ocwalves/list",
+            "list":"rs/ocwalves/list"
         },
         "walvesassembly":{
-            "list":"rs/walvesassembly/list",
+            "list":"rs/walvesassembly/list"
+        },
+        "zfunccheck":{
+            "list":"rs/zfunccheck/list"
         },
         "user":{
             "add":"rs/user/add",
