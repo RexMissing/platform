@@ -18,6 +18,9 @@
         "zfunccheck":{
             "list":"rs/zfunccheck/list"
         },
+        "nlcheck":{
+            "list":"rs/nlcheck/list"
+        },
         "user":{
             "add":"rs/user/add",
             "update":"rs/user/update",
