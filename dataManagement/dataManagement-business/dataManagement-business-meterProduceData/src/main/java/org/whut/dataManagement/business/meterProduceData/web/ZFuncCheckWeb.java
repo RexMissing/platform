@@ -28,7 +28,8 @@ public class ZFuncCheckWeb {
     @POST
     @Path("/list")
     public String list(@FormParam("fmetercode")String fmetercode){
-        if (fmetercode == null) {
+        if (fmetercode == null)
+        {
             return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.ERROR);
         }
         List<ZFuncCheck> list = zFuncCheckService.list(fmetercode);
