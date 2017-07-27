@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="realtimeMonitorWeb:war">
+    <output-path>$PROJECT_DIR$/realtimeMonitor/realtimeMonitorWeb/target</output-path>
+    <root id="archive" name="realtimeMonitorWeb-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="realtimeMonitorWeb:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-3.0.xsd
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <context:annotation-config></context:annotation-config>
+
+    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+        <property name="customEditors">
+            <map>
+                <entry key="java.net.SocketAddress" value="org.apache.mina.integration.beans.InetSocketAddressEditor">
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+
+    <bean id="ioAcceptor"
+          class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
+          init-method="bind" destroy-method="dispose">
+        <property name="defaultLocalAddress" value=":6601"/>
+        <property name="handler" ref="frameServerHandler"/>
+        <property name="filterChainBuilder" ref="filterChainBuilder"/>
+        <property name="reuseAddress" value="true"/>
+    </bean>
+
+    <!-- session config 通过工厂方法注入 -->
+    <bean id="sessionConfig" factory-bean="ioAcceptor" factory-method="getSessionConfig" >
+        <property name="bothIdleTime" value="120"/>
+        <property name="readBufferSize" value="2048"/>
+    </bean>
+
+    <!-- 定义服务器的handler -->
+    <bean id="frameServerHandler" class="org.whut.meterFrameManagement.communication.server.FrameServerHandler">
+    </bean>
+
+    <bean id="executorFilter"
+          class="org.apache.mina.filter.executor.ExecutorFilter"/>
+    <!--<bean id="mdcInjectionFilter"
+          class="org.apache.mina.filter.logging.MdcInjectionFilter">
+        <constructor-arg value="remoteAddress"/>
+    </bean>-->
+    <bean id="codecFilter"
+          class="org.apache.mina.filter.codec.ProtocolCodecFilter">
+        <constructor-arg>
+            <!--<bean class="org.apache.mina.filter.codec.textline.TextLineCodecFactory"></bean>-->
+            <bean class="org.whut.meterFrameManagement.communication.codec.DataCodecFactory"></bean>
+        </constructor-arg>
+    </bean>
+    <bean id="loggingFilter"
+          class="org.apache.mina.filter.logging.LoggingFilter"/>
+
+    <bean id="filterChainBuilder"
+          class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+        <property name="filters">
+            <map>
+                <entry key="loggingFilter" value-ref="loggingFilter"/>
+                <!--<entry key="mdcInjectionFilter" value-ref="mdcInjectionFilter"/>-->
+                <entry key="codecFilter" value-ref="codecFilter"/>
+                <entry key="executor" value-ref="executorFilter"/>
+            </map>
+        </property>
+    </bean>
+</beans>

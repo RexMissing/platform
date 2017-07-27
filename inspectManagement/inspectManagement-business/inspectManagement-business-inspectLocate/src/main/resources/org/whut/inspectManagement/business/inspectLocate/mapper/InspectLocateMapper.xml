@@ -1,0 +1,71 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.inspectManagement.business.inspectLocate.mapper.InspectLocateMapper">
+    <sql id="inspectLocate_fields">
+       ID,USERID,USERNAME,INSPECTSTARTTIME,INSPECTENDTIME,DEVICEID,DEVICENUM,DEVNAME,INSPECTTABLEID,INSPECTTABLENAME,LNG,LAT,APPID,STATUS,ADDRESS,UPDATETIME
+    </sql>
+    <resultMap id="inspectLocateResultMap" type="InspectLocate">
+        <id property="id" column="ID"/>
+        <result property="userId" column="USERID"/>
+        <result property="userName" column="USERNAME"/>
+        <result property="inspectStartTime" column="INSPECTSTARTTIME" />
+        <result property="inspectEndTime" column="INSPECTENDTIME"/>
+        <result property="deviceId" column="DEVICEID"/>
+        <result property="deviceNum" column="DEVICENUM"/>
+        <result property="devName" column="DEVNAME"/>
+        <result property="inspectTableId" column="INSPECTTABLEID"/>
+        <result property="inspectTableName" column="INSPECTTABLENAME"/>
+        <result property="lng" column="LNG"/>
+        <result property="lat" column="LAT"/>
+        <result property="appId" column="APPID"/>
+        <result property="status" column="STATUS"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="updateTime" column="UPDATETIME"/>
+    </resultMap>
+    <insert id="add" parameterType="InspectLocate"  keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        inspect_locate(
+        <include refid="inspectLocate_fields"/>
+        )
+        VALUES (#{id},#{userId},#{userName},#{inspectStartTime},#{inspectEndTime},#{deviceId},#{deviceNum},#{devName},#{inspectTableId},#{inspectTableName},#{lng},#{lat},#{appId},#{status},#{address},#{updateTime});
+        <selectKey  resultType="long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+    <update id="update" parameterType="InspectLocate">
+        UPDATE inspect_locate
+        <set>
+            <if test="userId!=null">USERID=#{userId},USERNAME=#{userName},DEVICEID=#{deviceId},DEVNAME=#{devName},deviceNum=#{deviceNum},INSPECTTABLEID=#{inspectTableId},INSPECTTABLENAME=#{inspectTableName},LNG=#{lng},LAT=#{lat},ADDRESS=#{address},</if>
+           <!-- <if test="userName!=null"></if>-->
+            <if test="inspectStartTime!=null">INSPECTSTARTTIME=#{inspectStartTime},</if>
+            <if test="inspectEndTime!=null">INSPECTENDTIME=#{inspectEndTime},</if>
+            <!--<if test="deviceId!=null"></if>
+            <if test="devName!=null"></if>
+            <if test="inspectTableId!=null"></if>
+            <if test="inspectTableName!=null"></if>
+            <if test="lng!=null"></if>
+            <if test="lat!=null"></if>-->
+            <if test="appId!=null">APPID=#{appId},</if>
+            <if test="status!=null">STATUS=#{status},</if>
+            <!--<if test="address!=null"></if>-->
+            <if test="address!=null">UPDATETIME=#{updateTime}</if>
+        </set>
+        WHERE ID=#{id}
+    </update>
+    <select id="findByCondition" parameterType="map" resultType="map">
+       SELECT a.userName,a.userId,a.deviceId,a.deviceNum,a.devName,a.inspectTableName,a.address,a.lng,a.lat,b.image
+       FROM inspect_locate a,user b
+       <where>
+           a.userId=b.id and a.appId=#{appId}
+           <if test="updateTime!=null">and a.UPDATETIME>=#{updateTime}</if>
+       </where>
+   </select>
+    <select id="validateIsExistRecord" parameterType="map" resultType="java.lang.Long">
+        SELECT id
+        FROM inspect_locate
+        WHERE appId=#{appId} AND userId=#{userId}
+    </select>
+
+</mapper>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.rentManagement.business.device.mapper.DeviceMapper">
+    <sql id="device_fields">
+          ID,MAINDEVICEID,BATCHID,SUPPLIERID,TYPEID,STOREHOUSEID,CONTRACTID,ADDRESS,STATUS,OPTIONTYPE,NAME,NUMBER,PRICE,PRODUCETIME,CREATETIME,PRICEUNIT,LNG,LAT,HAVEPRINT,APPID
+    </sql>
+    <resultMap id="device_resultMap" type="Device">
+        <id property="id" column="ID" />
+        <result property="mainDeviceId" column="MAINDEVICEID" />
+        <result property="batchId" column="BATCHID"/>
+        <result property="supplierId" column="SUPPLIERID"/>
+        <result property="typeId" column="TYPEID"/>
+        <result property="storehouseId" column="STOREHOUSEID"/>
+        <result property="contractId" column="CONTRACTID"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="status" column="STATUS"/>
+        <result property="optionType" column="OPTIONTYPE"/>
+        <result property="name" column="NAME"/>
+        <result property="number" column="NUMBER"/>
+        <result property="price" column="PRICE"/>
+        <result property="produceTime" column="PRODUCETIME"/>
+        <result property="createTime" column="CREATETIME"/>
+        <result property="priceUnit" column="PRICEUNIT"/>
+        <result property="lng" column="LNG"/>
+        <result property="lat" column="LAT"/>
+        <result property="havePrint" column="HAVEPRINT"/>
+        <result property="appId" column="APPID"/>
+    </resultMap>
+
+    <insert id="add" parameterType="Device"  keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO
+        device(
+        <include refid="device_fields" />
+        )
+        VALUES (#{id}, #{mainDeviceId},#{batchId},#{supplierId},#{typeId},#{storehouseId},#{contractId},#{address},#{status},#{optionType},#{name},#{number},#{price},#{produceTime},#{createTime},#{priceUnit},#{lng},#{lat},#{havePrint},#{appId});
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="Device">
+        update device
+        <set>
+            <if test="batchId!=null">BATCHID=#{batchId},</if>
+            <if test="supplierId!=null">SUPPLIERID=#{supplierId},</if>
+            <if test="optionType!=null">OPTIONTYPE=#{optionType},</if>
+            <if test="typeId!=null">TYPEID=#{typeId},</if>
+            <if test="storehouseId!=null">STOREHOUSEID=#{storehouseId},</if>
+            <if test="contractId!=null">CONTRACTID=#{contractId},</if>
+            <if test="address!=null">ADDRESS=#{address},</if>
+            <if test="status!=null">STATUS=#{status},</if>
+            <if test="name!=null">NAME=#{name},</if>
+            <if test="number!=null">NUMBER=#{number},</if>
+            <if test="price!=null">PRICE=#{price},</if>
+            <if test="produceTime!=null">PRODUCETIME=#{produceTime},</if>
+            <if test="priceUnit!=null">PRICEUNIT=#{priceUnit},</if>
+            <if test="lng!=null">LNG=#{lng},</if>
+            <if test="lat!=null">LAT=#{lat},</if>
+            <if test="havePrint!=null">HAVEPRINT=#{havePrint},</if>
+            <if test="appId!=null">APPID=#{appId}</if>
+        </set>
+        where id=#{id} and appId=#{appId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM device
+        WHERE ID=#{id}
+    </delete>
+
+    <select id="getListByAppId" parameterType="java.lang.Long" resultType="map">
+        select device.id,device.name,device.havePrint,device.optionType,device.number,device_type.name as deviceType,device_type.mainDevice as isMainDevice,storehouse.name as storehouse,contract.name as contract,device.price,device.createTime,supplier.name as supplierName,
+                device.produceTime,device.price,device.priceUnit,device.status,device.optionType,batch.number as batchNumber,device.contractId,device.batchId,device.storehouseId,device.typeId,device.supplierId
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        LEFT JOIN storehouse ON device.storehouseId=storehouse.id
+        LEFT JOIN contract ON device.contractId=contract.id
+        LEFT JOIN batch ON device.batchId=batch.id
+        LEFT JOIN supplier ON device.supplierId=supplier.id
+        LEFT JOIN customer ON contract.customerId=customer.id
+        where device.appId=#{appId}
+        <!--联查错误，改后台传name -->
+    </select>
+
+    <select id="getIdByNumber" parameterType="map" resultType="java.lang.Long">
+        select id
+        from device
+        where NUMBER=#{number} and APPID=#{appId}
+    </select>
+
+    <select id="getMainDeviceListByAppId" parameterType="java.lang.Long" resultType="map">
+        select device.id,device.name,device.havePrint,device.optionType,device.number,device.address,device_type.name as deviceType,device_type.mainDevice as isMainDevice,storehouse.name as storehouse,contract.name as contract,device.price,device.createTime,supplier.name as supplierName,
+        device.produceTime,device.price,device.priceUnit,device.status,device.optionType,device.lng,device.lat,batch.number as batchNumber,device.contractId,device.batchId,device.storehouseId,device.typeId,device.supplierId,customer.name as customerName,contract.startTime,contract.endTime
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        LEFT JOIN storehouse ON device.storehouseId=storehouse.id
+        LEFT JOIN contract ON device.contractId=contract.id
+        LEFT JOIN batch ON device.batchId=batch.id
+        LEFT JOIN supplier ON device.supplierId=supplier.id
+        LEFT JOIN customer ON contract.customerId=customer.id
+        where device_type.mainDevice=1 and device.appId=#{appId}
+    </select>
+
+    <select id="findByCondition" parameterType="map" resultType="map">
+        select device.id,device.name,device.havePrint,device.number,device.optionType,device_type.name as deviceType,device_type.mainDevice as isMainDevice,storehouse.name as storehouseName,contract.name as contractName,device.price,device.createTime,supplier.name as supplierName,
+        device.produceTime,device.price,device.priceUnit,device.status,device.optionType,batch.number as batchNumber,device.contractId,device.batchId,device.storehouseId,device.typeId,device.supplierId,supplier.name as supplierName,customer.name as customerName
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        LEFT JOIN storehouse ON device.storehouseId=storehouse.id
+        LEFT JOIN contract ON device.contractId=contract.id
+        LEFT JOIN batch ON device.batchId=batch.id
+        LEFT JOIN supplier ON device.supplierId=supplier.id
+        LEFT JOIN customer ON contract.customerId=customer.id
+        where
+        <if test="appId!=null"> device.APPID=#{appId}</if>
+        <if test="batchId!=null"> AND device.batchId=#{batchId}</if>
+        <if test="typeId!=null"> AND device.typeId=#{typeId}</if>
+        <if test="deviceType!=null">AND device_type.name like CONCAT('%',#{deviceType},'%')</if>
+        <if test="optionType!=null"> AND device.optionType=#{optionType}</if>
+        <if test="storehouseId!=null"> AND device.storehouseId=#{storehouseId}</if>
+        <if test="mainDevice!=null"> AND device_type.mainDevice=#{mainDevice}</if>
+        <if test="number!=null">AND device.number like CONCAT('%',#{number},'%') </if>
+        <if test="name!=null">AND device.name like CONCAT('%',#{name},'%')</if>
+        <if test="startTime!=null"><![CDATA[ AND device.produceTime>=#{startTime}]]></if>
+        <if test="endTime!=null"><![CDATA[ AND device.produceTime<=#{endTime} ]]> </if>
+    </select>
+
+    <select id="findMainDeviceList" parameterType="map" resultType="java.lang.Long">
+        select device.id
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        where device_type.mainDevice=1 and device.appId=#{appId} and device.id in
+        <foreach item="item" index="index" collection="deviceIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="installDevice" parameterType="map" >
+        update device set mainDeviceId=#{mainDeviceId},optionType=4
+        where device.appId=#{appId} and  ID in
+        <foreach item="item" index="index" collection="deviceIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="removeDevice" parameterType="map" >
+        update device set mainDeviceId=0,optionType=5
+        where device.appId=#{appId} and ID in
+        <foreach item="item" index="index" collection="deviceIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="transportDevice" parameterType="map" >
+        update device set optionType=3
+        where device.appId=#{appId} and ID in
+        <foreach item="item" index="index" collection="deviceIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="stockIn" parameterType="map" >
+        update device set optionType=1
+        where device.appId=#{appId} and ID in
+        <foreach item="item" index="index" collection="deviceIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="stockOut" parameterType="map" >
+        update device set optionType=2
+        where device.appId=#{appId} and ID in
+        <foreach item="item" index="index" collection="deviceIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getMainDeviceInfo" parameterType="map" resultType="map">
+        select device.id,device.name,device.havePrint,device.optionType,device.number,device.address,device_type.name as deviceType,device_type.mainDevice as isMainDevice,storehouse.name as storehouse,contract.name as contract,device.price,device.createTime,supplier.name as supplierName,
+        device.produceTime,device.price,device.priceUnit,device.status,device.optionType,batch.number as batchNumber,device.contractId,device.batchId,device.storehouseId,device.typeId,device.supplierId,customer.name as customerName,contract.startTime,contract.endTime
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        LEFT JOIN storehouse ON device.storehouseId=storehouse.id
+        LEFT JOIN contract ON device.contractId=contract.id
+        LEFT JOIN batch ON device.batchId=batch.id
+        LEFT JOIN supplier ON device.supplierId=supplier.id
+        LEFT JOIN customer ON contract.customerId=customer.id
+        <where>
+            <if test="mainDeviceId!=null">device.id=#{mainDeviceId}</if>
+            <if test="appId!=null">AND device.APPID=#{appId}</if>
+        </where>
+    </select>
+
+    <select id="listByMainDeviceId" parameterType="map" resultType="map">
+        select device.id,device.name,device.havePrint,device.optionType,device.number,device.address,device_type.name as deviceType,device_type.mainDevice as isMainDevice,storehouse.name as storehouse,contract.name as contract,device.price,device.createTime,supplier.name as supplierName,
+        device.produceTime,device.price,device.priceUnit,device.status,device.optionType,batch.number as batchNumber,device.contractId,device.batchId,device.storehouseId,device.typeId,device.supplierId,customer.name as customerName,contract.startTime,contract.endTime
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        LEFT JOIN storehouse ON device.storehouseId=storehouse.id
+        LEFT JOIN contract ON device.contractId=contract.id
+        LEFT JOIN batch ON device.batchId=batch.id
+        LEFT JOIN supplier ON device.supplierId=supplier.id
+        LEFT JOIN customer ON contract.customerId=customer.id
+        <where>
+            <if test="mainDeviceId!=null">device.mainDeviceId=#{mainDeviceId} </if>
+            <if test="appId!=null">AND device.APPID=#{appId}</if>
+        </where>
+        order by device.typeId
+    </select>
+
+    <select id="findMainDeviceByCondition" parameterType="map" resultType="map">
+        select device.id,device.name,device.number,mainDevice.name as mainDeviceName,mainDevice.number as mainDeviceNumber,contract.name as contractName,customer.name as customerName,device_type.name as deviceType,device_type.mainDevice as isMainDevice,device.address,device.havePrint,device.number,storehouse.name as storehouseName,device.price,device.createTime,supplier.name as supplierName,
+        device.produceTime,(year(now())-year(device.produceTime)+1) as age ,device.price,device.priceUnit,device.status,batch.number as batchNumber,device.contractId,device.batchId,device.storehouseId,device.typeId,device.supplierId,supplier.name as supplierName
+        ,(case device.optionType WHEN 1 THEN '安装' WHEN 2 THEN '运输' WHEN 3 THEN '运输' WHEN 4 THEN '入库' WHEN 5 THEN '出库' END) as optionType
+        from device
+        LEFT JOIN device_type ON device.typeId=device_type.id
+        LEFT JOIN storehouse ON device.storehouseId=storehouse.id
+        LEFT JOIN contract ON device.contractId=contract.id
+        LEFT JOIN batch ON device.batchId=batch.id
+        LEFT JOIN supplier ON device.supplierId=supplier.id
+        LEFT JOIN customer ON contract.customerId=customer.id
+        LEFT JOIN device as mainDevice  ON device.mainDeviceId=mainDevice.id
+        where device.mainDeviceId!=0
+        <if test="appId!=null"> AND device.APPID=#{appId}</if>
+        <if test="batchId!=null"> AND device.batchId=#{batchId}</if>
+        <if test="typeId!=null"> AND device.typeId=#{typeId}</if>
+        <if test="deviceType!=null">AND device_type.name like CONCAT('%',#{deviceType},'%')</if>
+        <if test="optionType!=null"> AND device.optionType=#{optionType}</if>
+        <if test="storehouseId!=null"> AND device.storehouseId=#{storehouseId}</if>
+        <if test="mainDevice!=null"> AND device_type.mainDevice=#{mainDevice}</if>
+        <if test="number!=null">AND device.number like CONCAT('%',#{number},'%') </if>
+        <if test="name!=null">AND device.name like CONCAT('%',#{name},'%')</if>
+        <if test="startTime!=null"><![CDATA[ AND device.produceTime>=#{startTime}]]></if>
+        <if test="endTime!=null"><![CDATA[ AND device.produceTime<=#{endTime} ]]> </if>
+        <if test="orderByCondition!=null"> ${orderByCondition}</if>
+
+    </select>
+
+</mapper>

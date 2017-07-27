@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.userFunctionRole.mapper.UserFuncRoleMapper">
+    <!--<sql id="userfuncrole_fields">
+        id,name,FDepartNo,FDepartName,function_power.func_role,func_name
+    </sql>-->
+    <resultMap id="userfuncroleResultMap" type="org.whut.dataManagement.business.userFunctionRole.entity.UserFuncRole">
+        <id property="userID" column="id"/>
+        <result property="userName" column="username"/>
+        <result property="departNo" column="fdepartNo"/>
+        <result property="departName" column="fdepartName"/>
+        <result property="funcRole" column="funcRole"/>
+        <result property="funcRoleName" column="funcName"/>
+    </resultMap>
+
+    <select id="getlist" parameterType="java.lang.String" resultMap="userfuncroleResultMap">
+        SELECT
+          a.id          as      id,
+          a.name        as      username,
+          c.FDepartNo   as      fdepartNo,
+          c.FDepartName as      fdepartName,
+          b.func_role   as      funcRole,
+          b.func_name   as      funcName
+        FROM user a,function_power b,tdepartment c
+        WHERE a.name=#{username} AND a.departNo = c.FDepartNo AND a.func_role=b.func_role;
+    </select>
+</mapper>

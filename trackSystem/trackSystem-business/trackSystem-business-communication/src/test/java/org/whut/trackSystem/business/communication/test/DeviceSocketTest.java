@@ -1,0 +1,69 @@
+package org.whut.trackSystem.business.communication.test;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: yangyang
+ * Date: 14-11-12
+ * Time: 下午11:35
+ * To change this template use File | Settings | File Templates.
+ */
+public class DeviceSocketTest {
+    public static void main(String[] args)  {
+        //为了简单起见，所有的异常都直接往外抛
+//        String host = "www.cseicms.com";  //要连接的服务端IP地址
+        String host = "127.0.0.1";  //要连接的服务端IP地
+        int port = 38888;   //要连接的服务端对应的监听端址口
+        //与服务端建立连接
+        Socket client = null;
+        try {
+            client = new Socket(host, port);
+            Writer writer = new OutputStreamWriter(client.getOutputStream());
+
+            //向服务器端第二次发送字符串
+            long count = 1000000;
+            StringBuffer lng = new StringBuffer("");
+            StringBuffer lat = new StringBuffer("");
+            StringBuffer lng1 = new StringBuffer("");
+            StringBuffer lat1 = new StringBuffer("");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Long lngData = Math.round(120.0);
+            Long lngData1 = Math.round(120.0);
+            Long latData = Math.round(30.0010);
+            Long latData1 = Math.round(30.0020);
+            for (long j=0;j<count;j++){
+                lng.append(lngData + 0.00005*j);
+                lat.append(latData + 0.00001*j);
+                lng1.append(lngData1 - 0.00006*j);
+                lat1.append(latData1 - 0.00002*j);
+                Date now = new Date();
+                String json = "{app:2,command:1,devices:["+"{deviceNum:'001',time:'"+format.format(now)+"',lng:'"+lng+"',lat:'"+lat+"'},"+
+                        "{deviceNum:'002',time:'"+format.format(now)+"',lng:'"+lng1+"',lat:'"+lat1+"'}]}";
+                writer.write(json);
+                writer.flush();//写完后要记得flush
+                System.out.println(json);
+                lng.delete(0,lng.length());
+                lat.delete(0,lat.length());
+                lng1.delete(0,lng1.length());
+                lat1.delete(0,lat1.length());
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            }
+
+            writer.flush();//写完后要记得flush
+            writer.close();
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

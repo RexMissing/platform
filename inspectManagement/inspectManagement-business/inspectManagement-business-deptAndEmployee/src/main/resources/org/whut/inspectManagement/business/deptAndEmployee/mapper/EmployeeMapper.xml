@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.inspectManagement.business.deptAndEmployee.mapper.EmployeeMapper">
+    <sql id="employee_fields">
+       ID,NAME,PASSWORD,SEX,EMPLOYEEROLENAME,STATUS,APPID,DEPARTMENTID,USERID,TEL
+    </sql>
+
+    <resultMap id="employeeResultMap" type="employee">
+        <id property="id" column="ID" />
+        <result property="name" column="NAME" />
+        <result property="password" column="PASSWORD" />
+        <result property="sex" column="SEX" />
+        <result property="employeeRoleName" column="EMPLOYEEROLENAME"/>
+        <result property="status" column="STATUS"/>
+        <result property="appId" column="APPID"/>
+        <result property="departmentId" column="DEPARTMENTID"/>
+        <result property="userId" column="USERID"/>
+        <result property="tel" column="TEL" />
+    </resultMap>
+
+    <insert id="add" parameterType="employee" keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO
+        employee(
+        <include refid="employee_fields" />
+        )
+        VALUES (#{id},#{name},#{password},#{sex},#{employeeRoleName},#{status},#{appId},#{departmentId},#{userId},#{tel});
+        <selectKey resultType="long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="employee">
+        update employee
+        <set>
+            <if test="name!=null">NAME=#{name},</if>
+            <if test="status!=null">STATUS=#{status},</if>
+            <if test="sex!=null">SEX=#{sex},</if>
+            <if test="password!=null">PASSWORD=#{password},</if>
+            <if test="employeeRoleName!=null">EMPLOYEEROLENAME=#{employeeRoleName},</if>
+            <if test="appId!=null">APPID=#{appId},</if>
+            <if test="departmentId!=null">DEPARTMENTID=#{departmentId},</if>
+            <if test="userId!=null">USERID=#{userId},</if>
+            <if test="tel!=null">TEL=#{tel}</if>
+        </set>
+        where ID=#{id};
+    </update>
+
+    <delete id="delete" parameterType="employee">
+        DELETE FROM employee
+        <where>
+            <if test="id != null">ID=#{id}</if>
+            <if test="name != null"> AND NAME=#{name}</if>
+        </where>
+    </delete>
+
+    <select id="getIdByName" parameterType="java.lang.String" resultType="java.lang.Long">
+        SELECT
+        id
+        FROM employee WHERE NAME=#{name}
+    </select>
+
+    <select id="getTelById" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT
+        tel
+        FROM employee WHERE ID=#{Id}
+    </select>
+
+    <select id="findByCondition" parameterType="map" resultMap="employeeResultMap">
+        SELECT
+        <include refid="employee_fields"/>
+        FROM employee
+        <where>
+            <if test="name!=null">NAME=#{name},</if>
+            <if test="status!=null">AND STATUS=#{status},</if>
+            <if test="sex!=null">AND SEX=#{sex}</if>
+            <if test="password!=null">AND PASSWORD=#{password}</if>
+            <if test="employeeRoleName!=null">AND EMPLOYEEROLENAME=#{employeeRoleName}</if>
+            <if test="appId!=null">AND APPID=#{appId}</if>
+            <if test="departmentId!=null">AND DEPARTMENTID=#{departmentId}</if>
+            <if test="userId!=null">AND USERID=#userId}</if>
+
+        </where>
+    </select>
+
+    <select id="getListByAppId" parameterType="java.lang.Long" resultType="map">
+        select e.*,u.image
+        from employee e,user u
+        where e.userId=u.id and  e.APPID=#{appId}
+    </select>
+
+    <select id="getById" parameterType="java.lang.Long" resultMap="employeeResultMap">
+        select
+        <include refid="employee_fields"/>
+        from employee
+        where ID=#{id}
+    </select>
+
+    <select id="getByUserId" parameterType="java.lang.Long" resultMap="employeeResultMap">
+        select
+        <include refid="employee_fields"/>
+        from employee
+        where USERID=#{userId}
+    </select>
+
+    <select id="getByNameDepartmentAndRole" parameterType="map" resultMap="employeeResultMap">
+        select
+        <include refid="employee_fields"/>
+        from employee
+        <where>
+            <if test="name !=null"> NAME LIKE #{name}</if>
+            <if test="departmentId !=null">and DEPARTMENTID=#{departmentId}</if>
+            <if test="employeeRoleName !=null">and EMPLOYEEROLENAME like #{employeeRoleName}</if>
+            <if test="appId !=null"> and APPID=#{appId}</if>
+        </where>
+    </select>
+
+    <select id="getNameAndTelListByAppId" parameterType="java.lang.Long" resultType="map">
+        select `name`,tel
+        from employee
+        where APPID=#{appid}
+    </select>
+
+</mapper>

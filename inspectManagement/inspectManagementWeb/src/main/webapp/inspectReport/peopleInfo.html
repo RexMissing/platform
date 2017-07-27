@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/report.css">
+    <link rel="stylesheet" href="css/reportShow.css">
+    <script src="lib/ligerUI/js/plugins/ligerForm.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerButton.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerRadio.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function(){
+            $.get($.URL.user.list,null,userListCallball,"json");
+            $.get($.URL.device.list,null,listCallback,"json");
+            function userListCallball(data){
+                if(data.code==200){
+                    var userData=[];
+                    for(i=0;i<data.data.length;i++){
+                        var d={};
+                        d['text']=data.data[i].name;
+                        d['id']=data.data[i].id;
+                        userData.push(d);
+                    }
+                    $("#txt2").ligerComboBox({
+                        data:userData,valueFieldID:"txt2"
+                    });
+                }
+            }
+            function listCallback(data){
+                if(data.code==200){
+                    var deviceData=[];
+                    for(i=0;i<data.data.length;i++){
+                        var d={};
+                        d['text']=data.data[i].name;
+                        d['id']=data.data[i].id;
+                        deviceData.push(d);
+                    }
+                    $("#txt3").ligerComboBox({
+                        data:deviceData,valueFieldID:"txt3"
+                    });
+                }
+            }
+            $("#txt4").ligerDateEditor();
+            $("#txt5").ligerDateEditor();
+            showPeopleInfoReport();
+            $("#submitBtn4").click(function(){
+                showPeopleInfoReport();
+            });
+        });
+        function showPeopleInfoReport(){
+            var user=$("#txt2").val();
+            var device=$("#txt3").val();
+            var sTime=$("#txt4").val();
+            var eTime=$("#txt5").val();
+            var j={"sTime":sTime,"eTime":eTime,"deviceName":device,"userName":user};
+            var jsonString= $.toJSON(j);
+            $("#peopleInfoShow").load($.URL.inspectReport.reportSearch,{"jsonString":jsonString,"flag":"3","type":"html"},reportSearchCallback,"json");
+            $("#ePeopleInfoDiv").css("display","block");
+        }
+        function reportSearchCallback(data){
+            if(data.code==200){
+            }
+        }
+        $("#ePeopleInfoBtn").click(function(){
+            var type=$("#ePeopleInfoType").val();
+            if(type!=null){
+                var typeFlag=type+",3";
+                location.href= "rs/inspectReport/exportSearchReport/"+typeFlag;
+            }else{
+                $.ligerDialog().alert("请输入导出报表类型!");
+            }
+        });
+        $("#ePeopleInfoType").ligerComboBox({
+            data: [
+                { text: 'pdf', id: '1' },
+                { text: 'word', id: '2' },
+                { text: 'excel', id: '3' }
+            ], valueFieldID: 'ePeopleInfoType'
+        });
+    </script>
+
+</head>
+<body>
+<div id="searchContainer" class="searchContainer">
+    <div class="searchItem"><span class="item_font">设备编号:</span><span class="item_input"><input id="txt2" type="text"></span></div>
+    <div class="searchItem"><span class="item_font">点检人员:</span><span class="item_input"><input id="txt3" type="text"></span></div>
+    <div class="searchItem"><span class="item_font">起始时间:</span><span class="item_input"><input id="txt4" type="text"></span></div>
+    <div class="searchItem"><span class="item_font">终止时间:</span><span class="item_input"><input id="txt5" type="text"></span></div>
+    <div class="btn"><span><input type="button" value="查看" id="submitBtn4" class="l-button l-button-submit" /></span></div>
+</div>
+<div class="exportDiv" id="ePeopleInfoDiv">
+                 <span class="exportType">
+                    <span class="type_font">导出类型:</span><span class="type_input"><input type="text" id="ePeopleInfoType"></span>
+                 </span>
+    <span class="exportBtn"><span><input type="button" value="导出" id="ePeopleInfoBtn" class="l-button l-button-submit" /></span></span>
+</div>
+<div id="peopleInfoShow"></div>
+</body>
+</html>
