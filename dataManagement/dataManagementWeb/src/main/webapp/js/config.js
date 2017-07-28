@@ -22,11 +22,17 @@
             "list":"rs/nlcheck/list"
         },
         "userfunction":{
-            "currentFuncRole":"rs/userfunction/currentFuncRole"
+            "currentFuncRole":"rs/userfunction/currentFuncRole",
+            "alldepart":"rs/userfunction/listdepart",
+            "allrole":"rs/userfunction/listrole",
+            "adduser":"rs/userfunction/adduser"
         },
         "updatepassword":{
             "update":"rs/updatepassword/update",
             "checkDepartNo":"rs/updatepassword/checkDepartNo"
+        },
+        "userCheck":{
+            "checkname":"rs/userCheck/checkname"
         },
         "user":{
             "add":"rs/user/add",
@@ -41,7 +47,7 @@
              "add":"rs/authority/add",
              "update":"rs/authority/update",
              "delete":"rs/authority/delete",
-            "list":"rs/authority/list"
+             "list":"rs/authority/list"
         },
         "userAuthority":{
               "add":"rs/userAuthority/add"

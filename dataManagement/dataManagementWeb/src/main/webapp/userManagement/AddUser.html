@@ -1,10 +1,214 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var curDepartNo = getCookie("departNo");
+        var curDepartName = getCookie("departName")
+        var curFuncRole = getCookie("funcRole");
+        var nameCheckResult = 0;
+        var passwordCheckResult = 0;
+        $(function(){
+            //$.ligerDialog.open({title:'添加用户', target: $("#addUser"),width:550});
+            if(curFuncRole == "2"){
+                $("#depart").empty();
+                var option = "<option value='" + curDepartNo + "'>" + curDepartName + "</option>"
+                $("#depart").append(option);
+            }
+            else if(curFuncRole == "1"){
+                $.post($.URL.userfunction.alldepart,null,showdepart,"json");
+            }
+            else {
+                alert("页面出错！")
+                window.location.href = "/logout";
+            }
+            var funcrole = {};
+            funcrole.role = curFuncRole;
+            $.post($.URL.userfunction.allrole,funcrole,showrole,"json");
+        });
+        $("#submitBtn1").click(function () {
+            if(nameCheckResult == 1 && passwordCheckResult == 1){
+                var fuser = {};
+                fuser.name = $("#username").val();
+                fuser.fname = $("#fname").val();
+                fuser.sex = $("#sex").val();
+                fuser.depart = $("#depart").val();
+                fuser.password = $("#password01").val();
+                fuser.userrole = $("#userrole").val();
+                $.post($.URL.userfunction.adduser,fuser,addcallback,"json");
+            }
+            else{
+                alert("用户名或密码有误！");
+            }
+        });
+        $("#submitBtn2").click(function () {
+            cleartable();
+            window.location.href = "/index.jsp";
+        });
+        function addcallback(data) {
+            if(data.code == 200){
+                alert("添加成功！");
+                cleartable();
+            }
+            else{
+                alert("添加失败！");
+                cleartable();
+            }
+        }
+        function cleartable() {
+            $("#username").val("");
+            $("#fname").val("");
+            $("#password01").val("");
+            $("#password02").val("");
+            $("#usermessage").text("");
+            $("#passwordmessage").text("");
+        }
+        function showrole(data) {
+            $("#userrole").empty();
+            if(data.code == 200){
+                var option;
+                for (var i = 0; i < data.data.length; i++){
+                    option = "<option value='" + data.data[i].funcRole + "'>" + data.data[i].funcName + "</option>"
+                    $("#userrole").append(option);
+                }
+            }
+        }
+        function showdepart(data) {
+            $("#depart").empty();
+            if (data.code == 200){
+                var option;
+                for(var i = 0; i < data.data.length; i++){
+                    option = "<option value='" + data.data[i].departNo + "'>" + data.data[i].departName + "</option>"
+                    $("#depart").append(option);
+                }
+            }
+        }
+        function Namechange() {
+            if($("#username").val() == "" || $("#username").val().trim() == ""){
+                $("#usermessage").css("color","red");
+                $("#usermessage").text("用户名不能为空！");
+                nameCheckResult = 0;
+            }
+            else{
+                var addusername = {};
+                addusername.name = $("#username").val();
+                $.post($.URL.userCheck.checkname,addusername,CheckUsername,"json");
+            }
+        }
+        function CheckUsername(data) {
+            if(data.code == 200){
+                $("#usermessage").css("color","green");
+                $("#usermessage").text("用户名可用！");
+                nameCheckResult = 1;
+            }
+            else if(data.code == 500){
+                $("#usermessage").css("color","red");
+                $("#usermessage").text("用户名已存在！");
+                nameCheckResult = 0;
+            }
+
+        }
+        function Passwordchange() {
+            var password01 = $("#password01").val();
+            var password02 = $("#password02").val();
+            if(password02 == "" || password02.trim() == ""){
+                $("#passwordmessage").css("color","red");
+                $("#passwordmessage").text("密码不能为空！");
+                passwordCheckResult = 0;
+            }
+            else if(password01 != password02){
+                $("#passwordmessage").css("color","red");
+                $("#passwordmessage").text("两次输入密码不同！");
+                passwordCheckResult = 0;
+            }
+            else if(password01 == password02){
+                $("#passwordmessage").css("color","green");
+                $("#passwordmessage").text("密码可用！");
+                passwordCheckResult = 1;
+            }
+        }
+        function getCookie(cname) {
+            var ss = document.cookie;
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for(var i = 0 ;i < ca.length ; i++)
+            {
+                var c = ca[i].trim();
+                if (c.indexOf(name)==0)
+                    return c.substring(name.length,c.length);
+            }
+            return "";
+        }
+    </script>
 </head>
 <body>
-新增用户
+<div id="addUser">
+    <form name="form1" method="post" action="" id="form1">
+        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+            <tr>
+                <td align="right" class="l-table-edit-td">用户名:</td>
+                <td align="left" class="l-table-edit-td"><input name="username" style="width:200px" type="text" id="username" ltype="text" onchange="Namechange()"/></td>
+                <td align="left" id="usermessage"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">姓名:</td>
+                <td align="left" class="l-table-edit-td"><input name="fname" style="width:200px" type="text" id="fname" ltype="text" /></td>
+                <td align="left" style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">性别:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="sex" id="sex">
+                        <option value="男" selected="selected">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </td>
+                <td align="left"  style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">部门:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="depart" id="depart">
+                        <!--动态加载-->
+                    </select>
+                </td>
+                <td align="left"  style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">密码:</td>
+                <td align="left" class="l-table-edit-td"><input name="password01" style="width:200px" type="password" id="password01" ltype="text" onchange="Passwordchange()"/></td>
+                <td align="left"  style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">密码确认:</td>
+                <td align="left" class="l-table-edit-td"><input name="password02" style="width:200px" type="password" id="password02" ltype="text" onchange="Passwordchange()"/></td>
+                <td align="left" id="passwordmessage" style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">用户角色:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="userrole" id="userrole">
+                        <!--动态加载-->
+                    </select>
+                </td>
+                <td align="left"  style="color: red"></td>
+            </tr>
+        </table>
+        <br />
+        <input type="button" value="提交" id="submitBtn1" class="l-button l-button-submit" />
+        <input type="button" value="取消" id="submitBtn2" class="l-button l-button-submit" />
+    </form>
+
+</div>
 </body>
 </html>

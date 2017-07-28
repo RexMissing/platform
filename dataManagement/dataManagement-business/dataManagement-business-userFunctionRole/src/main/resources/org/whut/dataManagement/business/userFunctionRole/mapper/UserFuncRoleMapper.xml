@@ -14,6 +14,14 @@
         <result property="funcRole" column="funcRole"/>
         <result property="funcRoleName" column="funcName"/>
     </resultMap>
+    <resultMap id="departMap" type="org.whut.dataManagement.business.userFunctionRole.entity.Depart">
+        <id property="departNo" column="FDepartNo"/>
+        <result property="departName" column="FDepartName"/>
+    </resultMap>
+    <resultMap id="roleMap" type="org.whut.dataManagement.business.userFunctionRole.entity.FuncRole">
+        <id property="funcRole" column="func_role"/>
+        <result property="funcName" column="func_name"/>
+    </resultMap>
 
     <select id="getlist" parameterType="java.lang.String" resultMap="userfuncroleResultMap">
         SELECT
@@ -26,4 +34,48 @@
         FROM user a,function_power b,tdepartment c
         WHERE a.name=#{username} AND a.departNo = c.FDepartNo AND a.func_role=b.func_role;
     </select>
+
+    <select id="getalldepart" resultMap="departMap">
+        SELECT
+        FDepartNo , FDepartName
+        FROM tdepartment;
+    </select>
+
+    <select id="getallrole" parameterType="java.lang.Integer" resultMap="roleMap">
+        SELECT func_role , func_name
+        FROM function_power
+        WHERE func_role != #{role};
+    </select>
+
+    <insert id="adduser" parameterType="org.whut.dataManagement.business.userFunctionRole.entity.FUser"  keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO
+        user(
+        id, name, password, sex, role, appId, status, image, func_role, departNo, fname
+        )
+        VALUES (#{id},#{username},#{password},#{sex},#{role},#{appid},#{status},#{image},#{funcrole},#{departNo},#{fname});
+        <selectKey resultType="long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <select id="getIdByName" parameterType="java.lang.String" resultType="java.lang.Long">
+        SELECT id
+        FROM user
+        WHERE name = #{username};
+    </select>
+
+    <insert id="adduserAuthority" parameterType="org.whut.dataManagement.business.userFunctionRole.entity.UserAuth" keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO
+        user_authority(
+        id, userId, authorityId, userName, authorityName
+        )
+        VALUES (#{id}, #{userid}, #{authid}, #{username}, #{aythorityName});
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+            select
+            LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
 </mapper>

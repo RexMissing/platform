@@ -40,12 +40,6 @@ public class UserPasswordWeb {
     @Path("/checkDepartNo")
     public String findDepartNoByUsername(@FormParam("up_username") String up_username){
         List<UserDepartNo> list = userPasswordService.findDepartNoByUsername(up_username);
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println(list);
-        System.out.println("");
-        System.out.println("");
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 
