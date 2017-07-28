@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 @Path("/updatepassword")
 public class UserPasswordWeb {
-    private static PlatformLogger logger = PlatformLogger.getLogger(UserFuncRoleWeb.class);
+    private static PlatformLogger logger = PlatformLogger.getLogger(UserPasswordWeb.class);
     @Autowired
     private UserPasswordService userPasswordService;
 

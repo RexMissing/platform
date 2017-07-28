@@ -34,6 +34,12 @@
         "userCheck":{
             "checkname":"rs/userCheck/checkname"
         },
+        "depart":{
+            "alluser":"rs/depart/alluser",
+            "add":"rs/depart/add",
+            "checkNo":"rs/depart/checkNo",
+            "checkName":"rs/depart/checkName"
+        },
         "user":{
             "add":"rs/user/add",
             "update":"rs/user/update",

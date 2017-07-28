@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 @Component
 @Path("/userCheck")
 public class UserCheckWeb {
-    private static PlatformLogger logger = PlatformLogger.getLogger(UserFuncRoleWeb.class);
+    private static PlatformLogger logger = PlatformLogger.getLogger(UserCheckWeb.class);
     @Autowired
     private UserCheckService userCheckService;
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")

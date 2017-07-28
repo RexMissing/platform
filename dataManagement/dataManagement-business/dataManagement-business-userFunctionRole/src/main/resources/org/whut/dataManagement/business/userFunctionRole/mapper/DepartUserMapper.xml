@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.userFunctionRole.mapper.DepartUserMapper">
+    <resultMap id="departUser" type="org.whut.dataManagement.business.userFunctionRole.entity.DepartUser">
+        <id property="userid" column="ID"/>
+        <result property="username" column="NAME"/>
+        <result property="fname" column="FNAME"/>
+        <result property="sex" column="SEX"/>
+        <result property="funcroleName" column="FUNCROLENAME"/>
+    </resultMap>
+
+    <select id="getalllist" parameterType="java.lang.String" resultMap="departUser">
+        SELECT
+        a.id         as         ID,
+        a.name       as         NAME,
+        a.fname      as         FNAME,
+        a.sex        as         SEX,
+        b.func_name  as         FUNCROLENAME
+        FROM user a, function_power b
+        WHERE a.departNo = #{departNo} AND a.func_role = b.func_role
+        ORDER BY a.id;
+    </select>
+
+    <select id="getlist" parameterType="org.whut.dataManagement.business.userFunctionRole.entity.QueryNumber"
+            resultMap="departUser">
+        SELECT
+        a.id         as         ID,
+        a.name       as         NAME,
+        a.fname      as         FNAME,
+        a.sex        as         SEX,
+        b.func_name  as         FUNCROLENAME
+        FROM user a, function_power b
+        WHERE a.departNo = #{departNo} AND a.func_role = #{funcrole} AND a.func_role = b.func_role
+        ORDER BY a.id;
+    </select>
+
+    <insert id="addDepart" parameterType="org.whut.dataManagement.business.userFunctionRole.entity.Depart">
+        INSERT INTO
+        tdepartment(FDepartNo,FDepartName)
+        VALUES (#{departNo}, #{departName});
+    </insert>
+
+    <select id="checkDepartNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tdepartment
+        WHERE FDepartNo = #{departNo};
+    </select>
+
+    <select id="checkDepartName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tdepartment
+        WHERE FDepartName = #{departName};
+    </select>
+</mapper>
