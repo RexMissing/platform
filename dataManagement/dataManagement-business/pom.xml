@@ -14,8 +14,10 @@
     <modules>
         <module>dataManagement-business-dynamicDataSource</module>
         <module>dataManagement-business-meterProduceData</module>
-        <module>dataManagement-business-userFunctionRole</module>
-    </modules>
+        <module>dataManagement-business-returnMeter</module>
+        <module>dataManagement-business-enumTable</module>
+        <module>dataManagement-business-meterAnalysis</module>
+        <module>dataManagement-business-userFunctionRole</module>    </modules>
 
 
 </project>

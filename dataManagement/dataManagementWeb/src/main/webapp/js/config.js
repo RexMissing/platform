@@ -44,7 +44,13 @@
             "findUser":"rs/depart/findUser",
             "uprole":"rs/depart/uprole"
         },
-        "user":{
+        "enumTable":{
+            "list":"rs/enumTable/list",
+            "add":"rs/enumTable/add",
+            "update":"rs/enumTable/update",
+            "delete":"rs/enumTable/delete",
+            "alllist":"rs/enumTable/alllist"
+        },        "user":{
             "add":"rs/user/add",
             "update":"rs/user/update",
             "delete":"rs/user/delete",
@@ -240,6 +246,24 @@
             "contractList":"rs/contract/getContractList",
             "inStockList":"rs/stock_in_sheet/getInStockList",
             "outStockList":"rs/stock_out_sheet/getOutStockList"
+        },
+        "returnMeter":{
+            "add":"rs/returnMeter/add",
+            "delete":"rs/returnMeter/delete",
+            "update":"rs/returnMeter/update",
+            "list":"rs/returnMeter/list"
+        },
+        "returnMeterInfo":{
+            "add":"rs/returnMeterInfo/add",
+            "delete":"rs/returnMeterInfo/delete",
+            "update":"rs/returnMeterInfo/update",
+            "list":"rs/returnMeterInfo/list"
+        },
+        "meterAnalysis":{
+            "add":"rs/meterAnalysis/add",
+            "delete":"rs/meterAnalysis/delete",
+            "update":"rs/meterAnalysis/update",
+            "list":"rs/meterAnalysis/list"
         },
         "deviceReport":{
             "deviceAccountReport":"rs/deviceReport/deviceAccountReport",

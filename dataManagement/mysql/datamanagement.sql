@@ -216,7 +216,7 @@ CREATE TABLE `treturnmeterinfo` (
   `FCustomer` varchar(50) DEFAULT NULL,
   `FMeterName` varchar(50) DEFAULT NULL,
   `FQuantity` int(20) DEFAULT NULL,
-  `FDataTime` datetime DEFAULT NULL,
+  `FDateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`FMeterCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

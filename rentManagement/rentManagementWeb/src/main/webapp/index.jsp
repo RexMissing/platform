@@ -25,10 +25,9 @@
         $(function ()
         {
             $("#layout1").ligerLayout({topHeight:68});
-            $("#titleContainer").load("title.html");
+            $("#titleContainer").load("title1.html");
             $("#mainContainer").load("dashboard/layout.html");
         });
-
     </script>
     <style type="text/css">
         body{ padding:0px; margin:0;overflow: hidden;}
