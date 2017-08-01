@@ -50,7 +50,7 @@
             "update":"rs/enumTable/update",
             "delete":"rs/enumTable/delete",
             "alllist":"rs/enumTable/alllist"
-        },        "user":{
+        "user":{
             "add":"rs/user/add",
             "update":"rs/user/update",
             "delete":"rs/user/delete",

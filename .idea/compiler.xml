@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />
       <entry name="!?*.form" />
@@ -10,12 +11,17 @@
       <entry name="!?*.flex" />
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
     </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="business-address" />
         <module name="business-app" />
         <module name="business-datarule" />
@@ -26,8 +32,12 @@
         <module name="dataManagement-business-enumTable" />
         <module name="dataManagement-business-meterAnalysis" />
         <module name="dataManagement-business-meterProduceData" />
+<<<<<<< HEAD
         <module name="dataManagement-business-returnMeter" />
         <module name="dataManagement-business-search" />
+=======
+        <module name="dataManagement-business-userFunctionRole" />
+>>>>>>> 01c1d12b34cdd08310ffdc2f9b0a11b0b39e8b85
         <module name="dataManagementWeb" />
         <module name="deviceManagement-business-device" />
         <module name="deviceManagement-business-maintain" />
@@ -75,7 +85,6 @@
         <module name="meterFrameManagement-communication" />
         <module name="meterFrameManagement-communicationFrame" />
         <module name="meterFrameManagement-db" />
-        <module name="meterFrameManagement-entity" />
         <module name="meterFrameManagement-MQ" />
         <module name="meterFrameManagement-util" />
         <module name="meterFrameManagementWeb" />
@@ -111,7 +120,7 @@
         <module name="trackSystemWeb" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.6">
+    <bytecodeTargetLevel>
       <module name="business" target="1.5" />
       <module name="business-address" target="1.5" />
       <module name="business-app" target="1.5" />
@@ -125,8 +134,12 @@
       <module name="dataManagement-business-enumTable" target="1.5" />
       <module name="dataManagement-business-meterAnalysis" target="1.5" />
       <module name="dataManagement-business-meterProduceData" target="1.5" />
+<<<<<<< HEAD
       <module name="dataManagement-business-returnMeter" target="1.5" />
       <module name="dataManagement-business-search" target="1.5" />
+=======
+      <module name="dataManagement-business-userFunctionRole" target="1.5" />
+>>>>>>> 01c1d12b34cdd08310ffdc2f9b0a11b0b39e8b85
       <module name="dataManagementWeb" target="1.5" />
       <module name="deviceManagement" target="1.5" />
       <module name="deviceManagement-business" target="1.5" />

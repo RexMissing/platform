@@ -19,6 +19,6 @@
         <module>dataManagement-business-meterAnalysis</module>
         <module>dataManagement-business-search</module>
         <module>dataManagement-business-userFunctionRole</module>    
-	</modules>
+    </modules>
 
 </project>
