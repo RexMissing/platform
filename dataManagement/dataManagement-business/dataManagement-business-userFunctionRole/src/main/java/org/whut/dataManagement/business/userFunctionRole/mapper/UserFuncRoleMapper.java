@@ -15,4 +15,5 @@ public interface UserFuncRoleMapper extends AbstractMapper<UserFuncRole>{
     public void adduser(FUser fuser);
     public long getIdByName(String username);
     public void adduserAuthority(UserAuth userAuth);
+    public int getRoleById(long id);
 }

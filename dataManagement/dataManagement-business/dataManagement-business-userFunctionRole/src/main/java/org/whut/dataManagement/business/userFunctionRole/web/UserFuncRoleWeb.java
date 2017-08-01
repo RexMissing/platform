@@ -107,4 +107,16 @@ public class UserFuncRoleWeb {
         userFuncRoleService.adduserAuthorith(userAuth);
         return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.SUCCESS.getCode(), "添加成功!");
     }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @POST
+    @Path("/getrole")
+    public String getRoleById(@FormParam("id")long id,@FormParam("curRoleNo")int curRoleNo){
+        int roleNo = userFuncRoleService.getRoleByTd(id);
+        if(roleNo > curRoleNo){
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.SUCCESS.getCode(),"允许操作！");
+        }
+        else
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"没有操作权限！");
+    }
 }

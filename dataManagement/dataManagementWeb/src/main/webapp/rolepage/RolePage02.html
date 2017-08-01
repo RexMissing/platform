@@ -14,6 +14,7 @@
             $("#accordion li").click(function(){
                 var url = $(this).attr("url");
                 if((typeof url)!="undefined"){
+                    $.ajaxSetup({cache:false});
                     $("#mainContainer").load(url);
                 }
             });
@@ -30,6 +31,7 @@
 <div id="accordion">
     <div  title="用户管理" style="padding: 10px">
         <ul>
+            <!--<li url="./departManagement/departManagement.html">部门管理</li>-->
             <li url="./userManagement/RoleDistri.html">角色分配</li>
             <li url="./userManagement/AddUser.html">新增用户</li>
             <li url="./userManagement/UpdatePassword.html">修改密码</li>

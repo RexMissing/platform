@@ -66,6 +66,12 @@
         WHERE name = #{username};
     </select>
 
+    <select id="getRoleById" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT func_role
+        FROM user
+        WHERE id = #{id};
+    </select>
+
     <insert id="adduserAuthority" parameterType="org.whut.dataManagement.business.userFunctionRole.entity.UserAuth" keyProperty="id"
             useGeneratedKeys="true">
         INSERT INTO

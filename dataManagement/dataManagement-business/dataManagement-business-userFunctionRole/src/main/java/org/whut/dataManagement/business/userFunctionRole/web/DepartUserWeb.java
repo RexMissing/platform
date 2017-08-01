@@ -2,10 +2,7 @@ package org.whut.dataManagement.business.userFunctionRole.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.whut.dataManagement.business.userFunctionRole.entity.Depart;
-import org.whut.dataManagement.business.userFunctionRole.entity.DepartUser;
-import org.whut.dataManagement.business.userFunctionRole.entity.QueryNumber;
-import org.whut.dataManagement.business.userFunctionRole.entity.UserDepartNo;
+import org.whut.dataManagement.business.userFunctionRole.entity.*;
 import org.whut.dataManagement.business.userFunctionRole.service.DepartUserService;
 import org.whut.platform.fundamental.logger.PlatformLogger;
 import org.whut.platform.fundamental.util.json.JsonResultUtils;
@@ -47,6 +44,30 @@ public class DepartUserWeb {
     }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/departuser")
+    @POST
+    public String getDepartUser(@FormParam("departNo")String departNo){
+        List<DepartUser> list = departUserService.getalllist(departNo);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findUser")
+    @POST
+    public String findDepartNoByUser(@FormParam("userNo")String userNo,@FormParam("departNo")String departNo){
+        String queryDepartNo = departUserService.findDepartNoByUser(userNo);
+        if (queryDepartNo.equals(departNo)){
+            List<DepartUser> departUser = null;
+            departUser = departUserService.getUser(userNo);
+            return JsonResultUtils.getObjectResultByStringAsDefault(departUser,JsonResultUtils.Code.SUCCESS);
+        }
+        else
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询错误！");
+
+    }
+
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/add")
     @POST
     public String add(@FormParam("departNo") String departNo,@FormParam("departName") String departName){
@@ -86,5 +107,22 @@ public class DepartUserWeb {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"部门名称不可用！");
         }
     }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/uprole")
+    @POST
+    public String upRoleById(@FormParam("upuserid") long userid,@FormParam("upfuncrole") int funcrole){
+        RoleNo roleNo = new RoleNo();
+        roleNo.setUserid(userid);
+        roleNo.setFuncRole(funcrole);
+        int count = departUserService.upRoleById(roleNo);
+        if(count == 1){
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.SUCCESS.getCode(),"修改成功！");
+        }
+        else {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"修改失败！");
+        }
+    }
+
 
 }

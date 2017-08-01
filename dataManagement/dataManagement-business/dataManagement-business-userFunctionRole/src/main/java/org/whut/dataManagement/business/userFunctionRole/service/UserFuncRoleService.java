@@ -47,5 +47,6 @@ public class UserFuncRoleService {
     public void adduserAuthorith(UserAuth userAuth){
         userFuncRoleMapper.adduserAuthority(userAuth);
     }
+    public int getRoleByTd(long id){return userFuncRoleMapper.getRoleById(id);}
 
 }

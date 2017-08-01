@@ -25,7 +25,8 @@
             "currentFuncRole":"rs/userfunction/currentFuncRole",
             "alldepart":"rs/userfunction/listdepart",
             "allrole":"rs/userfunction/listrole",
-            "adduser":"rs/userfunction/adduser"
+            "adduser":"rs/userfunction/adduser",
+            "getrole":"rs/userfunction/getrole"
         },
         "updatepassword":{
             "update":"rs/updatepassword/update",
@@ -38,7 +39,10 @@
             "alluser":"rs/depart/alluser",
             "add":"rs/depart/add",
             "checkNo":"rs/depart/checkNo",
-            "checkName":"rs/depart/checkName"
+            "checkName":"rs/depart/checkName",
+            "departuser":"rs/depart/departuser",
+            "findUser":"rs/depart/findUser",
+            "uprole":"rs/depart/uprole"
         },
         "user":{
             "add":"rs/user/add",
