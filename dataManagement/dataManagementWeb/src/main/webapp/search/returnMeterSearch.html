@@ -35,14 +35,12 @@
             var fmetername=$("#fmetername").val();
             var sTime=$("#returnMeterStartTime").val();
             var eTime=$("#returnMeterEndTime").val();
-            $.post($.URL.returnMeter.findByCondition,{"foperator":foperator,"fcustomer":fcustomer,"fmetername":fmetername})
+            $.post($.URL.returnMeter.findByCondition,{"foperator":foperator,"fcustomer":fcustomer,"fmetername":fmetername,"sTime":sTime,"eTime":eTime},getreturnMeterListCallback,"json");
+        }
+        function getreturnMeterListCallback(data) {
+
 
         }
-
-
-
-
-
 
         var manager, g;
         function f_initGrid()

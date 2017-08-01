@@ -44,12 +44,13 @@
             "findUser":"rs/depart/findUser",
             "uprole":"rs/depart/uprole"
         },
-        "enumTable":{
-            "list":"rs/enumTable/list",
-            "add":"rs/enumTable/add",
-            "update":"rs/enumTable/update",
-            "delete":"rs/enumTable/delete",
-            "alllist":"rs/enumTable/alllist"
+        "enumTable": {
+            "list": "rs/enumTable/list",
+            "add": "rs/enumTable/add",
+            "update": "rs/enumTable/update",
+            "delete": "rs/enumTable/delete",
+            "alllist": "rs/enumTable/alllist"
+        },
         "user":{
             "add":"rs/user/add",
             "update":"rs/user/update",

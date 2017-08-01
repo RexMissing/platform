@@ -102,7 +102,6 @@
           <element id="archive" name="dataManagement-business-meterProduceData-1.0-SNAPSHOT.jar">
             <element id="module-output" name="dataManagement-business-meterProduceData" />
           </element>
-<<<<<<< HEAD
           <element id="archive" name="dataManagement-business-returnMeter-1.0-SNAPSHOT.jar">
             <element id="module-output" name="dataManagement-business-returnMeter" />
           </element>
@@ -112,10 +111,9 @@
           <element id="library" level="project" name="Maven: javax.validation:validation-api:1.1.0.Final" />
           <element id="archive" name="dataManagement-business-meterAnalysis-1.0-SNAPSHOT.jar">
             <element id="module-output" name="dataManagement-business-meterAnalysis" />
-=======
+          </element>
           <element id="archive" name="dataManagement-business-userFunctionRole-1.0-SNAPSHOT.jar">
             <element id="module-output" name="dataManagement-business-userFunctionRole" />
->>>>>>> 01c1d12b34cdd08310ffdc2f9b0a11b0b39e8b85
           </element>
         </element>
       </element>

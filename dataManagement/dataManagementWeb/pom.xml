@@ -91,7 +91,6 @@
         </dependency>
         <dependency>
             <groupId>platform</groupId>
-<<<<<<< HEAD
             <artifactId>dataManagement-business-returnMeter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -103,15 +102,13 @@
         <dependency>
             <groupId>platform</groupId>
             <artifactId>dataManagement-business-meterAnalysis</artifactId>
-=======
-            <artifactId>dataManagement-business-userFunctionRole</artifactId>
->>>>>>> 01c1d12b34cdd08310ffdc2f9b0a11b0b39e8b85
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>platform</groupId>
             <artifactId>dataManagement-business-userFunctionRole</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>    </dependencies>
+        </dependency>
+    </dependencies>
 
 </project>
