@@ -14,10 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/7/24 0024.
@@ -89,11 +86,40 @@ public class ReturnMeterWeb {
             subRetunMeter.setFquantity(returnMeter.getFquantity());
             subRetunMeter.setFrinvono(returnMeter.getFrinvono());
             subRetunMeter.setFdatetime(returnMeter.getFdatetime());
+            subRetunMeter.setFoperator(returnMeter.getFoperator());
             returnMeterList.add(subRetunMeter);
         }
         if (returnMeterList.toArray().length==0)  {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
         }
         return JsonResultUtils.getObjectResultByStringAsDefault(returnMeterList, JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findByCondition")
+    @POST
+    public String findByCondition(@FormParam("foperator")String foperator,@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(foperator!=null&&!foperator.equals(""))
+        {
+            condition.put("foperator",foperator);
+        }
+        if (fcustomer!=null&&!fcustomer.equals(""))
+        {
+            condition.put("fcustomer",fcustomer);
+        }
+        if (fmetername!=null&&!fmetername.equals(""))
+        {
+            condition.put("fmetername",fmetername);
+        }
+        if(sTime!=null&&!sTime.equals("")){
+            condition.put("startTime",sTime+" 00:00:00");
+        }
+        if(eTime!=null&&!eTime.equals("")){
+            condition.put("endTime",eTime+" 59:59:59");
+        }
+        List<Map<String,Object>> list=returnMeterService.findByCondition(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 }

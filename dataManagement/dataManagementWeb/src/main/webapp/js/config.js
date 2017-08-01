@@ -251,7 +251,8 @@
             "add":"rs/returnMeter/add",
             "delete":"rs/returnMeter/delete",
             "update":"rs/returnMeter/update",
-            "list":"rs/returnMeter/list"
+            "list":"rs/returnMeter/list",
+            "findByCondition":"rs/returnMeter/findByCondition"
         },
         "returnMeterInfo":{
             "add":"rs/returnMeterInfo/add",

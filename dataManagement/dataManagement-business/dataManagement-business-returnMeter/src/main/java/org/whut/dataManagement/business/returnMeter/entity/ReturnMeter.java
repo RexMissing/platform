@@ -16,8 +16,15 @@ public class ReturnMeter {
     private String frinvono;
     @JsonDeserialize(using=CustomDateDeserialize.class)
     private Date fdatetime;
+    private String foperator;
 
+    public String getFoperator() {
+        return foperator;
+    }
 
+    public void setFoperator(String foperator) {
+        this.foperator = foperator;
+    }
 
     public String getFmetercode() {
         return fmetercode;

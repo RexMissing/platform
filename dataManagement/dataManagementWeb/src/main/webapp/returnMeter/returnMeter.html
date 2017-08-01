@@ -21,10 +21,11 @@
                 var data={};
                 data.fmetercode = $("#fmetercode").val();
                 data.fcustomer = $("#fcustomer").val();
-                data.fmetername = $("#fmetername").val();;
+                data.fmetername = $("#fmetername").val();
                 data.fquantity = $("#fquantity").val();
                 data.frinvono = $("#frinvono").val();
                 data.fdatetime  = $("#fdatetime").val();
+                data.foperator = $("#foperator").val();
                 $.post($.URL.returnMeter.add,{"jsonString":$.toJSON(data)},addCallback,"json");
             });
         });
@@ -46,9 +47,10 @@
                     { display: '表具编号', name: 'fmetercode', width: '10%', type: 'String', frozen: true},
                     { display: '燃气公司',name: 'fcustomer',width: '15%',editor:{type:'text'}} ,
                     { display: '表具类型',name: 'fmetername',width: '15%',editor:{type:'text'}},
-                    { display: '返修表数量',name: 'fquantity',width: '15%',editor:{type:'int'}},
+                    { display: '返修表数量',name: 'fquantity',width: '10%',editor:{type:'int'}},
                     { display: '退库单据号',name: 'frinvono',width: '15%',editor:{type:'text'}},
-                    { display: '录入时间',name: 'fdatetime',width: '15%',editor:{type:'text'}},
+                    { display: '录入时间',name: 'fdatetime',width: '10%',editor:{type:'text'}},
+                    { display: '录入人员',name: 'foperator',width: '10%',editor:{type:'text'}},
                     { display: '操作', isSort: false, width: '15%',render: function (rowdata, rowindex, value)
                     {
                         var h = "";
@@ -198,6 +200,12 @@
             <tr>
                 <td align="right" class="l-table-edit-td">录入时间:</td>
                 <td align="left" class="l-table-edit-td"><input name="fdatetime" type="text" id="fdatetime" ></td>
+                <td align="left"></td>
+            </tr>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">录入人员:</td>
+                <td align="left" class="l-table-edit-td"><input name="foperator" type="text" id="foperator" ></td>
                 <td align="left"></td>
             </tr>
         </table>

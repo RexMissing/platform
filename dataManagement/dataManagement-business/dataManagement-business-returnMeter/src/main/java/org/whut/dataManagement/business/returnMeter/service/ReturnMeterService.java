@@ -29,4 +29,9 @@ public class ReturnMeterService {
     public List<ReturnMeter> list() {
         return returnMeterMapper.getlist();
     }
+
+    public List<Map<String,Object>> findByCondition(Map<String,Object> condition)
+    {
+        return returnMeterMapper.findByCondition(condition);
+    }
 }

@@ -86,6 +86,7 @@ public class ReturnMeterInfoWeb {
             subreturnMeterInfo.setFmetername(returnMeterInfo.getFmetername());
             subreturnMeterInfo.setFquantity(returnMeterInfo.getFquantity());
             subreturnMeterInfo.setFdatetime(returnMeterInfo.getFdatetime());
+            subreturnMeterInfo.setFoperator(returnMeterInfo.getFoperator());
             returnMeterInfoList.add(subreturnMeterInfo);
         }
         if (returnMeterInfoList.toArray().length==0)  {

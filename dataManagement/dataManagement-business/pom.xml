@@ -17,7 +17,8 @@
         <module>dataManagement-business-returnMeter</module>
         <module>dataManagement-business-enumTable</module>
         <module>dataManagement-business-meterAnalysis</module>
-        <module>dataManagement-business-userFunctionRole</module>    </modules>
-
+        <module>dataManagement-business-search</module>
+        <module>dataManagement-business-userFunctionRole</module>    
+	</modules>
 
 </project>

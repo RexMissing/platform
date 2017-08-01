@@ -5,7 +5,7 @@
 
 <mapper namespace="org.whut.dataManagement.business.returnMeter.mapper.ReturnMeterInfoMapper">
     <sql id="returnMeterInfo_fields">
-       FMeterCode,FCustomer,FMeterName,FQuantity,FDateTime
+       FMeterCode,FCustomer,FMeterName,FQuantity,FDateTime,FOperator
     </sql>
 
     <resultMap id="returnMeterInfoResultMap" type="returnMeterInfo">
@@ -14,6 +14,7 @@
         <result property="fmetername" column="FMeterName"/>
         <result property="fquantity" column="FQuantity"/>
         <result property="fdatetime" column="FDateTime"/>
+        <result property="foperator" column="FOperator"/>
     </resultMap>
 
     <insert id="add" parameterType="returnMeterInfo" keyProperty="fmetercode">
@@ -21,7 +22,7 @@
         treturnmeterinfo(
         <include refid="returnMeterInfo_fields"/>
         )
-        VALUES (#{fmetercode},#{fcustomer},#{fmetername},#{fquantity},#{fdatetime});
+        VALUES (#{fmetercode},#{fcustomer},#{fmetername},#{fquantity},#{fdatetime},#{foperator});
     </insert>
 
     <update id="update" parameterType="returnMeterInfo">
@@ -31,7 +32,8 @@
             <if test="fcustomer!=null">FCustomer=#{fcustomer},</if>
             <if test="fmetername!=null">FMeterName=#{fmetername},</if>
             <if test="fquantity!=null">FQuantity=#{fquantity},</if>
-            <if test="fdatetime!=null">FDateTime=#{fdatetime}</if>
+            <if test="fdatetime!=null">FDateTime=#{fdatetime},</if>
+            <if test="foperator!=null">FOperator=#{foperator}</if>
         </set>
         WHERE FMeterCode=#{fmetercode};
     </update>
