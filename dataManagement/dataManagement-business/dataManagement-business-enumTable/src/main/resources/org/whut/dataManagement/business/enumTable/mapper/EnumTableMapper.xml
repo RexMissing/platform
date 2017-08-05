@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.enumTable.mapper.EnumTableMapper">
+    <sql id="enumTable_fields">
+        FEnumType,FEnumName,FEnumValue
+    </sql>
+
+    <resultMap id="enumTableResultMap" type="enumTable">
+        <id property="fenumtype" column="FEnumType"/>
+        <result property="fenumname" column="FEnumName"/>
+        <result property="fenumvalue" column="FEnumValue"/>
+    </resultMap>
+
+    <insert id="add" parameterType="enumTable" keyProperty="fenumname">
+        INSERT INTO
+        tenumeration(
+        <include refid="enumTable_fields"/>
+        )
+        VALUES (#{fenumtype},#{fenumname},#{fenumvalue});
+    </insert>
+
+    <update id="update" parameterType="enumTable">
+        UPDATE tenumeration
+        <set>
+            <if test="fenumtype!=null">FEnumType=#{fenumtype},</if>
+            <if test="fenumname!=null">FEnumName=#{fenumname},</if>
+            <if test="fenumvalue!=null">FEnumValue=#{fenumvalue}</if>
+        </set>
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM tenumeration
+        WHERE FEnumName=#{fenumname};
+    </delete>
+
+    <select id="getList" resultMap="enumTableResultMap">
+        SELECT <include refid="enumTable_fields"/>
+        FROM tenumeration
+        WHERE FEnumType='故障';
+    </select>
+
+    <select id="getAllList" resultMap="enumTableResultMap">
+        SELECT <include refid="enumTable_fields"/>
+        FROM tenumeration
+    </select>
+</mapper>

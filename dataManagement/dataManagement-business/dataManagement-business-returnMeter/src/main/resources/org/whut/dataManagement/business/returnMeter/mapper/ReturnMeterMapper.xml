@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.returnMeter.mapper.ReturnMeterMapper">
+    <sql id="returnMeter_fields">
+        FMeterCode,FCustomer,FMeterName,FQuantity,FRInvoNo,FDateTime,FOperator
+    </sql>
+
+    <resultMap id="returnMeterResultMap" type="returnMeter">
+        <id property="fmetercode" column="FMeterCode"/>
+        <result property="fcustomer" column="FCustomer"/>
+        <result property="fmetername" column="FMeterName"/>
+        <result property="fquantity" column="FQuantity"/>
+        <result property="frinvono" column="FRInvoNo"/>
+        <result property="fdatetime" column="FDateTime"/>
+        <result property="foperator" column="FOperator"/>
+    </resultMap>
+
+    <insert id="add" parameterType="returnMeter" keyProperty="fmetercode">
+        INSERT INTO
+        treturnmeter(
+        <include refid="returnMeter_fields"/>
+        )
+        VALUES (#{fmetercode},#{fcustomer},#{fmetername},#{fquantity},#{frinvono},#{fdatetime},#{foperator});
+    </insert>
+
+    <update id="update" parameterType="returnMeter">
+        UPDATE treturnmeter
+        <set>
+            <if test="fmetercode!=null">FMeterCode=#{fmetercode},</if>
+            <if test="fcustomer!=null">FCustomer=#{fcustomer},</if>
+            <if test="fmetername!=null">FMeterName=#{fmetername},</if>
+            <if test="fquantity!=null">FQuantity=#{fquantity},</if>
+            <if test="frinvono!=null">FRInvoNo=#{frinvono},</if>
+            <if test="fdatetime!=null">FDateTime=#{fdatetime},</if>
+            <if test="foperator!=null">FOperator=#{foperator}</if>
+        </set>
+        WHERE FMeterCode=#{fmetercode};
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM treturnmeter
+        WHERE FMeterCode=#{fmetercode}
+    </delete>
+
+    <select id="getlist" resultMap="returnMeterResultMap">
+        SELECT <include refid="returnMeter_fields"/>
+        FROM treturnmeter
+    </select>
+
+    <select id="findByCondition" parameterType="map" resultType="map">
+        SELECT treturnmeter.fmetercode,treturnmeterinfo.fmetercode
+        FROM treturnmeter,treturnmeterinfo
+        <where>
+            <if test="foperator!=null">treturnmeter.FOperator=#{foperator}</if>
+            <if test="foperator!=null">AND treturnmeterinfo.FOperator=#{foperator}</if>
+            <if test="fcustomer!=null">AND treturnmeter.FCustomer=#{fcustomer}</if>
+            <if test="fcustomer!=null">AND treturnmeterinfo.FCustomer=#{fcustomer}</if>
+            <if test="fmetername!=null">AND treturnmeter.FMeterName=#{fmetername}</if>
+            <if test="fmetername!=null">AND treturnmeterinfo.FMeterName=#{fmetername}</if>
+            <if test="startTime!=null"><![CDATA[ AND treturnmeter.FDateTime>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND treturnmeter.FDateTime<=#{endTime} ]]> </if>
+            <if test="startTime!=null"><![CDATA[ AND treturnmeterinfo.FDateTime>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND treturnmeterinfo.FDateTime<=#{endTime} ]]> </if>
+        </where>
+    </select>
+</mapper>

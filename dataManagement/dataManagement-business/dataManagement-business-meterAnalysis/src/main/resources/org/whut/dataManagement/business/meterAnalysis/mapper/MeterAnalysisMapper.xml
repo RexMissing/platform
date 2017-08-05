@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.meterAnalysis.mapper.MeterAnalysisMapper">
+    <sql id="meterAnalysis_fields">
+        FMeterCode,FMeterName,FValveName,FDepartment,FAnalysor,FCustomer,FReportMisFune,FConfirmMisFune,FMeterReading,FDateTime
+    </sql>
+
+    <resultMap id="meterAnalysisResultMap" type="meterAnalysis">
+        <id property="fmetercode" column="FMeterCode"/>
+        <result property="fmetername" column="FMeterName"/>
+        <result property="fvalvename" column="FValveName"/>
+        <result property="fdepartment" column="FDepartment"/>
+        <result property="fanalysor" column="FAnalysor"/>
+        <result property="fcustomer" column="FCustomer"/>
+        <result property="freportmisfune" column="FReportMisFune"/>
+        <result property="fconfirmmisfune" column="FConfirmMisFune"/>
+        <result property="fmeterreading" column="FMeterReading"/>
+        <result property="fdatetime" column="FDateTime"/>
+    </resultMap>
+
+    <insert id="add" parameterType="meterAnalysis" keyProperty="fmetercode">
+        INSERT INTO
+        tmeteranalysisinfo(
+        <include refid="meterAnalysis_fields"/>
+        )
+        VALUES (#{fmetercode},#{fmetername},#{fvalvename},#{fdepartment},#{fanalysor},#{fcustomer},#{freportmisfune},#{fconfirmmisfune},#{fmeterreading},#{fdatetime});
+    </insert>
+
+    <update id="update" parameterType="meterAnalysis">
+        UPDATE tmeteranalysisinfo
+        <set>
+            <if test="fmetercode!=null">FMeterCode=#{fmetercode},</if>
+            <if test="fmetername!=null">FMeterName=#{fmetername},</if>
+            <if test="fvalvename!=null">FValveName=#{fvalvename},</if>
+            <if test="fdepartment!=null">FDepartment=#{fdepartment},</if>
+            <if test="fanalysor!=null">FAnalysor=#{fanalysor},</if>
+            <if test="fcustomer!=null">FCustomer=#{fcustomer},</if>
+            <if test="freportmisfune!=null">FReportMisFune=#{freportmisfune},</if>
+            <if test="fconfirmmisfune!=null">FConfirmMisFune=#{fconfirmmisfune},</if>
+            <if test="fmeterreading!=null">FMeterReading=#{fmeterreading},</if>
+            <if test="fdatetime!=null">FDateTime=#{fdatetime}</if>
+        </set>
+        WHERE FMeterCode=#{fmetercode};
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM tmeteranalysisinfo
+        WHERE FMeterCode=#{fmetercode}
+    </delete>
+
+    <select id="getList" resultType="map">
+        SELECT tmeteranalysisinfo.fmetercode,tmeteranalysisinfo.fmetername,tmeteranalysisinfo.fvalvename,
+                tmeteranalysisinfo.fdepartment,tmeteranalysisinfo.fanalysor,tmeteranalysisinfo.fcustomer,
+                t.fenumname AS reportenum,m.fenumname AS confirmenum,
+                tmeteranalysisinfo.freportmisfune,tmeteranalysisinfo.fconfirmmisfune,
+                tmeteranalysisinfo.fmeterreading,tmeteranalysisinfo.fdatetime
+        FROM tmeteranalysisinfo
+        LEFT JOIN tenumeration t ON tmeteranalysisinfo.freportmisfune=t.fenumvalue
+        LEFT JOIN tenumeration m ON tmeteranalysisinfo.fconfirmmisfune=m.fenumvalue
+        WHERE t.fenumtype='故障' AND m.fenumtype='故障';
+    </select>
+
+</mapper>

@@ -10,33 +10,62 @@
     <script type="text/javascript">
         $(function ()
         {
-            $("#accordion").ligerAccordion();
-            $("#accordion li").click(function(){
-                var url = $(this).attr("url");
-                if((typeof url)!="undefined"){
-                    $("#mainContainer").load(url);
-                }
-            });
-            $("#inspectResult").parent().parent().trigger("click");
-            $("#inspectResult").trigger("click");
+            $.get($.URL.userfunction.currentFuncRole,null,functionShow,"json");
         });
+        function functionShow(data){
+            document.cookie = "userName=" + data.data[0].userName;
+            document.cookie = "funcRole=" + data.data[0].funcRole;
+            document.cookie = "funcRoleName=" + data.data[0].funcRoleName;
+            document.cookie = "departNo=" + data.data[0].departNo;
+            document.cookie = "departName=" + data.data[0].departName;
+//            alert(data.data[0].userID);
+//            alert(data.data[0].userName);
+//            alert(data.data[0].departNo);
+//            alert(data.data[0].departName);
+//            alert(data.data[0].funcRole);
+//            alert(data.data[0].funcRoleName);
+            if(data.data[0].funcRole == 1){
+                $("#rolePage").load("rolepage/RolePage01.html");
+            }
+            else if(data.data[0].funcRole == 2){
+                $("#rolePage").load("rolepage/RolePage02.html");
+            }
+            else if(data.data[0].funcRole == 3){
+                $("#rolePage").load("rolepage/RolePage03.html");
+            }
+            else if(data.data[0].funcRole == 4){
+                $("#rolePage").load("rolepage/RolePage04.html");
+            }
+            else {
+                alert("权限错误！");
+                window.location.href = "logout";
+            }
+        }
 
     </script>
     <style type="text/css">
         body{ padding:20px; margin:0;}
-        #accordion{ width:100%;height:100%;overflow:hidden;}
-        #accordion li{cursor: pointer;}
     </style>
 </head>
-<body style="padding:10px">
+<body style="padding:10px" scrol="no">
+<div id="rolePage" position="center" style="overflow:hidden">
 
+</div>
+<!--
 <div id="accordion">
+    <div id="roleAdmin" title="用户管理" style="padding: 10px">
+        <ul>
+            <li id="roleAdmin01">部门管理</li>
+            <li id="roleAdmin02">角色分配</li>
+            <li id="roleAdmin03">新增用户</li>
+        </ul>
+    </div>
     <div title="表具生产检测数据录入" style="padding:10px">
         <ul>
-            <li>外漏检测</li>
-            <li>整表转配</li>
-            <li>整机功能</li>
-            <li>内漏检测</li>
+            <li url="meterProduce/OCWalves.html">外漏检测</li>
+            <li url="meterProduce/WalvesAssembly.html">整表转配</li>
+            <li url="meterProduce/ZFuncCheck.html">整机功能</li>
+            <li url="meterProduce/NLCheck.html">内漏检测</li>
             <li>包装记录</li>
             <li>入库记录</li>
             <li>出库记录</li>
@@ -52,22 +81,33 @@
     </div>
     <div title="返修表具数据录入" style="padding:10px">
         <ul>
-            <li>返修表原始信息</li>
-            <li>退库单入库信息</li>
+            <li url="returnMeter/returnMeterInfo.html">返修表原始信息</li>
+            <li url="returnMeter/returnMeter.html">退库单入库信息</li>
         </ul>
     </div>
     <div title="维修分析记录录入" style="padding:10px">
-        <ul>表具分析信息</ul>
+        <ul>
+            <li url="meterAnalysis/meterAnalysis.html">表具维修分析</li>
+        </ul>
     </div>
-    <div title="枚举值" style="padding:10px"></div>
+    <div title="枚举值" style="padding:10px">
+        <ul>
+            <li url="enumTable/enumTable.html">枚举值列表</li>
+        </ul>
+    </div>
     <div title="新增资料录入" style="padding:10px">
     </div>
-    <div title="数据查询" style="padding:10px">
+    <div id="roleIn01" title="数据查询" style="padding:10px">
+        <ul>
+            <li url="search/returnMeterSearch.html">返修表批次查询</li>
+        </ul>
+
+    <div id="roleIn01" title="数据查询" style="padding:10px">
     </div>
-    <div title="数据统计" style="padding:10px">
+    <div id="roleIn02" title="数据统计" style="padding:10px">
     </div>
-    <div title="产品抽检" style="padding:10px">
+    <div id="roleIn03" title="产品抽检" style="padding:10px">
     </div>
-</div>
+</div>-->
 </body>
 </html>

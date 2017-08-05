@@ -135,7 +135,6 @@ public class DeviceServiceWeb {
         if(jsonString==null||jsonString.trim().equals("")){
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "对不起，参数不能为空!");
         }
-
         Map<String,Object> condition = JsonMapper.buildNonDefaultMapper().fromJson(jsonString, HashMap.class);
         condition.put("appId",UserContext.currentUserAppId());
         List<Map<String,Object>> list = deviceService.findByCondition(condition);

@@ -31,7 +31,6 @@
           <element id="library" level="project" name="Maven: org.glassfish.hk2:osgi-resource-locator:1.0.1" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-server:2.5.1" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-client:2.5.1" />
-          <element id="library" level="project" name="Maven: javax.validation:validation-api:1.1.0.Final" />
           <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0" />
           <element id="archive" name="business-user-1.0-SNAPSHOT.jar">
             <element id="module-output" name="business-user" />
@@ -100,6 +99,22 @@
             <element id="module-output" name="dataManagement-business-dynamicDataSource" />
           </element>
           <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.7.4" />
+          <element id="archive" name="dataManagement-business-meterProduceData-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="dataManagement-business-meterProduceData" />
+          </element>
+          <element id="archive" name="dataManagement-business-returnMeter-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="dataManagement-business-returnMeter" />
+          </element>
+          <element id="archive" name="dataManagement-business-enumTable-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="dataManagement-business-enumTable" />
+          </element>
+          <element id="library" level="project" name="Maven: javax.validation:validation-api:1.1.0.Final" />
+          <element id="archive" name="dataManagement-business-meterAnalysis-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="dataManagement-business-meterAnalysis" />
+          </element>
+          <element id="archive" name="dataManagement-business-userFunctionRole-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="dataManagement-business-userFunctionRole" />
+          </element>
         </element>
       </element>
       <element id="directory" name="META-INF">

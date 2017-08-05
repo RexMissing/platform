@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.meterProduceData.mapper.WalvesAssemblyMapper">
+    <sql id="walvesassembly_fields">
+        FValveCode,FMeterCode,FOnlyCode
+    </sql>
+    <resultMap id="walvesassemblyResultMap" type="WalvesAssembly">
+        <id property="fvalvecode" column="FValveCode"/>
+        <result property="fmetercode" column="FMeterCode"/>
+        <result property="fonlycode" column="FOnlyCode"/>
+    </resultMap>
+
+    <select id="getListByCode" parameterType="java.lang.String" resultMap="walvesassemblyResultMap">
+        SELECT
+        <include refid="walvesassembly_fields"/>
+        FROM tb_WalvesAssembly
+        WHERE FValveCode=#{fvalvecode};
+    </select>
+</mapper>

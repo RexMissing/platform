@@ -9,8 +9,47 @@
             "delete":"rs/power/delete",
             "list":"rs/power/list"
         },
-        "outleak":{
-            "list":"rs/outleak/list",
+        "ocwalves":{
+            "list":"rs/ocwalves/list"
+        },
+        "walvesassembly":{
+            "list":"rs/walvesassembly/list"
+        },
+        "zfunccheck":{
+            "list":"rs/zfunccheck/list"
+        },
+        "nlcheck":{
+            "list":"rs/nlcheck/list"
+        },
+        "userfunction":{
+            "currentFuncRole":"rs/userfunction/currentFuncRole",
+            "alldepart":"rs/userfunction/listdepart",
+            "allrole":"rs/userfunction/listrole",
+            "adduser":"rs/userfunction/adduser",
+            "getrole":"rs/userfunction/getrole"
+        },
+        "updatepassword":{
+            "update":"rs/updatepassword/update",
+            "checkDepartNo":"rs/updatepassword/checkDepartNo"
+        },
+        "userCheck":{
+            "checkname":"rs/userCheck/checkname"
+        },
+        "depart":{
+            "alluser":"rs/depart/alluser",
+            "add":"rs/depart/add",
+            "checkNo":"rs/depart/checkNo",
+            "checkName":"rs/depart/checkName",
+            "departuser":"rs/depart/departuser",
+            "findUser":"rs/depart/findUser",
+            "uprole":"rs/depart/uprole"
+        },
+        "enumTable": {
+            "list": "rs/enumTable/list",
+            "add": "rs/enumTable/add",
+            "update": "rs/enumTable/update",
+            "delete": "rs/enumTable/delete",
+            "alllist": "rs/enumTable/alllist"
         },
         "user":{
             "add":"rs/user/add",
@@ -25,7 +64,7 @@
              "add":"rs/authority/add",
              "update":"rs/authority/update",
              "delete":"rs/authority/delete",
-            "list":"rs/authority/list"
+             "list":"rs/authority/list"
         },
         "userAuthority":{
               "add":"rs/userAuthority/add"
@@ -208,6 +247,25 @@
             "contractList":"rs/contract/getContractList",
             "inStockList":"rs/stock_in_sheet/getInStockList",
             "outStockList":"rs/stock_out_sheet/getOutStockList"
+        },
+        "returnMeter":{
+            "add":"rs/returnMeter/add",
+            "delete":"rs/returnMeter/delete",
+            "update":"rs/returnMeter/update",
+            "list":"rs/returnMeter/list",
+            "findByCondition":"rs/returnMeter/findByCondition"
+        },
+        "returnMeterInfo":{
+            "add":"rs/returnMeterInfo/add",
+            "delete":"rs/returnMeterInfo/delete",
+            "update":"rs/returnMeterInfo/update",
+            "list":"rs/returnMeterInfo/list"
+        },
+        "meterAnalysis":{
+            "add":"rs/meterAnalysis/add",
+            "delete":"rs/meterAnalysis/delete",
+            "update":"rs/meterAnalysis/update",
+            "list":"rs/meterAnalysis/list"
         },
         "deviceReport":{
             "deviceAccountReport":"rs/deviceReport/deviceAccountReport",

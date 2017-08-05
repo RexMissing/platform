@@ -13,8 +13,8 @@
     <!-- 使用annotation定义事务 -->
     <!--<tx:annotation-driven transaction-manager="transactionManager"-->
                           <!--proxy-target-class="false" />-->
-    <!--&lt;!&ndash;<context:component-scan base-package="org.whut.platform.business,org.whut.dataManagement.business"></context:component-scan>&ndash;&gt;-->
-    <!--&lt;!&ndash;<context:annotation-config />&ndash;&gt;-->
+    <context:component-scan base-package="org.whut.platform.business,org.whut.dataManagement.business"></context:component-scan>
+    <context:annotation-config />
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dynamicDataSource" />

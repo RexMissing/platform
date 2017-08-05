@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var curFuncRole = getCookie("funcRole");
+        var curFuncRoleName = getCookie("funcRoleName");
+        var curDepartNo = getCookie("departNo");
+        var curDepartName = getCookie("departName");
+        var gridData = {};
+        var manager, g;
+        $.ligerDialog.close("#updateRole");
+        $(function () {
+            if(curFuncRole == "1"){
+                $.post($.URL.userfunction.alldepart,null,showdepart,"json");
+            }
+            else if(curFuncRole == "2"){
+                $("#depart").empty();
+                var option = "<option value='"+curDepartNo+"'>"+curDepartName+"</option>";
+                $("#depart").append(option);
+            }
+            else{
+                $.ligerDialog.error("页面出错！");
+                window.location.href = "/logout";
+            }
+            var upFuncrole = {};
+            upFuncrole.role = curFuncRole;
+            $.post($.URL.userfunction.allrole,upFuncrole,showUpRole,"json");
+            showDepartUser();
+        });
+        function showDepartUser() {
+            var querydepart = {};
+            querydepart.departNo = $("#depart").val();
+            $.ajax({
+                url:$.URL.depart.departuser,
+                async:false,
+                type:"POST",
+                data:querydepart,
+                success:queryListCallback
+            });
+        }
+        function showdepart(data) {
+            $("#depart").empty();
+            if (data.code == 200){
+                var option;
+                for(var i = 0; i < data.data.length; i++){
+                    option = "<option value='" + data.data[i].departNo + "'>" + data.data[i].departName + "</option>"
+                    $("#depart").append(option);
+                }
+            }
+        }
+        function f_initGrid()
+        {
+            g = manager = $("#maingrid").ligerGrid({
+                columns: [
+                    {display:'用户编号',name: 'userid',width:"80",
+                        editor: { type: 'text'}
+                    },
+                    {display:'用户名',name:'username',width:"200",
+                        editor:{type:'text'}
+                    },
+                    {display:'姓名',name:'fname',width:"200",
+                        editor:{type:'text'}
+                    },
+                    {display:'性别',name:'sex', width:"80",
+                        editor:{type:'text'}
+                    },
+                    {display:'角色权限',name:'funcroleName', width:"250",
+                        editor:{type:'text'}
+                    },
+                    { display: '操作', isSort: false, width: 120,
+                     render: function (rowdata, rowindex, value) {
+                         if (!rowdata._editing)
+                         {
+                             var updatename = rowdata.userid;
+                             var rolename = rowdata.funcroleName;
+                             var queryRole = {};
+                             queryRole.id = updatename;
+                             queryRole.curRoleNo = curFuncRole;
+                             var h = "";
+                             $.ajax({
+                                 url:$.URL.userfunction.getrole,
+                                 async:false,
+                                 type:"POST",
+                                 data:queryRole,
+                                 success:function (data) {
+                                     if(data.code == 200){
+                                         h += "<button name='" + updatename + "' value='" + rolename + "' onclick='updateRole(this)'>修改</button> ";
+                                     }
+                                     else{
+                                         h += "<a>没有操作权限</a>"
+                                     }
+                                 }
+                             });
+                             return h;
+                         }
+
+                         }
+                     }
+                ],
+                onSelectRow: function (rowdata, rowindex)
+                {
+                    $("#txtrowindex").val(rowindex);
+                },
+                enabledEdit: true,clickToEdit:false, isScroll: false,
+                data: gridData,
+                width: '100%'
+            });
+        }
+        function updateRole(updateuser) {
+             var updataUsername = updateuser.name;
+             var curUserRoleName = updateuser.value;
+             $("#updataUsername").text(updataUsername);
+             $("#curUserRoleName").text(curUserRoleName);
+             $("#updateRole").css('display','block');
+            $.ligerDialog.open({title:'修改用户角色', target: $("#updateRole"),width:550});
+         }
+        function showUpRole(data) {
+            $("#updateUserRoleName").empty();
+             if(data.code == 200){
+             var option;
+                 for (var i = 0; i < data.data.length; i++){
+                 option = "<option value='" + data.data[i].funcRole + "'>" + data.data[i].funcName + "</option>"
+                 $("#updateUserRoleName").append(option);
+                 }
+             }
+         }
+        $("#submitBtn1").click(function(){
+            var querydata = {};
+            querydata.departNo = $("#depart").val();
+            querydata.userNo = $("#userNo").val();
+            $.post($.URL.depart.findUser,querydata,queryCallback,"json");
+        });
+
+        $("#submitBtn2").click(function(){
+            var uprole = {};
+            uprole.upuserid = $("#updataUsername").text();
+            uprole.upfuncrole = $("#updateUserRoleName").val();
+            $.ajax({
+                url:$.URL.depart.uprole,
+                async:false,
+                type:"POST",
+                data:uprole,
+                success:upcallback
+            });
+            showDepartUser();
+        });
+        function upcallback(data) {
+            if(data.code == 200){
+                $.ligerDialog.success("修改成功！");
+            }
+            else{
+                $.ligerDialog.error(data.message);
+            }
+        }
+        function queryListCallback(data){
+            if(data.code==200){
+                gridData.Rows=data.data;
+                gridData.Total=data.data.length;
+                f_initGrid();
+            }
+            else if(data.code==500) {
+                $.ligerDialog.error(data.message);
+            }
+        }
+        function queryCallback(data){
+            if(data.code==200){
+                gridData.Rows=data.data;
+                gridData.Total=data.data.length;
+                f_initGrid();
+            }
+            else if(data.code==500) {
+                $.ligerDialog.error("查询失败！");
+            }
+        }
+        function getCookie(cname) {
+            var ss = document.cookie;
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for(var i = 0 ;i < ca.length ; i++)
+            {
+                var c = ca[i].trim();
+                if (c.indexOf(name)==0)
+                    return c.substring(name.length,c.length);
+            }
+            return "";
+        }
+    </script>
+    <style type="text/css">
+        .l-table-edit {}
+        .l-table-edit-td{ padding:4px;}
+        .l-button-submit,.l-button-reset{width:80px; float:left; margin-left:10px; padding-bottom:2px;}
+        .l-dialog-tc{background:#E0EDFF;}
+
+    </style>
+</head>
+<body style="padding:10px">
+<div class="l-clear"></div>
+<div id="updateRole" style="display:none" >
+    <form name="form1" method="post" action="" id="form2">
+        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+            <tr>
+                <td align="right" class="l-table-edit-td">用户编号:</td>
+                <td align="left" class="l-table-edit-td" id="updataUsername"></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">当前角色:</td>
+                <td align="left" class="l-table-edit-td" id="curUserRoleName"></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">修改角色:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select id="updateUserRoleName">
+                        <!--动态加载-->
+                    </select>
+                </td>
+                <td align="left"></td>
+            </tr>
+        </table>
+        <br />
+        <input type="button" value="提交" id="submitBtn2" class="l-button l-button-submit" />
+    </form>
+</div>
+
+<div id="list">
+    <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <tr>
+            <td align="right" class="l-table-edit-td">部门名称:</td>
+            <td class="l-table-edit-td">
+                <select id="depart" onchange="showDepartUser()">
+                    <!--动态加载-->
+                </select>
+            </td>
+            <td align="right" class="l-table-edit-td">用户名:</td>
+            <td class="l-table-edit-td"></td><td class="l-table-edit-td"><input name="userNo" style="width:200px" type="text" id="userNo" ltype="text"/></td>
+            <td align="right"><input type="button" value="查询" id="submitBtn1" class="l-button l-button-submit" /></td>
+            </tr>
+    </table>
+    <div class="l-clear"></div>
+    <div id="maingrid" style="margin-top:20px"></div> <br />
+</div>
+<div style="display:none;">
+</div>
+</body>
+</html>
