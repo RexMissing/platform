@@ -8,6 +8,7 @@ import org.whut.platform.fundamental.util.json.CustomDateDeserialize;
  * Created by Administrator on 2017/7/27 0027.
  */
 public class MeterAnalysis {
+    private long id;
     private String fdepartment;
     private String fanalysor;
     private String fcustomer;
@@ -19,6 +20,23 @@ public class MeterAnalysis {
     private String fmeterreading;
     @JsonDeserialize(using=CustomDateDeserialize.class)
     private Date fdatetime;
+    private int isdelete;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getIsdelete() {
+        return isdelete;
+    }
+
+    public void setIsdelete(int isdelete) {
+        this.isdelete = isdelete;
+    }
 
     public String getFdepartment() {
         return fdepartment;

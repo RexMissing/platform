@@ -21,11 +21,27 @@
                 var data={};
                 data.fenumtype = $("#fenumtype").val();
                 data.fenumname = $("#fenumname").val();
-                data.fenumvalue = $("#fenumvalue").val();;
+                data.fenumvalue = $("#fenumvalue").val();
                 $.post($.URL.enumTable.add,{"jsonString":$.toJSON(data)},addCallback,"json");
             });
+            $("#updatesubmitBtn").click(function () {
+                var data={};
+                data.dataname = $("#dataname").val();
+                data.updatedate = $("#updatedate").val();
+                data.updateoperator = $("#updateoperator").val();
+                data.updatename = $("#updatename").val();
+                data.updatekey = $("#updatekey").val();
+                data.updatebefore = $("#updatebefore").val();
+                data.updateafter = $("#updateafter").val();
+                $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},updateRecordCallback,"json");
+            });
+            $("#enumSearchBtn").click(function () {
+                var fenumname = $("#name").val();
+                var fenumtype = $("#type").val();
+                var fenumvalue = $("#value").val();
+                $.post($.URL.enumTable.findBySearch,{"fenumname":fenumname,"fenumtype":fenumtype,"fenumvalue":fenumvalue},listCallback,"json");
+            });
         });
-
         var gridData = {};
         function listCallback(data){
             if(data.code==200){
@@ -40,8 +56,9 @@
         {
             g = manager = $("#maingrid").ligerGrid({
                 columns: [
-                    { display: '枚举名称', name: 'fenumname', width: '25%', type: 'String', frozen: true},
-                    { display: '枚举类型',name: 'fenumtype',width: '25%',editor:{type:'text'}} ,
+                    { display: '主键', name: 'id', width: '10%', type: 'int', frozen: true},
+                    { display: '枚举名称', name: 'fenumname', width: '20%',editor:{type:'text'}},
+                    { display: '枚举类型',name: 'fenumtype',width: '20%',editor:{type:'text'}} ,
                     { display: '枚举值',name: 'fenumvalue',width: '25%',editor:{type:'int'}},
                     { display: '操作', isSort: false, width: '25%',render: function (rowdata, rowindex, value)
                     {
@@ -78,12 +95,17 @@
         function endEdit(rowid)
         {
             manager.endEdit(rowid);
+            window.beforeData = manager.getRow(rowid);
             var row = manager.getRow(rowid);
             var jsonString  = $.toJSON(row);
             $.post($.URL.enumTable.update,{"jsonString":jsonString},updateCallback,"json");
+            document.getElementById('form2').reset();
+            c_show1();
+            $.ligerDialog.open({ target: $("#addupdateEnumTable"),width:500,title:'添加数据修改记录'});
             function updateCallback(data){
                 if(data.code==200){
                     $.ligerDialog.success("修改成功");
+                    window.afterData = manager.getRow(rowid);
                     $.post($.URL.enumTable.alllist,null,listCallback,"json");
                 }
                 else{
@@ -128,6 +150,10 @@
             $('#addenumTable').css('display','block');
         }
 
+        function c_show1(){
+            $('#addupdateEnumTable').css('display','block');
+        }
+
         function addCallback(data){
             if(data.code==200){
                 $.ligerDialog.success(data.message);
@@ -139,6 +165,30 @@
                 $.ligerDialog.warn(data.message);
             }
         }
+        function updateRecordCallback(data){
+            if(data.code==200){
+                $.ligerDialog.success(data.message);
+                document.getElementById('form2').reset();
+                $.post($.URL.enumTable.alllist,null,listCallback,"json");
+            }
+            else{
+                $.ligerDialog.warn(data.message);
+            }
+        }
+
+        function searchCallback(data) {
+            if(data.code==200)
+            {
+                $.ligerDialog.success(data.message);
+                document.getElementById('form1').reset();
+                $.post($.URL.enumTable.alllist,null,listCallback,"json");
+            }
+            else
+            {
+                $.ligerDialog.warn(data.message);
+            }
+        }
+
     </script>
     <style type="text/css">
         .l-table-edit {}
@@ -150,7 +200,26 @@
 </head>
 <body  style="padding:10px">
 <div><input type="button" value="添加" id="addSubmitBtn" onclick="f_add()" class="l-button l-button-submit" /></div>
-<br/><br/>
+<div id="list">
+    <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <tr>
+            <td align="right" class="l-table-edit-td">枚举名称:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="name" type="text" id="name"/>
+            </td>
+            <td align="right" class="l-table-edit-td">枚举类型:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="type" type="text"  id="type">
+            </td>
+            <td align="right" class="l-table-edit-td">枚举值:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="value" type="text"  id="value">
+            </td>
+            <td align="right"><input type="button" value="查询" id="enumSearchBtn" class="l-button l-button-submit" /></td>
+        </tr>
+    </table>
+    <div class="l-clear"></div>
+</div>
 <div style="display:none;">
 </div>
 <div id="maingrid" style="margin-top:5px"></div>
@@ -179,6 +248,53 @@
         </table>
         <br />
         <input type="button" value="提交" id="submitBtn" class="l-button l-button-submit" />
+    </form>
+</div>
+
+<div id="addupdateEnumTable" style=" margin:3px; display:none;">
+    <form name="form2" method="post" action="" id="form2" style="margin-left: 15px">
+
+        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+            <tr>
+                <td align="right" class="l-table-edit-td">修改数据名:</td>
+                <td align="left" class="l-table-edit-td"><input name="dataname" type="text" id="dataname" ></td>
+                <td align="left"></td>
+            </tr>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">修改日期:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatedate" type="date" id="updatedate" ></td>
+                <td align="left"></td>
+            </tr>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">修改人员:</td>
+                <td align="left" class="l-table-edit-td"><input name="updateoperator" type="text" id="updateoperator" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">修改的项目:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatename" type="text" id="updatename" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">修改项目主键:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatekey" type="text" id="updatekey" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">修改前数据:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatebefore" type="text" id="updatebefore" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">修改后数据:</td>
+                <td align="left" class="l-table-edit-td"><input name="updateafter" type="text" id="updateafter" ></td>
+                <td align="left"></td>
+            </tr>
+        </table>
+        <br />
+        <input type="button" value="提交" id="updatesubmitBtn" class="l-button l-button-submit" />
     </form>
 </div>
 

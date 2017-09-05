@@ -14,21 +14,73 @@
     <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
     <script type="text/javascript">
+        $.ligerDialog.close("#addreturnMeter");
         $(function(){
             $.post($.URL.returnMeter.list,null,listCallback,"json");
-
-            $("#submitBtn").click(function () {
-                var data={};
-                data.fmetercode = $("#fmetercode").val();
-                data.fcustomer = $("#fcustomer").val();
-                data.fmetername = $("#fmetername").val();
-                data.fquantity = $("#fquantity").val();
-                data.frinvono = $("#frinvono").val();
-                data.fdatetime  = $("#fdatetime").val();
-                data.foperator = $("#foperator").val();
-                $.post($.URL.returnMeter.add,{"jsonString":$.toJSON(data)},addCallback,"json");
-            });
         });
+
+        $("#submitBtn").click(function () {
+            var mdata={};
+            mdata.fmetercode = $("#fmetercode").val();
+            mdata.fquantity = $("#fquantity").val();
+            mdata.frinvono = $("#frinvono").val();
+            mdata.fdatetime  = $("#fdatetime").val();
+            mdata.foperator = $("#foperator").val();
+
+            $.post($.URL.boxCodeSearch.findByCondition, {"fmetercode":mdata.fmetercode}, getBoxCodeListCallback, "json");
+
+            function getBoxCodeListCallback(data) {
+                if(data.data==null)
+                {
+                    $.ligerDialog.alert("参数为空");
+                }
+                else
+                {
+                    $.post($.URL.boxBatch.getBoxBatchInfo,{"fboxcode":data.data[0].fboxcode},getListCallback,"json");
+                }
+            }
+
+            function getListCallback(data) {
+                if(data.data==null)
+                {
+                    $.ligerDialog.alert("参数为空");
+                }
+                else
+                {
+                    $.post($.URL.returnCustomAndName.findCustomAndName,{"fdbatchid":data.data[0].fdbatchid},getCustomAndNameCallback,"json");
+                }
+            }
+
+            function getCustomAndNameCallback(data) {
+                if(data.data==null)
+                {
+                    $.ligerDialog.alert("参数为空");
+                }
+                else
+                {
+                    mdata.fcustomer =data.data[0].fcustomer;
+                    mdata.fmetername = data.data[0].fmetername;
+                    $.post($.URL.returnMeter.add,{"jsonString":$.toJSON(mdata)},addCallback,"json");
+                }
+            }
+        });
+
+        $("#returnSearchBtn").click(function () {
+            var fmetercode = $("#code").val();
+            var fmetername = $("#type").val();
+            var frinvono = $("#return").val();
+            $.post($.URL.returnMeter.findBySearch,{"fmetercode":fmetercode,"fmetername":fmetername,"frinvono":frinvono},listCallback,"json");
+        });
+        function updateRecordCallback(data){
+            if(data.code==200){
+                $.ligerDialog.success(data.message);
+                document.getElementById('form2').reset();
+                $.post($.URL.returnMeter.list,null,listCallback,"json");
+            }
+            else{
+                $.ligerDialog.warn(data.message);
+            }
+        }
 
         var gridData = {};
         function listCallback(data){
@@ -44,9 +96,10 @@
         {
             g = manager = $("#maingrid").ligerGrid({
                 columns: [
-                    { display: '表具编号', name: 'fmetercode', width: '10%', type: 'String', frozen: true},
-                    { display: '燃气公司',name: 'fcustomer',width: '15%',editor:{type:'text'}} ,
-                    { display: '表具类型',name: 'fmetername',width: '15%',editor:{type:'text'}},
+                    { display: '主键', name: 'id', width: '10%', type: 'int', frozen: true},
+                    { display: '表具编号', name: 'fmetercode', width: '10%', editor:{type:'text'}},
+                    { display: '燃气公司',name: 'fcustomer',width: '10%',editor:{type:'text'}} ,
+                    { display: '表具类型',name: 'fmetername',width: '10%',editor:{type:'text'}},
                     { display: '返修表数量',name: 'fquantity',width: '10%',editor:{type:'int'}},
                     { display: '退库单据号',name: 'frinvono',width: '15%',editor:{type:'text'}},
                     { display: '录入时间',name: 'fdatetime',width: '10%',editor:{type:'text'}},
@@ -89,6 +142,9 @@
             var row = manager.getRow(rowid);
             var jsonString  = $.toJSON(row);
             $.post($.URL.returnMeter.update,{"jsonString":jsonString},updateCallback,"json");
+            document.getElementById('form2').reset();
+            c_show1();
+            $.ligerDialog.open({ target: $("#addupdateReturnMeter"),width:500,title:'添加数据修改记录'});
             function updateCallback(data){
                 if(data.code==200){
                     $.ligerDialog.success("修改成功");
@@ -136,17 +192,34 @@
             $('#addreturnMeter').css('display','block');
         }
 
+        function c_show1(){
+            $('#addupdateReturnMeter').css('display','block');
+        }
+
+
         function addCallback(data){
             if(data.code==200){
                 $.ligerDialog.success(data.message);
                 document.getElementById('form1').reset();
                 $.post($.URL.returnMeter.list,null,listCallback,"json");
-
+                $.ligerDialog.hide("#addreturnMeter");
             }
             else{
                 $.ligerDialog.warn(data.message);
             }
         }
+
+        $("#updatesubmitBtn").click(function () {
+            var data={};
+            data.dataname = $("#dataname").val();
+            data.updatedate = $("#updatedate").val();
+            data.updateoperator = $("#updateoperator").val();
+            data.updatename = $("#updatename").val();
+            data.updatekey = $("#updatekey").val();
+            data.updatebefore = $("#updatebefore").val();
+            data.updateafter = $("#updateafter").val();
+            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},updateRecordCallback,"json");
+        });
     </script>
     <style type="text/css">
         .l-table-edit {}
@@ -158,30 +231,36 @@
 </head>
 <body  style="padding:10px">
 <div><input type="button" value="添加" id="addSubmitBtn" onclick="f_add()" class="l-button l-button-submit" /></div>
-<br/><br/>
+<div id="list">
+    <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <tr>
+            <td align="right" class="l-table-edit-td">表具编号:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="code" type="text" id="code"/>
+            </td>
+            <td align="right" class="l-table-edit-td">表具类型:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="type" type="text"  id="type">
+            </td>
+            <td align="right" class="l-table-edit-td">退库单:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="return" type="text"  id="return">
+            </td>
+            <td align="right"><input type="button" value="查询" id="returnSearchBtn" class="l-button l-button-submit" /></td>
+        </tr>
+    </table>
+    <div class="l-clear"></div>
+</div>
 <div style="display:none;">
 </div>
 <div id="maingrid" style="margin-top:5px"></div>
 
 <div id="addreturnMeter" style=" margin:3px; display:none;">
     <form name="form1" method="post" action="" id="form1" style="margin-left: 15px">
-
         <table cellpadding="0" cellspacing="0" class="l-table-edit" >
             <tr>
                 <td align="right" class="l-table-edit-td">表具编号:</td>
                 <td align="left" class="l-table-edit-td"><input name="fmetercode" type="text" id="fmetercode" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">燃气公司:</td>
-                <td align="left" class="l-table-edit-td"><input name="fcustomer" type="text" id="fcustomer" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">表具类型:</td>
-                <td align="left" class="l-table-edit-td"><input name="fmetername" type="text" id="fmetername" ></td>
                 <td align="left"></td>
             </tr>
 
@@ -199,7 +278,7 @@
 
             <tr>
                 <td align="right" class="l-table-edit-td">录入时间:</td>
-                <td align="left" class="l-table-edit-td"><input name="fdatetime" type="text" id="fdatetime" ></td>
+                <td align="left" class="l-table-edit-td"><input name="fdatetime" type="date" id="fdatetime" ></td>
                 <td align="left"></td>
             </tr>
 
@@ -213,5 +292,53 @@
         <input type="button" value="提交" id="submitBtn" class="l-button l-button-submit" />
     </form>
 </div>
+
+<div id="addupdateReturnMeter" style=" margin:3px; display:none;">
+    <form name="form2" method="post" action="" id="form2" style="margin-left: 15px">
+
+        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+            <tr>
+                <td align="right" class="l-table-edit-td">修改数据名:</td>
+                <td align="left" class="l-table-edit-td"><input name="dataname" type="text" id="dataname" ></td>
+                <td align="left"></td>
+            </tr>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">修改日期:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatedate" type="date" id="updatedate" ></td>
+                <td align="left"></td>
+            </tr>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">修改人员:</td>
+                <td align="left" class="l-table-edit-td"><input name="updateoperator" type="text" id="updateoperator" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">修改的项目:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatename" type="text" id="updatename" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">修改项目主键:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatekey" type="text" id="updatekey" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">修改前数据:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatebefore" type="text" id="updatebefore" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">修改后数据:</td>
+                <td align="left" class="l-table-edit-td"><input name="updateafter" type="text" id="updateafter" ></td>
+                <td align="left"></td>
+            </tr>
+        </table>
+        <br />
+        <input type="button" value="提交" id="updatesubmitBtn" class="l-button l-button-submit" />
+    </form>
+</div>
+
 </body>
 </html>

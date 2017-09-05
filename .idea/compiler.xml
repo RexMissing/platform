@@ -33,6 +33,7 @@
         <module name="dataManagement-business-meterProduceData" />
         <module name="dataManagement-business-returnMeter" />
         <module name="dataManagement-business-search" />
+        <module name="dataManagement-business-updateRecord" />
         <module name="dataManagement-business-userFunctionRole" />
         <module name="dataManagementWeb" />
         <module name="deviceManagement-business-device" />
@@ -132,6 +133,7 @@
       <module name="dataManagement-business-meterProduceData" target="1.5" />
       <module name="dataManagement-business-returnMeter" target="1.5" />
       <module name="dataManagement-business-search" target="1.5" />
+      <module name="dataManagement-business-updateRecord" target="1.5" />
       <module name="dataManagement-business-userFunctionRole" target="1.5" />
       <module name="dataManagementWeb" target="1.5" />
       <module name="deviceManagement" target="1.5" />

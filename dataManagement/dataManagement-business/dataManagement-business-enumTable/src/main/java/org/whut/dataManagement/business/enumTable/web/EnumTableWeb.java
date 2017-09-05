@@ -1,6 +1,5 @@
 package org.whut.dataManagement.business.enumTable.web;
 
-import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.whut.dataManagement.business.enumTable.entity.EnumTable;
@@ -14,7 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +86,6 @@ public class EnumTableWeb {
     }
 
 
-
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/list")
     @POST
@@ -98,5 +96,24 @@ public class EnumTableWeb {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
         }
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findBySearch")
+    @POST
+    public String findBySearch(@FormParam("fenumname")String fenumname,@FormParam("fenumtype") String fenumtype,@FormParam("fenumvalue") int fenumvalue)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(fenumname!=null&&!fenumname.equals(""))
+        {
+            condition.put("fenumname",fenumname);
+        }
+        if(fenumtype!=null&&!fenumtype.equals(""))
+        {
+            condition.put("fenumtype",fenumtype);
+        }
+        condition.put("fenumvalue",fenumvalue);
+        List<Map<String,Object>> list = enumTableService.findBySearch(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 }

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css"/>
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function(){
+            var d=new Date();
+            var endTime=d.getFullYear()+"-"+ (d.getMonth()+1)+"-"+ d.getDate();
+            var startTime;
+            if(d.getMonth()==1){
+                startTime=(d.getFullYear()-1)+"-"+12+"-"+ d.getDate();
+
+            }else{
+                startTime=(d.getFullYear())+"-"+ (d.getMonth())+"-"+ d.getDate();
+            }
+            $("#returnMeterStartTime").ligerDateEditor({initValue: startTime});
+            $("#returnMeterEndTime").ligerDateEditor({initValue: endTime});
+            $.post($.URL.enumTable.list, null, enumListCallBack, "json");
+            $.post($.URL.department.list,null,departListCallBack,"json");
+        });
+
+        var enumData=[];
+        function enumListCallBack(data) {
+            if (data.code == 200) {
+                $.each(data.data, function (index, content) {
+                    var j = {};
+                    j.text = content.fenumname;
+                    j.value = content.fenumvalue;
+                    enumData.push(j);
+                });
+                $("#freportmisfune").ligerComboBox({
+                    isShowCheckBox: true, emptyText: null, /*实现下拉表*/
+                    data: enumData,
+                    width: 200,
+                    valueField: 'value',
+                    textField: 'text',
+                    valueFieldID: 'freportmisfuneSelect'   /*下拉表Id是Device*/
+                });
+                $("#fconfirmmisfune").ligerComboBox({
+                    isShowCheckBox: true, emptyText: null, /*实现下拉表*/
+                    data: enumData,
+                    width: 200,
+                    valueField: 'value',
+                    textField: 'text',
+                    valueFieldID: 'fconfirmmisfuneSelect'   /*下拉表Id是Device*/
+                });
+            }
+        }
+
+        var departData=[];
+        function departListCallBack(data) {
+            if (data.code == 200) {
+                $.each(data.data, function (index, content) {
+                    var j = {};
+                    j.text = content.departName;
+                    j.value = content.departNo;
+                    departData.push(j);
+                });
+                $("#fdepartment").ligerComboBox({
+                    isShowCheckBox: true, emptyText: null, /*实现下拉表*/
+                    data: departData,
+                    width: 200,
+                    valueField: 'value',
+                    textField: 'text',
+                    valueFieldID: 'departSelect'
+                });
+            }
+        }
+
+        function getMeterAnalysisList() {
+            var fmetercode = $("#fmetercode").val();
+            var fmetername = $("#fmetername").val();
+            var fanalysor = $("#fanalysor").val();
+            var fcustomer = $("#fcustomer").val();
+            var freportmisfune = $("#freportmisfune").ligerComboBox().getValue();
+            var fconfirmmisfune = $("#fconfirmmisfune").ligerComboBox().getValue();
+            var sTime=$("#returnMeterStartTime").val();
+            var eTime=$("#returnMeterEndTime").val();
+            $.post($.URL.meterAnalysis.findByCondition,{"fmetercode":fmetercode,"fmetername":fmetername,"fanalysor":fanalysor,"fcustomer":fcustomer,"freportmisfune":freportmisfune,"fconfirmmisfune":fconfirmmisfune,"sTime":sTime,"eTime":eTime},getListCallback,"json");
+        }
+
+        var analysisSearchData={};
+        function getListCallback(data) {
+            if(data.code==200){
+                if(data.data==null){
+                    $.ligerDialog.alert("抱歉,记录不存在!");
+                }else{
+                    analysisSearchData.Rows = data.data;
+                    analysisSearchData.Total = data.data.length;
+                    f_peopleRecord();
+                }
+            }
+        }
+
+        $("#analysisSearchBtn").click(function(){
+            getMeterAnalysisList();
+        });
+
+        var manager, g;
+        var h = "";
+        function f_peopleRecord()
+        {
+            g = manager = $("#analysisMainGrid").ligerGrid({
+                columns: [
+                    {display: '表具编号', name: 'fmetercode', width: '10%', type: 'String', frozen: true},
+                    {display: '表具类型', name: 'fmetername', width: '10%', editor: {type: 'text'}},
+                    {display: '基表条码', name: 'fvalvename', width: '10%', editor: {type: 'text'}},
+                    {
+                        display: '部门', name: 'fdepartment', width: '10%', type: 'text',
+                        editor: {
+                            type: 'select',
+                            emptyText: null,
+                            data: departData,
+                            valueField: 'value',
+                            textField: 'text'
+                        },
+                        render: function (item) {
+                            return item.departenum;
+                        }
+                    },
+                    {display: '分析员', name: 'fanalysor', width: '10%', editor: {type: 'text'}},
+                    {display: '燃气公司', name: 'fcustomer', width: '10%', editor: {type: 'text'}},
+                    {
+                        display: '报修故障', name: 'freportmisfune', width: '10%', type: 'int',
+                        editor: {
+                            type: 'select',
+                            emptyText: null,
+                            data: enumData,
+                            valueField: 'value',
+                            textField: 'text'
+                        },
+                        render: function (item) {
+                            return item.reportenum;
+                        }
+                    },
+                    {
+                        display: '实查故障', name: 'fconfirmmisfune', width: '10%', type: 'int',
+                        editor: {
+                            type: 'select',
+                            emptyText: null,
+                            data: enumData,
+                            valueField: 'value',
+                            textField: 'text'
+                        },
+                        render: function (item) {
+                            return item.confirmenum;
+                        }
+                    },
+                    {display: '表具止码', name: 'fmeterreading', width: '10%', editor: {type: 'text'}},
+                    {display: '分析时间', name: 'fdatetime', width: '10%', editor: {type: 'text'}}
+                ],
+                onSelectRow: function (rowdata, rowindex) {
+                    $("#txtrowindex").val(rowindex);
+                },
+                enabledEdit: true, clickToEdit: false, isScroll: false,
+                data: analysisSearchData,
+                width: '100%'
+            });
+        }
+    </script>
+    <style type="text/css">
+        .l-table-edit {}
+        .l-table-edit-td {padding: 4px;}
+        .l-button-submit, .l-button-reset {width: 80px;float: left; margin-left: 10px;padding-bottom: 2px;}
+        .l-dialog-tc { background: #E0EDFF;}
+    </style>
+</head>
+<body style="padding:10px">
+<div id="list">
+    <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <tr>
+            <td align="right" class="l-table-edit-td">表具编号:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="fmetercode" type="text" id="fmetercode" ltype="text" />
+            </td>
+            <td align="right" class="l-table-edit-td">表具类型:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="fmetername" type="text"  id="fmetername">
+            </td>
+            <td align="right" class="l-table-edit-td">分析员:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="fanalysor" type="text"  id="fanalysor">
+            </td>
+        </tr>
+        <tr>
+            <td align="right" class="l-table-edit-td">燃气公司:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="fcustomer" type="text"  id="fcustomer">
+            </td>
+            <td align="right" class="l-table-edit-td">报修故障:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="freportmisfune" type="text"  id="freportmisfune">
+            </td>
+            <td align="right" class="l-table-edit-td">实查故障:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="fconfirmmisfune" type="text"  id="fconfirmmisfune">
+            </td>
+        </tr>
+        <tr>
+            <td align="right" class="l-table-edit-td">起始时间:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="returnMeterStartTime" type="date"  id="returnMeterStartTime">
+            </td>
+            <td align="right" class="l-table-edit-td">终止时间:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="returnMeterEndTime" type="date"  id="returnMeterEndTime">
+            </td>
+            <td align="right"><input type="button" value="查询" id="analysisSearchBtn" class="l-button l-button-submit" /></td>
+        </tr>
+    </table>
+    <div class="l-clear"></div>
+    <div id="analysisMainGrid" style="margin-top:5px"></div>
+    <br/>
+</div>
+<div style="display:none;">
+</div>
+</body>
+</html>

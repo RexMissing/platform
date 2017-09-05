@@ -22,7 +22,7 @@ $(function () {
     $.post($.URL.batch.list, null, batchListCallBack, "json");
     $.post($.URL.supplier.list, null, supplierListCallBack, "json");
     $.post($.URL.device.list, null, deviceCallback, "json");
-})
+});
 
 var deviceSupplierData = [];
 function supplierListCallBack(data) {

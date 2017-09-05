@@ -34,4 +34,10 @@ public class ReturnMeterService {
     {
         return returnMeterMapper.findByCondition(condition);
     }
+    public List<Map<String,Object>> findBySearch(Map<String,Object> condition)
+    {
+        return returnMeterMapper.findBySearch(condition);
+    }
+
+
 }

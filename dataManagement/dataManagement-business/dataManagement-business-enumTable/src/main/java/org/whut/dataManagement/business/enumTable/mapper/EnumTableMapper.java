@@ -12,4 +12,5 @@ import java.util.Map;
 public interface EnumTableMapper extends AbstractMapper<EnumTable> {
     public List<Map<String,String>> getList();
     public List<Map<String,String>> getAllList();
+    public List<Map<String,Object>> findBySearch(Map<String,Object> condition);
 }

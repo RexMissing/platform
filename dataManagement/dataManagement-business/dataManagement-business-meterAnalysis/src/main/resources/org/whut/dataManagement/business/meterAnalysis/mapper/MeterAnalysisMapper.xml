@@ -4,11 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.whut.dataManagement.business.meterAnalysis.mapper.MeterAnalysisMapper">
     <sql id="meterAnalysis_fields">
-        FMeterCode,FMeterName,FValveName,FDepartment,FAnalysor,FCustomer,FReportMisFune,FConfirmMisFune,FMeterReading,FDateTime
+        ID,FMeterCode,FMeterName,FValveName,FDepartment,FAnalysor,FCustomer,FReportMisFune,FConfirmMisFune,FMeterReading,FDateTime
     </sql>
 
     <resultMap id="meterAnalysisResultMap" type="meterAnalysis">
-        <id property="fmetercode" column="FMeterCode"/>
+        <id property="id" column="ID"/>
+        <result property="fmetercode" column="FMeterCode"/>
         <result property="fmetername" column="FMeterName"/>
         <result property="fvalvename" column="FValveName"/>
         <result property="fdepartment" column="FDepartment"/>
@@ -20,12 +21,13 @@
         <result property="fdatetime" column="FDateTime"/>
     </resultMap>
 
-    <insert id="add" parameterType="meterAnalysis" keyProperty="fmetercode">
+    <insert id="add" parameterType="meterAnalysis" keyProperty="id"
+            useGeneratedKeys="true">
         INSERT INTO
         tmeteranalysisinfo(
         <include refid="meterAnalysis_fields"/>
         )
-        VALUES (#{fmetercode},#{fmetername},#{fvalvename},#{fdepartment},#{fanalysor},#{fcustomer},#{freportmisfune},#{fconfirmmisfune},#{fmeterreading},#{fdatetime});
+        VALUES (#{id},#{fmetercode},#{fmetername},#{fvalvename},#{fdepartment},#{fanalysor},#{fcustomer},#{freportmisfune},#{fconfirmmisfune},#{fmeterreading},#{fdatetime});
     </insert>
 
     <update id="update" parameterType="meterAnalysis">
@@ -42,24 +44,69 @@
             <if test="fmeterreading!=null">FMeterReading=#{fmeterreading},</if>
             <if test="fdatetime!=null">FDateTime=#{fdatetime}</if>
         </set>
-        WHERE FMeterCode=#{fmetercode};
+        WHERE ID=#{id};
     </update>
 
     <delete id="delete" parameterType="java.lang.String">
-        DELETE FROM tmeteranalysisinfo
-        WHERE FMeterCode=#{fmetercode}
+        UPDATE tmeteranalysisinfo
+        SET IsDelete=1
+        WHERE ID=#{id};
     </delete>
 
     <select id="getList" resultType="map">
-        SELECT tmeteranalysisinfo.fmetercode,tmeteranalysisinfo.fmetername,tmeteranalysisinfo.fvalvename,
+        SELECT tmeteranalysisinfo.id,tmeteranalysisinfo.fmetercode,tmeteranalysisinfo.fmetername,tmeteranalysisinfo.fvalvename,
                 tmeteranalysisinfo.fdepartment,tmeteranalysisinfo.fanalysor,tmeteranalysisinfo.fcustomer,
-                t.fenumname AS reportenum,m.fenumname AS confirmenum,
+                t.fenumname AS reportenum,m.fenumname AS confirmenum,tdepartment.fdepartName AS departenum,
                 tmeteranalysisinfo.freportmisfune,tmeteranalysisinfo.fconfirmmisfune,
                 tmeteranalysisinfo.fmeterreading,tmeteranalysisinfo.fdatetime
         FROM tmeteranalysisinfo
         LEFT JOIN tenumeration t ON tmeteranalysisinfo.freportmisfune=t.fenumvalue
         LEFT JOIN tenumeration m ON tmeteranalysisinfo.fconfirmmisfune=m.fenumvalue
-        WHERE t.fenumtype='故障' AND m.fenumtype='故障';
+        LEFT JOIN tdepartment ON tmeteranalysisinfo.fdepartment=tdepartment.fdepartNo
+        WHERE t.fenumtype='故障' AND m.fenumtype='故障' AND tmeteranalysisinfo.IsDelete=0;
     </select>
 
+    <select id="findByCondition" parameterType="map" resultType="map">
+        SELECT tmeteranalysisinfo.id,tmeteranalysisinfo.fmetercode,tmeteranalysisinfo.fmetername,tmeteranalysisinfo.fvalvename,
+                tmeteranalysisinfo.fdepartment,tmeteranalysisinfo.fanalysor,tmeteranalysisinfo.fcustomer,
+                t.fenumname AS reportenum,m.fenumname AS confirmenum,tdepartment.fdepartName AS departenum,
+                tmeteranalysisinfo.freportmisfune,tmeteranalysisinfo.fconfirmmisfune,
+                tmeteranalysisinfo.fmeterreading,tmeteranalysisinfo.fdatetime
+        FROM tmeteranalysisinfo
+        LEFT JOIN tenumeration t ON tmeteranalysisinfo.freportmisfune=t.fenumvalue
+        LEFT JOIN tenumeration m ON tmeteranalysisinfo.fconfirmmisfune=m.fenumvalue
+        LEFT JOIN tdepartment ON tmeteranalysisinfo.fdepartment=tdepartment.fdepartNo
+        <where>
+            t.fenumtype='故障'
+            AND m.fenumtype='故障'
+            AND tmeteranalysisinfo.IsDelete=0
+            <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
+            <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
+            <if test="fanalysor!=null">AND FAnalysor=#{fanalysor}</if>
+            <if test="fcustomer!=null">AND FCustomer=#{fcustomer}</if>
+            <if test="freportmisfune!=0">AND FReportMisFune=#{freportmisfune}</if>
+            <if test="fconfirmmisfune!=0">AND FConfirmMisFune=#{fconfirmmisfune}</if>
+            <if test="startTime!=null"><![CDATA[ AND FDateTime>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
+        </where>
+    </select>
+
+    <select id="findBySearch" parameterType="map" resultType="map">
+        SELECT tmeteranalysisinfo.id,tmeteranalysisinfo.fmetercode,tmeteranalysisinfo.fmetername,tmeteranalysisinfo.fvalvename,
+                tmeteranalysisinfo.fdepartment,tmeteranalysisinfo.fanalysor,tmeteranalysisinfo.fcustomer,
+                t.fenumname AS reportenum,m.fenumname AS confirmenum,tdepartment.fdepartName AS departenum,
+                tmeteranalysisinfo.freportmisfune,tmeteranalysisinfo.fconfirmmisfune,
+                tmeteranalysisinfo.fmeterreading,tmeteranalysisinfo.fdatetime
+        FROM tmeteranalysisinfo
+        LEFT JOIN tenumeration t ON tmeteranalysisinfo.freportmisfune=t.fenumvalue
+        LEFT JOIN tenumeration m ON tmeteranalysisinfo.fconfirmmisfune=m.fenumvalue
+        LEFT JOIN tdepartment ON tmeteranalysisinfo.fdepartment=tdepartment.fdepartNo
+        <where>
+            t.fenumtype='故障'
+            AND m.fenumtype='故障'
+            AND tmeteranalysisinfo.IsDelete=0
+            <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
+            <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
+        </where>
+    </select>
 </mapper>

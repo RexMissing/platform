@@ -9,6 +9,7 @@ import java.util.Date;
  * Created by Administrator on 2017/7/26 0026.
  */
 public class ReturnMeterInfo {
+    private long id;
     private String fmetercode;
     private String fcustomer;
     private String fmetername;
@@ -16,6 +17,23 @@ public class ReturnMeterInfo {
     @JsonDeserialize(using=CustomDateDeserialize.class)
     private Date fdatetime;
     private String foperator;
+    private int isdelete;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getIsdelete() {
+        return isdelete;
+    }
+
+    public void setIsdelete(int isdelete) {
+        this.isdelete = isdelete;
+    }
 
     public String getFoperator() {
         return foperator;

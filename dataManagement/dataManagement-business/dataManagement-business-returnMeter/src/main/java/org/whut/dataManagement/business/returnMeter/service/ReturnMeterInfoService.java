@@ -36,6 +36,14 @@ public class ReturnMeterInfoService{
     public List<ReturnMeterInfo> getlist() {
         return returnMeterInfoMapper.getlist();
     }
+    public List<Map<String,Object>> findByCondition(Map<String,Object> condition)
+    {
+        return returnMeterInfoMapper.findByCondition(condition);
+    }
+    public List<Map<String,Object>> findBySearch(Map<String,Object> condition)
+    {
+        return returnMeterInfoMapper.findBySearch(condition);
+    }
 
     public List<ReturnMeterInfo> getstalist(StaQuery staQuery) {
         if (staQuery.getQuerytype().equals("无"))

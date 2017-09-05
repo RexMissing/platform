@@ -27,11 +27,19 @@ public class MeterAnalysisService {
         return meterAnalysisMapper.delete(meterAnalysis);
     }
 
-    public List<Map<String,String>> getList() {
+    public List<MeterAnalysis> getList() {
         return meterAnalysisMapper.getList();
     }
     public List<Map<String,String>> getConfirmList()
     {
         return meterAnalysisMapper.getConfirmList();
+    }
+    public List<Map<String,Object>> findByCondition(Map<String,Object> condition)
+    {
+        return meterAnalysisMapper.findByCondition(condition);
+    }
+    public List<Map<String,Object>> findBySearch(Map<String,Object> condition)
+    {
+        return meterAnalysisMapper.findBySearch(condition);
     }
  }

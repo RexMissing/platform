@@ -76,23 +76,24 @@ public class ReturnMeterWeb {
     @POST
     public String list() {
         List<ReturnMeter> list = returnMeterService.list();
-        List<ReturnMeter> returnMeterList = new ArrayList<ReturnMeter>();
-        for(ReturnMeter returnMeter:list)
-        {
-            ReturnMeter subRetunMeter = new ReturnMeter();
-            subRetunMeter.setFmetercode(returnMeter.getFmetercode());
-            subRetunMeter.setFcustomer(returnMeter.getFcustomer());
-            subRetunMeter.setFmetername(returnMeter.getFmetername());
-            subRetunMeter.setFquantity(returnMeter.getFquantity());
-            subRetunMeter.setFrinvono(returnMeter.getFrinvono());
-            subRetunMeter.setFdatetime(returnMeter.getFdatetime());
-            subRetunMeter.setFoperator(returnMeter.getFoperator());
-            returnMeterList.add(subRetunMeter);
-        }
-        if (returnMeterList.toArray().length==0)  {
-            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
-        }
-        return JsonResultUtils.getObjectResultByStringAsDefault(returnMeterList, JsonResultUtils.Code.SUCCESS);
+//        List<ReturnMeter> returnMeterList = new ArrayList<ReturnMeter>();
+//        for(ReturnMeter returnMeter:list)
+//        {
+//            ReturnMeter subRetunMeter = new ReturnMeter();
+//            subRetunMeter.setFmetercode(returnMeter.getFmetercode());
+//            subRetunMeter.setFcustomer(returnMeter.getFcustomer());
+//            subRetunMeter.setFmetername(returnMeter.getFmetername());
+//            subRetunMeter.setFquantity(returnMeter.getFquantity());
+//            subRetunMeter.setFrinvono(returnMeter.getFrinvono());
+//            subRetunMeter.setFdatetime(returnMeter.getFdatetime());
+//            subRetunMeter.setFoperator(returnMeter.getFoperator());
+//            returnMeterList.add(subRetunMeter);
+//        }
+//        if (returnMeterList.toArray().length==0)  {
+//            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+//        }
+//        return JsonResultUtils.getObjectResultByStringAsDefault(returnMeterList, JsonResultUtils.Code.SUCCESS);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -120,6 +121,31 @@ public class ReturnMeterWeb {
             condition.put("endTime",eTime+" 59:59:59");
         }
         List<Map<String,Object>> list=returnMeterService.findByCondition(condition);
+        System.out.print(list);
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findBySearch")
+    @POST
+    public String findBySearch(@FormParam("fmetercode")String fmetercode,@FormParam("fmetername")String fmetername,@FormParam("frinvono")String frinvono)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(fmetercode!=null&&!fmetercode.equals(""))
+        {
+            condition.put("fmetercode",fmetercode);
+        }
+        if (fmetername!=null&&!fmetername.equals(""))
+        {
+            condition.put("fmetername",fmetername);
+        }
+        if (frinvono!=null&&!frinvono.equals(""))
+        {
+            condition.put("frinvono",frinvono);
+        }
+        List<Map<String,Object>> list = returnMeterService.findBySearch(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+
 }

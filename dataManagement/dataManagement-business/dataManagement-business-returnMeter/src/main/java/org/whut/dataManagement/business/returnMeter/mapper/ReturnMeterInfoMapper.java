@@ -6,12 +6,16 @@ import org.whut.dataManagement.business.returnMeter.entity.StaQuery;
 import org.whut.platform.fundamental.orm.mapper.AbstractMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/7/26 0026.
  */
 public interface ReturnMeterInfoMapper extends AbstractMapper<ReturnMeterInfo> {
     public List<ReturnMeterInfo> getlist();
+    public List<Map<String,Object>> findByCondition(Map<String, Object> conditions);
+    public List<Map<String,Object>> findBySearch(Map<String,Object> condition);
+
     public List<ReturnMeterInfo> getstalist(StaQuery staQuery);
     public List<ReturnMeterInfo> getinlist(StaQuery staQuery);
     public List<ReturnMeterInfo> getcomlist(StaQuery staQuery);

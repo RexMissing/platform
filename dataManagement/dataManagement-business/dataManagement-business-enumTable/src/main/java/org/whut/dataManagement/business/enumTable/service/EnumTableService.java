@@ -12,10 +12,11 @@ import java.util.Map;
  * Created by Administrator on 2017/7/27 0027.
  */
 @DataSource("datamanagement")
-public class EnumTableService{
+public class EnumTableService {
     @Autowired
     private EnumTableMapper enumTableMapper;
-    public List<Map<String,String>> getList() {
+
+    public List<Map<String, String>> getList() {
         return enumTableMapper.getList();
     }
 
@@ -33,5 +34,10 @@ public class EnumTableService{
 
     public int delete(EnumTable enumTable) {
         return enumTableMapper.delete(enumTable);
+    }
+
+    public List<Map<String, Object>> findBySearch(Map<String, Object> condition)
+    {
+        return enumTableMapper.findBySearch(condition);
     }
 }
