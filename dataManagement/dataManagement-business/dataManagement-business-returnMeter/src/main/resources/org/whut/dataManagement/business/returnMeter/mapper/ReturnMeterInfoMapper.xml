@@ -86,7 +86,7 @@
     </select>
     <select id="getcomlist" parameterType="org.whut.dataManagement.business.returnMeter.entity.StaQuery" resultMap="returnMeterInfoResultMap">
         SELECT <include refid="returnMeterInfo_fields"/>
-        FROM treturnmeterinfo
+        FROM treturnmeter
         WHERE FDateTime BETWEEN #{begindate} AND #{enddate} AND FCustomer = #{queryvalue};
     </select>
     <select id="gettypelist" parameterType="org.whut.dataManagement.business.returnMeter.entity.StaQuery" resultMap="returnMeterInfoResultMap">
