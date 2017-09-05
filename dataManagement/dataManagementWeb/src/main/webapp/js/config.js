@@ -259,7 +259,11 @@
             "add":"rs/returnMeterInfo/add",
             "delete":"rs/returnMeterInfo/delete",
             "update":"rs/returnMeterInfo/update",
-            "list":"rs/returnMeterInfo/list"
+            "list":"rs/returnMeterInfo/list",
+            "stalist":"rs/returnMeterInfo/stalist"
+        },
+        "graph":{
+            "graphYear":"rs/graph/graphYear"
         },
         "meterAnalysis":{
             "add":"rs/meterAnalysis/add",

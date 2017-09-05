@@ -47,4 +47,37 @@
         SELECT <include refid="returnMeterInfo_fields"/>
         FROM treturnmeterinfo
     </select>
+
+    <select id="getstalist" parameterType="org.whut.dataManagement.business.returnMeter.entity.StaQuery" resultMap="returnMeterInfoResultMap">
+        SELECT <include refid="returnMeterInfo_fields"/>
+        FROM treturnmeter
+        WHERE FDateTime BETWEEN #{begindate} AND #{enddate};
+    </select>
+    <select id="getinlist" parameterType="org.whut.dataManagement.business.returnMeter.entity.StaQuery" resultMap="returnMeterInfoResultMap">
+        SELECT <include refid="returnMeterInfo_fields"/>
+        FROM treturnmeter
+        WHERE FDateTime BETWEEN #{begindate} AND #{enddate} AND FOperator = #{queryvalue};
+    </select>
+    <select id="getcomlist" parameterType="org.whut.dataManagement.business.returnMeter.entity.StaQuery" resultMap="returnMeterInfoResultMap">
+        SELECT <include refid="returnMeterInfo_fields"/>
+        FROM treturnmeterinfo
+        WHERE FDateTime BETWEEN #{begindate} AND #{enddate} AND FCustomer = #{queryvalue};
+    </select>
+    <select id="gettypelist" parameterType="org.whut.dataManagement.business.returnMeter.entity.StaQuery" resultMap="returnMeterInfoResultMap">
+        SELECT <include refid="returnMeterInfo_fields"/>
+        FROM treturnmeter
+        WHERE FDateTime BETWEEN #{begindate} AND #{enddate} AND FMeterName = #{queryvalue};
+    </select>
+    <select id="getretlist" parameterType="org.whut.dataManagement.business.returnMeter.entity.StaQuery" resultMap="returnMeterInfoResultMap">
+        SELECT <include refid="returnMeterInfo_fields"/>
+        FROM treturnmeter
+        WHERE FDateTime BETWEEN #{begindate} AND #{enddate} AND FRInvoNo = #{queryvalue};
+    </select>
+
+    <select id="getMonthReturnMeters" parameterType="org.whut.dataManagement.business.returnMeter.entity.MonthReturnMeters"
+            resultType="java.lang.Integer">
+        select count(FMeterCode) from treturnmeter
+        where YEAR (FDateTime) = #{year}
+        AND MONTH (FDateTime) = #{month}
+    </select>
 </mapper>

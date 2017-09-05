@@ -33,8 +33,7 @@
     </beans:bean>
     <!-- 系统运行时加载 系统要拦截的资源   与用户请求时要过滤的资源 -->
     <beans:bean id="mySecurityMetadataSource"
-                class="org.whut.platform.business.user.security.MySecurityMetadataSource"
-    >
+                class="org.whut.platform.business.user.security.MySecurityMetadataSource">
     </beans:bean>
 
     <!--
