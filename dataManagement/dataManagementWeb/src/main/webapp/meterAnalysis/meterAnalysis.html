@@ -165,9 +165,13 @@
                 var row = manager.getRow(rowid);
                 var jsonString = $.toJSON(row);
                 $.post($.URL.meterAnalysis.update,{"jsonString": jsonString},updateCallback,"json");
+                document.getElementById('form2').reset();
+                c_show1();
+                $.ligerDialog.open({ target: $("#addUpdateMeterAnalysis"),width:500,title:'添加数据修改记录'});
                 function updateCallback(data) {
                     if (data.code == 200) {
                         $.ligerDialog.success("修改成功");
+                        window.afterData = manager.getRow(rowid);
                         $.post($.URL.meterAnalysis.list, null,listCallback, "json");
                     }
                     else {
@@ -207,12 +211,13 @@
             $('#addMeterAnalysis').css('display', 'block');
         }
 
+        function c_show1(){
+            $('#addUpdateMeterAnalysis').css('display','block');
+        }
+
         $("#submitBtn").click(function () {
-//            alert("dahsdhakk");
             var gdata={};
             gdata.fmetercode = $("#fmetercode").val();
-//            data.fmetername = $("#fmetername").val();
-//            data.fvalvename = $("#fvalvename").val();
             gdata.fdepartment = $("#departSelect").val();
             gdata.fanalysor = $("#fanalysor").val();
             gdata.fcustomer = $("#fcustomer").val();
@@ -229,9 +234,6 @@
                 }
                 else
                 {
-//                    alert("lilang");
-//                    alert(data.data[0].fmetername);
-//                    alert(data.data[0].fvalvename);
                     gdata.fmetername = data.data[0].fmetername;
                     gdata.fvalvename = data.data[0].fvalvename;
                     $.post($.URL.meterAnalysis.add,{"jsonString":$.toJSON(gdata)},addCallback,"json");
@@ -239,7 +241,37 @@
             }
         });
 
-
+        $("#updateSubmitBtn").click(function () {
+            var data={};
+            switch ($("#dataname").val())
+            {
+                case "表具编号":data.updateafter = afterData.fmetercode;break;
+                case "部门":data.updateafter = afterData.fdepartment;break;
+                case "分析人员":data.updateafter = afterData.fanalysor;break;
+                case "天然气公司":data.updateafter = afterData.fcustomer;break;
+                case "报修故障":data.updateafter = afterData.freportmisfune;break;
+                case "实查故障":data.updateafter = afterData.fconfirmmisfune;break;
+                case "表具止码":data.updateafter = afterData.fmeterreading;break;
+                case "分析时间":data.updateafter = afterData.fdatetime;break;
+            }
+            data.dataname = $("#dataname").val();
+            data.updatedate = $("#updatedate").val();
+            data.updateoperator = $("#updateoperator").val();
+            data.updatename = "维修分析表";
+            data.updatekey = afterData.id;
+            data.updatebefore = $("#updatebefore").val();
+            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},RecordCallback,"json");
+            function RecordCallback(data){
+                if(data.code==200){
+                    $.ligerDialog.success(data.message);
+                    document.getElementById('form2').reset();
+                    $.post($.URL.meterAnalysis.list, null,listCallback,"json");
+                }
+                else{
+                    $.ligerDialog.warn(data.message);
+                }
+            }
+        });
 
         function addCallback(data){
             if (data.code == 200) {
@@ -276,18 +308,6 @@
                 <td align="left" class="l-table-edit-td"><input name="fmetercode" type="text" id="fmetercode" ></td>
                 <td align="left"></td>
             </tr>
-
-            <!--<tr>-->
-                <!--<td align="right" class="l-table-edit-td">表具类型:</td>-->
-                <!--<td align="left" class="l-table-edit-td"><input name="fmetername" type="text" id="fmetername" ></td>-->
-                <!--<td align="left"></td>-->
-            <!--</tr>-->
-
-            <!--<tr>-->
-                <!--<td align="right" class="l-table-edit-td">基表条码:</td>-->
-                <!--<td align="left" class="l-table-edit-td"><input name="fvalvename" type="text" id="fvalvename" ></td>-->
-                <!--<td align="left"></td>-->
-            <!--</tr>-->
 
             <tr>
                 <td align="right" class="l-table-edit-td">部门:</td>
@@ -357,5 +377,48 @@
 </div>
 
 <div id="maingrid" style="margin-top:5px"></div>
+
+<div id="addUpdateMeterAnalysis" style=" margin:3px; display:none;">
+    <form name="form2" method="post" action="" id="form2" style="margin-left: 15px">
+        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+            <tr>
+                <td align="right" class="l-table-edit-td">修改数据名:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select id="dataname">
+                        <option value="表具编号">表具编号</option>
+                        <option value="部门">部门</option>
+                        <option value="分析人员">分析人员</option>
+                        <option value="报修故障">报修故障</option>
+                        <option value="实查故障">实查故障</option>
+                        <option value="表具止码">表具止码</option>
+                        <option value="分析时间">分析时间</option>
+                    </select>
+                </td>
+                <td align="left"></td>
+            </tr>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">修改日期:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatedate" type="date" id="updatedate" ></td>
+                <td align="left"></td>
+            </tr>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">修改人员:</td>
+                <td align="left" class="l-table-edit-td"><input name="updateoperator" type="text" id="updateoperator" ></td>
+                <td align="left"></td>
+            </tr>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">修改前数据:</td>
+                <td align="left" class="l-table-edit-td"><input name="updatebefore" type="text" id="updatebefore" ></td>
+                <td align="left"></td>
+            </tr>
+        </table>
+        <br />
+        <input type="button" value="提交" id="updateSubmitBtn" class="l-button l-button-submit" />
+    </form>
+</div>
+
 </body>
 </html>

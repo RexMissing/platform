@@ -37,7 +37,6 @@ public class ReturnCustomAndNameWeb {
             condition.put("fdbatchid",fdbatchid);
         }
         List<Map<String,Object>> list = returnCustomAndNameService.findCustomAndName(condition);
-        System.out.print(list);
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
     }
 }

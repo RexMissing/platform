@@ -34,7 +34,7 @@
         {
             g = manager = $("#maingrid").ligerGrid({
                 columns: [
-                    { display: '修改记录条数', name: 'id', width: '10%', type: 'int', frozen: true},
+                    { display: '主键', name: 'id', width: '10%', type: 'int', frozen: true},
                     { display: '数据名称', name: 'dataname', width: '10%', type: 'String',editor:{type:'text'}},
                     { display: '修改日期',name: 'updatedate',width: '10%',editor:{type:'date'}} ,
                     { display: '修改人员',name: 'updateoperator',width: '10%',editor:{type:'text'}},
@@ -62,12 +62,30 @@
         <tr>
             <td align="right" class="l-table-edit-td">数据名称:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="dataname" type="text" id="dataname" ltype="text" />
+                <select id="dataname">
+                    <option value="枚举名称">枚举名称</option>
+                    <option value="枚举类型">枚举类型</option>
+                    <option value="枚举值">枚举值</option>
+                    <option value="部门编号">部门编号</option>
+                    <option value="部门名称">部门名称</option>
+                    <option value="部门">部门</option>
+                    <option value="分析人员">分析人员</option>
+                    <option value="报修故障">报修故障</option>
+                    <option value="实查故障">实查故障</option>
+                    <option value="表具止码">表具止码</option>
+                    <option value="分析时间">分析时间</option>
+                    <option value="表具编号">表具编号</option>
+                    <option value="燃气公司">燃气公司</option>
+                    <option value="表具类型">表具类型</option>
+                    <option value="返修表数量">返修表数量</option>
+                    <option value="退库单据号">退库单据号</option>
+                    <option value="录入时间">录入时间</option>
+                    <option value="录入人员">录入人员</option>
+                </select>
             </td>
             <td align="right"><input type="button" value="查询" id="submitBtn" class="l-button l-button-submit" /></td>
         </tr>
     </table>
-    <div class="l-clear"></div>
     <div class="l-clear"></div>
     <div id="maingrid" style="margin-top:5px"></div>
     <br/>

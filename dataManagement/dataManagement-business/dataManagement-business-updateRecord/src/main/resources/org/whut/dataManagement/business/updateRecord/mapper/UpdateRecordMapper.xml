@@ -24,10 +24,6 @@
         <include refid="updateRecord_fields"/>
         )
         VALUES (#{id},#{dataname},#{updatedate},#{updateoperator},#{updatename},#{updatekey},#{updatebefore},#{updateafter});
-        <selectKey resultType="long" keyProperty="id">
-            select
-            LAST_INSERT_ID() as id
-        </selectKey>
     </insert>
 
     <select id="findByCondition" parameterType="map" resultMap="updateRecordResultMap">

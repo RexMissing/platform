@@ -11,7 +11,7 @@
 
     <select id="getBoxCode" parameterType="map" resultMap="boxCodeResultMap">
         SELECT Fboxcode
-        FROM 查询
+        FROM TPackDetails
         WHERE Fmetercode=#{fmetercode}
     </select>
 </mapper>

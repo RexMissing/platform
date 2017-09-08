@@ -21,6 +21,15 @@
         "nlcheck":{
             "list":"rs/nlcheck/list"
         },
+        "box":{
+            "findByCondition":"rs/box/findByCondition"
+        },
+        "storage":{
+            "findByCondition":"rs/storage/findByCondition"
+        },
+        "delivery":{
+            "findByCondition":"rs/delivery/findByCondition"
+        },
         "userfunction":{
             "currentFuncRole":"rs/userfunction/currentFuncRole",
             "alldepart":"rs/userfunction/listdepart",

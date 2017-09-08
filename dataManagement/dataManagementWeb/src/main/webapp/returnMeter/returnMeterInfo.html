@@ -72,16 +72,34 @@
                 }
             }
         });
-        $("#updatesubmitBtn").click(function () {
+        $("#updateSubmitBtn").click(function () {
             var data={};
+            switch ($("#dataname").val())
+            {
+                case "表具编号":data.updateafter = afterData.fmetercode;break;
+                case "燃气公司":data.updateafter = afterData.fcustomer;break;
+                case "表具类型":data.updateafter = afterData.fmetername;break;
+                case "返修表数量":data.updateafter = afterData.fquantity;break;
+                case "录入时间":data.updateafter = afterData.fdatetime;break;
+                case "录入人员":data.updateafter = afterData.foperator;break;
+            }
             data.dataname = $("#dataname").val();
             data.updatedate = $("#updatedate").val();
             data.updateoperator = $("#updateoperator").val();
-            data.updatename = $("#updatename").val();
-            data.updatekey = $("#updatekey").val();
+            data.updatename = "公司返修表";
+            data.updatekey = afterData.id;
             data.updatebefore = $("#updatebefore").val();
-            data.updateafter = $("#updateafter").val();
-            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},updateRecordCallback,"json");
+            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},RecordCallback,"json");
+            function RecordCallback(data){
+                if(data.code==200){
+                    $.ligerDialog.success(data.message);
+                    document.getElementById('form2').reset();
+                    $.post($.URL.returnMeterInfo.list,null,listCallback,"json");
+                }
+                else{
+                    $.ligerDialog.warn(data.message);
+                }
+            }
         });
 
         $("#returnInfoSearchBtn").click(function () {
@@ -89,17 +107,6 @@
             var fmetername = $("#type").val();
             $.post($.URL.returnMeterInfo.findBySearch,{"fmetercode":fmetercode,"fmetername":fmetername},listCallback,"json");
         });
-
-        function updateRecordCallback(data){
-            if(data.code==200){
-                $.ligerDialog.success(data.message);
-                document.getElementById('form2').reset();
-                $.post($.URL.returnMeterInfo.list,null,listCallback,"json");
-            }
-            else{
-                $.ligerDialog.warn(data.message);
-            }
-        }
 
         var manager, g;
         function f_initGrid()
@@ -153,10 +160,11 @@
             $.post($.URL.returnMeterInfo.update,{"jsonString":jsonString},updateCallback,"json");
             document.getElementById('form2').reset();
             c_show1();
-            $.ligerDialog.open({ target: $("#addupdateReturnMeterInfo"),width:500,title:'添加数据修改记录'});
+            $.ligerDialog.open({ target: $("#addUpdateReturnMeterInfo"),width:500,title:'添加数据修改记录'});
             function updateCallback(data){
                 if(data.code==200){
                     $.post($.URL.returnMeterInfo.list,null,listCallback,"json");
+                    window.afterData = manager.getRow(rowid);
                     $.ligerDialog.success(data.message);
                 }
                 else{
@@ -185,12 +193,6 @@
             }
         }
 
-        var newrowid = 100;
-        function addNewRow()
-        {
-            manager.addEditRow();
-        }
-
         function f_add() {
             document.getElementById('form1').reset();
             c_show();
@@ -202,7 +204,7 @@
         }
 
         function c_show1(){
-            $('#addupdateReturnMeterInfo').css('display','block');
+            $('#addUpdateReturnMeterInfo').css('display','block');
         }
 
         function addCallback(data){
@@ -257,18 +259,6 @@
                 <td align="left"></td>
             </tr>
 
-            <!--<tr>-->
-                <!--<td align="right" class="l-table-edit-td">燃气公司:</td>-->
-                <!--<td align="left" class="l-table-edit-td"><input name="fcustomer" type="text" id="fcustomer" ></td>-->
-                <!--<td align="left"></td>-->
-            <!--</tr>-->
-
-            <!--<tr>-->
-                <!--<td align="right" class="l-table-edit-td">表具类型:</td>-->
-                <!--<td align="left" class="l-table-edit-td"><input name="fmetername" type="text" id="fmetername" ></td>-->
-                <!--<td align="left"></td>-->
-            <!--</tr>-->
-
             <tr>
                 <td align="right" class="l-table-edit-td">返修表数量:</td>
                 <td align="left" class="l-table-edit-td"><input name="fquantity" type="int" id="fquantity" ></td>
@@ -292,13 +282,22 @@
     </form>
 </div>
 
-<div id="addupdateReturnMeterInfo" style=" margin:3px; display:none;">
+<div id="addUpdateReturnMeterInfo" style=" margin:3px; display:none;">
     <form name="form2" method="post" action="" id="form2" style="margin-left: 15px">
 
         <table cellpadding="0" cellspacing="0" class="l-table-edit" >
             <tr>
                 <td align="right" class="l-table-edit-td">修改数据名:</td>
-                <td align="left" class="l-table-edit-td"><input name="dataname" type="text" id="dataname" ></td>
+                <td align="left" class="l-table-edit-td">
+                    <select id="dataname">
+                        <option value="表具编号">表具编号</option>
+                        <option value="燃气公司">燃气公司</option>
+                        <option value="表具类型">表具类型</option>
+                        <option value="返修表数量">返修表数量</option>
+                        <option value="录入时间">录入时间</option>
+                        <option value="录入人员">录入人员</option>
+                    </select>
+                </td>
                 <td align="left"></td>
             </tr>
 
@@ -313,29 +312,15 @@
                 <td align="left" class="l-table-edit-td"><input name="updateoperator" type="text" id="updateoperator" ></td>
                 <td align="left"></td>
             </tr>
-            <tr>
-                <td align="right" class="l-table-edit-td">修改的项目:</td>
-                <td align="left" class="l-table-edit-td"><input name="updatename" type="text" id="updatename" ></td>
-                <td align="left"></td>
-            </tr>
-            <tr>
-                <td align="right" class="l-table-edit-td">修改项目主键:</td>
-                <td align="left" class="l-table-edit-td"><input name="updatekey" type="text" id="updatekey" ></td>
-                <td align="left"></td>
-            </tr>
+
             <tr>
                 <td align="right" class="l-table-edit-td">修改前数据:</td>
                 <td align="left" class="l-table-edit-td"><input name="updatebefore" type="text" id="updatebefore" ></td>
                 <td align="left"></td>
             </tr>
-            <tr>
-                <td align="right" class="l-table-edit-td">修改后数据:</td>
-                <td align="left" class="l-table-edit-td"><input name="updateafter" type="text" id="updateafter" ></td>
-                <td align="left"></td>
-            </tr>
         </table>
         <br />
-        <input type="button" value="提交" id="updatesubmitBtn" class="l-button l-button-submit" />
+        <input type="button" value="提交" id="updateSubmitBtn" class="l-button l-button-submit" />
     </form>
 </div>
 </body>

@@ -56,19 +56,19 @@
         {
             g = manager = $("#maingrid").ligerGrid({
                 columns: [
-                    {display:'用户编号',name: 'userid',width:"80",
+                    {display:'用户编号',name: 'userid',width:"20%",
                         editor: { type: 'text'}
                     },
-                    {display:'用户名',name:'username',width:"200",
+                    {display:'用户名',name:'username',width:"20%",
                         editor:{type:'text'}
                     },
-                    {display:'姓名',name:'fname',width:"200",
+                    {display:'姓名',name:'fname',width:"20%",
                         editor:{type:'text'}
                     },
-                    {display:'性别',name:'sex', width:"80",
+                    {display:'性别',name:'sex', width:"20%",
                         editor:{type:'text'}
                     },
-                    {display:'角色权限',name:'funcroleName', width:"250",
+                    {display:'角色权限',name:'funcroleName', width:"20%",
                         editor:{type:'text'}
                     }
                 ],
@@ -84,93 +84,93 @@
         $("#submitBtn1").click(function(){
             query();
         });
-        $("#submitBtn2").click(function () {
-            cleartable();
-            $("#addDepart").css('display','block');
-            $.ligerDialog.open({title:'添加部门', target: $("#addDepart"),width:550});
-        });
-        function dNoChange() {
-            if($("#departNo").val() == null || $("#departNo").val().trim() == ""){
-                $("#dNoMessage").css("color","red")
-                $("#dNoMessage").text("部门编号不能为空！");
-                checkdepartno = 0;
-            }
-            else {
-                var addDepartNo = {};
-                addDepartNo.departNo = $("#departNo").val();
-                $.post($.URL.depart.checkNo,addDepartNo,checkDepartNo,"json");
-            }
-        }
-        function checkDepartNo(data){
-            if(data.code == 200){
-                $("#dNoMessage").css("color","green")
-                $("#dNoMessage").text("部门编号可用！");
-                checkdepartno = 1;
-            }
-            else {
-                $("#dNoMessage").css("color","red")
-                $("#dNoMessage").text("部门编号已存在！");
-                checkdepartno = 0;
-            }
-        }
-        function dNameChange() {
-            if($("#departName").val() == null || $("#departName").val().trim() == ""){
-                $("#dNameMessage").css("color","red")
-                $("#dNameMessage").text("部门名称不能为空！");
-                checkdepartname = 0;
-            }
-            else {
-                var addDepartName = {};
-                addDepartName.departName = $("#departName").val();
-                $.post($.URL.depart.checkName,addDepartName,checkDepartName,"json");
-            }
-        }
-        function checkDepartName(data){
-            if(data.code == 200){
-                $("#dNameMessage").css("color","green")
-                $("#dNameMessage").text("部门名称可用！");
-                checkdepartname = 1;
-            }
-            else {
-                $("#dNameMessage").css("color","red")
-                $("#dNameMessage").text("部门名称已存在！");
-                checkdepartname = 0;
-            }
-        }
-        $("#submitBtn3").click(function () {
-            var department = {};
-            department.departNo = $("#departNo").val();
-            department.departName = $("#departName").val();
-            if(department.departNo == null || department.departNo.trim() == ""){
-                $("#dNoMessage").css("color","red")
-                $("#dNoMessage").text("部门编号不能为空！");
-                checkdepartno = 0;
-            }
-            else if(department.departName == null || department.departName.trim() == ""){
-                $("#dNameMessage").css("color","red")
-                $("#dNameMessage").text("部门名称不能为空！");
-                checkdepartname = 0;
-            }else if(checkdepartno == 1 && checkdepartname == 1){
-                $.post($.URL.depart.add,department,addback,"json");
-            }
-        });
-
-        function addback(data) {
-            if(data.code == 200){
-                $.ligerDialog.success("添加成功！");
-                cleartable();
-            }
-            else{
-                $.ligerDialog.error("添加失败！");
-                cleartable();
-            }
-        }
-        function cleartable() {
-            $("#departNo").val("");
-            $("#departName").val("");
-            $("#dNoMessage").text("");
-            $("#dNameMessage").text("");
-        }
+//        $("#submitBtn2").click(function () {
+//            cleartable();
+//            $("#addDepart").css('display','block');
+//            $.ligerDialog.open({title:'添加部门', target: $("#addDepart"),width:550});
+//        });
+//        function dNoChange() {
+//            if($("#departNo").val() == null || $("#departNo").val().trim() == ""){
+//                $("#dNoMessage").css("color","red")
+//                $("#dNoMessage").text("部门编号不能为空！");
+//                checkdepartno = 0;
+//            }
+//            else {
+//                var addDepartNo = {};
+//                addDepartNo.departNo = $("#departNo").val();
+//                $.post($.URL.depart.checkNo,addDepartNo,checkDepartNo,"json");
+//            }
+//        }
+//        function checkDepartNo(data){
+//            if(data.code == 200){
+//                $("#dNoMessage").css("color","green")
+//                $("#dNoMessage").text("部门编号可用！");
+//                checkdepartno = 1;
+//            }
+//            else {
+//                $("#dNoMessage").css("color","red")
+//                $("#dNoMessage").text("部门编号已存在！");
+//                checkdepartno = 0;
+//            }
+//        }
+//        function dNameChange() {
+//            if($("#departName").val() == null || $("#departName").val().trim() == ""){
+//                $("#dNameMessage").css("color","red")
+//                $("#dNameMessage").text("部门名称不能为空！");
+//                checkdepartname = 0;
+//            }
+//            else {
+//                var addDepartName = {};
+//                addDepartName.departName = $("#departName").val();
+//                $.post($.URL.depart.checkName,addDepartName,checkDepartName,"json");
+//            }
+//        }
+//        function checkDepartName(data){
+//            if(data.code == 200){
+//                $("#dNameMessage").css("color","green")
+//                $("#dNameMessage").text("部门名称可用！");
+//                checkdepartname = 1;
+//            }
+//            else {
+//                $("#dNameMessage").css("color","red")
+//                $("#dNameMessage").text("部门名称已存在！");
+//                checkdepartname = 0;
+//            }
+//        }
+//        $("#submitBtn3").click(function () {
+//            var department = {};
+//            department.departNo = $("#departNo").val();
+//            department.departName = $("#departName").val();
+//            if(department.departNo == null || department.departNo.trim() == ""){
+//                $("#dNoMessage").css("color","red")
+//                $("#dNoMessage").text("部门编号不能为空！");
+//                checkdepartno = 0;
+//            }
+//            else if(department.departName == null || department.departName.trim() == ""){
+//                $("#dNameMessage").css("color","red")
+//                $("#dNameMessage").text("部门名称不能为空！");
+//                checkdepartname = 0;
+//            }else if(checkdepartno == 1 && checkdepartname == 1){
+//                $.post($.URL.depart.add,department,addback,"json");
+//            }
+//        });
+//
+//        function addback(data) {
+//            if(data.code == 200){
+//                $.ligerDialog.success("添加成功！");
+//                cleartable();
+//            }
+//            else{
+//                $.ligerDialog.error("添加失败！");
+//                cleartable();
+//            }
+//        }
+//        function cleartable() {
+//            $("#departNo").val("");
+//            $("#departName").val("");
+//            $("#dNoMessage").text("");
+//            $("#dNameMessage").text("");
+//        }
         function queryListCallback(data){
             if(data.code==200){
                 gridData.Rows=data.data;
@@ -193,6 +193,132 @@
             }
             return "";
         }
+
+        var curDepartNo = getCookie("departNo");
+        var curDepartName = getCookie("departName")
+        var curFuncRole = getCookie("funcRole");
+        var nameCheckResult = 0;
+        var passwordCheckResult = 0;
+        $.ligerDialog.close("#addUser");
+        $("#button1").click(function () {
+            $("#addUser").css('display','block');
+            $.ligerDialog.open({title:'添加用户', target: $("#addUser"),width:550});
+            loaddata();
+        });
+        function loaddata() {
+            if(curFuncRole == "2"){
+                $("#depart1").empty();
+                var option = "<option value='" + curDepartNo + "'>" + curDepartName + "</option>"
+                $("#depart1").append(option);
+            }
+            else if(curFuncRole == "1"){
+                $.post($.URL.userfunction.alldepart,null,showdepart1,"json");
+            }
+            else {
+                $.ligerDialog.error("页面出错！");
+                window.location.href = "/logout";
+            }
+            var funcrole = {};
+            funcrole.role = curFuncRole;
+            $.post($.URL.userfunction.allrole,funcrole,showrole,"json");
+        }
+        $("#submitBtn2").click(function () {
+            if(nameCheckResult == 1 && passwordCheckResult == 1){
+                var fuser = {};
+                fuser.name = $("#username").val();
+                fuser.fname = $("#fname").val();
+                fuser.sex = $("#sex").val();
+                fuser.depart = $("#depart1").val();
+                fuser.password = $("#password01").val();
+                fuser.userrole = $("#userrole").val();
+                $.post($.URL.userfunction.adduser,fuser,addcallback,"json");
+            }
+            else{
+                $.ligerDialog.error("用户名或密码有误！");
+            }
+        });
+        function addcallback(data) {
+            if(data.code == 200){
+                $.ligerDialog.success("添加成功！");
+                cleartable();
+            }
+            else{
+                $.ligerDialog.error(data.message);
+                cleartable();
+            }
+        }
+        function cleartable() {
+            $("#username").val("");
+            $("#fname").val("");
+            $("#password01").val("");
+            $("#password02").val("");
+            $("#usermessage").text("");
+            $("#passwordmessage").text("");
+        }
+        function showrole(data) {
+            $("#userrole").empty();
+            if(data.code == 200){
+                var option;
+                for (var i = 0; i < data.data.length; i++){
+                    option = "<option value='" + data.data[i].funcRole + "'>" + data.data[i].funcName + "</option>"
+                    $("#userrole").append(option);
+                }
+            }
+        }
+        function showdepart1(data) {
+            $("#depart1").empty();
+            if (data.code == 200){
+                var option;
+                for(var i = 0; i < data.data.length; i++){
+                    option = "<option value='" + data.data[i].departNo + "'>" + data.data[i].departName + "</option>"
+                    $("#depart1").append(option);
+                }
+            }
+        }
+        function Namechange() {
+            if($("#username").val() == "" || $("#username").val().trim() == ""){
+                $("#usermessage").css("color","red");
+                $("#usermessage").text("用户名不能为空！");
+                nameCheckResult = 0;
+            }
+            else{
+                var addusername = {};
+                addusername.name = $("#username").val();
+                $.post($.URL.userCheck.checkname,addusername,CheckUsername,"json");
+            }
+        }
+        function CheckUsername(data) {
+            if(data.code == 200){
+                $("#usermessage").css("color","green");
+                $("#usermessage").text("用户名可用！");
+                nameCheckResult = 1;
+            }
+            else if(data.code == 500){
+                $("#usermessage").css("color","red");
+                $("#usermessage").text("用户名已存在！");
+                nameCheckResult = 0;
+            }
+
+        }
+        function Passwordchange() {
+            var password01 = $("#password01").val();
+            var password02 = $("#password02").val();
+            if(password02 == "" || password02.trim() == ""){
+                $("#passwordmessage").css("color","red");
+                $("#passwordmessage").text("密码不能为空！");
+                passwordCheckResult = 0;
+            }
+            else if(password01 != password02){
+                $("#passwordmessage").css("color","red");
+                $("#passwordmessage").text("两次输入密码不同！");
+                passwordCheckResult = 0;
+            }
+            else if(password01 == password02){
+                $("#passwordmessage").css("color","green");
+                $("#passwordmessage").text("密码可用！");
+                passwordCheckResult = 1;
+            }
+        }
     </script>
     <style type="text/css">
         .l-table-edit {}
@@ -204,53 +330,6 @@
 </head>
 <body style="padding:10px">
 <div class="l-clear"></div>
-<div id="addDepart" style="display:none" >
-    <form name="form1" method="post" action="" id="form1">
-        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
-            <tr>
-                <td align="right" class="l-table-edit-td">部门编号:</td>
-                <td align="left" class="l-table-edit-td"><input name="depart" style="width:200px" type="text" id="departNo" ltype="text" onchange="dNoChange()" /></td>
-                <td align="left" id="dNoMessage"></td>
-            </tr>
-            <tr>
-                <td align="right" class="l-table-edit-td">部门名称:</td>
-                <td align="left" class="l-table-edit-td"><input name="departName" style="width:200px" type="text" id="departName" ltype="text" onchange="dNameChange()" /></td>
-                <td align="left" id="dNameMessage"></td>
-            </tr>
-        </table>
-        <br />
-        <input type="button" value="提交" id="submitBtn3" class="l-button l-button-submit" />
-    </form>
-</div>
-
-<!--<div id="updateRole" style="display:none" >
-    <form name="form1" method="post" action="" id="form2">
-        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
-            <tr>
-                <td align="right" class="l-table-edit-td">用户编号:</td>
-                <td align="left" class="l-table-edit-td" id="updataUsername"></td>
-                <td align="left"></td>
-            </tr>
-            <tr>
-                <td align="right" class="l-table-edit-td">当前角色:</td>
-                <td align="left" class="l-table-edit-td" id="curUserRoleName"></td>
-                <td align="left"></td>
-            </tr>
-            <tr>
-                <td align="right" class="l-table-edit-td">修改角色:</td>
-                <td align="left" class="l-table-edit-td">
-                    <select id="updateUserRoleName">
-                        &lt;!&ndash;动态加载&ndash;&gt;
-                    </select>
-                </td>
-                <td align="left"></td>
-            </tr>
-        </table>
-        <br />
-        <input type="button" value="提交" id="submitBtn4" class="l-button l-button-submit" />
-    </form>
-</div>-->
-
 <div id="list">
     <table cellpadding="0" cellspacing="0" class="l-table-edit" >
         <tr>
@@ -271,11 +350,69 @@
                 </select>
             </td>
             <td align="right"><input type="button" value="查询" id="submitBtn1" class="l-button l-button-submit" /></td>
-            <td align="right"><input type="button" value="添加" id="submitBtn2" class="l-button l-button-submit" /></td>
+            <td align="right"><input type="button" value="添加" id="button1"  class="l-button l-button-submit" /></td>
         </tr>
     </table>
     <div class="l-clear"></div>
     <div id="maingrid" style="margin-top:20px"></div> <br />
+</div>
+
+<div id="addUser" style="display: none">
+    <form name="form1" method="post" action="" id="form1">
+        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+            <tr>
+                <td align="right" class="l-table-edit-td">用户名:</td>
+                <td align="left" class="l-table-edit-td"><input name="username" style="width:200px" type="text" id="username" ltype="text" onchange="Namechange()"/></td>
+                <td align="left" id="usermessage"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">姓名:</td>
+                <td align="left" class="l-table-edit-td"><input name="fname" style="width:200px" type="text" id="fname" ltype="text" /></td>
+                <td align="left" style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">性别:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="sex" id="sex">
+                        <option value="男" selected="selected">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </td>
+                <td align="left"  style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">部门:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="depart" id="depart1">
+                        <!--动态加载-->
+                    </select>
+                </td>
+                <td align="left"  style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">密码:</td>
+                <td align="left" class="l-table-edit-td"><input name="password01" style="width:200px" type="password" id="password01" ltype="text" onchange="Passwordchange()"/></td>
+                <td align="left"  style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">密码确认:</td>
+                <td align="left" class="l-table-edit-td"><input name="password02" style="width:200px" type="password" id="password02" ltype="text" onchange="Passwordchange()"/></td>
+                <td align="left" id="passwordmessage" style="color: red"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">用户角色:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="userrole" id="userrole">
+                        <!--动态加载-->
+                    </select>
+                </td>
+                <td align="left"  style="color: red"></td>
+            </tr>
+        </table>
+        <br />
+        <input type="button" value="提交" id="submitBtn2" class="l-button l-button-submit" />
+    </form>
+
 </div>
 <div style="display:none;">
 </div>
