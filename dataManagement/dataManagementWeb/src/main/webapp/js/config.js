@@ -136,7 +136,9 @@
             "stalist":"rs/returnMeterInfo/stalist"
         },
         "graph":{
-            "graphYear":"rs/graph/graphYear"
+            "graphYear":"rs/graph/graphYear",
+            "graphYears":"rs/graph/graphYears",
+            "graphCompareYears":"rs/graph/graphCompareYears"
         },
         "returnCustomAndName":{
             "findCustomAndName":"rs/returnCustomAndName/findCustomAndName"

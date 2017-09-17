@@ -11,4 +11,12 @@
         AND YEAR(c.FDate) = #{year}
         AND MONTH(c.FDate)= #{month};
     </select>
+
+    <select id="graphReturnYears" parameterType="org.whut.dataManagement.business.returnMeter.entity.MonthProductions"
+            resultType="java.lang.Integer">
+        select COUNT(a.FMeterCode) from TPackDetailsII as a,TBox as b,TDeliveryBatch as c
+        where b.FDBatchID = c.FDBatchID
+        AND b.FBoxCode = a.FBoxCode
+        AND YEAR(c.FDate) = #{year};
+    </select>
 </mapper>

@@ -8,5 +8,6 @@ import java.util.List;
  * Created by Administrator on 2017/9/5.
  */
 public interface ReturnGraphMapper {
-    public int graphReturnYear(MonthProductions monthProductions);
+    int graphReturnYear(MonthProductions monthProductions);
+    int graphReturnYears(MonthProductions monthProductions);
 }

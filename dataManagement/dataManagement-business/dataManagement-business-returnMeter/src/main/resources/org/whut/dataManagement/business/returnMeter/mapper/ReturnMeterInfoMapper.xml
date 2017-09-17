@@ -106,4 +106,10 @@
         where YEAR (FDateTime) = #{year}
         AND MONTH (FDateTime) = #{month}
     </select>
+
+    <select id="getYearReturnMeters" parameterType="org.whut.dataManagement.business.returnMeter.entity.MonthReturnMeters"
+            resultType="java.lang.Integer">
+        select count(FMeterCode) from treturnmeter
+        where YEAR (FDateTime) = #{year};
+    </select>
 </mapper>

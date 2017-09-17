@@ -12,14 +12,15 @@ import java.util.Map;
  * Created by Administrator on 2017/7/26 0026.
  */
 public interface ReturnMeterInfoMapper extends AbstractMapper<ReturnMeterInfo> {
-    public List<ReturnMeterInfo> getlist();
-    public List<Map<String,Object>> findByCondition(Map<String, Object> conditions);
-    public List<Map<String,Object>> findBySearch(Map<String,Object> condition);
+    List<ReturnMeterInfo> getlist();
+    List<Map<String,Object>> findByCondition(Map<String, Object> conditions);
+    List<Map<String,Object>> findBySearch(Map<String,Object> condition);
 
-    public List<ReturnMeterInfo> getstalist(StaQuery staQuery);
-    public List<ReturnMeterInfo> getinlist(StaQuery staQuery);
-    public List<ReturnMeterInfo> getcomlist(StaQuery staQuery);
-    public List<ReturnMeterInfo> getretlist(StaQuery staQuery);
-    public List<ReturnMeterInfo> gettypelist(StaQuery staQuery);
-    public int getMonthReturnMeters(MonthReturnMeters monthReturnMeters);
+    List<ReturnMeterInfo> getstalist(StaQuery staQuery);
+    List<ReturnMeterInfo> getinlist(StaQuery staQuery);
+    List<ReturnMeterInfo> getcomlist(StaQuery staQuery);
+    List<ReturnMeterInfo> getretlist(StaQuery staQuery);
+    List<ReturnMeterInfo> gettypelist(StaQuery staQuery);
+    int getMonthReturnMeters(MonthReturnMeters monthReturnMeters);
+    int getYearReturnMeters(MonthReturnMeters monthReturnMeters);
 }

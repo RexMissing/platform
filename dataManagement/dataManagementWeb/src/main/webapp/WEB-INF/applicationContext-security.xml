@@ -35,7 +35,6 @@
     <beans:bean id="mySecurityMetadataSource"
                 class="org.whut.platform.business.user.security.MySecurityMetadataSource">
     </beans:bean>
-
     <!--
 14	        Required for the casProcessingFilter, so define it explicitly set and
 15	        specify an Id Even though the authenticationManager is created by

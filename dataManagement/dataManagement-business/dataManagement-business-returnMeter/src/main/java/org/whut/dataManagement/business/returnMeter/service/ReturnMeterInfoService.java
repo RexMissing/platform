@@ -73,4 +73,18 @@ public class ReturnMeterInfoService{
         }
         return rlist;
     }
+
+    public List<MonthReturnMeters> getYearReturnMeters(String year){
+        List<MonthReturnMeters> rlist = new ArrayList<MonthReturnMeters>();
+        int temp = 0;
+        for (int i = 0; i < 10; i++){
+            MonthReturnMeters monthReturnMeters = new MonthReturnMeters();
+            monthReturnMeters.setYear(Integer.toString(Integer.parseInt(year) - i));
+            monthReturnMeters.setMonth(0);
+            temp = returnMeterInfoMapper.getYearReturnMeters(monthReturnMeters);
+            monthReturnMeters.setReturnMeters(temp);
+            rlist.add(monthReturnMeters);
+        }
+        return rlist;
+    }
 }

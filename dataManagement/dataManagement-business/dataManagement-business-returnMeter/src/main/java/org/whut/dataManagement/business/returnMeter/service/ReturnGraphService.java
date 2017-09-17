@@ -29,4 +29,17 @@ public class ReturnGraphService {
         }
         return plist;
     }
+    public List<MonthProductions> graphReturnYears(String year){
+        List<MonthProductions> plist = new ArrayList<MonthProductions>();
+        int temp = 0;
+        for (int i = 0; i < 10; i++){
+            MonthProductions monthProductions = new MonthProductions();
+            monthProductions.setYear(Integer.toString(Integer.parseInt(year) - i));
+            monthProductions.setMonth(0);
+            temp = returnGraphMapper.graphReturnYears(monthProductions);
+            monthProductions.setProductions(temp);
+            plist.add(monthProductions);
+        }
+        return plist;
+    }
 }
