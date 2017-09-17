@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="deviceAccountReport" language="groovy" pageWidth="800" pageHeight="842" columnWidth="800" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="deviceAccountReport" language="groovy" pageWidth="800" pageHeight="842" columnWidth="800" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3accad9b-4138-424a-a05b-214000ac9399">
 	<property name="ireport.zoom" value="0.75"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -61,7 +61,7 @@
 	<title>
 		<band height="35" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="800" height="35"/>
+				<reportElement x="0" y="0" width="800" height="35" uuid="90381370-b3b3-4bc8-ac6d-2b08f4759557"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -82,7 +82,7 @@
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="100" y="0" width="100" height="30"/>
+				<reportElement x="100" y="0" width="100" height="30" uuid="83b72021-2550-4778-9fdd-18d0ab4ade13"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -96,7 +96,7 @@
 				<text><![CDATA[设备编号]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="200" y="0" width="100" height="30"/>
+				<reportElement x="200" y="0" width="100" height="30" uuid="5dac32db-0436-4b6c-9954-aad017fd904a"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -110,7 +110,7 @@
 				<text><![CDATA[设备名称]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="0" width="100" height="30"/>
+				<reportElement x="300" y="0" width="100" height="30" uuid="4b59d7a9-cad7-4a35-8bd8-124c3334dea8"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -124,7 +124,7 @@
 				<text><![CDATA[价格]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="30"/>
+				<reportElement x="0" y="0" width="100" height="30" uuid="768a712e-b8ab-4ac1-be1d-763329537813"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -138,7 +138,7 @@
 				<text><![CDATA[设备类型]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="400" y="0" width="100" height="30"/>
+				<reportElement x="400" y="0" width="100" height="30" uuid="07303680-665c-4d5a-932f-e2aea574069f"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -152,7 +152,7 @@
 				<text><![CDATA[单位]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="700" y="0" width="100" height="30"/>
+				<reportElement x="700" y="0" width="100" height="30" uuid="b23ed849-0cec-4baa-9612-422afd03703e"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -166,7 +166,7 @@
 				<text><![CDATA[生产日期]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="600" y="0" width="100" height="30"/>
+				<reportElement x="600" y="0" width="100" height="30" uuid="836a4ed4-0fc8-4bec-974a-7296387eac77"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -180,7 +180,7 @@
 				<text><![CDATA[设备地点]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="500" y="0" width="100" height="30"/>
+				<reportElement x="500" y="0" width="100" height="30" uuid="a206e244-09ca-49e9-9e24-57119bfe539f"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -198,7 +198,7 @@
 	<detail>
 		<band height="30" splitType="Stretch">
 			<textField>
-				<reportElement x="100" y="0" width="100" height="30"/>
+				<reportElement x="100" y="0" width="100" height="30" uuid="e8eeb2f8-154e-44e4-9b16-5c08aea35843"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -209,10 +209,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{number}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="0" width="100" height="30"/>
+				<reportElement x="200" y="0" width="100" height="30" uuid="7bc1b1bd-942a-47cf-9039-09b27eed8594"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -223,10 +223,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="300" y="0" width="100" height="30"/>
+				<reportElement x="300" y="0" width="100" height="30" uuid="0652cead-fd6f-4c7c-8838-dfa0e93e2233"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -237,10 +237,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{price}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="400" y="0" width="100" height="30"/>
+				<reportElement x="400" y="0" width="100" height="30" uuid="39e8b2f6-a640-412a-ae2d-0de11ff436fe"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -251,10 +251,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{priceUnit}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{priceUnit}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="600" y="0" width="100" height="30"/>
+				<reportElement x="600" y="0" width="100" height="30" uuid="b4543a16-e6c3-41bd-be76-b27fc4dd511a"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -265,10 +265,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{address}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="500" y="0" width="100" height="30"/>
+				<reportElement x="500" y="0" width="100" height="30" uuid="5acb7df9-f388-4010-b949-a61419689d50"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -279,10 +279,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{optionType}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{optionType}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="700" y="0" width="100" height="30"/>
+				<reportElement x="700" y="0" width="100" height="30" uuid="2059effa-6323-45c4-b399-77ea6b503eae"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -293,10 +293,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{produceTime}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{produceTime}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="30"/>
+				<reportElement x="0" y="0" width="100" height="30" uuid="0e4dbf04-f554-4983-9cc7-0257e4637470"/>
 				<box>
 					<leftPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
@@ -307,7 +307,7 @@
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="100" height="30"/>
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="100" height="30" uuid="738e4bda-8608-4694-a883-f9d98293ec82"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -318,7 +318,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{deviceType}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{deviceType}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -331,16 +331,15 @@
 	<summary>
 		<band height="240" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="800" height="0"/>
+				<reportElement x="0" y="0" width="800" height="0" uuid="ace22ee3-0c3b-45b0-adff-9298188794a1"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 				</box>
-				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<pieChart>
 				<chart>
-					<reportElement x="0" y="0" width="400" height="240"/>
+					<reportElement x="0" y="0" width="400" height="240" uuid="1ba4e3f2-7f8b-40bb-94e2-e15ef72e406f"/>
 					<box>
 						<topPen lineWidth="0.5"/>
 					</box>
@@ -360,7 +359,7 @@
 			</pieChart>
 			<barChart>
 				<chart>
-					<reportElement x="400" y="0" width="400" height="240"/>
+					<reportElement x="400" y="0" width="400" height="240" uuid="e4898015-83f8-4cf8-ab25-5c59396be4fe"/>
 					<box>
 						<topPen lineWidth="0.5"/>
 					</box>
@@ -380,16 +379,10 @@
 					<plot/>
 					<itemLabel color="#000000" backgroundColor="#FFFFFF"/>
 					<categoryAxisFormat>
-						<axisFormat>
-							<labelFont/>
-							<tickLabelFont/>
-						</axisFormat>
+						<axisFormat/>
 					</categoryAxisFormat>
 					<valueAxisFormat>
-						<axisFormat>
-							<labelFont/>
-							<tickLabelFont/>
-						</axisFormat>
+						<axisFormat/>
 					</valueAxisFormat>
 				</barPlot>
 			</barChart>

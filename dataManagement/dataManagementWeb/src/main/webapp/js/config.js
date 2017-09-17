@@ -123,7 +123,8 @@
             "update": "rs/returnMeter/update",
             "list": "rs/returnMeter/list",
             "findByCondition": "rs/returnMeter/findByCondition",
-            "findBySearch": "rs/returnMeter/findBySearch"
+            "findBySearch": "rs/returnMeter/findBySearch",
+            "findByMap":"rs/returnMeter/findByMap"
         },
         "returnMeterInfo": {
             "add": "rs/returnMeterInfo/add",

@@ -38,15 +38,46 @@
                     { display: '数据名称', name: 'dataname', width: '10%', type: 'String',editor:{type:'text'}},
                     { display: '修改日期',name: 'updatedate',width: '10%',editor:{type:'date'}} ,
                     { display: '修改人员',name: 'updateoperator',width: '10%',editor:{type:'text'}},
-                    { display: '修改项目',name: 'updatename',width: '15%',editor:{type:'text'}},
+                    { display: '修改项目',name: 'updatename',width: '15%',editor: {type: 'text'}},
                     {display:'修改项目主键',name:'updatekey',width:'15%',editor:{type:'text'}},
                     { display: '修改前数据',name: 'updatebefore',width: '15%',editor:{type:'text'}},
                     { display: '修改后数据',name: 'updateafter',width: '15%',editor:{type:'text'}}
+//                    {
+//                        display: '操作', isSort: false, width: '5%', render: function (rowdata, rowindex, value) {
+////                        var h="";
+//                         return '<a href="javascript:void(0)" onclick="fun('+rowindex+');">跳转</a>';
+////                        h += "<a href='javascript:fun(" + rowindex + ")'>跳转</a>";
+////                        return h;
+//                        }
+//                    }
                 ],
+                onSelectRow: function (rowdata, rowindex)
+                {
+                    $("#txtrowindex").val(rowindex);
+                },
+                enabledEdit: true,clickToEdit:false, isScroll: false,
                 data: gridData,
                 width: '100%'
             });
         }
+//        function fun(rowid) {
+//            var row = manager.getRow(rowid);
+//            var updatename = row.updatename;
+//            switch (updatename) {
+//                case "部门管理表":
+//                    window.location.href("departManagement/department.html");break;
+//                case "枚举表":
+//                     window.location.href("enumTable/enumTable.html");break;
+//                case "维修分析表":
+//                    alert("lilanf");
+//                     window.location.href("meterAnalysis/meterAnalysis.html");break;
+//                case "退库单返修表":
+//                     window.location.href("returnMeter/returnMeter.html");break;
+//                case "公司返修表":
+//                     window.location.href("returnMeter/returnMeterInfo.html");break;
+//            }
+//            window.location.href("enumTable/enumTable.html");
+//        }
     </script>
     <style type="text/css">
         .l-table-edit {}

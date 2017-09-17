@@ -76,23 +76,6 @@ public class ReturnMeterWeb {
     @POST
     public String list() {
         List<ReturnMeter> list = returnMeterService.list();
-//        List<ReturnMeter> returnMeterList = new ArrayList<ReturnMeter>();
-//        for(ReturnMeter returnMeter:list)
-//        {
-//            ReturnMeter subRetunMeter = new ReturnMeter();
-//            subRetunMeter.setFmetercode(returnMeter.getFmetercode());
-//            subRetunMeter.setFcustomer(returnMeter.getFcustomer());
-//            subRetunMeter.setFmetername(returnMeter.getFmetername());
-//            subRetunMeter.setFquantity(returnMeter.getFquantity());
-//            subRetunMeter.setFrinvono(returnMeter.getFrinvono());
-//            subRetunMeter.setFdatetime(returnMeter.getFdatetime());
-//            subRetunMeter.setFoperator(returnMeter.getFoperator());
-//            returnMeterList.add(subRetunMeter);
-//        }
-//        if (returnMeterList.toArray().length==0)  {
-//            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
-//        }
-//        return JsonResultUtils.getObjectResultByStringAsDefault(returnMeterList, JsonResultUtils.Code.SUCCESS);
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 
@@ -147,5 +130,36 @@ public class ReturnMeterWeb {
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
     }
 
-
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findByMap")
+    @POST
+    public String findByMap(@FormParam("foperator")String foperator,@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,
+                            @FormParam("frinvono")String frinvono,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(foperator!=null&&!foperator.equals(""))
+        {
+            condition.put("foperator",foperator);
+        }
+        if (fcustomer!=null&&!fcustomer.equals(""))
+        {
+            condition.put("fcustomer",fcustomer);
+        }
+        if (fmetername!=null&&!fmetername.equals(""))
+        {
+            condition.put("fmetername",fmetername);
+        }
+        if (frinvono!=null&&!frinvono.equals(""))
+        {
+            condition.put("frinvono",frinvono);
+        }
+        if(sTime!=null&&!sTime.equals("")){
+            condition.put("startTime",sTime+" 00:00:00");
+        }
+        if(eTime!=null&&!eTime.equals("")){
+            condition.put("endTime",eTime+" 59:59:59");
+        }
+        List<Map<String,Object>> list = returnMeterService.findByMap(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
 }

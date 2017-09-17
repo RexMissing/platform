@@ -38,6 +38,9 @@ public class ReturnMeterService {
     {
         return returnMeterMapper.findBySearch(condition);
     }
-
+    public List<Map<String,Object>> findByMap(Map<String,Object> condition)
+    {
+        return returnMeterMapper.findByMap(condition);
+    }
 
 }

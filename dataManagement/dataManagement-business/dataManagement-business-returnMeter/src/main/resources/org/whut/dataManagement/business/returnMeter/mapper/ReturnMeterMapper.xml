@@ -76,4 +76,18 @@
             <if test="frinvono!=null">AND FRInvoNo=#{frinvono}</if>
         </where>
     </select>
+
+    <select id="findByMap" parameterType="map" resultMap="returnMeterResultMap">
+        SELECT <include refid="returnMeter_fields"/>
+        FROM treturnmeter
+        <where>
+            IsDelete=0
+            <if test="foperator!=null">AND FOperator=#{foperator}</if>
+            <if test="fcustomer!=null">AND FCustomer=#{fcustomer}</if>
+            <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
+            <if test="frinvono!=null">AND FRInvoNo=#{frinvono}</if>
+            <if test="startTime!=null"><![CDATA[ AND FDateTime>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
+        </where>
+    </select>
 </mapper>

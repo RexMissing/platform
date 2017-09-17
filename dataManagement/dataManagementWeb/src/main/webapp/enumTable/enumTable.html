@@ -109,11 +109,6 @@
         }
         function endEdit(rowid)
         {
-//            $.post($.URL.user.currentUserInfo,null,userInfoCallback,"json");
-//            function userInfoCallback(data) {
-//                alert(data.data.name);
-//                window.userName = data.data[0].name;
-//            }
             manager.endEdit(rowid);
             var row = manager.getRow(rowid);
             var jsonString  = $.toJSON(row);
