@@ -36,6 +36,7 @@
 
     function userInfoCallback(data){
         if(data!=null){
+            $.cookie('name','data.data[0].name')
             $("#userInfo").show();
             $("#userNameDiv").html(data.data.name);
             $("#userNameDiv").click(function(){

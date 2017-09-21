@@ -128,7 +128,8 @@
             "list": "rs/returnMeter/list",
             "findByCondition": "rs/returnMeter/findByCondition",
             "findBySearch": "rs/returnMeter/findBySearch",
-            "findByMap":"rs/returnMeter/findByMap"
+            "findByMap":"rs/returnMeter/findByMap",
+            "findLastData":"rs/returnMeter/findLastData"
         },
         "returnMeterInfo": {
             "add": "rs/returnMeterInfo/add",

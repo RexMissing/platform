@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50173
 File Encoding         : 65001
 
-Date: 2017-09-17 21:12:20
+Date: 2017-09-21 11:23:38
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -120,23 +120,6 @@ INSERT INTO `power` VALUES ('6', '/rs/anonymousUser/**', 'resource', '匿名rest
 INSERT INTO `power` VALUES ('15', 'cas/**', 'service', 'cas client test from android');
 
 -- ----------------------------
--- Table structure for `tanalysor`
--- ----------------------------
-DROP TABLE IF EXISTS `tanalysor`;
-CREATE TABLE `tanalysor` (
-  `FAnaNo` varchar(50) NOT NULL DEFAULT '',
-  `FAnaName` varchar(50) DEFAULT NULL,
-  `FRole` varchar(20) DEFAULT NULL,
-  `FPassword` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`FAnaNo`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
-
--- ----------------------------
--- Records of tanalysor
--- ----------------------------
-INSERT INTO `tanalysor` VALUES ('001', '张攀', 'ROLE_USER', '110');
-
--- ----------------------------
 -- Table structure for `tdepartment`
 -- ----------------------------
 DROP TABLE IF EXISTS `tdepartment`;
@@ -146,22 +129,13 @@ CREATE TABLE `tdepartment` (
   `FDepartName` varchar(50) DEFAULT NULL,
   `IsDelete` int(20) DEFAULT '0',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of tdepartment
 -- ----------------------------
 INSERT INTO `tdepartment` VALUES ('1', '001', '维修部', '0');
 INSERT INTO `tdepartment` VALUES ('2', '002', '外检部', '0');
-INSERT INTO `tdepartment` VALUES ('3', '003', '003', '0');
-INSERT INTO `tdepartment` VALUES ('4', '004', 'swe', '0');
-INSERT INTO `tdepartment` VALUES ('5', '005', 'SK', '0');
-INSERT INTO `tdepartment` VALUES ('6', '006', 'ASDA', '0');
-INSERT INTO `tdepartment` VALUES ('7', '007', 'WE', '0');
-INSERT INTO `tdepartment` VALUES ('8', '008', 'ASD', '0');
-INSERT INTO `tdepartment` VALUES ('9', '009', 'ER', '0');
-INSERT INTO `tdepartment` VALUES ('10', '010', 'QWE', '0');
-INSERT INTO `tdepartment` VALUES ('11', '011', 'SAD', '0');
 
 -- ----------------------------
 -- Table structure for `tenumeration`
@@ -172,23 +146,14 @@ CREATE TABLE `tenumeration` (
   `FEnumType` varchar(50) DEFAULT NULL,
   `FEnumName` varchar(50) DEFAULT '',
   `FEnumValue` int(200) DEFAULT NULL,
+  `FDescription` varchar(200) DEFAULT NULL,
   `IsDelete` int(20) DEFAULT '0',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of tenumeration
 -- ----------------------------
-INSERT INTO `tenumeration` VALUES ('1', '表具类型', '3-2B', '1', '0');
-INSERT INTO `tenumeration` VALUES ('2', '表具类型', '4-3C', '2', '0');
-INSERT INTO `tenumeration` VALUES ('3', '表具类型', '4-5C', '3', '1');
-INSERT INTO `tenumeration` VALUES ('4', '故障', '不走字', '1', '0');
-INSERT INTO `tenumeration` VALUES ('5', '故障', '整机故障', '4', '0');
-INSERT INTO `tenumeration` VALUES ('6', '故障', '无显示', '2', '0');
-INSERT INTO `tenumeration` VALUES ('7', '故障', '阀门关闭', '3', '0');
-INSERT INTO `tenumeration` VALUES ('9', '表具类型', '4-2F', '3', '0');
-INSERT INTO `tenumeration` VALUES ('10', '内漏检测故障', '内漏', '1', '1');
-INSERT INTO `tenumeration` VALUES ('11', '整机装配故障', '外壳损坏', '1', '0');
 
 -- ----------------------------
 -- Table structure for `tmeteranalysisinfo`
@@ -202,22 +167,19 @@ CREATE TABLE `tmeteranalysisinfo` (
   `FDepartment` varchar(50) DEFAULT NULL,
   `FAnalysor` varchar(50) DEFAULT NULL,
   `FCustomer` varchar(50) DEFAULT NULL,
-  `FReportMisFune` int(50) DEFAULT NULL,
-  `FConfirmMisFune` int(50) DEFAULT NULL,
+  `FReportMisFune` varchar(50) DEFAULT NULL,
+  `FConfirmMisFune` varchar(50) DEFAULT NULL,
+  `FMisFuneDescrib` varchar(100) DEFAULT NULL,
   `FMeterReading` varchar(50) DEFAULT NULL,
+  `FElecDisplay` varchar(50) DEFAULT NULL,
   `FDateTime` date DEFAULT NULL,
   `IsDelete` int(20) DEFAULT '0',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of tmeteranalysisinfo
 -- ----------------------------
-INSERT INTO `tmeteranalysisinfo` VALUES ('1', '151150700757', '4-3B(QK1)(江南)', 'Z015012193', '001', '吕亚龙', '宜昌焦化煤气公司', '4', '2', '344', '2017-07-20', '0');
-INSERT INTO `tmeteranalysisinfo` VALUES ('2', '23411', 'wer', '324', '002', 'wre', 'wer', '1', '3', '236', '2017-08-22', '1');
-INSERT INTO `tmeteranalysisinfo` VALUES ('3', '13212', 'ff', '22343', '001', 'er', 'w', '4', '1', '23', '2017-09-12', '0');
-INSERT INTO `tmeteranalysisinfo` VALUES ('4', '123123', 'qwe', '21314', '002', 'wer', 'fwd', '4', '1', '123', '2017-09-03', '0');
-INSERT INTO `tmeteranalysisinfo` VALUES ('5', '129150813223', '4-3B(C)(YII)', 'K115061365', '001', '李浪', '武汉天然气', '4', '2', '122', '2017-09-25', '0');
 
 -- ----------------------------
 -- Table structure for `treturnmeter`
@@ -225,59 +187,24 @@ INSERT INTO `tmeteranalysisinfo` VALUES ('5', '129150813223', '4-3B(C)(YII)', 'K
 DROP TABLE IF EXISTS `treturnmeter`;
 CREATE TABLE `treturnmeter` (
   `ID` bigint(50) NOT NULL AUTO_INCREMENT,
+  `FReturnBatch` varchar(20) DEFAULT NULL,
   `FMeterCode` varchar(14) DEFAULT NULL,
   `FCustomer` varchar(50) DEFAULT NULL,
   `FMeterName` varchar(50) DEFAULT NULL,
-  `FQuantity` int(200) DEFAULT NULL,
-  `FRInvoNo` varchar(50) DEFAULT '0',
+  `FMeterDirection` varchar(50) DEFAULT NULL,
   `FDateTime` date DEFAULT NULL,
   `FOperator` varchar(50) DEFAULT NULL,
+  `FReportMisFune` varchar(50) DEFAULT NULL,
+  `FProduceTime` date DEFAULT NULL,
+  `FSaleTime` date DEFAULT NULL,
+  `FPreMaintain` varchar(20) DEFAULT NULL,
   `IsDelete` int(20) DEFAULT '0',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of treturnmeter
 -- ----------------------------
-INSERT INTO `treturnmeter` VALUES ('1', '123124234', 'wer', '4-3C左', '4', '2345555', '2014-01-09', '张三', '0');
-INSERT INTO `treturnmeter` VALUES ('2', '15110700859', '武汉天然气', '4-3B(QK2)右', '4', '0', '2014-02-20', 'zhangsan', '0');
-INSERT INTO `treturnmeter` VALUES ('3', '151150700757', '宜昌焦化煤气公司', '4-3B(QK1)(江南)左', '4', '10001', '2014-07-11', '邓超', '0');
-INSERT INTO `treturnmeter` VALUES ('4', '157170103750', 'sd', 'fsd左', '4', '10002', '2014-02-13', '亚龙', '1');
-INSERT INTO `treturnmeter` VALUES ('5', '157170103751', '深圳天然气', '5-2D右', '4', '0', '2014-03-28', '李浪', '0');
-INSERT INTO `treturnmeter` VALUES ('6', '123124342', 'ewr', '424右', '3', '0', '2014-06-05', 'lilang', '0');
-INSERT INTO `treturnmeter` VALUES ('12', '157170103507', '天燃气有限公司', '4-3B(C3)左', '2', '2314214', '2014-12-24', 'lilang', '1');
-INSERT INTO `treturnmeter` VALUES ('13', '157170103507', '天燃气有限公司', '4-3B(C3)左', '4', '46789', '2014-05-08', 'lilang', '1');
-INSERT INTO `treturnmeter` VALUES ('14', '157170103507', '天燃气有限公司', '4-3B(C3)右', '4', '46789', '2014-04-15', 'lilang', '1');
-INSERT INTO `treturnmeter` VALUES ('15', '157170103507', '天燃气有限公司', '4-3B(C3)右', '5', '12344', '2014-10-14', 'lilang', '1');
-INSERT INTO `treturnmeter` VALUES ('16', '157170103506', '天燃气有限公司', '4-3B左', '2', '1234', '2014-10-24', 'lilang', '0');
-INSERT INTO `treturnmeter` VALUES ('17', '157170103507', '天燃气有限公司', '4-3B(C3)左', '4', '887799', '2014-12-18', 'lilang', '0');
-INSERT INTO `treturnmeter` VALUES ('18', '157170103400', '天燃气有限公司', '4-5D右', '6', '99999', '2014-11-19', 'lilang', '0');
-INSERT INTO `treturnmeter` VALUES ('19', '157170102246', '天燃气有限公司', '4-3B右', '5', '21334', '2014-08-20', 'lilang', '0');
-INSERT INTO `treturnmeter` VALUES ('20', '157170103391', '天燃气有限公司', '4-3C左', '4', '0', '2014-09-05', 'lilang', '0');
-INSERT INTO `treturnmeter` VALUES ('21', '157170102132', '天燃气有限公司', '4-3B右', '1', '6666', '2014-05-08', 'lilang', '0');
-INSERT INTO `treturnmeter` VALUES ('22', '0109130800009', '宜昌焦化煤气公司', '4-3B(C3)左', '4', '0', '2017-09-11', 'lilang', '0');
-INSERT INTO `treturnmeter` VALUES ('23', '12314255', '天然气有限公司', '4-2J右', '3', '2345555', '2014-01-09', 'xiaohua', '0');
-
--- ----------------------------
--- Table structure for `treturnmeterinfo`
--- ----------------------------
-DROP TABLE IF EXISTS `treturnmeterinfo`;
-CREATE TABLE `treturnmeterinfo` (
-  `FMeterCode` varchar(14) NOT NULL,
-  `FCustomer` varchar(50) DEFAULT NULL,
-  `FMeterName` varchar(50) DEFAULT NULL,
-  `FQuantity` int(200) DEFAULT NULL,
-  `FDateTime` date DEFAULT NULL,
-  `FOperator` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`FMeterCode`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
-
--- ----------------------------
--- Records of treturnmeterinfo
--- ----------------------------
-INSERT INTO `treturnmeterinfo` VALUES ('15110700859', '武汉天然气', '4-3B(QK2)', '4', '2017-05-20', '李四');
-INSERT INTO `treturnmeterinfo` VALUES ('151150700757', '宜昌焦化煤气公司', '4-3B(QK1)(江南)', '4', '2017-07-05', '邓超');
-INSERT INTO `treturnmeterinfo` VALUES ('157170103750', '深圳天然气', '4-2B', '6', '2016-03-14', '吕亚龙');
 
 -- ----------------------------
 -- Table structure for `updaterecord`
@@ -293,7 +220,7 @@ CREATE TABLE `updaterecord` (
   `UpdateBefore` varchar(300) DEFAULT NULL,
   `UpdateAfter` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of updaterecord
@@ -301,6 +228,8 @@ CREATE TABLE `updaterecord` (
 INSERT INTO `updaterecord` VALUES ('1', '枚举值', '2017-08-21', '李浪', '枚举表', '3-2B', '4', '1');
 INSERT INTO `updaterecord` VALUES ('3', '表具止码', '2017-08-21', '李浪', '维修分析表', '1', '323', '325');
 INSERT INTO `updaterecord` VALUES ('4', '录入人员', '2017-09-12', 'lilang', '公司返修表', '2', '李四', 'zhangsan');
+INSERT INTO `updaterecord` VALUES ('5', '分析人员', '2017-09-17', '李浪', '维修分析表', '3', 'wer', '小花');
+INSERT INTO `updaterecord` VALUES ('6', '录入时间', '2017-09-11', '小哈', '公司返修表', '6', '2016-4-5', '2017-09-16T16:00:00.000Z');
 
 -- ----------------------------
 -- Table structure for `user`

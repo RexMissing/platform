@@ -4,18 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.whut.dataManagement.business.returnMeter.mapper.ReturnMeterMapper">
     <sql id="returnMeter_fields">
-        ID,FMeterCode,FCustomer,FMeterName,FQuantity,FRInvoNo,FDateTime,FOperator
+        ID,FReturnBatch,FMeterCode,FCustomer,FMeterName,FMeterDirection,FDateTime,FOperator,FReportMisFune,FProduceTime,FSaleTime,FPreMaintain
     </sql>
 
     <resultMap id="returnMeterResultMap" type="returnMeter">
         <id property="id" column="ID"/>
+        <result property="freturnbatch" column="FReturnBatch"/>
         <result property="fmetercode" column="FMeterCode"/>
         <result property="fcustomer" column="FCustomer"/>
         <result property="fmetername" column="FMeterName"/>
-        <result property="fquantity" column="FQuantity"/>
-        <result property="frinvono" column="FRInvoNo"/>
+        <result property="fmeterdirection" column="FMeterDirection"/>
         <result property="fdatetime" column="FDateTime"/>
         <result property="foperator" column="FOperator"/>
+        <result property="freportmisfune" column="FReportMisFune"/>
+        <result property="fproducetime" column="FProduceTime"/>
+        <result property="fsaletime" column="FSaleTime"/>
+        <result property="fpremaintain" column="FPreMaintain"/>
     </resultMap>
 
     <insert id="add" parameterType="returnMeter" keyProperty="id"
@@ -24,19 +28,23 @@
         treturnmeter(
         <include refid="returnMeter_fields"/>
         )
-        VALUES (#{id},#{fmetercode},#{fcustomer},#{fmetername},#{fquantity},#{frinvono},#{fdatetime},#{foperator});
+        VALUES (#{id},#{freturnbatch},#{fmetercode},#{fcustomer},#{fmetername},#{fmeterdirection},#{fdatetime},#{foperator},#{freportmisfune},#{fproducetime},#{fsaletime},#{fpremaintain});
     </insert>
 
     <update id="update" parameterType="returnMeter">
         UPDATE treturnmeter
         <set>
+            <if test="freturnbatch!=null">FReturnBatch=#{freturnbatch},</if>
             <if test="fmetercode!=null">FMeterCode=#{fmetercode},</if>
             <if test="fcustomer!=null">FCustomer=#{fcustomer},</if>
             <if test="fmetername!=null">FMeterName=#{fmetername},</if>
-            <if test="fquantity!=null">FQuantity=#{fquantity},</if>
-            <if test="frinvono!=null">FRInvoNo=#{frinvono},</if>
+            <if test="fmeterdirection!=null">FMeterDirection=#{fmeterdirection},</if>
             <if test="fdatetime!=null">FDateTime=#{fdatetime},</if>
-            <if test="foperator!=null">FOperator=#{foperator}</if>
+            <if test="foperator!=null">FOperator=#{foperator},</if>
+            <if test="freportmisfune!=null">FReportMisFune=#{freportmisfune},</if>
+            <if test="fproducetime!=null">FProduceTime=#{fproducetime},</if>
+            <if test="fsaletime!=null">FSaleTime=#{fsaletime},</if>
+            <if test="fpremaintain!=null">FPreMaintain=#{fpremaintain}</if>
         </set>
         WHERE ID=#{id};
     </update>
@@ -50,14 +58,20 @@
     <select id="getlist" resultMap="returnMeterResultMap">
         SELECT <include refid="returnMeter_fields"/>
         FROM treturnmeter
-        WHERE IsDelete=0 AND FRInvoNo!=0;
+        WHERE IsDelete=0;
+    </select>
+
+    <select id="findLastData" resultMap="returnMeterResultMap">
+        SELECT <include refid="returnMeter_fields"/>
+        FROM treturnmeter
+        WHERE IsDelete=0  ORDER BY id DESC;
     </select>
 
     <select id="findByCondition" parameterType="map" resultMap="returnMeterResultMap">
         SELECT <include refid="returnMeter_fields"/>
         FROM treturnmeter
         <where>
-            IsDelete=0 AND FRInvoNo!=0
+            IsDelete=0
             <if test="foperator!=null">AND FOperator=#{foperator}</if>
             <if test="fcustomer!=null">AND FCustomer=#{fcustomer}</if>
             <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
@@ -70,7 +84,7 @@
         SELECT <include refid="returnMeter_fields"/>
         FROM treturnmeter
         <where>
-            FRInvoNo!=0 AND IsDelete=0
+            IsDelete=0
             <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
             <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
             <if test="frinvono!=null">AND FRInvoNo=#{frinvono}</if>

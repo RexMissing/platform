@@ -64,7 +64,7 @@ public class ReturnMeterWeb {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "参数不能是空!");
         }
         ReturnMeter returnMeter = JsonMapper.buildNonDefaultMapper().fromJson(jsonString, ReturnMeter.class);
-        if (returnMeter.getFcustomer() == null||returnMeter.getFdatetime()==null||returnMeter.getFquantity()==0) {
+        if (returnMeter.getFcustomer() == null||returnMeter.getFdatetime()==null) {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "参数不能是空!");
         }
         returnMeterService.update(returnMeter);
@@ -75,7 +75,7 @@ public class ReturnMeterWeb {
     @Path("/list")
     @POST
     public String list() {
-        List<ReturnMeter> list = returnMeterService.list();
+        List<Map<String,Object>> list = returnMeterService.list();
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 
@@ -160,6 +160,14 @@ public class ReturnMeterWeb {
             condition.put("endTime",eTime+" 59:59:59");
         }
         List<Map<String,Object>> list = returnMeterService.findByMap(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findLastData")
+    @POST
+    public String findLastData() {
+       List<Map<String,Object>> list = returnMeterService.findLastData();
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 }

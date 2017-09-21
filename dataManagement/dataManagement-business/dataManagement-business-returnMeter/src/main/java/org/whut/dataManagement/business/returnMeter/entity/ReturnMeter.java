@@ -10,15 +10,20 @@ import java.util.Date;
  */
 public class ReturnMeter {
     private long id;
+    private  String freturnbatch;
     private String fmetercode;
     private String fcustomer;
     private String fmetername;
-    private int fquantity;
-    private String frinvono;
+    private String fmeterdirection;
     @JsonDeserialize(using=CustomDateDeserialize.class)
     private Date fdatetime;
     private String foperator;
-    private int isdelete;
+    private String freportmisfune;
+    @JsonDeserialize(using=CustomDateDeserialize.class)
+    private Date fproducetime;
+    @JsonDeserialize(using=CustomDateDeserialize.class)
+    private Date fsaletime;
+    private String fpremaintain;    //现场维修人员
 
     public long getId() {
         return id;
@@ -28,20 +33,12 @@ public class ReturnMeter {
         this.id = id;
     }
 
-    public int getIsdelete() {
-        return isdelete;
+    public String getFreturnbatch() {
+        return freturnbatch;
     }
 
-    public void setIsdelete(int isdelete) {
-        this.isdelete = isdelete;
-    }
-
-    public String getFoperator() {
-        return foperator;
-    }
-
-    public void setFoperator(String foperator) {
-        this.foperator = foperator;
+    public void setFreturnbatch(String freturnbatch) {
+        this.freturnbatch = freturnbatch;
     }
 
     public String getFmetercode() {
@@ -68,19 +65,12 @@ public class ReturnMeter {
         this.fmetername = fmetername;
     }
 
-    public int getFquantity() {
-        return fquantity;
+    public String getFmeterdirection() {
+        return fmeterdirection;
     }
 
-    public void setFquantity(int fquantity) {
-        this.fquantity = fquantity;
-    }
-    public String getFrinvono() {
-        return frinvono;
-    }
-
-    public void setFrinvono(String frinvono) {
-        this.frinvono = frinvono;
+    public void setFmeterdirection(String fmeterdirection) {
+        this.fmeterdirection = fmeterdirection;
     }
 
     public Date getFdatetime() {
@@ -91,4 +81,43 @@ public class ReturnMeter {
         this.fdatetime = fdatetime;
     }
 
+    public String getFoperator() {
+        return foperator;
+    }
+
+    public void setFoperator(String foperator) {
+        this.foperator = foperator;
+    }
+
+    public String getFreportmisfune() {
+        return freportmisfune;
+    }
+
+    public void setFreportmisfune(String freportmisfune) {
+        this.freportmisfune = freportmisfune;
+    }
+
+    public Date getFproducetime() {
+        return fproducetime;
+    }
+
+    public void setFproducetime(Date fproducetime) {
+        this.fproducetime = fproducetime;
+    }
+
+    public Date getFsaletime() {
+        return fsaletime;
+    }
+
+    public void setFsaletime(Date fsaletime) {
+        this.fsaletime = fsaletime;
+    }
+
+    public String getFpremaintain() {
+        return fpremaintain;
+    }
+
+    public void setFpremaintain(String fpremaintain) {
+        this.fpremaintain = fpremaintain;
+    }
 }

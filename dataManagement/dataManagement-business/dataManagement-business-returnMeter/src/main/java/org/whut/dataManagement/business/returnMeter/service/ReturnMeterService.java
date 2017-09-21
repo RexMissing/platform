@@ -26,7 +26,7 @@ public class ReturnMeterService {
         return returnMeterMapper.delete(returnMeter);
     }
 
-    public List<ReturnMeter> list() {
+    public List<Map<String,Object>> list() {
         return returnMeterMapper.getlist();
     }
 
@@ -41,6 +41,10 @@ public class ReturnMeterService {
     public List<Map<String,Object>> findByMap(Map<String,Object> condition)
     {
         return returnMeterMapper.findByMap(condition);
+    }
+    public List<Map<String,Object>> findLastData()
+    {
+        return returnMeterMapper.findLastData();
     }
 
 }
