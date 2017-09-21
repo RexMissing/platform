@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.whut.dataManagement.business.meterAnalysis.mapper.MeterAnalysisMapper">
     <sql id="meterAnalysis_fields">
-        ID,FMeterCode,FMeterName,FValveName,FDepartment,FAnalysor,FCustomer,FReportMisFune,FConfirmMisFune,FMeterReading,FDateTime
+        ID,FMeterCode,FMeterName,FValveName,FDepartment,FAnalysor,FCustomer,FReportMisFune,FConfirmMisFune,FMisFuneDescrib,FMeterReading,FElecDisplay,FDateTime
     </sql>
 
     <resultMap id="meterAnalysisResultMap" type="meterAnalysis">
@@ -17,7 +17,9 @@
         <result property="fcustomer" column="FCustomer"/>
         <result property="freportmisfune" column="FReportMisFune"/>
         <result property="fconfirmmisfune" column="FConfirmMisFune"/>
+        <result property="fmisfunedescrib" column="FMisFuneDescrib"/>
         <result property="fmeterreading" column="FMeterReading"/>
+        <result property="felecdisplay" column="FElecDisplay"/>
         <result property="fdatetime" column="FDateTime"/>
     </resultMap>
 
@@ -27,7 +29,7 @@
         tmeteranalysisinfo(
         <include refid="meterAnalysis_fields"/>
         )
-        VALUES (#{id},#{fmetercode},#{fmetername},#{fvalvename},#{fdepartment},#{fanalysor},#{fcustomer},#{freportmisfune},#{fconfirmmisfune},#{fmeterreading},#{fdatetime});
+        VALUES (#{id},#{fmetercode},#{fmetername},#{fvalvename},#{fdepartment},#{fanalysor},#{fcustomer},#{freportmisfune},#{fconfirmmisfune},#{fmisfunedescrib},#{fmeterreading},#{felecdisplay},#{fdatetime});
     </insert>
 
     <update id="update" parameterType="meterAnalysis">

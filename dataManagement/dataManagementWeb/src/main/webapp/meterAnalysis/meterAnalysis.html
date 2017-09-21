@@ -15,36 +15,58 @@
     <script type="text/javascript">
         $.ligerDialog.close("#addMeterAnalysis");
         $(function(){
-            $.post($.URL.enumTable.list, null, enumListCallBack, "json");
+            $.post($.URL.enumTable.mislist, null, enumMisListCallBack, "json");
+            $.post($.URL.enumTable.misinfolist, null, enumMisInfoListCallBack, "json");
+            $.post($.URL.enumTable.cuslist, null, enumCusListCallBack, "json");
+            $.post($.URL.enumTable.elelist, null, enumEleListCallBack, "json");
             $.post($.URL.department.list,null,departListCallBack,"json");
             $.post($.URL.meterAnalysis.list, null,listCallback,"json");
         });
+        function getCookie(cname) {
+            var ss = document.cookie;
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for(var i = 0 ;i < ca.length ; i++)
+            {
+                var c = ca[i].trim();
+                if (c.indexOf(name)==0)
+                    return c.substring(name.length,c.length);
+            }
+            return "";
+        }
 
         var enumData=[];
-        function enumListCallBack(data) {
+        function enumMisListCallBack(data) {
             if (data.code == 200) {
-                $.each(data.data, function (index, content) {
-                    var j = {};
-                    j.text = content.fenumname;
-                    j.value = content.fenumvalue;
-                    enumData.push(j);
-                });
-                $("#freportmisfune").ligerComboBox({
-                    isShowCheckBox: true, emptyText: null, /*实现下拉表*/
-                    data: enumData,
-                    width: 200,
-                    valueField: 'value',
-                    textField: 'text',
-                    valueFieldID: 'freportmisfuneSelect'   /*下拉表Id是Device*/
-                });
-                $("#fconfirmmisfune").ligerComboBox({
-                    isShowCheckBox: true, emptyText: null, /*实现下拉表*/
-                    data: enumData,
-                    width: 200,
-                    valueField: 'value',
-                    textField: 'text',
-                    valueFieldID: 'fconfirmmisfuneSelect'   /*下拉表Id是Device*/
-                });
+                $("#freportmisfune").empty();
+                $("#freportmisfune").append("<option value='无'>无</option>");
+                for(var i = 0; i < data.data.length; i++){
+                    $("#freportmisfune").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+                }
+                $("#fconfirmmisfune").empty();
+                for(var i = 0; i < data.data.length; i++){
+                    $("#fconfirmmisfune").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+                }
+            }
+        }
+
+        function enumMisInfoListCallBack(data) {
+            $("#fmisfuneinfo").empty();
+            for(var i = 0; i < data.data.length; i++){
+                $("#fmisfuneinfo").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+        }
+
+        function enumCusListCallBack(data) {
+            $("#fcustomer").empty();
+            for(var i = 0; i < data.data.length; i++){
+                $("#fcustomer").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+        }
+        function enumEleListCallBack(data) {
+            $("#felecdisplay").empty();
+            for(var i = 0; i < data.data.length; i++){
+                $("#felecdisplay").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
             }
         }
 
@@ -76,9 +98,8 @@
                 f_initGrid();
             }
         }
-
-            var manager, g;
-            function f_initGrid() {
+        var manager, g;
+        function f_initGrid() {
                 g = manager = $("#maingrid").ligerGrid({
                     columns: [
                         {display: '主键', name: 'id', width: '5%', type: 'int', frozen:true},
@@ -152,15 +173,15 @@
                 });
             }
 
-            function beginEdit(rowid) {
+        function beginEdit(rowid) {
                 manager.beginEdit(rowid);
             }
 
-            function cancelEdit(rowid) {
-                manager.cancelEdit(rowid);
-            }
+        function cancelEdit(rowid) {
+            manager.cancelEdit(rowid);
+        }
 
-            function endEdit(rowid) {
+        function endEdit(rowid) {
                 manager.endEdit(rowid);
                 var row = manager.getRow(rowid);
                 var jsonString = $.toJSON(row);
@@ -181,7 +202,7 @@
                 }
             }
 
-            function deleteRow(rowid) {
+        function deleteRow(rowid) {
                 if (confirm('确定删除?')) {
                     var row = manager.getRow(rowid);
                     var jsonString = $.toJSON(row);
@@ -190,7 +211,7 @@
                 }
             }
 
-            function deleteCallback(data) {
+        function deleteCallback(data) {
                 if (data.code == 200) {
                     $.ligerDialog.success("成功删除！");
                     $.post($.URL.meterAnalysis.list,null,listCallback, "json");
@@ -206,27 +227,25 @@
                 $.ligerDialog.open({target: $("#addMeterAnalysis"), width: 500, title: '添加维修分析表'});
             }
         });
-
         function c_show() {
             $('#addMeterAnalysis').css('display', 'block');
         }
-
-        function c_show1(){
-            $('#addUpdateMeterAnalysis').css('display','block');
-        }
+//        function c_show1(){
+//            $('#addUpdateMeterAnalysis').css('display','block');
+//        }
 
         $("#submitBtn").click(function () {
             var gdata={};
+            gdata.fanalysor = getCookie("userName");
+            gdata.fdepartment = getCookie("departName");
             gdata.fmetercode = $("#fmetercode").val();
-            gdata.fdepartment = $("#departSelect").val();
-            gdata.fanalysor = $("#fanalysor").val();
             gdata.fcustomer = $("#fcustomer").val();
-            gdata.freportmisfune = $("#freportmisfuneSelect").val();
-            gdata.fconfirmmisfune = $("#fconfirmmisfuneSelect").val();
+            gdata.freportmisfune = $("#freportmisfune").val();
+            gdata.fconfirmmisfune = $("#fconfirmmisfune").val();
+            gdata.fmisfunedescrib = $("#fmisfuneinfo").val();
             gdata.fmeterreading = $("#fmeterreading").val();
-            gdata.fdatetime = $("#fdatetime").val();
+            gdata.felecdisplay = $("#felecdisplay").val();
             $.post($.URL.returnValveAndName.findValveAndName,{"fmetercode":gdata.fmetercode},getValveListCallback,"json");
-
             function getValveListCallback(data) {
                 if(data.data==null)
                 {
@@ -240,38 +259,37 @@
                 }
             }
         });
-
-        $("#updateSubmitBtn").click(function () {
-            var data={};
-            switch ($("#dataname").val())
-            {
-                case "表具编号":data.updateafter = afterData.fmetercode;break;
-                case "部门":data.updateafter = afterData.fdepartment;break;
-                case "分析人员":data.updateafter = afterData.fanalysor;break;
-                case "天然气公司":data.updateafter = afterData.fcustomer;break;
-                case "报修故障":data.updateafter = afterData.freportmisfune;break;
-                case "实查故障":data.updateafter = afterData.fconfirmmisfune;break;
-                case "表具止码":data.updateafter = afterData.fmeterreading;break;
-                case "分析时间":data.updateafter = afterData.fdatetime;break;
-            }
-            data.dataname = $("#dataname").val();
-            data.updatedate = $("#updatedate").val();
-            data.updateoperator = $("#updateoperator").val();
-            data.updatename = "维修分析表";
-            data.updatekey = afterData.id;
-            data.updatebefore = $("#updatebefore").val();
-            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},RecordCallback,"json");
-            function RecordCallback(data){
-                if(data.code==200){
-                    $.ligerDialog.success(data.message);
-                    document.getElementById('form2').reset();
-                    $.post($.URL.meterAnalysis.list, null,listCallback,"json");
-                }
-                else{
-                    $.ligerDialog.warn(data.message);
-                }
-            }
-        });
+//        $("#updateSubmitBtn").click(function () {
+//            var data={};
+//            switch ($("#dataname").val())
+//            {
+//                case "表具编号":data.updateafter = afterData.fmetercode;break;
+//                case "部门":data.updateafter = afterData.fdepartment;break;
+//                case "分析人员":data.updateafter = afterData.fanalysor;break;
+//                case "天然气公司":data.updateafter = afterData.fcustomer;break;
+//                case "报修故障":data.updateafter = afterData.freportmisfune;break;
+//                case "实查故障":data.updateafter = afterData.fconfirmmisfune;break;
+//                case "表具止码":data.updateafter = afterData.fmeterreading;break;
+//                case "分析时间":data.updateafter = afterData.fdatetime;break;
+//            }
+//            data.dataname = $("#dataname").val();
+//            data.updatedate = $("#updatedate").val();
+//            data.updateoperator = $("#updateoperator").val();
+//            data.updatename = "维修分析表";
+//            data.updatekey = afterData.id;
+//            data.updatebefore = $("#updatebefore").val();
+//            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},RecordCallback,"json");
+//            function RecordCallback(data){
+//                if(data.code==200){
+//                    $.ligerDialog.success(data.message);
+//                    document.getElementById('form2').reset();
+//                    $.post($.URL.meterAnalysis.list, null,listCallback,"json");
+//                }
+//                else{
+//                    $.ligerDialog.warn(data.message);
+//                }
+//            }
+//        });
 
         function addCallback(data){
             if (data.code == 200) {
@@ -300,62 +318,6 @@
     </style>
 </head>
 <body style="padding:10px">
-<div id="addMeterAnalysis" style=" margin:3px; display:none;">
-    <form name="form1" method="post" action="" id="form1" style="margin-left: 15px">
-        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
-            <tr>
-                <td align="right" class="l-table-edit-td">表具编号:</td>
-                <td align="left" class="l-table-edit-td"><input name="fmetercode" type="text" id="fmetercode" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">部门:</td>
-                <td align="left" class="l-table-edit-td"><input name="fdepartment" type="text" id="fdepartment" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">分析人员:</td>
-                <td align="left" class="l-table-edit-td"><input name="fanalysor" type="text" id="fanalysor" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">天然气公司:</td>
-                <td align="left" class="l-table-edit-td"><input name="fcustomer" type="text" id="fcustomer" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">报修故障:</td>
-                <td align="left" class="l-table-edit-td"><input name="freportmisfune" type="text" id="freportmisfune" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">实查故障:</td>
-                <td align="left" class="l-table-edit-td"><input name="fconfirmmisfune" type="text" id="fconfirmmisfune" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">表具止码:</td>
-                <td align="left" class="l-table-edit-td"><input name="fmeterreading" type="text" id="fmeterreading" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">分析时间:</td>
-                <td align="left" class="l-table-edit-td"><input name="fdatetime" type="date" id="fdatetime" ltype="date"></td>
-                <td align="left"></td>
-            </tr>
-        </table>
-        <br/>
-        <input type="button" value="提交" id="submitBtn" class="l-button l-button-submit" />
-    </form>
-</div>
-
 <div id="list">
     <table cellpadding="0" cellspacing="0" class="l-table-edit" >
         <tr>
@@ -373,52 +335,107 @@
     </table>
     <div class="l-clear"></div>
 </div>
-<div style="display:none;">
-</div>
-
-<div id="maingrid" style="margin-top:5px"></div>
-
-<div id="addUpdateMeterAnalysis" style=" margin:3px; display:none;">
-    <form name="form2" method="post" action="" id="form2" style="margin-left: 15px">
+<div id="addMeterAnalysis" style=" margin:3px; display:none;">
+    <form name="form1" method="post" action="" id="form1" style="margin-left: 15px">
         <table cellpadding="0" cellspacing="0" class="l-table-edit" >
             <tr>
-                <td align="right" class="l-table-edit-td">修改数据名:</td>
+                <td align="right" class="l-table-edit-td">表具编号:</td>
+                <td align="left" class="l-table-edit-td"><input name="fmetercode" type="text" id="fmetercode"></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">市场:</td>
                 <td align="left" class="l-table-edit-td">
-                    <select id="dataname">
-                        <option value="表具编号">表具编号</option>
-                        <option value="部门">部门</option>
-                        <option value="分析人员">分析人员</option>
-                        <option value="报修故障">报修故障</option>
-                        <option value="实查故障">实查故障</option>
-                        <option value="表具止码">表具止码</option>
-                        <option value="分析时间">分析时间</option>
-                    </select>
-                </td>
+                    <select name="fcustomer" id="fcustomer" >
+                        <!--js控制添加市场-->
+                    </select></td>
                 <td align="left"></td>
             </tr>
-
             <tr>
-                <td align="right" class="l-table-edit-td">修改日期:</td>
-                <td align="left" class="l-table-edit-td"><input name="updatedate" type="date" id="updatedate" ></td>
+                <td align="right" class="l-table-edit-td">报修故障:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="freportmisfune" id="freportmisfune" >
+                        <!--js控制添加报修故障-->
+                    </select></td>
                 <td align="left"></td>
             </tr>
-
             <tr>
-                <td align="right" class="l-table-edit-td">修改人员:</td>
-                <td align="left" class="l-table-edit-td"><input name="updateoperator" type="text" id="updateoperator" ></td>
+                <td align="right" class="l-table-edit-td">实查故障:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="fconfirmmisfune" id="fconfirmmisfune" >
+                        <!--js控制添加实查故障-->
+                    </select></td>
                 <td align="left"></td>
             </tr>
-
             <tr>
-                <td align="right" class="l-table-edit-td">修改前数据:</td>
-                <td align="left" class="l-table-edit-td"><input name="updatebefore" type="text" id="updatebefore" ></td>
+                <td align="right" class="l-table-edit-td">故障详情:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="fmisfuneinfo" id="fmisfuneinfo" >
+                        <!--js控制添加故障详情-->
+                    </select></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">表具止码:</td>
+                <td align="left" class="l-table-edit-td"><input name="fmeterreading" type="text" id="fmeterreading" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">上电显示状态:</td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="felecdisplay" type="text" id="felecdisplay" >
+                        <!--js控制添加上电显示状态-->
+                    </select></td>
                 <td align="left"></td>
             </tr>
         </table>
-        <br />
-        <input type="button" value="提交" id="updateSubmitBtn" class="l-button l-button-submit" />
+        <br/>
+        <input type="button" value="提交" id="submitBtn" class="l-button l-button-submit" />
     </form>
 </div>
+<div style="display:none;">
+</div>
+<div id="maingrid" style="margin-top:5px"></div>
+<!--<div id="addUpdateMeterAnalysis" style=" margin:3px; display:none;">-->
+    <!--<form name="form2" method="post" action="" id="form2" style="margin-left: 15px">-->
+        <!--<table cellpadding="0" cellspacing="0" class="l-table-edit" >-->
+            <!--<tr>-->
+                <!--<td align="right" class="l-table-edit-td">修改数据名:</td>-->
+                <!--<td align="left" class="l-table-edit-td">-->
+                    <!--<select id="dataname">-->
+                        <!--<option value="表具编号">表具编号</option>-->
+                        <!--<option value="部门">部门</option>-->
+                        <!--<option value="分析人员">分析人员</option>-->
+                        <!--<option value="报修故障">报修故障</option>-->
+                        <!--<option value="实查故障">实查故障</option>-->
+                        <!--<option value="表具止码">表具止码</option>-->
+                        <!--<option value="分析时间">分析时间</option>-->
+                    <!--</select>-->
+                <!--</td>-->
+                <!--<td align="left"></td>-->
+            <!--</tr>-->
 
+            <!--<tr>-->
+                <!--<td align="right" class="l-table-edit-td">修改日期:</td>-->
+                <!--<td align="left" class="l-table-edit-td"><input name="updatedate" type="date" id="updatedate" ></td>-->
+                <!--<td align="left"></td>-->
+            <!--</tr>-->
+
+            <!--<tr>-->
+                <!--<td align="right" class="l-table-edit-td">修改人员:</td>-->
+                <!--<td align="left" class="l-table-edit-td"><input name="updateoperator" type="text" id="updateoperator" ></td>-->
+                <!--<td align="left"></td>-->
+            <!--</tr>-->
+
+            <!--<tr>-->
+                <!--<td align="right" class="l-table-edit-td">修改前数据:</td>-->
+                <!--<td align="left" class="l-table-edit-td"><input name="updatebefore" type="text" id="updatebefore" ></td>-->
+                <!--<td align="left"></td>-->
+            <!--</tr>-->
+        <!--</table>-->
+        <!--<br />-->
+        <!--<input type="button" value="提交" id="updateSubmitBtn" class="l-button l-button-submit" />-->
+    <!--</form>-->
+<!--</div>-->
 </body>
 </html>

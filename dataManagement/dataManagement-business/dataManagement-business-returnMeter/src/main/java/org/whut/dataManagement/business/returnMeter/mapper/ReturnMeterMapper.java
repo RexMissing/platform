@@ -12,9 +12,8 @@ import java.util.Map;
  * Created by Administrator on 2017/7/24 0024.
  */
 public interface ReturnMeterMapper extends AbstractMapper<ReturnMeter> {
-    public List<ReturnMeter> getlist();
-    public List<Map<String,Object>> findBySearch(Map<String,Object> condition);
-    public List<Map<String,Object>> findByCondition(Map<String, Object> conditions);
-    public List<Map<String,Object>> findByMap(Map<String,Object> condition);
-
+    List<ReturnMeter> getlist();
+    List<Map<String,Object>> findBySearch(Map<String,Object> condition);
+    List<Map<String,Object>> findByCondition(Map<String, Object> conditions);
+    List<Map<String,Object>> findByMap(Map<String,Object> condition);
 }

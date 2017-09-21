@@ -62,12 +62,16 @@
             "findDepart":"rs/department/findDepart"
         },
         "enumTable": {
-            "list": "rs/enumTable/list",
-            "add": "rs/enumTable/add",
-            "update": "rs/enumTable/update",
-            "delete": "rs/enumTable/delete",
-            "alllist": "rs/enumTable/alllist",
-            "findBySearch": "rs/enumTable/findBySearch"
+            "meterlist":"rs/enumTable/meterlist",
+            "elelist":"rs/enumTable/elelist",
+            "misinfolist":"rs/enumTable/misinfolist",
+            "cuslist":"rs/enumTable/cuslist",
+            "mislist":"rs/enumTable/mislist",
+            "add":"rs/enumTable/add",
+            "update":"rs/enumTable/update",
+            "delete":"rs/enumTable/delete",
+            "alllist":"rs/enumTable/alllist",
+            "findBySearch":"rs/enumTable/findBySearch"
         },
         "user":{
             "add":"rs/user/add",

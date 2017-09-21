@@ -10,8 +10,8 @@ import java.util.Map;
  * Created by Administrator on 2017/7/27 0027.
  */
 public interface MeterAnalysisMapper extends AbstractMapper<MeterAnalysis> {
-    public List<MeterAnalysis> getList();
-    public List<Map<String,String>> getConfirmList();
-    public List<Map<String,Object>> findByCondition(Map<String,Object> condition);
-    public List<Map<String,Object>> findBySearch(Map<String,Object> condition);
+    List<MeterAnalysis> getList();
+    List<Map<String,String>> getConfirmList();
+    List<Map<String,Object>> findByCondition(Map<String,Object> condition);
+    List<Map<String,Object>> findBySearch(Map<String,Object> condition);
 }

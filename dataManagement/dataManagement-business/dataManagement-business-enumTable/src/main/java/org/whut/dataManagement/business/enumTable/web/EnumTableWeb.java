@@ -85,18 +85,65 @@ public class EnumTableWeb {
         return JsonResultUtils.getObjectResultByStringAsDefault(alllist, JsonResultUtils.Code.SUCCESS);
     }
 
-
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
-    @Path("/list")
+    @Path("/mislist")
     @POST
-    public String list()
+    public String mislist()
     {
-        List<Map<String,String>> list = enumTableService.getList();
+        List<Map<String,String>> list = enumTableService.getMisList();
         if (list.toArray().length==0)  {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
         }
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
     }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/misinfolist")
+    @POST
+    public String misinfolist()
+    {
+        List<Map<String,String>> list = enumTableService.getMisInfoList();
+        if (list.toArray().length==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/cuslist")
+    @POST
+    public String cuslist()
+    {
+        List<Map<String,String>> list = enumTableService.getCusList();
+        if (list.toArray().length==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/elelist")
+    @POST
+    public String elelist()
+    {
+        List<Map<String,String>> list = enumTableService.getEleList();
+        if (list.toArray().length==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+//    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+//    @Path("/meterlist")
+//    @POST
+//    public String meterlist()
+//    {
+//        List<Map<String,String>> list = enumTableService.getMeterList();
+//        if (list.toArray().length==0)  {
+//            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+//        }
+//        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+//    }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findBySearch")

@@ -13,10 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/7/27 0027.
@@ -40,7 +37,8 @@ public class MeterAnalysisWeb {
         {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"参数不能是空!");
         }
-        System.out.print("lilang");
+
+        meterAnalysis.setFdatetime(new java.sql.Date(System.currentTimeMillis()));
         meterAnalysisService.add(meterAnalysis);
         return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.SUCCESS.getCode(), "添加成功!");
     }

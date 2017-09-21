@@ -43,11 +43,35 @@
         WHERE ID=#{id};
     </delete>
 
-    <select id="getList" resultMap="enumTableResultMap">
+    <select id="getMisList" resultMap="enumTableResultMap">
         SELECT <include refid="enumTable_fields"/>
         FROM tenumeration
-        WHERE FEnumType='故障' AND IsDelete=0;
+        WHERE FEnumType='故障类型' AND IsDelete=0;
     </select>
+
+    <select id="getMisInfoList" resultMap="enumTableResultMap">
+        SELECT <include refid="enumTable_fields"/>
+        FROM tenumeration
+        WHERE FEnumType='故障详情' AND IsDelete=0;
+    </select>
+
+    <select id="getCusList" resultMap="enumTableResultMap">
+        SELECT <include refid="enumTable_fields"/>
+        FROM tenumeration
+        WHERE FEnumType='市场' AND IsDelete=0;
+    </select>
+
+    <select id="getEleList" resultMap="enumTableResultMap">
+        SELECT <include refid="enumTable_fields"/>
+        FROM tenumeration
+        WHERE FEnumType='上电显示状态' AND IsDelete=0;
+    </select>
+
+    <!--<select id="getMeterList" resultMap="enumTableResultMap">-->
+        <!--SELECT <include refid="enumTable_fields"/>-->
+        <!--FROM tenumeration-->
+        <!--WHERE FEnumType='表具类型' AND IsDelete=0;-->
+    <!--</select>-->
 
     <select id="getAllList" resultMap="enumTableResultMap">
         SELECT <include refid="enumTable_fields"/>

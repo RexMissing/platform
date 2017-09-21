@@ -16,9 +16,21 @@ public class EnumTableService {
     @Autowired
     private EnumTableMapper enumTableMapper;
 
-    public List<Map<String, String>> getList() {
-        return enumTableMapper.getList();
+    public List<Map<String, String>> getMisList() {
+        return enumTableMapper.getMisList();
     }
+    public List<Map<String, String>> getMisInfoList() {
+        return enumTableMapper.getMisInfoList();
+    }
+    public List<Map<String, String>> getCusList() {
+        return enumTableMapper.getCusList();
+    }
+    public List<Map<String, String>> getEleList() {
+        return enumTableMapper.getEleList();
+    }
+//    public List<Map<String, String>> getMeterList() {
+//        return enumTableMapper.getMeterList();
+//    }
 
     public List<Map<String, String>> getAllList() {
         return enumTableMapper.getAllList();
