@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.meterAnalysis.mapper.ReturnValveAndNameMapper">
+
+    <sql id="valveAndName_fields">
+        FMeterCode,FValveCode,FCoverName
+    </sql>
+
+    <select id="findValveAndName" parameterType="map" resultType="map">
+        SELECT fmetercode,fcovername AS fmetername,fvalvecode AS fvalvename
+        FROM tb_WalvesAssembly
+        WHERE FMeterCode=#{fmetercode};
+    </select>
+</mapper>

@@ -80,6 +80,11 @@
         <version>${project.version}</version>
     </dependency>
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>platform</groupId>
             <artifactId>dataManagement-business-dynamicDataSource</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -108,6 +113,32 @@
             <groupId>platform</groupId>
             <artifactId>dataManagement-business-userFunctionRole</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>platform</groupId>
+            <artifactId>dataManagement-business-search</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>platform</groupId>
+            <artifactId>dataManagement-business-updateRecord</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+            <version>${servlet.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.jtds</groupId>
+            <artifactId>jtds</artifactId>
+            <version>${jtds.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
         </dependency>
     </dependencies>
 

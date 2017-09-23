@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.userFunctionRole.mapper.DepartMapper">
+    <sql id="depart_fields">
+        ID,FDepartNo,FDepartName
+    </sql>
+
+    <resultMap id="departResultMap" type="depart">
+        <id property="id" column="ID"/>
+        <result property="departNo" column="FDepartNo"/>
+        <result property="departName" column="FDepartName"/>
+    </resultMap>
+
+    <insert id="add" parameterType="depart" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        tdepartment(
+        <include refid="depart_fields"/>
+        )
+        VALUES (#{id},#{departNo},#{departName});
+    </insert>
+
+    <update id="update" parameterType="depart">
+        UPDATE tdepartment
+        <set>
+            <if test="departNo!=null">FDepartNo=#{departNo},</if>
+            <if test="departName!=null">FDepartName=#{departName}</if>
+        </set>
+        WHERE ID=#{id};
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE tdepartment
+        SET IsDelete=1
+        WHERE ID=#{id};
+    </delete>
+
+    <select id="findDepart" parameterType="java.lang.String" resultMap="departResultMap">
+        SELECT <include refid="depart_fields"/>
+        FROM tdepartment
+        WHERE FDepartNo=#{departNo} AND IsDelete=0;
+    </select>
+
+    <select id="getList" resultMap="departResultMap">
+        SELECT ID,FDepartNo,FDepartName
+        FROM tdepartment
+        WHERE IsDelete=0;
+    </select>
+</mapper>

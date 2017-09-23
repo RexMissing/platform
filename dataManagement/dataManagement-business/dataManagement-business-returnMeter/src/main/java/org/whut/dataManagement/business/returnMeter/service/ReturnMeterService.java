@@ -26,12 +26,30 @@ public class ReturnMeterService {
         return returnMeterMapper.delete(returnMeter);
     }
 
-    public List<ReturnMeter> list() {
+    public List<Map<String,Object>> list() {
         return returnMeterMapper.getlist();
+    }
+
+    public List<Map<String,Object>> getBatchlist()
+    {
+        return returnMeterMapper.getBatchlist();
     }
 
     public List<Map<String,Object>> findByCondition(Map<String,Object> condition)
     {
         return returnMeterMapper.findByCondition(condition);
     }
+    public List<Map<String,Object>> findBySearch(Map<String,Object> condition)
+    {
+        return returnMeterMapper.findBySearch(condition);
+    }
+    public List<Map<String,Object>> findByMap(Map<String,Object> condition)
+    {
+        return returnMeterMapper.findByMap(condition);
+    }
+    public List<Map<String,Object>> findLastData()
+    {
+        return returnMeterMapper.findLastData();
+    }
+
 }

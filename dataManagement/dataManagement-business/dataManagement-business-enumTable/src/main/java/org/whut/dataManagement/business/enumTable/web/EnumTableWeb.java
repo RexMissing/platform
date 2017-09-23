@@ -1,6 +1,5 @@
 package org.whut.dataManagement.business.enumTable.web;
 
-import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.whut.dataManagement.business.enumTable.entity.EnumTable;
@@ -14,7 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,17 +85,88 @@ public class EnumTableWeb {
         return JsonResultUtils.getObjectResultByStringAsDefault(alllist, JsonResultUtils.Code.SUCCESS);
     }
 
-
-
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
-    @Path("/list")
+    @Path("/mislist")
     @POST
-    public String list()
+    public String mislist()
     {
-        List<Map<String,String>> list = enumTableService.getList();
+        List<Map<String,String>> list = enumTableService.getMisList();
         if (list.toArray().length==0)  {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
         }
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/misinfolist")
+    @POST
+    public String misinfolist(@FormParam("misType")String misType)
+    {
+        List<Map<String, String>> list;
+        if (misType.equals("all")) {
+            list = enumTableService.getMisInfoAllList();
+        }
+        else{
+            list = enumTableService.getMisInfoList(misType);
+        }
+        if (list.toArray().length == 0) {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/cuslist")
+    @POST
+    public String cuslist()
+    {
+        List<Map<String,String>> list = enumTableService.getCusList();
+        if (list.toArray().length==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/elelist")
+    @POST
+    public String elelist()
+    {
+        List<Map<String,String>> list = enumTableService.getEleList();
+        if (list.toArray().length==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+//    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+//    @Path("/meterlist")
+//    @POST
+//    public String meterlist()
+//    {
+//        List<Map<String,String>> list = enumTableService.getMeterList();
+//        if (list.toArray().length==0)  {
+//            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+//        }
+//        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+//    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findBySearch")
+    @POST
+    public String findBySearch(@FormParam("fenumname")String fenumname,@FormParam("fenumtype") String fenumtype,@FormParam("fenumvalue") int fenumvalue)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(fenumname!=null&&!fenumname.equals(""))
+        {
+            condition.put("fenumname",fenumname);
+        }
+        if(fenumtype!=null&&!fenumtype.equals(""))
+        {
+            condition.put("fenumtype",fenumtype);
+        }
+        condition.put("fenumvalue",fenumvalue);
+        List<Map<String,Object>> list = enumTableService.findBySearch(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 }

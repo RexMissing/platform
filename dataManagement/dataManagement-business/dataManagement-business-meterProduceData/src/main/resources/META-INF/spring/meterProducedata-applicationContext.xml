@@ -6,4 +6,7 @@
     <bean id="walvesAssemblyService" class="org.whut.dataManagement.business.meterProduceData.service.WalvesAssemblyService" depends-on="mappers"></bean>
     <bean id="zFuncCheckService" class="org.whut.dataManagement.business.meterProduceData.service.ZFuncCheckService" depends-on="mappers"></bean>
     <bean id="nlCheckService" class="org.whut.dataManagement.business.meterProduceData.service.NLCheckService" depends-on="mappers"></bean>
+    <bean id="boxService" class="org.whut.dataManagement.business.meterProduceData.service.BoxService" depends-on="mappers"></bean>
+    <bean id="storageService" class="org.whut.dataManagement.business.meterProduceData.service.StorageService" depends-on="mappers"></bean>
+    <bean id="deliveryService" class="org.whut.dataManagement.business.meterProduceData.service.DeliveryService" depends-on="mappers"></bean>
 </beans>

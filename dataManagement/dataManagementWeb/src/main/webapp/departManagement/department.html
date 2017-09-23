@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>部门管理</title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $.ligerDialog.close("#addDepartment");
+        $(function () {
+            $.post($.URL.department.list,null,listCallback,"json");
+        });
+        function getCookie(cname) {
+            var ss = document.cookie;
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for(var i = 0 ;i < ca.length ; i++)
+            {
+                var c = ca[i].trim();
+                if (c.indexOf(name)==0)
+                    return c.substring(name.length,c.length);
+            }
+            return "";
+        }
+
+
+        var gridData = {};
+        function listCallback(data) {
+            if(data.code==200)
+            {
+                gridData.Rows=data.data;
+                gridData.Total=data.data.length;
+                f_initGrid();
+            }
+        }
+
+        var manager, g;
+        function f_initGrid()
+        {
+            g = manager = $("#maingrid").ligerGrid({
+                columns: [
+                    { display: '主键', name: 'id', width: '25%', type: 'int', frozen: true},
+                    { display: '部门编号', name: 'departNo', width: '25%',editor:{type:'text'}},
+                    { display: '部门名称',name: 'departName',width: '25%',editor:{type:'text'}} ,
+                    { display: '操作', isSort: false, width: '25%',render: function (rowdata, rowindex, value)
+                    {
+                        var h = "";
+                        if (!rowdata._editing)
+                        {
+                            h += "<a href='javascript:beginEdit(" + rowindex + ")'>修改</a> ";
+                            h += "<a href='javascript:deleteRow(" + rowindex + ")'>删除</a> ";
+                        }
+                        else
+                        {
+                            h += "<a href='javascript:endEdit(" + rowindex + ")'>提交</a> ";
+                            h += "<a href='javascript:cancelEdit(" + rowindex + ")'>取消</a> ";
+                        }
+                        return h;
+                    }
+                    }
+                ],
+                onSelectRow: function (rowdata, rowindex)
+                {
+                    $("#txtrowindex").val(rowindex);
+                },
+                enabledEdit: true,clickToEdit:false, isScroll: false,
+                data: gridData,
+                width: '100%'
+            });
+        }
+        var rowbefore = {};
+        function beginEdit(rowid) {
+            var row = manager.getRow(rowid);
+            rowbefore.departNo = row.departNo;
+            rowbefore.departName = row.departName;
+            manager.beginEdit(rowid);
+        }
+        function cancelEdit(rowid) {
+            manager.cancelEdit(rowid);
+        }
+        function endEdit(rowid) {
+            manager.endEdit(rowid);
+            var row = manager.getRow(rowid);
+            var jsonString = $.toJSON(row);
+            $.post($.URL.department.update,{"jsonString":jsonString},updateCallback,"json");
+            function updateCallback(data) {
+                if(data.code==200)
+                {
+                    $.ligerDialog.success("修改成功");
+                    $.post($.URL.department.list,null,listCallback,"json");
+
+                    var dataupdate = {};
+                    dataupdate.updateoperator = getCookie("userName");
+                    dataupdate.updatename = "部门管理表";
+                    dataupdate.updatekey = row.id;
+                    var flag = true;
+                    while(flag){
+                        flag = false;
+                        if (rowbefore.departNo != row.departNo){
+                            dataupdate.dataname = "部门编号";
+                            dataupdate.updatebefore = rowbefore.departNo;
+                            dataupdate.updateafter = row.departNo;
+                            rowbefore.departNo = row.departNo;
+                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                            flag = true;
+                        }
+                        else if (rowbefore.departName != row.departName){
+                            dataupdate.dataname = "部门名称";
+                            dataupdate.updatebefore = rowbefore.departName;
+                            dataupdate.updateafter = row.departName;
+                            rowbefore.departName = row.departName;
+                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                            flag = true;
+                        }
+                        function RecordCallback(data){
+                            if(data.code != 200){
+                                $.ligerDialog.warn(data.message);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    $.ligerDialog.warn(data.message);
+                    $.post($.URL.department.list,null,listCallback,"json");
+                }
+            }
+        }
+
+        function deleteRow(rowid)
+        {
+            if (confirm('确定删除?'))
+            {
+                var row = manager.getRow(rowid);
+                var jsonString  = $.toJSON(row);
+                $.post($.URL.department.delete,{"jsonString":jsonString},deleteCallback,"json");
+                manager.deleteRow(rowid);
+            }
+        }
+
+        function deleteCallback(data) {
+            if(data.code==200){
+                $.ligerDialog.success("成功删除！");
+                $.post($.URL.department.list,null,listCallback,"json");
+            }else{
+                $.ligerDialog.success("删除失败！");
+            }
+        }
+
+        function f_add() {
+            document.getElementById("form1").reset();
+            c_show();
+            $.ligerDialog.open({ target: $("#addDepartment"),width:500,title:'添加部门'});
+        }
+
+        function c_show() {
+            $('#addDepartment').css('display','block');
+        }
+
+        $("#updateSubmitBtn").click(function () {
+            var data={};
+            switch ($("#dataname").val())
+            {
+                case "部门编号":data.updateafter = afterData.departNo;break;
+                case "部门名称":data.updateafter = afterData.departName;break;
+            }
+            data.dataname = $("#dataname").val();
+            data.updatedate = $("#updatedate").val();
+            data.updateoperator = $("#updateoperator").val();
+            data.updatename = "部门管理表";
+            data.updatekey = afterData.id;
+            data.updatebefore = $("#updatebefore").val();
+            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},RecordCallback,"json");
+            function RecordCallback(data){
+                if(data.code==200){
+                    $.ligerDialog.success(data.message);
+                    document.getElementById('form2').reset();
+                    $.post($.URL.department.list,null,listCallback,"json");
+                }
+                else{
+                    $.ligerDialog.warn(data.message);
+                }
+            }
+        });
+
+        $("#submitBtn").click(function () {
+            var data={};
+            data.departNo = $("#departNo").val();
+            data.departName = $("#departName").val();
+            $.post($.URL.department.add,{"jsonString":$.toJSON(data)},addCallback,"json");
+
+            function addCallback(data) {
+                if(data.code==200)
+                {
+                    $.ligerDialog.success(data.message);
+                    document.getElementById('form1').reset();
+                    $.ligerDialog.close("#addDepartment");
+                    $.post($.URL.department.list,null,listCallback,"json");
+                }
+               else
+                {
+                    $.ligerDialog.error("添加失败");
+                    $.post($.URL.department.list,null,listCallback,"json");
+                }
+            }
+        });
+
+        $("#departSearchBtn").click(function () {
+            var departNo = $("#departbnum").val();
+            $.post($.URL.department.findDepart,{"departNo":departNo},listCallback,"json");
+        });
+
+    </script>
+    <style type="text/css">
+        .l-table-edit {}
+        .l-table-edit-td{margin-left:30px; margin-top:10px;padding:4px;height: 20px}
+        .l-table-edit-input{ padding:4px;width:300px}
+        .l-button-submit,.l-button-reset{width:80px; float:left; margin-left:10px; padding-bottom:2px;}
+        .l-dialog-tc{background:#E0EDFF; }
+    </style>
+</head>
+<body>
+<div><input type="button" value="添加" id="addSubmitBtn" onclick="f_add()"  class="l-button l-button-submit" /></div>
+<div id="list">
+    <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <tr>
+            <td align="right" class="l-table-edit-td">部门编号:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="departbnum" type="text" id="departbnum"/>
+            </td>
+            <td align="right"><input type="button" value="查询" id="departSearchBtn" class="l-button l-button-submit" /></td>
+        </tr>
+    </table>
+    <div class="l-clear"></div>
+</div>
+<div style="display:none;">
+</div>
+<div id="maingrid" style="margin-top:5px"></div>
+<div id="addDepartment" style=" margin:3px; display:none;">
+    <form name="form1" method="post" action="" id="form1" style="margin-left: 15px">
+
+        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+            <tr>
+                <td align="right" class="l-table-edit-td">部门编号:</td>
+                <td align="left" class="l-table-edit-td"><input name="departNo" type="text" id="departNo" ></td>
+                <td align="left"></td>
+            </tr>
+
+            <tr>
+                <td align="right" class="l-table-edit-td">部门名称:</td>
+                <td align="left" class="l-table-edit-td"><input name="departName" type="text" id="departName" ></td>
+                <td align="left"></td>
+            </tr>
+        </table>
+        <br />
+        <input type="button" value="提交" id="submitBtn" class="l-button l-button-submit" />
+    </form>
+</div>
+</body>
+</html>

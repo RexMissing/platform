@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.meterProduceData.mapper.StorageMapper">
+    <select id="findByCondition" parameterType="java.lang.String" resultType="map">
+        SELECT TPackDetails.FMeterCode AS fmetercode,TPackDetails.FBoxCode AS fboxcode,b.FPBatchID AS fpbatchid,b.FPOperatorID,
+        b.FIsStorage AS fisstorage,b.FSBatchID AS fsbatchid,b.FSOperatorID AS fsoperatorid,o.FName AS foperatorname,p.FName AS fsoperatorname,
+        a.FPackageDate AS fpackagedate,a.FStorageDate AS fstoragedate
+        FROM TPackDetails
+        LEFT JOIN TBox b ON b.FBoxCode=TPackDetails.FBoxCode
+        LEFT JOIN TOperator o ON o.FWorkID=b.FPOperatorID
+        LEFT JOIN TOperator p ON p.FWorkID=b.FSOperatorID
+        LEFT JOIN TBatch a ON a.FPBatchID=b.FPBatchID
+        WHERE TPackDetails.FMeterCode=#{fmetercode};
+    </select>
+</mapper>

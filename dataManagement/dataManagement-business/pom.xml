@@ -18,7 +18,8 @@
         <module>dataManagement-business-enumTable</module>
         <module>dataManagement-business-meterAnalysis</module>
         <module>dataManagement-business-search</module>
-        <module>dataManagement-business-userFunctionRole</module>    
+        <module>dataManagement-business-userFunctionRole</module>
+        <module>dataManagement-business-updateRecord</module>
     </modules>
 
 </project>

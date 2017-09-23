@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="js/highcharts.js" type="text/javascript"></script>
+    <script src="js/exporting.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            var graphType = $("#graphType").val();
+            if (graphType == 0){
+                $.post($.URL.graph.graphYears, null, showYears, "json");
+            }
+        });
+        $("#submitBtn1").click(function () {
+            var graphType = $("#graphType").val();
+            if (graphType == 0){
+                $.post($.URL.graph.graphYears, null, showYears, "json");
+            }
+            else if (graphType == 1){
+                var year = $("#year").val();
+                var data = {};
+                data.year = year;
+                $.post($.URL.graph.graphYear, data, showYear,"json");
+            }
+            else if (graphType == 2){
+                var year1 = $("#year1").val();
+                var year2 = $("#year2").val();
+                var data = {};
+                data.year1 = year1;
+                data.year2 = year2;
+                $.post($.URL.graph.graphCompareYears, data, showCompareYears, "json");
+            }
+        });
+        function showCompareYears(data) {
+            if (data.code == 200){
+                var number1 = new Array();
+                var number2 = new Array();
+                for(var i = 0; i < data.data.length; i++){
+                    number1[i] = data.data[i].number1;
+                    number2[i] = data.data[i].number2;
+                }
+                $("#containerMonth").css("display", "none");
+                $("#containerYear").css("display", "none");
+                $("#containerYearNumber").css("display", "block");
+                $('#containerYearNumber').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    credits: {
+                        text: '武汉理工大学',
+                        href: false
+                    },
+                    title: {
+                        text: '返修表年故障数量对比图'
+                    },
+                    xAxis: {
+                        categories: [
+                            '一月',
+                            '二月',
+                            '三月',
+                            '四月',
+                            '五月',
+                            '六月',
+                            '七月',
+                            '八月',
+                            '九月',
+                            '十月',
+                            '十一月',
+                            '十二月'
+                        ],
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '返修表数量 (块)'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y} 块</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: $("#year1").val(),
+                        data: number1
+                    }, {
+                        name: $("#year2").val(),
+                        data: number2
+                    }]
+                });
+            }
+        }
+        function showYears(data) {
+            var yearReturnRate = new Array();
+            var years = new Array();
+            var date = new Date();
+            var year = date.getFullYear();
+            for (var i = 9; i >= 0; i--){
+                years[i] = (year - i).toString();
+            }
+            if (data.code == 200) {
+                for (var i = 9; i >= 0; i--) {
+                    yearReturnRate[i] = parseFloat((data.data[i].rate * 100).toFixed(5));
+                }
+                $("#containerMonth").css("display", "none");
+                $("#containerYearNumber").css("display", "none");
+                $("#containerYear").css("display", "block");
+                var chart = new Highcharts.Chart('containerYear', {
+                    title: {
+                        text: '返修表近十年故障率趋势图',
+                        x: -20
+                    },
+                    credits: {
+                        text: '武汉理工大学',
+                        href: false
+                    },
+                    subtitle: {
+                        x: -20
+                    },
+                    xAxis: {
+                        categories: years
+                    },
+                    yAxis: {
+                        title: {
+                            text: '年故障率 (%)'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        valueSuffix: '%'
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle',
+                        borderWidth: 0
+                    },
+                    series: [{
+                        name: '返修表年故障率',
+                        data: yearReturnRate
+                    }]
+                });
+            }
+            else
+                $.ligerDialog.error("查询错误");
+        }
+        function showYear(data) {
+            var monthReturnRate = new Array();
+            if(data.code == 200){
+                for (var i = 0; i < data.data.length; i++){
+                    monthReturnRate[i] = parseFloat((data.data[i].rate * 100).toFixed(5));
+                }
+                $("#containerYear").css("display","none");
+                $("#containerYearNumber").css("display", "none");
+                $("#containerMonth").css("display","block");
+                var chart = new Highcharts.Chart('containerMonth', {
+                    title: {
+                        text: '返修表年故障率趋势图',
+                        x: -20
+                    },
+                    credits:{
+                        text: '武汉理工大学',
+                        href: false
+                    },
+                    subtitle: {
+                        x: -20
+                    },
+                    xAxis: {
+                        categories: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                    },
+                    yAxis: {
+                        title: {
+                            text: '故障率 (%)'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        valueSuffix: '%'
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle',
+                        borderWidth: 0
+                    },
+                    series: [{
+                        name: '返修表故障率',
+                        data: monthReturnRate
+                    }]
+                });
+            }
+            else
+                $.ligerDialog.error("查询错误");
+        }
+        function graphTypeChange(){
+            if($("#graphType").val() == 2){
+                $("#compareQuery").css("display","block");
+                $("#years").css("display","none");
+                var date = new Date();
+                var year = date.getFullYear();
+                $("#year1").empty();
+                $("#year2").empty();
+                for(var i = 0; i < 10; i++){
+                    $("#year1").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
+                    $("#year2").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
+                }
+
+            }
+            else if($("#graphType").val() == 1){
+                $("#compareQuery").css("display","none");
+                $("#years").css("display","block");
+                var date = new Date();
+                var year = date.getFullYear();
+                $("#year").empty();
+                for(var i = 0; i < 10; i++){
+                    $("#year").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
+                }
+            }
+            else {
+                $("#years").css("display","none");
+                $("#compareQuery").css("display","none");
+            }
+        }
+    </script>
+    <style type="text/css">
+        .l-table-edit {}
+        .l-table-edit-td{ padding:4px;}
+        .l-button-submit,.l-button-reset{width:80px; float:left; margin-left:10px; padding-bottom:2px;}
+        .l-dialog-tc{background:#E0EDFF;}
+
+    </style>
+</head>
+<body style="padding:10px">
+<div class="l-clear"></div>
+<div>
+    <div cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <table>
+            <tr>
+                <td class="l-table-edit-td">
+                    <select id="graphType" onchange="graphTypeChange()">
+                        <option value="0">返修表各年故障率趋势图</option>
+                        <option value="1">返修表年故障率趋势图</option>
+                        <option value="2">返修表年故障数量对比图</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div id="years" style="display: none">
+            <table>
+                <tr>
+                    <td class="l-table-edit-td">年份选择</td>
+                    <td>
+                        <select id="year">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="compareQuery" style="display:none;">
+            <table>
+                <tr>
+                    <td class="l-table-edit-td">年份选择</td>
+                    <td class="l-table-edit-td">
+                        <select id="year1">
+                        </select>
+                    </td>
+                    <td class="l-table-edit-td">对比</td>
+                    <td class="l-table-edit-td">
+                        <select id="year2">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td align="right"><input type="button" value="查询" id="submitBtn1" class="l-button l-button-submit" /></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="containerMonth" style="min-width: 400px;height: 400px;display: none"></div>
+<div id="containerYear" style="min-width: 400px;height: 400px;display: none"></div>
+<div id="containerYearNumber" style="min-width: 400px;height: 400px;display: none"></div>
+</body>
+</html>

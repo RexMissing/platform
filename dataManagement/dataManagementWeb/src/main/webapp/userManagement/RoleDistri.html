@@ -63,22 +63,22 @@
         {
             g = manager = $("#maingrid").ligerGrid({
                 columns: [
-                    {display:'用户编号',name: 'userid',width:"80",
+                    {display:'用户编号',name: 'userid',width:"20%",
                         editor: { type: 'text'}
                     },
-                    {display:'用户名',name:'username',width:"200",
+                    {display:'用户名',name:'username',width:"20%",
                         editor:{type:'text'}
                     },
-                    {display:'姓名',name:'fname',width:"200",
+                    {display:'姓名',name:'fname',width:"20%",
                         editor:{type:'text'}
                     },
-                    {display:'性别',name:'sex', width:"80",
+                    {display:'性别',name:'sex', width:"10%",
                         editor:{type:'text'}
                     },
-                    {display:'角色权限',name:'funcroleName', width:"250",
+                    {display:'角色权限',name:'funcroleName', width:"20%",
                         editor:{type:'text'}
                     },
-                    { display: '操作', isSort: false, width: 120,
+                    { display: '操作', isSort: false, width: "10%",
                      render: function (rowdata, rowindex, value) {
                          if (!rowdata._editing)
                          {

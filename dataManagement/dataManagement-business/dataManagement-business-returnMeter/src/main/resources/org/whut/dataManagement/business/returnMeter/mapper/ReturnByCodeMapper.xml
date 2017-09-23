@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.returnMeter.mapper.ReturnByCodeMapper">
+    <select id="findByCode" parameterType="map" resultType="map">
+        SELECT tb_WalvesAssembly.FMeterCode,tb_WalvesAssembly.FMeterDirection as fmeterdirection,tb_WalvesAssembly.FCoverName as fmetername,tb_WalvesAssembly.FValveCode as fvalvecode,
+        t.FBoxCode,b.FDBatchID,d.FCustomerID,s.FName as fcustomer
+        FROM tb_WalvesAssembly
+        LEFT JOIN TPackDetails t ON t.FMeterCode=tb_WalvesAssembly.FMeterCode
+        LEFT JOIN TBox b ON t.FBoxCode=b.FBoxCode
+        LEFT JOIN TDeliveryBatch d ON d.FDBatchID=b.FDBatchID
+        LEFT JOIN TCustomers s ON s.FCustomerID=d.FCustomerID
+        WHERE tb_WalvesAssembly.FMeterCode=#{fmetercode};
+    </select>
+</mapper>

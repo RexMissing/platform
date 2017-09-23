@@ -10,6 +10,12 @@ import java.util.Map;
  * Created by Administrator on 2017/7/27 0027.
  */
 public interface EnumTableMapper extends AbstractMapper<EnumTable> {
-    public List<Map<String,String>> getList();
-    public List<Map<String,String>> getAllList();
+    List<Map<String,String>> getMisList();
+    List<Map<String,String>> getMisInfoList(String misType);
+    List<Map<String,String>> getMisInfoAllList();
+    List<Map<String,String>> getCusList();
+    List<Map<String,String>> getEleList();
+//    List<Map<String,String>> getMeterList();
+    List<Map<String,String>> getAllList();
+    List<Map<String,Object>> findBySearch(Map<String,Object> condition);
 }

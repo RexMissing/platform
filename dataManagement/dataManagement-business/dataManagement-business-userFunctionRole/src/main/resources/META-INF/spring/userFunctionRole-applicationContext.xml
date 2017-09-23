@@ -6,4 +6,5 @@
    <bean id="userpasswordservice" class="org.whut.dataManagement.business.userFunctionRole.service.UserPasswordService" depends-on="mappers"></bean>
    <bean id="usercheckservice" class="org.whut.dataManagement.business.userFunctionRole.service.UserCheckService" depends-on="mappers"></bean>
    <bean id="departuserservice" class="org.whut.dataManagement.business.userFunctionRole.service.DepartUserService" depends-on="mappers"></bean>
+   <bean id="departService" class="org.whut.dataManagement.business.userFunctionRole.service.DepartService" depends-on="mappers"></bean>
 </beans>

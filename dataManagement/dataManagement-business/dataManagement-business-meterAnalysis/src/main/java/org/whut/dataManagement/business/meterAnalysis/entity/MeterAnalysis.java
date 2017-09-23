@@ -8,17 +8,29 @@ import org.whut.platform.fundamental.util.json.CustomDateDeserialize;
  * Created by Administrator on 2017/7/27 0027.
  */
 public class MeterAnalysis {
+    private long id;
     private String fdepartment;
-    private String fanalysor;
-    private String fcustomer;
     private String fmetername;
     private String fmetercode;
     private String fvalvename;
-    private int freportmisfune;
-    private int fconfirmmisfune;
+    private String fanalysor;
+    private String fcustomer;
+    private String freportmisfune;
+    private String fconfirmmisfune;
+    private String fmisfunedescrib;
     private String fmeterreading;
-    @JsonDeserialize(using=CustomDateDeserialize.class)
+    private String felecdisplay;
+//    @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date fdatetime;
+    private int isdelete;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getFdepartment() {
         return fdepartment;
@@ -26,22 +38,6 @@ public class MeterAnalysis {
 
     public void setFdepartment(String fdepartment) {
         this.fdepartment = fdepartment;
-    }
-
-    public String getFanalysor() {
-        return fanalysor;
-    }
-
-    public void setFanalysor(String fanalysor) {
-        this.fanalysor = fanalysor;
-    }
-
-    public String getFcustomer() {
-        return fcustomer;
-    }
-
-    public void setFcustomer(String fcustomer) {
-        this.fcustomer = fcustomer;
     }
 
     public String getFmetername() {
@@ -68,20 +64,44 @@ public class MeterAnalysis {
         this.fvalvename = fvalvename;
     }
 
-    public int getFreportmisfune() {
+    public String getFanalysor() {
+        return fanalysor;
+    }
+
+    public void setFanalysor(String fanalysor) {
+        this.fanalysor = fanalysor;
+    }
+
+    public String getFcustomer() {
+        return fcustomer;
+    }
+
+    public void setFcustomer(String fcustomer) {
+        this.fcustomer = fcustomer;
+    }
+
+    public String getFreportmisfune() {
         return freportmisfune;
     }
 
-    public void setFreportmisfune(int freportmisfune) {
+    public void setFreportmisfune(String freportmisfune) {
         this.freportmisfune = freportmisfune;
     }
 
-    public int getFconfirmmisfune() {
+    public String getFconfirmmisfune() {
         return fconfirmmisfune;
     }
 
-    public void setFconfirmmisfune(int fconfirmmisfune) {
+    public void setFconfirmmisfune(String fconfirmmisfune) {
         this.fconfirmmisfune = fconfirmmisfune;
+    }
+
+    public String getFmisfunedescrib() {
+        return fmisfunedescrib;
+    }
+
+    public void setFmisfunedescrib(String fmisfunedescrib) {
+        this.fmisfunedescrib = fmisfunedescrib;
     }
 
     public String getFmeterreading() {
@@ -92,11 +112,27 @@ public class MeterAnalysis {
         this.fmeterreading = fmeterreading;
     }
 
+    public String getFelecdisplay() {
+        return felecdisplay;
+    }
+
+    public void setFelecdisplay(String felecdisplay) {
+        this.felecdisplay = felecdisplay;
+    }
+
     public Date getFdatetime() {
         return fdatetime;
     }
 
     public void setFdatetime(Date fdatetime) {
         this.fdatetime = fdatetime;
+    }
+
+    public int getIsdelete() {
+        return isdelete;
+    }
+
+    public void setIsdelete(int isdelete) {
+        this.isdelete = isdelete;
     }
 }

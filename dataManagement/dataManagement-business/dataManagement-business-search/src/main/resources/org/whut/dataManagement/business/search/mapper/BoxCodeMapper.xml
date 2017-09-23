@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.search.mapper.BoxCodeMapper">
+
+    <resultMap id="boxCodeResultMap" type="boxCode">
+        <id property="fmetercode" column="Fmetercode"/>
+        <result property="fboxcode" column="Fboxcode"/>
+    </resultMap>
+
+    <select id="getBoxCode" parameterType="map" resultMap="boxCodeResultMap">
+        SELECT Fboxcode
+        FROM TPackDetails
+        WHERE Fmetercode=#{fmetercode}
+    </select>
+</mapper>

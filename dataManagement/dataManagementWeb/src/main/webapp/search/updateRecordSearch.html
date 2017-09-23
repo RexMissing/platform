@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function(){
+            $("#submitBtn").click(function (){
+                var updatename = $("#updatename").val();
+                var dataname = $("#dataname").val();
+                $.post($.URL.updateRecord.findByCondition,{"updatename":updatename,"dataname":dataname},listCallback,"json");
+            });
+        });
+
+        var gridData = {};
+        function listCallback(data){
+            if(data.code==200){
+                gridData.Rows = data.data;
+                gridData.Total = data.data.length;
+                f_initGrid();
+            }
+        }
+        var manager, g;
+        function f_initGrid()
+        {
+            g = manager = $("#maingrid").ligerGrid({
+                columns: [
+                    { display: '主键', name: 'id', width: '10%', type: 'int', frozen: true},
+                    { display: '数据名称', name: 'dataname', width: '10%', type: 'String',editor:{type:'text'}},
+                    { display: '修改日期',name: 'updatedate',width: '10%',editor:{type:'date'}} ,
+                    { display: '修改人员',name: 'updateoperator',width: '10%',editor:{type:'text'}},
+                    { display: '修改项目',name: 'updatename',width: '15%',editor: {type: 'text'}},
+                    {display:'修改项目主键',name:'updatekey',width:'15%',editor:{type:'text'}},
+                    { display: '修改前数据',name: 'updatebefore',width: '15%',editor:{type:'text'}},
+                    { display: '修改后数据',name: 'updateafter',width: '15%',editor:{type:'text'}}
+                ],
+                onSelectRow: function (rowdata, rowindex)
+                {
+                    $("#txtrowindex").val(rowindex);
+                },
+                enabledEdit: true,clickToEdit:false, isScroll: false,
+                data: gridData,
+                width: '100%'
+            });
+        }
+
+        function f_update() {
+            switch ($("#updatename").val())
+            {
+                case "部门管理表":
+                    $("#dataname").append("<option value='部门编号'>部门编号</option>");
+                    $("#dataname").append("<option value='部门名称'>部门名称</option>");
+
+                    break;
+                case "枚举表":
+                    $("#dataname").append("<option value='枚举类型'>枚举类型</option>");
+                    $("#dataname").append("<option value='枚举名称'>枚举名称</option>");
+                    $("#dataname").append("<option value='枚举值'>枚举值</option>");
+                    $("#dataname").append("<option value='枚举描述'>枚举描述</option>");
+                    break;
+                case "维修分析表":
+                    $("#dataname").append("<option value='表具编号'>表具编号</option>");
+                    $("#dataname").append("<option value='市场'>市场</option>");
+                    $("#dataname").append("<option value='报修故障'>报修故障</option>");
+                    $("#dataname").append("<option value='实查故障'>实查故障</option>");
+                    $("#dataname").append("<option value='故障详情'>故障详情</option>");
+                    $("#dataname").append("<option value='表具止码'>表具止码</option>");
+                    $("#dataname").append("<option value='上电显示状态'>上电显示状态</option>");
+                    break;
+                case "返修表录入表":
+                    $("#dataname").append("<option value='清点批次'>清点批次</option>");
+                    $("#dataname").append("<option value='表具编号'>表具编号</option>");
+                    $("#dataname").append("<option value='市场'>市场</option>");
+                    $("#dataname").append("<option value='报修故障'>报修故障</option>");
+                    $("#dataname").append("<option value='现场维修员'>现场维修员</option>");
+                    break;
+            }
+
+        }
+    </script>
+    <style type="text/css">
+        .l-table-edit {}
+        .l-table-edit-td{margin-left:30px; margin-top:10px;padding:4px;height: 20px}
+        .l-table-edit-input{ padding:4px;width:300px}
+        .l-button-submit,.l-button-reset{width:80px; float:left; margin-left:10px; padding-bottom:2px;}
+        .l-dialog-tc{background:#E0EDFF; }
+    </style>
+</head>
+<body  style="padding:10px">
+<div id="list">
+    <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <tr>
+            <td align="right" class="l-table-edit-td">修改表:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="updatename" onchange="f_update()">
+                    <option>无</option>
+                    <option>部门管理表</option>
+                    <option>枚举表</option>
+                    <option>维修分析表</option>
+                    <option>返修表录入表</option>
+                </select></td>
+            <td align="right" class="l-table-edit-td">数据名称:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="dataname"></select>
+            </td>
+            <td align="right"><input type="button" value="查询" id="submitBtn" class="l-button l-button-submit" /></td>
+        </tr>
+    </table>
+    <div class="l-clear"></div>
+    <div id="maingrid" style="margin-top:5px"></div>
+    <br/>
+</div>
+<div style="display:none;">
+</div>
+</body>
+</html>

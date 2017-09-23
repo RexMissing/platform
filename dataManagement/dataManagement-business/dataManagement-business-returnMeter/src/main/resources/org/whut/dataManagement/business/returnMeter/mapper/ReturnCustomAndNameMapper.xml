@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.returnMeter.mapper.ReturnCustomAndNameMapper">
+    <sql id="custom_fields">
+        FDBatchID,FProductType,FCustomerID
+    </sql>
+
+    <select id="findCustomAndName" parameterType="map" resultType="map">
+        SELECT TDeliveryBatch.fdbatchid,TDeliveryBatch.fproducttype,TDeliveryBatch.fcustomerid,t.fname AS fcustomer,p.fproductname AS fmetername
+        FROM TDeliveryBatch
+        LEFT JOIN TCustomers t ON t.fcustomerid=TDeliveryBatch.fcustomerid
+        LEFT JOIN TProducts p ON p.fproducttype=TDeliveryBatch.fproducttype
+        WHERE TDeliveryBatch.fdbatchid=#{fdbatchid};
+    </select>
+</mapper>

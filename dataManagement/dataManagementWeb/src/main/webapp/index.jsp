@@ -41,9 +41,7 @@
     <div id="mainContainer" position="center" title="" style="overflow-x: scroll; overflow-y: scroll;">
 
     </div>
-    <!--<div position="right"></div>-->
     <div id="titleContainer" position="top"></div>
-    <!--<div position="bottom"></div>-->
 </div>
 
 <div style="display:none;">

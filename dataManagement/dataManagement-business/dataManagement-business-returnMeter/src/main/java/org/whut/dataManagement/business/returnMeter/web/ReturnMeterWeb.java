@@ -3,6 +3,7 @@ package org.whut.dataManagement.business.returnMeter.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.whut.dataManagement.business.returnMeter.entity.ReturnMeter;
+import org.whut.dataManagement.business.returnMeter.service.ReturnByCodeService;
 import org.whut.dataManagement.business.returnMeter.service.ReturnMeterService;
 import org.whut.platform.fundamental.logger.PlatformLogger;
 import org.whut.platform.fundamental.util.json.JsonMapper;
@@ -25,6 +26,8 @@ public class ReturnMeterWeb {
     private static final PlatformLogger logger = PlatformLogger.getLogger(ReturnMeterWeb.class);
     @Autowired
     private ReturnMeterService returnMeterService;
+    @Autowired
+    private ReturnByCodeService returnByCodeService;
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/add")
@@ -64,9 +67,19 @@ public class ReturnMeterWeb {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "参数不能是空!");
         }
         ReturnMeter returnMeter = JsonMapper.buildNonDefaultMapper().fromJson(jsonString, ReturnMeter.class);
-        if (returnMeter.getFcustomer() == null||returnMeter.getFdatetime()==null||returnMeter.getFquantity()==0) {
+        if (returnMeter.getFcustomer() == null||returnMeter.getFdatetime()==null) {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "参数不能是空!");
         }
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(returnMeter.getFmetercode()!=null&&!returnMeter.getFmetercode().equals(""))
+        {
+            condition.put("fmetercode",returnMeter.getFmetercode());
+        }
+        List<Map<String,Object>> list = returnByCodeService.findByCode(condition);
+        System.out.print(list.get(0).get("fmetername").toString()+list.get(0).get("fmeterdirection").toString());
+        returnMeter.setFmetername(list.get(0).get("fmetername").toString());
+        returnMeter.setFcustomer(list.get(0).get("fcustomer").toString());
+        returnMeter.setFmeterdirection(list.get(0).get("fmeterdirection").toString());
         returnMeterService.update(returnMeter);
         return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.SUCCESS);
     }
@@ -75,24 +88,16 @@ public class ReturnMeterWeb {
     @Path("/list")
     @POST
     public String list() {
-        List<ReturnMeter> list = returnMeterService.list();
-        List<ReturnMeter> returnMeterList = new ArrayList<ReturnMeter>();
-        for(ReturnMeter returnMeter:list)
-        {
-            ReturnMeter subRetunMeter = new ReturnMeter();
-            subRetunMeter.setFmetercode(returnMeter.getFmetercode());
-            subRetunMeter.setFcustomer(returnMeter.getFcustomer());
-            subRetunMeter.setFmetername(returnMeter.getFmetername());
-            subRetunMeter.setFquantity(returnMeter.getFquantity());
-            subRetunMeter.setFrinvono(returnMeter.getFrinvono());
-            subRetunMeter.setFdatetime(returnMeter.getFdatetime());
-            subRetunMeter.setFoperator(returnMeter.getFoperator());
-            returnMeterList.add(subRetunMeter);
-        }
-        if (returnMeterList.toArray().length==0)  {
-            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
-        }
-        return JsonResultUtils.getObjectResultByStringAsDefault(returnMeterList, JsonResultUtils.Code.SUCCESS);
+        List<Map<String,Object>> list = returnMeterService.list();
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/getBatchlist")
+    @POST
+    public String getBatchlist() {
+        List<Map<String,Object>> list = returnMeterService.getBatchlist();
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -120,6 +125,72 @@ public class ReturnMeterWeb {
             condition.put("endTime",eTime+" 59:59:59");
         }
         List<Map<String,Object>> list=returnMeterService.findByCondition(condition);
+        System.out.print(list);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findBySearch")
+    @POST
+    public String findBySearch(@FormParam("freturnbatch")String freturnbatch,@FormParam("fmetercode")String fmetercode,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(freturnbatch!=null&&!freturnbatch.equals(""))
+        {
+            condition.put("freturnbatch",freturnbatch);
+        }
+        if (fmetercode!=null&&!fmetercode.equals(""))
+        {
+            condition.put("fmetercode",fmetercode);
+        }
+        if(sTime!=null&&!sTime.equals("")){
+            condition.put("startTime",sTime+" 00:00:00");
+        }
+        if(eTime!=null&&!eTime.equals("")){
+            condition.put("endTime",eTime+" 59:59:59");
+        }
+        List<Map<String,Object>> list = returnMeterService.findBySearch(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findByMap")
+    @POST
+    public String findByMap(@FormParam("foperator")String foperator,@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,
+                            @FormParam("frinvono")String frinvono,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(foperator!=null&&!foperator.equals(""))
+        {
+            condition.put("foperator",foperator);
+        }
+        if (fcustomer!=null&&!fcustomer.equals(""))
+        {
+            condition.put("fcustomer",fcustomer);
+        }
+        if (fmetername!=null&&!fmetername.equals(""))
+        {
+            condition.put("fmetername",fmetername);
+        }
+        if (frinvono!=null&&!frinvono.equals(""))
+        {
+            condition.put("frinvono",frinvono);
+        }
+        if(sTime!=null&&!sTime.equals("")){
+            condition.put("startTime",sTime+" 00:00:00");
+        }
+        if(eTime!=null&&!eTime.equals("")){
+            condition.put("endTime",eTime+" 59:59:59");
+        }
+        List<Map<String,Object>> list = returnMeterService.findByMap(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findLastData")
+    @POST
+    public String findLastData() {
+       List<Map<String,Object>> list = returnMeterService.findLastData();
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 }

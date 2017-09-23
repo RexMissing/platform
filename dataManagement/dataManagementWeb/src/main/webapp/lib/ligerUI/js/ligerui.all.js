@@ -1104,7 +1104,7 @@
             mozilla: /mozilla/.test(userAgent) && !/(compatible|webkit)/.test(userAgent)
         };
     }
-})(jQuery);﻿/**
+})(jQuery);/**
 * jQuery ligerUI 1.2.3
 * 
 * http://ligerui.com
@@ -1386,7 +1386,7 @@
         liger.inject.init();
     });
 
-})(jQuery);﻿/**
+})(jQuery);/**
 * jQuery ligerUI 1.2.3
 * 
 * http://ligerui.com
@@ -1569,7 +1569,7 @@
     });
 
 
-})(jQuery);﻿/**
+})(jQuery);/**
 * jQuery ligerUI 1.2.3
 * 
 * http://ligerui.com
@@ -5472,7 +5472,7 @@
     };
 
 
-})(jQuery);﻿/**
+})(jQuery);/**
 * jQuery ligerUI 1.2.3
 * 
 * http://ligerui.com
@@ -5806,7 +5806,7 @@
 
     });
 
-})(jQuery);﻿/**
+})(jQuery);/**
 * jQuery ligerUI 1.2.3
 * 
 * http://ligerui.com
@@ -12474,7 +12474,7 @@
         }
     });
 
-})(jQuery);﻿/**
+})(jQuery);/**
 * jQuery ligerUI 1.2.3
 * 
 * http://ligerui.com
@@ -12954,9 +12954,7 @@
             });
         } 
     });
-      
-
-})(jQuery);﻿/**
+})(jQuery);/**
 * jQuery ligerUI 1.2.3
 * 
 * http://ligerui.com
@@ -17215,7 +17213,7 @@
         return "" + (((sign) ? '' : '-') + '' + num + '.' + cents);
     }
 
-})(jQuery);﻿/**
+})(jQuery);/**
 * jQuery ligerUI 1.2.3
 * 
 * http://ligerui.com
