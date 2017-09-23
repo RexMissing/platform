@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : mysql
+Source Server         : dc
 Source Server Version : 50173
-Source Host           : 127.0.0.1:3306
+Source Host           : localhost:3306
 Source Database       : datamanagement
 
 Target Server Type    : MYSQL
 Target Server Version : 50173
 File Encoding         : 65001
 
-Date: 2017-09-21 11:23:38
+Date: 2017-09-23 14:55:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -149,11 +149,21 @@ CREATE TABLE `tenumeration` (
   `FDescription` varchar(200) DEFAULT NULL,
   `IsDelete` int(20) DEFAULT '0',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of tenumeration
 -- ----------------------------
+INSERT INTO `tenumeration` VALUES ('1', '故障类型', '无显', '1', '0', '0');
+INSERT INTO `tenumeration` VALUES ('2', '故障类型', '整机故障', '2', '0', '0');
+INSERT INTO `tenumeration` VALUES ('3', '市场', '武汉天然气', '1', '0', '0');
+INSERT INTO `tenumeration` VALUES ('4', '市场', '宜昌', '2', '0', '0');
+INSERT INTO `tenumeration` VALUES ('5', '故障详情', '测控板坏', '1', '无显', '0');
+INSERT INTO `tenumeration` VALUES ('6', '故障详情', '电源插头线反', '2', '无显', '0');
+INSERT INTO `tenumeration` VALUES ('7', '上电显示状态', '有显', '1', '0', '0');
+INSERT INTO `tenumeration` VALUES ('8', '上电显示状态', '无显', '2', '0', '0');
+INSERT INTO `tenumeration` VALUES ('9', '表具类型', '4-3BC', '1', '0', '0');
+INSERT INTO `tenumeration` VALUES ('10', '表具类型', '3BC(优化)', '2', '0', '0');
 
 -- ----------------------------
 -- Table structure for `tmeteranalysisinfo`
@@ -175,11 +185,17 @@ CREATE TABLE `tmeteranalysisinfo` (
   `FDateTime` date DEFAULT NULL,
   `IsDelete` int(20) DEFAULT '0',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of tmeteranalysisinfo
 -- ----------------------------
+INSERT INTO `tmeteranalysisinfo` VALUES ('6', '1234567', '4-3BC', '1234567', '维修部', 'xiaozhujun', '宜昌', '无', '无显', '测控板坏', '23', '有显', '2017-09-22', '0');
+INSERT INTO `tmeteranalysisinfo` VALUES ('7', '12345678', 'QK', '12345678', '维修部', 'xiaozhujun', '武汉天然气', '无显', '无显', '电源插头线反', '12334567', '有显', '2017-09-22', '0');
+INSERT INTO `tmeteranalysisinfo` VALUES ('8', '123456', '4-3BC', '123456', '维修部', 'xiaozhujun', '武汉天然气', '无', '无显', '测控板坏', '12', '有显', '2017-09-23', '0');
+INSERT INTO `tmeteranalysisinfo` VALUES ('9', '123456', '4-3BC', '123456', '外检部', 'test', '武汉天然气', '无', '无显', '测控板坏', '123', '有显', '2017-09-23', '1');
+INSERT INTO `tmeteranalysisinfo` VALUES ('10', '123456', '4-3BC', '123456', '外检部', 'test', '武汉天然气', '无', '无显', '测控板坏', '123', '有显', '2017-09-23', '1');
+INSERT INTO `tmeteranalysisinfo` VALUES ('11', '1234567', '4-3BC', '1234567', '外检部', 'test', '宜昌', '无', '无显', '测控板坏', '123', '无显', '2017-09-23', '0');
 
 -- ----------------------------
 -- Table structure for `treturnmeter`
@@ -189,6 +205,7 @@ CREATE TABLE `treturnmeter` (
   `ID` bigint(50) NOT NULL AUTO_INCREMENT,
   `FReturnBatch` varchar(20) DEFAULT NULL,
   `FMeterCode` varchar(14) DEFAULT NULL,
+  `FValveCode` varchar(14) DEFAULT NULL,
   `FCustomer` varchar(50) DEFAULT NULL,
   `FMeterName` varchar(50) DEFAULT NULL,
   `FMeterDirection` varchar(50) DEFAULT NULL,
@@ -200,11 +217,14 @@ CREATE TABLE `treturnmeter` (
   `FPreMaintain` varchar(20) DEFAULT NULL,
   `IsDelete` int(20) DEFAULT '0',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of treturnmeter
 -- ----------------------------
+INSERT INTO `treturnmeter` VALUES ('1', 'f2017092101', '1234567', '1234567', '宜昌', '4-3BC', '左', '2017-09-21', 'lilang', '无', '2015-08-01', '2016-09-01', null, '0');
+INSERT INTO `treturnmeter` VALUES ('2', 'f2017092201', '12345678', '12345678', '武汉天然气', 'QK', '右', '2017-09-22', 'dengchao', '无', '2016-07-11', '2017-03-10', null, '0');
+INSERT INTO `treturnmeter` VALUES ('3', 'f2017092301', '123456', '123456', '武汉天然气', '4-3BC', '左', '2017-09-23', 'dengchao', '无', '2015-11-12', '2015-12-10', null, '0');
 
 -- ----------------------------
 -- Table structure for `updaterecord`
@@ -220,16 +240,25 @@ CREATE TABLE `updaterecord` (
   `UpdateBefore` varchar(300) DEFAULT NULL,
   `UpdateAfter` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=940 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of updaterecord
 -- ----------------------------
-INSERT INTO `updaterecord` VALUES ('1', '枚举值', '2017-08-21', '李浪', '枚举表', '3-2B', '4', '1');
-INSERT INTO `updaterecord` VALUES ('3', '表具止码', '2017-08-21', '李浪', '维修分析表', '1', '323', '325');
-INSERT INTO `updaterecord` VALUES ('4', '录入人员', '2017-09-12', 'lilang', '公司返修表', '2', '李四', 'zhangsan');
-INSERT INTO `updaterecord` VALUES ('5', '分析人员', '2017-09-17', '李浪', '维修分析表', '3', 'wer', '小花');
-INSERT INTO `updaterecord` VALUES ('6', '录入时间', '2017-09-11', '小哈', '公司返修表', '6', '2016-4-5', '2017-09-16T16:00:00.000Z');
+INSERT INTO `updaterecord` VALUES ('926', '上电显示状态', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '有显', '无显');
+INSERT INTO `updaterecord` VALUES ('927', '故障详情', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '电源插头线反', '测控板坏');
+INSERT INTO `updaterecord` VALUES ('928', '表具止码', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '1233', '123345');
+INSERT INTO `updaterecord` VALUES ('929', '报修故障', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '无', '无显');
+INSERT INTO `updaterecord` VALUES ('930', '表具编号', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '12345678', '1234567');
+INSERT INTO `updaterecord` VALUES ('931', '上电显示状态', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '无显', '有显');
+INSERT INTO `updaterecord` VALUES ('932', '市场', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '武汉天然气', '宜昌');
+INSERT INTO `updaterecord` VALUES ('933', '表具止码', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '123345', '12334567');
+INSERT INTO `updaterecord` VALUES ('934', '市场', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '宜昌', '武汉天然气');
+INSERT INTO `updaterecord` VALUES ('935', '实查故障', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '无显', '整机故障');
+INSERT INTO `updaterecord` VALUES ('936', '实查故障', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '整机故障', '无显');
+INSERT INTO `updaterecord` VALUES ('937', '故障详情', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '测控板坏', '电源插头线反');
+INSERT INTO `updaterecord` VALUES ('938', '表具编号', '2017-09-23', 'xiaozhujun', '维修分析表', '7', '1234567', '12345678');
+INSERT INTO `updaterecord` VALUES ('939', '上电显示状态', '2017-09-23', 'xiaozhujun', '维修分析表', '11', '有显', '无显');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -248,7 +277,7 @@ CREATE TABLE `user` (
   `departNo` varchar(50) DEFAULT NULL,
   `fname` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of user
@@ -258,6 +287,7 @@ INSERT INTO `user` VALUES ('2', 'zhangsan', '202cb962ac59075b964b07152d234b70', 
 INSERT INTO `user` VALUES ('3', 'sunhui', '202cb962ac59075b964b07152d234b70', '男', 'ROLE_USER', '1', '启用', null, '2', '001', '孙辉');
 INSERT INTO `user` VALUES ('4', 'liujinxia', '202cb962ac59075b964b07152d234b70', '女', 'ROLE_ADMIN', '1', '启用', null, '3', '002', '刘金霞');
 INSERT INTO `user` VALUES ('5', 'lilang', '202cb962ac59075b964b07152d234b70', '男', 'ROLE_USER', '1', '启用', null, '1', '003', 'li');
+INSERT INTO `user` VALUES ('6', 'test', '202cb962ac59075b964b07152d234b70', '男', 'ROLE_USER', '1', '启用', null, '4', '002', 'sss');
 
 -- ----------------------------
 -- Table structure for `user_authority`
@@ -270,7 +300,7 @@ CREATE TABLE `user_authority` (
   `userName` varchar(255) DEFAULT NULL,
   `authorityName` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of user_authority
@@ -283,3 +313,4 @@ INSERT INTO `user_authority` VALUES ('5', '2', '1', 'zhangsan', 'ROLE_USER');
 INSERT INTO `user_authority` VALUES ('6', '3', '1', 'sunhui', 'ROLE_USER');
 INSERT INTO `user_authority` VALUES ('7', '4', '2', 'liujinxia', 'ROLE_ADMIN');
 INSERT INTO `user_authority` VALUES ('8', '5', '1', 'lilang', 'ROLE_USER');
+INSERT INTO `user_authority` VALUES ('9', '6', '1', 'test', 'ROLE_USER');
