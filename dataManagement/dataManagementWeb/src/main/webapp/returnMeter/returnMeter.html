@@ -14,10 +14,23 @@
     <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
     <script type="text/javascript">
+        var nowbatch = null;
         $(function(){
+            var d=new Date();
+            var endTime=d.getFullYear()+"-"+ (d.getMonth()+1)+"-"+ d.getDate();
+            var startTime;
+            if(d.getMonth()==1){
+                startTime=(d.getFullYear()-1)+"-"+12+"-"+ d.getDate();
+
+            }else{
+                startTime=(d.getFullYear())+"-"+ (d.getMonth())+"-"+ d.getDate();
+            }
+            $("#returnMeterStartTime").ligerDateEditor({initValue: startTime});
+            $("#returnMeterEndTime").ligerDateEditor({initValue: endTime});
+            $.post($.URL.enumTable.mislist, null, enumMisListCallBack, "json");
+            $.post($.URL.enumTable.cuslist, null, enumCusListCallBack, "json");
             $.post($.URL.returnMeter.list,null,listCallback,"json");
         });
-
         function Appendzero(obj) {
             if(obj<10)
                 return "0"+obj;
@@ -32,67 +45,111 @@
                 var batch = data.data[0].freturnbatch;
                 if(str==batch.substring(1,9))
                 {
-                    window.nowbatch = "f"+mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate())+Appendzero(parseInt(batch.substring(9,11))+1);
+                    nowbatch = "f"+mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate())+Appendzero(parseInt(batch.substring(9,11))+1);
+                    alert("当前生成批次号："+nowbatch);
                 }
                 else
                 {
-                    window.nowbatch = "f"+mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate())+"01";
+                    nowbatch = "f"+mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate())+"01";
+                    alert("当前生成批次号："+nowbatch);
+                }
+
+            }
+        }
+
+        function getCookie(cname) {
+            var ss = document.cookie;
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for(var i = 0 ;i < ca.length ; i++)
+            {
+                var c = ca[i].trim();
+                if (c.indexOf(name)==0)
+                    return c.substring(name.length,c.length);
+            }
+            return "";
+        }
+
+        var enumData=[];
+        function enumMisListCallBack(data) {
+            if (data.code == 200) {
+                $("#freportmisfune").empty();
+                $("#freportmisfune").append("<option value='无'>无</option>");
+                for(var i = 0; i < data.data.length; i++){
+                    $("#freportmisfune").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+                }
+            }
+        }
+
+        function enumCusListCallBack(data) {
+            for(var i = 0; i < data.data.length; i++){
+                $("#fcustomer").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+        }
+
+        function bacthListCallBack(data) {
+            if (data.code == 200) {
+                $("#freturnbatch").empty();
+                if (nowbatch != null)
+                    $("#freturnbatch").append("<option value='"+nowbatch+"'>"+nowbatch+"</option>");
+                for(var i = 0; i < data.data.length; i++){
+                    $("#freturnbatch").append("<option value='" + data.data[i].freturnbatch + "'>" + data.data[i].freturnbatch + "</option>");
+                }
+            }
+        }
+
+        function f_customer() {
+            var fmetercode = $("#fmetercode").val();
+            $.post($.URL.returnByCode.findByCode, {"fmetercode": fmetercode}, getCustomerCallback, "json");
+            function getCustomerCallback(data) {
+                if (data.data[0].fcustomer != "") {
+                    $('#fcustomer').attr('value',data.data[0].fcustomer);
                 }
             }
         }
 
         $("#submitBtn").click(function () {
-
             var mdata={};
+            mdata.freturnbatch = $("#freturnbatch").val();
             mdata.fmetercode = $("#fmetercode").val();
-            mdata.fquantity = $("#fquantity").val();
-            mdata.frinvono = $("#frinvono").val();
-            mdata.fdatetime  = $("#fdatetime").val();
-            mdata.foperator = $("#foperator").val();
-
-            $.post($.URL.boxCodeSearch.findByCondition, {"fmetercode":mdata.fmetercode}, getBoxCodeListCallback, "json");
-
-            function getBoxCodeListCallback(data) {
-                if(data.data==null)
-                {
-                    $.ligerDialog.alert("参数为空");
-                }
+            mdata.fcustomer = $("#fcustomer").val();
+            $.post($.URL.returnByCode.findByCode,{"fmetercode":mdata.fmetercode},getInfoCallback,"json");
+            function getInfoCallback(data) {
+                mdata.fvalvecode = data.data[0].fvalvecode;
+                mdata.fmetername = data.data[0].fmetername;
+                mdata.fmeterdirection = data.data[0].fmeterdirection;
+                var nowdate = new Date();
+                mdata.fdatetime = nowdate.getFullYear()+"-"+Appendzero(nowdate.getMonth()+1)+"-"+Appendzero(nowdate.getDate());
+                mdata.foperator = getCookie("userName");
+                mdata.freportmisfune = $("#freportmisfune").val();
+                if(mdata.fmetercode.length==12)
+                    mdata.fproducetime = "20"+mdata.fmetercode.substring(3,5)+"-"+mdata.fmetercode.substring(5,7)+"-"+"01";
                 else
-                {
-                    $.post($.URL.boxBatch.getBoxBatchInfo,{"fboxcode":data.data[0].fboxcode},getListCallback,"json");
-                }
-            }
+                    mdata.fproducetime = "20"+mdata.fmetercode.substring(4,6)+"-"+mdata.fmetercode.substring(6,8)+"-"+"01";
+                mdata.fsaletime = "2017-09-20";
+                mdata.fpremaintain = "lilang";
+                $.post($.URL.returnMeter.add,{"jsonString":$.toJSON(mdata)},addCallback,"json");
 
-            function getListCallback(data) {
-                if(data.data==null)
-                {
-                    $.ligerDialog.alert("参数为空");
-                }
-                else
-                {
-                    $.post($.URL.returnCustomAndName.findCustomAndName,{"fdbatchid":data.data[0].fdbatchid},getCustomAndNameCallback,"json");
-                }
-            }
-
-            function getCustomAndNameCallback(data) {
-                if(data.data==null)
-                {
-                    $.ligerDialog.alert("参数为空");
-                }
-                else
-                {
-                    mdata.fcustomer =data.data[0].fcustomer;
-                    mdata.fmetername = data.data[0].fmetername;
-                    $.post($.URL.returnMeter.add,{"jsonString":$.toJSON(mdata)},addCallback,"json");
+                function addCallback(data){
+                    if(data.code==200){
+                        $.ligerDialog.success("添加成功");
+                        document.getElementById('form1').reset();
+                        $.post($.URL.returnMeter.list,null,listCallback,"json");
+                        $.ligerDialog.hide("#addreturnMeter");
+                    }
+                    else{
+                        $.ligerDialog.warn(data.message);
+                    }
                 }
             }
         });
 
         $("#returnSearchBtn").click(function () {
+            var freturnbatch = $("#batch").val();
             var fmetercode = $("#code").val();
-            var fmetername = $("#type").val();
-            var frinvono = $("#return").val();
-            $.post($.URL.returnMeter.findBySearch,{"fmetercode":fmetercode,"fmetername":fmetername,"frinvono":frinvono},listCallback,"json");
+            var sTime=$("#returnMeterStartTime").val();
+            var eTime=$("#returnMeterEndTime").val();
+            $.post($.URL.returnMeter.findBySearch,{"freturnbatch":freturnbatch,"fmetercode":fmetercode,"sTime":sTime,"eTime":eTime},listCallback,"json");
         });
 
         var gridData = {};
@@ -110,13 +167,13 @@
             g = manager = $("#maingrid").ligerGrid({
                 columns: [
                     { display: '主键', name: 'id', width: '5%', type: 'int', frozen: true},
-                    { display: '清点批次', name: 'freturnbatch', width: '10%',editor:{type:'text'}},
+                    { display: '清点批次', name: 'freturnbatch', width: '10%', editor:{type:'text'}},
                     { display: '表具编号', name: 'fmetercode', width: '10%', editor:{type:'text'}},
                     { display: '市场',name: 'fcustomer',width: '10%',editor:{type:'text'}} ,
-                    { display: '表具类型',name: 'fmetername',width: '10%',editor:{type:'text'}},
-                    { display: '表具方向',name: 'fmeterdirection',width: '8%',editor:{type:'text'}},
-                    { display: '录入时间',name: 'fdatetime',width: '10%',editor:{type:'date'}},
-                    { display: '录入人员',name: 'foperator',width: '10%',editor:{type:'text'}},
+                    { display: '表具类型',name: 'fmetername',width: '10%'},
+                    { display: '表具方向',name: 'fmeterdirection',width: '8%'},
+                    { display: '录入时间',name: 'fdatetime',width: '10%'},
+                    { display: '录入人员',name: 'foperator',width: '10%'},
                     { display: '预报故障',name: 'freportmisfune',width: '10%',editor:{type:'text'}},
                     { display: '现场维修员',name: 'fpremaintain',width: '7%',editor:{type:'text'}},
                     { display: '操作', isSort: false, width: '10%',render: function (rowdata, rowindex, value)
@@ -145,7 +202,14 @@
                 width: '100%'
             });
         }
+        var rowbefore = {};
         function beginEdit(rowid) {
+            var row = manager.getRow(rowid);
+            rowbefore.freturnbatch = row.freturnbatch;
+            rowbefore.fmetercode = row.fmetercode;
+            rowbefore.fcustomer = row.fcustomer;
+            rowbefore.freportmisfune = row.freportmisfune;
+            rowbefore.fpremaintain = row.fpremaintain;
             manager.beginEdit(rowid);
         }
         function cancelEdit(rowid) {
@@ -154,17 +218,67 @@
         function endEdit(rowid)
         {
             manager.endEdit(rowid);
-            var row = manager.getRow(rowid);
+            window.row = manager.getRow(rowid);
             var jsonString  = $.toJSON(row);
             $.post($.URL.returnMeter.update,{"jsonString":jsonString},updateCallback,"json");
-            document.getElementById('form2').reset();
-            c_show1();
-            $.ligerDialog.open({ target: $("#addUpdateReturnMeter"),width:500,title:'添加数据修改记录'});
+
             function updateCallback(data){
                 if(data.code==200){
                     $.ligerDialog.success("修改成功");
-                    window.afterData = manager.getRow(rowid);
                     $.post($.URL.returnMeter.list,null,listCallback,"json");
+                    var dataupdate = {};
+                    dataupdate.updateoperator = getCookie("userName");
+                    dataupdate.updatename = "返修表录入表";
+                    dataupdate.updatekey = row.id;
+                    var flag = true;
+                    while(flag){
+                        flag = false;
+                        if (rowbefore.freturnbatch != row.freturnbatch){
+                            dataupdate.dataname = "清点批次";
+                            dataupdate.updatebefore = rowbefore.freturnbatch;
+                            dataupdate.updateafter = row.freturnbatch;
+                            rowbefore.freturnbatch = row.freturnbatch;
+                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                            flag = true;
+                        }
+                        else if (rowbefore.fmetercode != row.fmetercode){
+                            dataupdate.dataname = "表具编号";
+                            dataupdate.updatebefore = rowbefore.fmetercode;
+                            dataupdate.updateafter = row.fmetercode;
+                            rowbefore.fmetercode = row.fmetercode;
+                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                            flag = true;
+                        }
+                        else if (rowbefore.fcustomer != row.fcustomer){
+                            dataupdate.dataname = "市场";
+                            dataupdate.updatebefore = rowbefore.fcustomer;
+                            dataupdate.updateafter = row.fcustomer;
+                            rowbefore.fcustomer = row.fcustomer;
+                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                            flag = true;
+                        }
+                        else if (rowbefore.freportmisfune != row.freportmisfune){
+                            dataupdate.dataname = "报修故障";
+                            dataupdate.updatebefore = rowbefore.freportmisfune;
+                            dataupdate.updateafter = row.freportmisfune;
+                            rowbefore.freportmisfune = row.freportmisfune;
+                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                            flag = true;
+                        }
+                        else if (rowbefore.fpremaintain != row.fpremaintain){
+                            dataupdate.dataname = "现场维修员";
+                            dataupdate.updatebefore = rowbefore.fpremaintain;
+                            dataupdate.updateafter = row.fpremaintain;
+                            rowbefore.fpremaintain = row.fpremaintain;
+                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                            flag = true;
+                        }
+                        function RecordCallback(data){
+                            if(data.code != 200){
+                                $.ligerDialog.warn(data.message);
+                            }
+                        }
+                    }
                 }
                 else{
                     $.post($.URL.returnMeter.list,null,listCallback,"json");
@@ -195,6 +309,7 @@
 
         function f_add() {
             document.getElementById('form1').reset();
+            $.post($.URL.returnMeter.getBatchlist,null,bacthListCallBack,"json");
             c_show();
             $.ligerDialog.open({ target: $("#addreturnMeter"),width:500,title:'添加返修表'});
         }
@@ -202,54 +317,6 @@
         function c_show(){
             $('#addreturnMeter').css('display','block');
         }
-
-        function c_show1(){
-            $('#addUpdateReturnMeter').css('display','block');
-        }
-
-
-        function addCallback(data){
-            if(data.code==200){
-                $.ligerDialog.success(data.message);
-                document.getElementById('form1').reset();
-                $.post($.URL.returnMeter.list,null,listCallback,"json");
-                $.ligerDialog.hide("#addreturnMeter");
-            }
-            else{
-                $.ligerDialog.warn(data.message);
-            }
-        }
-
-        $("#updateSubmitBtn").click(function () {
-            var data={};
-            switch ($("#dataname").val())
-            {
-                case "表具编号":data.updateafter = afterData.fmetercode;break;
-                case "燃气公司":data.updateafter = afterData.fcustomer;break;
-                case "表具类型":data.updateafter = afterData.fmetername;break;
-                case "返修表数量":data.updateafter = afterData.fquantity;break;
-                case "退库单据号":data.updateafter = afterData.frinvono;break;
-                case "录入时间":data.updateafter = afterData.fdatetime;break;
-                case "录入人员":data.updateafter = afterData.foperator;break;
-            }
-            data.dataname = $("#dataname").val();
-            data.updatedate = $("#updatedate").val();
-            data.updateoperator = $("#updateoperator").val();
-            data.updatename = "退库单返修表";
-            data.updatekey = afterData.id;
-            data.updatebefore = $("#updatebefore").val();
-            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},RecordCallback,"json");
-            function RecordCallback(data){
-                if(data.code==200){
-                    $.ligerDialog.success(data.message);
-                    document.getElementById('form2').reset();
-                    $.post($.URL.returnMeter.list,null,listCallback,"json");
-                }
-                else{
-                    $.ligerDialog.warn(data.message);
-                }
-            }
-        });
     </script>
     <style type="text/css">
         .l-table-edit {}
@@ -267,17 +334,21 @@
 <div id="list">
     <table cellpadding="0" cellspacing="0" class="l-table-edit" >
         <tr>
+            <td align="right" class="l-table-edit-td">清点批次:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="batch" type="text" id="batch"/>
+            </td>
             <td align="right" class="l-table-edit-td">表具编号:</td>
             <td align="left" class="l-table-edit-td">
                 <input name="code" type="text" id="code"/>
             </td>
-            <td align="right" class="l-table-edit-td">表具类型:</td>
+            <td align="right" class="l-table-edit-td">起始时间:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="type" type="text"  id="type">
+                <input name="returnMeterStartTime" type="date"  id="returnMeterStartTime">
             </td>
-            <td align="right" class="l-table-edit-td">退库单:</td>
+            <td align="right" class="l-table-edit-td">终止时间:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="return" type="text"  id="return">
+                <input name="returnMeterEndTime" type="date"  id="returnMeterEndTime">
             </td>
             <td align="right"><input type="button" value="查询" id="returnSearchBtn" class="l-button l-button-submit" /></td>
         </tr>
@@ -293,31 +364,34 @@
         <table cellpadding="0" cellspacing="0" class="l-table-edit" >
             <tr>
                 <td align="right" class="l-table-edit-td">清点批次:</td>
-                <td align="left" class="l-table-edit-td"><input name="freturnbatch" type="text" id="freturnbatch" ></td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="freturnbatch" id="freturnbatch" >
+                        <!--js控制添加批次-->
+                    </select></td>
                 <td align="left"></td>
             </tr>
 
             <tr>
                 <td align="right" class="l-table-edit-td">表具编号:</td>
-                <td align="left" class="l-table-edit-td"><input name="fmetercode" type="text" id="fmetercode" ></td>
+                <td align="left" class="l-table-edit-td">
+                    <input name="fmetercode" type="text" id="fmetercode" onchange="f_customer()"></td>
                 <td align="left"></td>
             </tr>
 
             <tr>
                 <td align="right" class="l-table-edit-td">市场:</td>
-                <td align="left" class="l-table-edit-td"><input name="fcustomer" type="text" id="fcustomer" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">录入时间:</td>
-                <td align="left" class="l-table-edit-td"><input name="fdatetime" type="date" id="fdatetime" ></td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="fcustomer" id="fcustomer" >
+                        <!--js控制添加市场-->
+                    </select></td>
                 <td align="left"></td>
             </tr>
 
             <tr>
                 <td align="right" class="l-table-edit-td">报修故障:</td>
-                <td align="left" class="l-table-edit-td"><input name="freportmisfune" type="text" id="freportmisfune" ></td>
+                <td align="left" class="l-table-edit-td">
+                    <select name="freportmisfune" id="freportmisfune" >
+                    </select></td>
                 <td align="left"></td>
             </tr>
         </table>
@@ -325,49 +399,5 @@
         <input type="button" value="提交" id="submitBtn" class="l-button l-button-submit" />
     </form>
 </div>
-
-<div id="addUpdateReturnMeter" style=" margin:3px; display:none;">
-    <form name="form2" method="post" action="" id="form2" style="margin-left: 15px">
-
-        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
-            <tr>
-                <td align="right" class="l-table-edit-td">修改数据名:</td>
-                <td align="left" class="l-table-edit-td">
-                    <select id="dataname">
-                        <option value="表具编号">表具编号</option>
-                        <option value="燃气公司">燃气公司</option>
-                        <option value="表具类型">表具类型</option>
-                        <option value="返修表数量">返修表数量</option>
-                        <option value="退库单据号">退库单据号</option>
-                        <option value="录入时间">录入时间</option>
-                        <option value="录入人员">录入人员</option>
-                    </select>
-                </td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">修改日期:</td>
-                <td align="left" class="l-table-edit-td"><input name="updatedate" type="date" id="updatedate" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">修改人员:</td>
-                <td align="left" class="l-table-edit-td"><input name="updateoperator" type="text" id="updateoperator" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">修改前数据:</td>
-                <td align="left" class="l-table-edit-td"><input name="updatebefore" type="text" id="updatebefore" ></td>
-                <td align="left"></td>
-            </tr>
-        </table>
-        <br />
-        <input type="button" value="提交" id="updateSubmitBtn" class="l-button l-button-submit" />
-    </form>
-</div>
-
 </body>
 </html>

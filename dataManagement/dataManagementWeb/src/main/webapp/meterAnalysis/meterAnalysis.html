@@ -173,8 +173,17 @@
                 });
             }
 
+        var rowbefore = {};
         function beginEdit(rowid) {
-                manager.beginEdit(rowid);
+            var row = manager.getRow(rowid);
+            rowbefore.fmetercode = row.fmetercode;
+            rowbefore.fcustomer = row.fcustomer;
+            rowbefore.fconfirmmisfune = row.fconfirmmisfune;
+            rowbefore.freportmisfune = row.freportmisfune;
+            rowbefore.fmisfunedescrib = row.fmisfunedescrib;
+            rowbefore.fmeterreading = row.fmeterreading;
+            rowbefore.felecdisplay = row.felecdisplay;
+            manager.beginEdit(rowid);
             }
 
         function cancelEdit(rowid) {
@@ -183,7 +192,7 @@
 
         function endEdit(rowid) {
                 manager.endEdit(rowid);
-                var row = manager.getRow(rowid);
+                window.row = manager.getRow(rowid);
                 var jsonString = $.toJSON(row);
                 $.post($.URL.meterAnalysis.update,{"jsonString": jsonString},updateCallback,"json");
                 document.getElementById('form2').reset();
@@ -192,8 +201,76 @@
                 function updateCallback(data) {
                     if (data.code == 200) {
                         $.ligerDialog.success("修改成功");
-                        window.afterData = manager.getRow(rowid);
                         $.post($.URL.meterAnalysis.list, null,listCallback, "json");
+                        var dataupdate = {};
+                        dataupdate.updateoperator = getCookie("userName");
+                        dataupdate.updatename = "维修分析表";
+                        dataupdate.updatekey = row.id;
+                        var flag = true;
+                        while(flag){
+                            flag = false;
+                            if (rowbefore.fmetercode != row.fmetercode){
+                                dataupdate.dataname = "表具编号";
+                                dataupdate.updatebefore = rowbefore.fmetercode;
+                                dataupdate.updateafter = row.fmetercode;
+                                rowbefore.fmetercode = row.fmetercode;
+                                $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                                flag = true;
+                            }
+                            else if (rowbefore.fcustomer != row.fcustomer){
+                                dataupdate.dataname = "市场";
+                                dataupdate.updatebefore = rowbefore.fcustomer;
+                                dataupdate.updateafter = row.fcustomer;
+                                rowbefore.fcustomer = row.fcustomer;
+                                $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                                flag = true;
+                            }
+                            else if (rowbefore.freportmisfune != row.freportmisfune){
+                                dataupdate.dataname = "报修故障";
+                                dataupdate.updatebefore = rowbefore.freportmisfune;
+                                dataupdate.updateafter = row.freportmisfune;
+                                rowbefore.freportmisfune = row.freportmisfune;
+                                $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                                flag = true;
+                            }
+                            else if (rowbefore.fconfirmmisfune != row.fconfirmmisfune){
+                                dataupdate.dataname = "实查故障";
+                                dataupdate.updatebefore = rowbefore.fconfirmmisfune;
+                                dataupdate.updateafter = row.fconfirmmisfune;
+                                rowbefore.fconfirmmisfune = row.fconfirmmisfune;
+                                $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                                flag = true;
+                            }
+                            else if (rowbefore.fmisfunedescrib != row.fmisfunedescrib){
+                                dataupdate.dataname = "故障详情";
+                                dataupdate.updatebefore = rowbefore.fmisfunedescrib;
+                                dataupdate.updateafter = row.fmisfunedescrib;
+                                rowbefore.fmisfunedescrib = row.fmisfunedescrib;
+                                $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                                flag = true;
+                            }
+                            else if (rowbefore.fmeterreading != row.fmeterreading){
+                                dataupdate.dataname = "表具止码";
+                                dataupdate.updatebefore = rowbefore.fmeterreading;
+                                dataupdate.updateafter = row.fmeterreading;
+                                rowbefore.fmeterreading = row.fmeterreading;
+                                $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                                flag = true;
+                            }
+                            else if (rowbefore.felecdisplay != row.felecdisplay){
+                                dataupdate.dataname = "上电显示状态";
+                                dataupdate.updatebefore = rowbefore.felecdisplay;
+                                dataupdate.updateafter = row.felecdisplay;
+                                rowbefore.felecdisplay = row.felecdisplay;
+                                $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                                flag = true;
+                            }
+                            function RecordCallback(data){
+                                if(data.code != 200){
+                                    $.ligerDialog.warn(data.message);
+                                }
+                            }
+                        }
                     }
                     else {
                         $.post($.URL.meterAnalysis.list, null,listCallback, "json");
@@ -230,9 +307,6 @@
         function c_show() {
             $('#addMeterAnalysis').css('display', 'block');
         }
-//        function c_show1(){
-//            $('#addUpdateMeterAnalysis').css('display','block');
-//        }
 
         $("#submitBtn").click(function () {
             var gdata={};
@@ -259,37 +333,6 @@
                 }
             }
         });
-//        $("#updateSubmitBtn").click(function () {
-//            var data={};
-//            switch ($("#dataname").val())
-//            {
-//                case "表具编号":data.updateafter = afterData.fmetercode;break;
-//                case "部门":data.updateafter = afterData.fdepartment;break;
-//                case "分析人员":data.updateafter = afterData.fanalysor;break;
-//                case "天然气公司":data.updateafter = afterData.fcustomer;break;
-//                case "报修故障":data.updateafter = afterData.freportmisfune;break;
-//                case "实查故障":data.updateafter = afterData.fconfirmmisfune;break;
-//                case "表具止码":data.updateafter = afterData.fmeterreading;break;
-//                case "分析时间":data.updateafter = afterData.fdatetime;break;
-//            }
-//            data.dataname = $("#dataname").val();
-//            data.updatedate = $("#updatedate").val();
-//            data.updateoperator = $("#updateoperator").val();
-//            data.updatename = "维修分析表";
-//            data.updatekey = afterData.id;
-//            data.updatebefore = $("#updatebefore").val();
-//            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(data)},RecordCallback,"json");
-//            function RecordCallback(data){
-//                if(data.code==200){
-//                    $.ligerDialog.success(data.message);
-//                    document.getElementById('form2').reset();
-//                    $.post($.URL.meterAnalysis.list, null,listCallback,"json");
-//                }
-//                else{
-//                    $.ligerDialog.warn(data.message);
-//                }
-//            }
-//        });
 
         function addCallback(data){
             if (data.code == 200) {
@@ -396,46 +439,5 @@
 <div style="display:none;">
 </div>
 <div id="maingrid" style="margin-top:5px"></div>
-<!--<div id="addUpdateMeterAnalysis" style=" margin:3px; display:none;">-->
-    <!--<form name="form2" method="post" action="" id="form2" style="margin-left: 15px">-->
-        <!--<table cellpadding="0" cellspacing="0" class="l-table-edit" >-->
-            <!--<tr>-->
-                <!--<td align="right" class="l-table-edit-td">修改数据名:</td>-->
-                <!--<td align="left" class="l-table-edit-td">-->
-                    <!--<select id="dataname">-->
-                        <!--<option value="表具编号">表具编号</option>-->
-                        <!--<option value="部门">部门</option>-->
-                        <!--<option value="分析人员">分析人员</option>-->
-                        <!--<option value="报修故障">报修故障</option>-->
-                        <!--<option value="实查故障">实查故障</option>-->
-                        <!--<option value="表具止码">表具止码</option>-->
-                        <!--<option value="分析时间">分析时间</option>-->
-                    <!--</select>-->
-                <!--</td>-->
-                <!--<td align="left"></td>-->
-            <!--</tr>-->
-
-            <!--<tr>-->
-                <!--<td align="right" class="l-table-edit-td">修改日期:</td>-->
-                <!--<td align="left" class="l-table-edit-td"><input name="updatedate" type="date" id="updatedate" ></td>-->
-                <!--<td align="left"></td>-->
-            <!--</tr>-->
-
-            <!--<tr>-->
-                <!--<td align="right" class="l-table-edit-td">修改人员:</td>-->
-                <!--<td align="left" class="l-table-edit-td"><input name="updateoperator" type="text" id="updateoperator" ></td>-->
-                <!--<td align="left"></td>-->
-            <!--</tr>-->
-
-            <!--<tr>-->
-                <!--<td align="right" class="l-table-edit-td">修改前数据:</td>-->
-                <!--<td align="left" class="l-table-edit-td"><input name="updatebefore" type="text" id="updatebefore" ></td>-->
-                <!--<td align="left"></td>-->
-            <!--</tr>-->
-        <!--</table>-->
-        <!--<br />-->
-        <!--<input type="button" value="提交" id="updateSubmitBtn" class="l-button l-button-submit" />-->
-    <!--</form>-->
-<!--</div>-->
 </body>
 </html>

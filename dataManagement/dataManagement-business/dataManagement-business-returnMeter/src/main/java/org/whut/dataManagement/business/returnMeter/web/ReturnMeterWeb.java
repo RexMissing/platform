@@ -3,6 +3,7 @@ package org.whut.dataManagement.business.returnMeter.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.whut.dataManagement.business.returnMeter.entity.ReturnMeter;
+import org.whut.dataManagement.business.returnMeter.service.ReturnByCodeService;
 import org.whut.dataManagement.business.returnMeter.service.ReturnMeterService;
 import org.whut.platform.fundamental.logger.PlatformLogger;
 import org.whut.platform.fundamental.util.json.JsonMapper;
@@ -25,6 +26,8 @@ public class ReturnMeterWeb {
     private static final PlatformLogger logger = PlatformLogger.getLogger(ReturnMeterWeb.class);
     @Autowired
     private ReturnMeterService returnMeterService;
+    @Autowired
+    private ReturnByCodeService returnByCodeService;
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/add")
@@ -67,6 +70,16 @@ public class ReturnMeterWeb {
         if (returnMeter.getFcustomer() == null||returnMeter.getFdatetime()==null) {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "参数不能是空!");
         }
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(returnMeter.getFmetercode()!=null&&!returnMeter.getFmetercode().equals(""))
+        {
+            condition.put("fmetercode",returnMeter.getFmetercode());
+        }
+        List<Map<String,Object>> list = returnByCodeService.findByCode(condition);
+        System.out.print(list.get(0).get("fmetername").toString()+list.get(0).get("fmeterdirection").toString());
+        returnMeter.setFmetername(list.get(0).get("fmetername").toString());
+        returnMeter.setFcustomer(list.get(0).get("fcustomer").toString());
+        returnMeter.setFmeterdirection(list.get(0).get("fmeterdirection").toString());
         returnMeterService.update(returnMeter);
         return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.SUCCESS);
     }
@@ -76,6 +89,14 @@ public class ReturnMeterWeb {
     @POST
     public String list() {
         List<Map<String,Object>> list = returnMeterService.list();
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/getBatchlist")
+    @POST
+    public String getBatchlist() {
+        List<Map<String,Object>> list = returnMeterService.getBatchlist();
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 
@@ -111,20 +132,22 @@ public class ReturnMeterWeb {
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findBySearch")
     @POST
-    public String findBySearch(@FormParam("fmetercode")String fmetercode,@FormParam("fmetername")String fmetername,@FormParam("frinvono")String frinvono)
+    public String findBySearch(@FormParam("freturnbatch")String freturnbatch,@FormParam("fmetercode")String fmetercode,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
     {
         Map<String,Object> condition = new HashMap<String, Object>();
-        if(fmetercode!=null&&!fmetercode.equals(""))
+        if(freturnbatch!=null&&!freturnbatch.equals(""))
+        {
+            condition.put("freturnbatch",freturnbatch);
+        }
+        if (fmetercode!=null&&!fmetercode.equals(""))
         {
             condition.put("fmetercode",fmetercode);
         }
-        if (fmetername!=null&&!fmetername.equals(""))
-        {
-            condition.put("fmetername",fmetername);
+        if(sTime!=null&&!sTime.equals("")){
+            condition.put("startTime",sTime+" 00:00:00");
         }
-        if (frinvono!=null&&!frinvono.equals(""))
-        {
-            condition.put("frinvono",frinvono);
+        if(eTime!=null&&!eTime.equals("")){
+            condition.put("endTime",eTime+" 59:59:59");
         }
         List<Map<String,Object>> list = returnMeterService.findBySearch(condition);
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);

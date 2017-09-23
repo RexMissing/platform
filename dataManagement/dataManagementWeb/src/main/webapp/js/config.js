@@ -129,7 +129,8 @@
             "findByCondition": "rs/returnMeter/findByCondition",
             "findBySearch": "rs/returnMeter/findBySearch",
             "findByMap":"rs/returnMeter/findByMap",
-            "findLastData":"rs/returnMeter/findLastData"
+            "findLastData":"rs/returnMeter/findLastData",
+            "getBatchlist":"rs/returnMeter/getBatchlist"
         },
         "returnMeterInfo": {
             "add": "rs/returnMeterInfo/add",
@@ -158,6 +159,9 @@
         },
         "returnValveAndName":{
             "findValveAndName":"rs/returnValveAndName/findValveAndName"
+        },
+        "returnByCode":{
+            "findByCode":"rs/returnByCode/findByCode"
         },
         "boxCodeSearch":{
             "findByCondition":"rs/boxCodeSearch/findByCondition"

@@ -12,6 +12,7 @@ public class ReturnMeter {
     private long id;
     private  String freturnbatch;
     private String fmetercode;
+    private String fvalvecode;
     private String fcustomer;
     private String fmetername;
     private String fmeterdirection;
@@ -47,6 +48,14 @@ public class ReturnMeter {
 
     public void setFmetercode(String fmetercode) {
         this.fmetercode = fmetercode;
+    }
+
+    public String getFvalvecode() {
+        return fvalvecode;
+    }
+
+    public void setFvalvecode(String fvalvecode) {
+        this.fvalvecode = fvalvecode;
     }
 
     public String getFcustomer() {

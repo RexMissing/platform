@@ -4,13 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.whut.dataManagement.business.returnMeter.mapper.ReturnMeterMapper">
     <sql id="returnMeter_fields">
-        ID,FReturnBatch,FMeterCode,FCustomer,FMeterName,FMeterDirection,FDateTime,FOperator,FReportMisFune,FProduceTime,FSaleTime,FPreMaintain
+        ID,FReturnBatch,FMeterCode,FValveCode,FCustomer,FMeterName,FMeterDirection,FDateTime,FOperator,FReportMisFune,FProduceTime,FSaleTime,FPreMaintain
     </sql>
 
     <resultMap id="returnMeterResultMap" type="returnMeter">
         <id property="id" column="ID"/>
         <result property="freturnbatch" column="FReturnBatch"/>
         <result property="fmetercode" column="FMeterCode"/>
+        <result property="fvalvecode" column="FValveCode"/>
         <result property="fcustomer" column="FCustomer"/>
         <result property="fmetername" column="FMeterName"/>
         <result property="fmeterdirection" column="FMeterDirection"/>
@@ -28,7 +29,7 @@
         treturnmeter(
         <include refid="returnMeter_fields"/>
         )
-        VALUES (#{id},#{freturnbatch},#{fmetercode},#{fcustomer},#{fmetername},#{fmeterdirection},#{fdatetime},#{foperator},#{freportmisfune},#{fproducetime},#{fsaletime},#{fpremaintain});
+        VALUES (#{id},#{freturnbatch},#{fmetercode},#{fvalvecode},#{fcustomer},#{fmetername},#{fmeterdirection},#{fdatetime},#{foperator},#{freportmisfune},#{fproducetime},#{fsaletime},#{fpremaintain});
     </insert>
 
     <update id="update" parameterType="returnMeter">
@@ -61,6 +62,12 @@
         WHERE IsDelete=0;
     </select>
 
+    <select id="getBatchlist" resultMap="returnMeterResultMap">
+        SELECT DISTINCT freturnbatch
+        FROM treturnmeter
+        WHERE IsDelete=0 AND FDateTime=CURRENT_DATE;
+    </select>
+
     <select id="findLastData" resultMap="returnMeterResultMap">
         SELECT <include refid="returnMeter_fields"/>
         FROM treturnmeter
@@ -85,9 +92,10 @@
         FROM treturnmeter
         <where>
             IsDelete=0
+            <if test="freturnbatch!=null">AND FReturnBatch=#{freturnbatch}</if>
             <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
-            <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
-            <if test="frinvono!=null">AND FRInvoNo=#{frinvono}</if>
+            <if test="startTime!=null"><![CDATA[ AND FDateTime>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
         </where>
     </select>
 

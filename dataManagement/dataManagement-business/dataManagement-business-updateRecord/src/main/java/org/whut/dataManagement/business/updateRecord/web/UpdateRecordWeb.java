@@ -34,6 +34,7 @@ public class UpdateRecordWeb {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "参数不能为空");
         }
          UpdateRecord updateRecord = JsonMapper.buildNonDefaultMapper().fromJson(jsonString, UpdateRecord.class);
+        updateRecord.setUpdatedate(new java.sql.Date(System.currentTimeMillis()));
         if (updateRecord == null) {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "参数不能是空!");
         }
