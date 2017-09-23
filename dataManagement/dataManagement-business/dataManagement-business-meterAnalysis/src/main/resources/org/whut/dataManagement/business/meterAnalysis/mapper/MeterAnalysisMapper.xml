@@ -43,7 +43,9 @@
             <if test="fcustomer!=null">FCustomer=#{fcustomer},</if>
             <if test="freportmisfune!=null">FReportMisFune=#{freportmisfune},</if>
             <if test="fconfirmmisfune!=null">FConfirmMisFune=#{fconfirmmisfune},</if>
+            <if test="fmisfunedescrib!=null">FMisFuneDescrib=#{fmisfunedescrib},</if>
             <if test="fmeterreading!=null">FMeterReading=#{fmeterreading},</if>
+            <if test="felecdisplay!=null">FElecDisplay=#{felecdisplay},</if>
             <if test="fdatetime!=null">FDateTime=#{fdatetime}</if>
         </set>
         WHERE ID=#{id};
@@ -55,17 +57,16 @@
         WHERE ID=#{id};
     </delete>
 
-    <select id="getList" resultType="map">
-        SELECT tmeteranalysisinfo.id,tmeteranalysisinfo.fmetercode,tmeteranalysisinfo.fmetername,tmeteranalysisinfo.fvalvename,
-                tmeteranalysisinfo.fdepartment,tmeteranalysisinfo.fanalysor,tmeteranalysisinfo.fcustomer,
-                t.fenumname AS reportenum,m.fenumname AS confirmenum,tdepartment.fdepartName AS departenum,
-                tmeteranalysisinfo.freportmisfune,tmeteranalysisinfo.fconfirmmisfune,
-                tmeteranalysisinfo.fmeterreading,tmeteranalysisinfo.fdatetime
+    <select id="getList" resultMap="meterAnalysisResultMap">
+        SELECT <include refid="meterAnalysis_fields"/> 
+        FROM tmeteranalysisinfo 
+        WHERE IsDelete=0;
+    </select>
+
+    <select id="getListByFanalysor" resultMap="meterAnalysisResultMap">
+        SELECT <include refid="meterAnalysis_fields"/>
         FROM tmeteranalysisinfo
-        LEFT JOIN tenumeration t ON tmeteranalysisinfo.freportmisfune=t.fenumvalue
-        LEFT JOIN tenumeration m ON tmeteranalysisinfo.fconfirmmisfune=m.fenumvalue
-        LEFT JOIN tdepartment ON tmeteranalysisinfo.fdepartment=tdepartment.fdepartNo
-        WHERE t.fenumtype='故障' AND m.fenumtype='故障' AND tmeteranalysisinfo.IsDelete=0;
+        WHERE IsDelete=0 AND FAnalysor=#{fanalysor};
     </select>
 
     <select id="findByCondition" parameterType="map" resultType="map">
@@ -93,22 +94,26 @@
         </where>
     </select>
 
-    <select id="findBySearch" parameterType="map" resultType="map">
-        SELECT tmeteranalysisinfo.id,tmeteranalysisinfo.fmetercode,tmeteranalysisinfo.fmetername,tmeteranalysisinfo.fvalvename,
-                tmeteranalysisinfo.fdepartment,tmeteranalysisinfo.fanalysor,tmeteranalysisinfo.fcustomer,
-                t.fenumname AS reportenum,m.fenumname AS confirmenum,tdepartment.fdepartName AS departenum,
-                tmeteranalysisinfo.freportmisfune,tmeteranalysisinfo.fconfirmmisfune,
-                tmeteranalysisinfo.fmeterreading,tmeteranalysisinfo.fdatetime
+    <select id="getCusByCode" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT FCustomer
+        FROM treturnmeter
+        WHERE IsDelete = 0 AND FMeterCode = #{fmetercode};
+    </select>
+
+    <select id="findBySearch" parameterType="map" resultMap="meterAnalysisResultMap">
+        SELECT <include refid="meterAnalysis_fields"/>
         FROM tmeteranalysisinfo
-        LEFT JOIN tenumeration t ON tmeteranalysisinfo.freportmisfune=t.fenumvalue
-        LEFT JOIN tenumeration m ON tmeteranalysisinfo.fconfirmmisfune=m.fenumvalue
-        LEFT JOIN tdepartment ON tmeteranalysisinfo.fdepartment=tdepartment.fdepartNo
         <where>
-            t.fenumtype='故障'
-            AND m.fenumtype='故障'
-            AND tmeteranalysisinfo.IsDelete=0
+            IsDelete=0
             <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
             <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
+            <if test="fanalysor!=null">AND FAnalysor=#{fanalysor}</if>
         </where>
+    </select>
+    
+    <select id="findValveAndName" parameterType="map" resultType="map">
+        SELECT fmetercode,fmetername,fvalvecode
+        FROM treturnmeter
+        WHERE FMeterCode=#{fmetercode} AND IsDelete = 0
     </select>
 </mapper>

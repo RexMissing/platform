@@ -10,8 +10,11 @@ import java.util.Map;
  * Created by Administrator on 2017/7/27 0027.
  */
 public interface MeterAnalysisMapper extends AbstractMapper<MeterAnalysis> {
+    String getCusByCode(String fmetercode);
     List<MeterAnalysis> getList();
+    List<MeterAnalysis> getListByFanalysor(String fanalysor);
     List<Map<String,String>> getConfirmList();
     List<Map<String,Object>> findByCondition(Map<String,Object> condition);
-    List<Map<String,Object>> findBySearch(Map<String,Object> condition);
+    List<MeterAnalysis> findBySearch(Map<String,Object> condition);
+    List<Map<String,String>> findValveAndName(Map<String,String> condition);
 }

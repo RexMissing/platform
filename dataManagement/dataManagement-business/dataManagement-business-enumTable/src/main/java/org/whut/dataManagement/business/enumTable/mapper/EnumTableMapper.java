@@ -11,7 +11,8 @@ import java.util.Map;
  */
 public interface EnumTableMapper extends AbstractMapper<EnumTable> {
     List<Map<String,String>> getMisList();
-    List<Map<String,String>> getMisInfoList();
+    List<Map<String,String>> getMisInfoList(String misType);
+    List<Map<String,String>> getMisInfoAllList();
     List<Map<String,String>> getCusList();
     List<Map<String,String>> getEleList();
 //    List<Map<String,String>> getMeterList();

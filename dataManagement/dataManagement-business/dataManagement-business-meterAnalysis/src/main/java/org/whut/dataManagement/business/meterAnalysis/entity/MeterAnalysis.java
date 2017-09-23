@@ -20,6 +20,7 @@ public class MeterAnalysis {
     private String fmisfunedescrib;
     private String fmeterreading;
     private String felecdisplay;
+//    @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date fdatetime;
     private int isdelete;
 

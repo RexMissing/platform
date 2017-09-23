@@ -37,7 +37,6 @@ public class MeterAnalysisWeb {
         {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"参数不能是空!");
         }
-
         meterAnalysis.setFdatetime(new java.sql.Date(System.currentTimeMillis()));
         meterAnalysisService.add(meterAnalysis);
         return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.SUCCESS.getCode(), "添加成功!");
@@ -70,6 +69,14 @@ public class MeterAnalysisWeb {
         {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "参数不能是空!");
         }
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("fmetercode",meterAnalysis.getFmetercode());
+        List<Map<String,String>> list = meterAnalysisService.findValveAndName(map);
+        if (list.size()==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "修改的表具编号未清点!");
+        }
+        meterAnalysis.setFmetername(list.get(0).get("fmetername"));
+        meterAnalysis.setFvalvename(list.get(0).get("fvalvecode"));
         meterAnalysisService.update(meterAnalysis);
         return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.SUCCESS);
     }
@@ -77,13 +84,42 @@ public class MeterAnalysisWeb {
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/list")
     @POST
-    public String list() {
-        List<MeterAnalysis> list = meterAnalysisService.getList();
+    public String list(@FormParam("curFuncRole") String curFuncRole,@FormParam("fanalysor") String fanalysor) {
+        List<MeterAnalysis> list;
+        if (curFuncRole.equals("1") || curFuncRole.equals("2")){
+            list = meterAnalysisService.getList();
+            if (list.toArray().length==0)  {
+                return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+            }
+            return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+        }
+        else if (curFuncRole.equals("3") || curFuncRole.equals("4")){
+            list = meterAnalysisService.getListByFanalysor(fanalysor);
+            if (list.toArray().length==0)  {
+                return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+            }
+            return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+        }
+        else{
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "权限不够!");
+        }
+    }
+
+    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Path("/getCusByCode")
+    @POST
+    public String getCusByCode(@FormParam("fmetercode") String fmetercode){
+        String cus = meterAnalysisService.getCusByCode(fmetercode);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("fcustomer",cus);
+        List<Map<String,String>> list = new ArrayList<Map<String, String>>();
+        list.add(map);
         if (list.toArray().length==0)  {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
         }
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
+
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findByCondition")
@@ -124,7 +160,10 @@ public class MeterAnalysisWeb {
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findBySearch")
     @POST
-    public String findBySearch(@FormParam("fmetercode")String fmetercode,@FormParam("fmetername")String fmetername)
+    public String findBySearch(@FormParam("fmetercode")String fmetercode,
+                               @FormParam("fmetername")String fmetername,
+                               @FormParam("curFuncRole") String curFuncRole,
+                               @FormParam("fanalysor") String fanalysor)
     {
         Map<String,Object> condition = new HashMap<String, Object>();
         if(fmetercode!=null&&!fmetercode.equals(""))
@@ -135,7 +174,28 @@ public class MeterAnalysisWeb {
         {
             condition.put("fmetername",fmetername);
         }
-        List<Map<String,Object>> meterlist = meterAnalysisService.findBySearch(condition);
+        if (curFuncRole.equals("3") || curFuncRole.equals("4")){
+            condition.put("fanalysor",fanalysor);
+        }
+        List<MeterAnalysis> meterlist = meterAnalysisService.findBySearch(condition);
+        if (meterlist.size()==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
         return JsonResultUtils.getObjectResultByStringAsDefault(meterlist,JsonResultUtils.Code.SUCCESS);
     }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findValveAndName")
+    @POST
+    public String findValveAndName(@FormParam("fmetercode")String fmetercode)
+    {
+        Map<String,String> condition = new HashMap<String, String>();
+        if(fmetercode!=null&&!fmetercode.equals(""))
+        {
+            condition.put("fmetercode",fmetercode);
+        }
+        List<Map<String,String>> list = meterAnalysisService.findValveAndName(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
 }

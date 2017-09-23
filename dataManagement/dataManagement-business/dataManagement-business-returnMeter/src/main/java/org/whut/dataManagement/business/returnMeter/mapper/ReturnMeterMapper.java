@@ -1,6 +1,5 @@
 package org.whut.dataManagement.business.returnMeter.mapper;
 
-import com.sun.org.apache.regexp.internal.RE;
 import org.whut.dataManagement.business.returnMeter.entity.ReturnMeter;
 import org.whut.platform.fundamental.orm.mapper.AbstractMapper;
 

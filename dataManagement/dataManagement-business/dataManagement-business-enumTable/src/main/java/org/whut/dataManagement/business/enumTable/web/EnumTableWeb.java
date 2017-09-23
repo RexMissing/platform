@@ -100,10 +100,16 @@ public class EnumTableWeb {
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/misinfolist")
     @POST
-    public String misinfolist()
+    public String misinfolist(@FormParam("misType")String misType)
     {
-        List<Map<String,String>> list = enumTableService.getMisInfoList();
-        if (list.toArray().length==0)  {
+        List<Map<String, String>> list;
+        if (misType.equals("all")) {
+            list = enumTableService.getMisInfoAllList();
+        }
+        else{
+            list = enumTableService.getMisInfoList(misType);
+        }
+        if (list.toArray().length == 0) {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
         }
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);

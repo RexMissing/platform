@@ -30,6 +30,17 @@ public class MeterAnalysisService {
     public List<MeterAnalysis> getList() {
         return meterAnalysisMapper.getList();
     }
+    public List<MeterAnalysis> getListByFanalysor(String fanalysor) {
+        return meterAnalysisMapper.getListByFanalysor(fanalysor);
+    }
+
+    public String getCusByCode(String fmetercode){
+        return meterAnalysisMapper.getCusByCode(fmetercode);
+    }
+    public List<Map<String,String>> findValveAndName(Map<String,String> condition)
+    {
+        return meterAnalysisMapper.findValveAndName(condition);
+    }
     public List<Map<String,String>> getConfirmList()
     {
         return meterAnalysisMapper.getConfirmList();
@@ -38,7 +49,7 @@ public class MeterAnalysisService {
     {
         return meterAnalysisMapper.findByCondition(condition);
     }
-    public List<Map<String,Object>> findBySearch(Map<String,Object> condition)
+    public List<MeterAnalysis> findBySearch(Map<String,Object> condition)
     {
         return meterAnalysisMapper.findBySearch(condition);
     }

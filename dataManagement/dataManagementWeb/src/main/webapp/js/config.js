@@ -150,11 +150,13 @@
             "findCustomAndName":"rs/returnCustomAndName/findCustomAndName"
         },
         "meterAnalysis":{
+            "findValveAndName":"rs/meterAnalysis/findValveAndName",
             "add":"rs/meterAnalysis/add",
             "delete":"rs/meterAnalysis/delete",
             "update":"rs/meterAnalysis/update",
             "list":"rs/meterAnalysis/list",
             "findByCondition":"rs/meterAnalysis/findByCondition",
+            "getCusByCode":"rs/meterAnalysis/getCusByCode",
             "findBySearch":"rs/meterAnalysis/findBySearch"
         },
         "returnValveAndName":{

@@ -19,8 +19,11 @@ public class EnumTableService {
     public List<Map<String, String>> getMisList() {
         return enumTableMapper.getMisList();
     }
-    public List<Map<String, String>> getMisInfoList() {
-        return enumTableMapper.getMisInfoList();
+    public List<Map<String, String>> getMisInfoList(String misType) {
+        return enumTableMapper.getMisInfoList(misType);
+    }
+    public List<Map<String, String>> getMisInfoAllList() {
+        return enumTableMapper.getMisInfoAllList();
     }
     public List<Map<String, String>> getCusList() {
         return enumTableMapper.getCusList();

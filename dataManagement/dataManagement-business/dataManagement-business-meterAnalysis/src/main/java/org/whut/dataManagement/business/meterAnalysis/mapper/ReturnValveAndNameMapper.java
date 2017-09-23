@@ -7,5 +7,5 @@ import java.util.Map;
  * Created by Administrator on 2017/8/30 0030.
  */
 public interface ReturnValveAndNameMapper {
-    public List<Map<String,Object>> findValveAndName(Map<String,Object> condition);
+    List<Map<String,Object>> findValveAndName(Map<String,Object> condition);
 }
