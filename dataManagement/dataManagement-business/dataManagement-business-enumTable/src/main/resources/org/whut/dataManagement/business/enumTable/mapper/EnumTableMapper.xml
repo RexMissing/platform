@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.whut.dataManagement.business.enumTable.mapper.EnumTableMapper">
     <sql id="enumTable_fields">
-        ID,FEnumType,FEnumName,FEnumValue
+        ID,FEnumType,FEnumName,FEnumValue,FDescription
     </sql>
 
     <resultMap id="enumTableResultMap" type="enumTable">
@@ -12,6 +12,7 @@
         <result property="fenumtype" column="FEnumType"/>
         <result property="fenumname" column="FEnumName"/>
         <result property="fenumvalue" column="FEnumValue"/>
+        <result property="fdescription" column="FDescription"/>
     </resultMap>
 
     <insert id="add" parameterType="map" keyProperty="id"
@@ -20,7 +21,7 @@
         tenumeration(
         <include refid="enumTable_fields"/>
         )
-        VALUES (#{id},#{fenumtype},#{fenumname},#{fenumvalue});
+        VALUES (#{id},#{fenumtype},#{fenumname},#{fenumvalue},#{fdescription});
         <selectKey resultType="long" keyProperty="id">
             select
             LAST_INSERT_ID() as id
@@ -32,7 +33,8 @@
         <set>
             <if test="fenumtype!=null">FEnumType=#{fenumtype},</if>
             <if test="fenumname!=null">FEnumName=#{fenumname},</if>
-            <if test="fenumvalue!=null">FEnumValue=#{fenumvalue}</if>
+            <if test="fenumvalue!=null">FEnumValue=#{fenumvalue},</if>
+            <if test="fdescription!=null">FDescription=#{fdescription}</if>
         </set>
         WHERE ID=#{id};
     </update>

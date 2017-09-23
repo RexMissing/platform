@@ -45,8 +45,12 @@ public class UpdateRecordWeb {
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findByCondition")
     @POST
-    public String findByCondition(@FormParam("dataname") String dataname){
+    public String findByCondition(@FormParam("updatename")String updatename,@FormParam("dataname") String dataname){
         Map<String,Object> condition = new HashMap<String, Object>();
+        if(updatename!=null&&!updatename.equals(""))
+        {
+            condition.put("updatename",updatename);
+        }
         if(dataname!=null&&!dataname.equals(""))
         {
             condition.put("dataname",dataname);

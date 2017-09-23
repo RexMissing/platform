@@ -29,6 +29,6 @@
     <select id="findByCondition" parameterType="map" resultMap="updateRecordResultMap">
         SELECT <include refid="updateRecord_fields"/>
         FROM updaterecord
-        WHERE DataName LIKE CONCAT('%',#{dataname},'%');
+        WHERE UpdateName=#{updatename} AND DataName=#{dataname};
     </select>
 </mapper>

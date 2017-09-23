@@ -16,8 +16,9 @@
     <script type="text/javascript">
         $(function(){
             $("#submitBtn").click(function (){
+                var updatename = $("#updatename").val();
                 var dataname = $("#dataname").val();
-                $.post($.URL.updateRecord.findByCondition,{"dataname":dataname},listCallback,"json");
+                $.post($.URL.updateRecord.findByCondition,{"updatename":updatename,"dataname":dataname},listCallback,"json");
             });
         });
 
@@ -42,14 +43,6 @@
                     {display:'修改项目主键',name:'updatekey',width:'15%',editor:{type:'text'}},
                     { display: '修改前数据',name: 'updatebefore',width: '15%',editor:{type:'text'}},
                     { display: '修改后数据',name: 'updateafter',width: '15%',editor:{type:'text'}}
-//                    {
-//                        display: '操作', isSort: false, width: '5%', render: function (rowdata, rowindex, value) {
-////                        var h="";
-//                         return '<a href="javascript:void(0)" onclick="fun('+rowindex+');">跳转</a>';
-////                        h += "<a href='javascript:fun(" + rowindex + ")'>跳转</a>";
-////                        return h;
-//                        }
-//                    }
                 ],
                 onSelectRow: function (rowdata, rowindex)
                 {
@@ -60,24 +53,40 @@
                 width: '100%'
             });
         }
-//        function fun(rowid) {
-//            var row = manager.getRow(rowid);
-//            var updatename = row.updatename;
-//            switch (updatename) {
-//                case "部门管理表":
-//                    window.location.href("departManagement/department.html");break;
-//                case "枚举表":
-//                     window.location.href("enumTable/enumTable.html");break;
-//                case "维修分析表":
-//                    alert("lilanf");
-//                     window.location.href("meterAnalysis/meterAnalysis.html");break;
-//                case "退库单返修表":
-//                     window.location.href("returnMeter/returnMeter.html");break;
-//                case "公司返修表":
-//                     window.location.href("returnMeter/returnMeterInfo.html");break;
-//            }
-//            window.location.href("enumTable/enumTable.html");
-//        }
+
+        function f_update() {
+            switch ($("#updatename").val())
+            {
+                case "部门管理表":
+                    $("#dataname").append("<option value='部门编号'>部门编号</option>");
+                    $("#dataname").append("<option value='部门名称'>部门名称</option>");
+
+                    break;
+                case "枚举表":
+                    $("#dataname").append("<option value='枚举类型'>枚举类型</option>");
+                    $("#dataname").append("<option value='枚举名称'>枚举名称</option>");
+                    $("#dataname").append("<option value='枚举值'>枚举值</option>");
+                    $("#dataname").append("<option value='枚举描述'>枚举描述</option>");
+                    break;
+                case "维修分析表":
+                    $("#dataname").append("<option value='表具编号'>表具编号</option>");
+                    $("#dataname").append("<option value='市场'>市场</option>");
+                    $("#dataname").append("<option value='报修故障'>报修故障</option>");
+                    $("#dataname").append("<option value='实查故障'>实查故障</option>");
+                    $("#dataname").append("<option value='故障详情'>故障详情</option>");
+                    $("#dataname").append("<option value='表具止码'>表具止码</option>");
+                    $("#dataname").append("<option value='上电显示状态'>上电显示状态</option>");
+                    break;
+                case "返修表录入表":
+                    $("#dataname").append("<option value='清点批次'>清点批次</option>");
+                    $("#dataname").append("<option value='表具编号'>表具编号</option>");
+                    $("#dataname").append("<option value='市场'>市场</option>");
+                    $("#dataname").append("<option value='报修故障'>报修故障</option>");
+                    $("#dataname").append("<option value='现场维修员'>现场维修员</option>");
+                    break;
+            }
+
+        }
     </script>
     <style type="text/css">
         .l-table-edit {}
@@ -91,28 +100,18 @@
 <div id="list">
     <table cellpadding="0" cellspacing="0" class="l-table-edit" >
         <tr>
+            <td align="right" class="l-table-edit-td">修改表:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="updatename" onchange="f_update()">
+                    <option>无</option>
+                    <option>部门管理表</option>
+                    <option>枚举表</option>
+                    <option>维修分析表</option>
+                    <option>返修表录入表</option>
+                </select></td>
             <td align="right" class="l-table-edit-td">数据名称:</td>
             <td align="left" class="l-table-edit-td">
-                <select id="dataname">
-                    <option value="枚举名称">枚举名称</option>
-                    <option value="枚举类型">枚举类型</option>
-                    <option value="枚举值">枚举值</option>
-                    <option value="部门编号">部门编号</option>
-                    <option value="部门名称">部门名称</option>
-                    <option value="部门">部门</option>
-                    <option value="分析人员">分析人员</option>
-                    <option value="报修故障">报修故障</option>
-                    <option value="实查故障">实查故障</option>
-                    <option value="表具止码">表具止码</option>
-                    <option value="分析时间">分析时间</option>
-                    <option value="表具编号">表具编号</option>
-                    <option value="燃气公司">燃气公司</option>
-                    <option value="表具类型">表具类型</option>
-                    <option value="返修表数量">返修表数量</option>
-                    <option value="退库单据号">退库单据号</option>
-                    <option value="录入时间">录入时间</option>
-                    <option value="录入人员">录入人员</option>
-                </select>
+                <select id="dataname"></select>
             </td>
             <td align="right"><input type="button" value="查询" id="submitBtn" class="l-button l-button-submit" /></td>
         </tr>

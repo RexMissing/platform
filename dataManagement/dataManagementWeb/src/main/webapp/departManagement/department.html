@@ -18,6 +18,19 @@
         $(function () {
             $.post($.URL.department.list,null,listCallback,"json");
         });
+        function getCookie(cname) {
+            var ss = document.cookie;
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for(var i = 0 ;i < ca.length ; i++)
+            {
+                var c = ca[i].trim();
+                if (c.indexOf(name)==0)
+                    return c.substring(name.length,c.length);
+            }
+            return "";
+        }
+
 
         var gridData = {};
         function listCallback(data) {
@@ -63,7 +76,11 @@
                 width: '100%'
             });
         }
+        var rowbefore = {};
         function beginEdit(rowid) {
+            var row = manager.getRow(rowid);
+            rowbefore.departNo = row.departNo;
+            rowbefore.departName = row.departName;
             manager.beginEdit(rowid);
         }
         function cancelEdit(rowid) {
@@ -74,15 +91,41 @@
             var row = manager.getRow(rowid);
             var jsonString = $.toJSON(row);
             $.post($.URL.department.update,{"jsonString":jsonString},updateCallback,"json");
-            document.getElementById('form2').reset();
-            c_show1();
-            $.ligerDialog.open({ target: $("#addDepartUpdate"),width:500,title:'添加数据修改记录'});
             function updateCallback(data) {
                 if(data.code==200)
                 {
                     $.ligerDialog.success("修改成功");
-                    window.afterData = manager.getRow(rowid);
                     $.post($.URL.department.list,null,listCallback,"json");
+
+                    var dataupdate = {};
+                    dataupdate.updateoperator = getCookie("userName");
+                    dataupdate.updatename = "部门管理表";
+                    dataupdate.updatekey = row.id;
+                    var flag = true;
+                    while(flag){
+                        flag = false;
+                        if (rowbefore.departNo != row.departNo){
+                            dataupdate.dataname = "部门编号";
+                            dataupdate.updatebefore = rowbefore.departNo;
+                            dataupdate.updateafter = row.departNo;
+                            rowbefore.departNo = row.departNo;
+                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                            flag = true;
+                        }
+                        else if (rowbefore.departName != row.departName){
+                            dataupdate.dataname = "部门名称";
+                            dataupdate.updatebefore = rowbefore.departName;
+                            dataupdate.updateafter = row.departName;
+                            rowbefore.departName = row.departName;
+                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
+                            flag = true;
+                        }
+                        function RecordCallback(data){
+                            if(data.code != 200){
+                                $.ligerDialog.warn(data.message);
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -120,10 +163,6 @@
 
         function c_show() {
             $('#addDepartment').css('display','block');
-        }
-
-        function c_show1(){
-            $('#addDepartUpdate').css('display','block');
         }
 
         $("#updateSubmitBtn").click(function () {
@@ -223,44 +262,6 @@
         </table>
         <br />
         <input type="button" value="提交" id="submitBtn" class="l-button l-button-submit" />
-    </form>
-</div>
-
-<div id="addDepartUpdate" style=" margin:3px; display:none;">
-    <form name="form2" method="post" action="" id="form2" style="margin-left: 15px">
-
-        <table cellpadding="0" cellspacing="0" class="l-table-edit" >
-            <tr>
-                <td align="right" class="l-table-edit-td">修改数据名:</td>
-                <td align="left" class="l-table-edit-td">
-                    <select id="dataname">
-                        <option value="部门编号">部门编号</option>
-                        <option value="部门名称">部门名称</option>
-                    </select>
-                </td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">修改日期:</td>
-                <td align="left" class="l-table-edit-td"><input name="updatedate" type="date" id="updatedate" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">修改人员:</td>
-                <td align="left" class="l-table-edit-td"><input name="updateoperator" type="text" id="updateoperator" ></td>
-                <td align="left"></td>
-            </tr>
-
-            <tr>
-                <td align="right" class="l-table-edit-td">修改前数据:</td>
-                <td align="left" class="l-table-edit-td"><input name="updatebefore" type="text" id="updatebefore" ></td>
-                <td align="left"></td>
-            </tr>
-        </table>
-        <br />
-        <input type="button" value="提交" id="updateSubmitBtn" class="l-button l-button-submit" />
     </form>
 </div>
 </body>

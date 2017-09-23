@@ -7,7 +7,17 @@ public class EnumTable {
     private long id;
     private String fenumtype;
     private String fenumname;
-    private int fenumvalue;
+    private String fenumvalue;
+    private String fdescription;
+
+    public String getFdescription() {
+        return fdescription;
+    }
+
+    public void setFdescription(String fdescription) {
+        this.fdescription = fdescription;
+    }
+
     private int isdelete;
 
     public long getId() {
@@ -42,11 +52,11 @@ public class EnumTable {
         this.fenumname = fenumname;
     }
 
-    public int getFenumvalue() {
+    public String getFenumvalue() {
         return fenumvalue;
     }
 
-    public void setFenumvalue(int fenumvalue) {
+    public void setFenumvalue(String fenumvalue) {
         this.fenumvalue = fenumvalue;
     }
 }
