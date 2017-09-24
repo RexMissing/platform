@@ -1,104 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="business-address" />
-        <module name="business-app" />
-        <module name="business-datarule" />
-        <module name="business-menu" />
-        <module name="business-user" />
-        <module name="dataManagement-business-dynamicDataSource" />
-        <module name="dataManagement-business-enumTable" />
-        <module name="dataManagement-business-meterAnalysis" />
-        <module name="dataManagement-business-meterProduceData" />
-        <module name="dataManagement-business-returnMeter" />
-        <module name="dataManagement-business-search" />
-        <module name="dataManagement-business-updateRecord" />
-        <module name="dataManagement-business-userFunctionRole" />
-        <module name="dataManagementWeb" />
-        <module name="deviceManagement-business-device" />
-        <module name="deviceManagement-business-maintain" />
-        <module name="deviceManagement-business-message" />
-        <module name="deviceManagement-business-project" />
-        <module name="deviceManagementWeb" />
-        <module name="dubboDemo-business-helloworld-api" />
-        <module name="dubboDemo-business-helloworld-consumer" />
-        <module name="dubboDemo-business-helloworld-impl" />
-        <module name="dubboDemoConsumerWeb" />
-        <module name="dubboDemoProviderWeb" />
-        <module name="fundamental-activemq" />
-        <module name="fundamental-algorithm" />
-        <module name="fundamental-androidCasClient" />
-        <module name="fundamental-command" />
-        <module name="fundamental-communication" />
-        <module name="fundamental-config" />
-        <module name="fundamental-datasource" />
-        <module name="fundamental-exception" />
-        <module name="fundamental-fileupload" />
-        <module name="fundamental-jxl" />
-        <module name="fundamental-logger" />
-        <module name="fundamental-map" />
-        <module name="fundamental-message" />
-        <module name="fundamental-mongoConnector" />
-        <module name="fundamental-orm" />
-        <module name="fundamental-redisConnector" />
-        <module name="fundamental-report" />
-        <module name="fundamental-sms" />
-        <module name="fundamental-util" />
-        <module name="fundamental-websocket" />
-        <module name="inspectAdminWeb" />
-        <module name="inspectManagement-business-configuration" />
-        <module name="inspectManagement-business-deptAndEmployee" />
-        <module name="inspectManagement-business-device" />
-        <module name="inspectManagement-business-inspectLocate" />
-        <module name="inspectManagement-business-inspectReport" />
-        <module name="inspectManagement-business-inspectResult" />
-        <module name="inspectManagement-business-inspectTable" />
-        <module name="inspectManagement-business-task" />
-        <module name="inspectManagement-business-user" />
-        <module name="inspectManagementWeb" />
-        <module name="meterFrameManagement-aes" />
-        <module name="meterFrameManagement-business" />
-        <module name="meterFrameManagement-communication" />
-        <module name="meterFrameManagement-communicationFrame" />
-        <module name="meterFrameManagement-db" />
-        <module name="meterFrameManagement-MQ" />
-        <module name="meterFrameManagement-util" />
-        <module name="meterFrameManagementWeb" />
-        <module name="realtimeMonitor-business-algorithm" />
-        <module name="realtimeMonitor-business-communication" />
-        <module name="realtimeMonitor-business-dataTest" />
-        <module name="realtimeMonitor-business-message" />
-        <module name="realtimeMonitor-business-monitor" />
-        <module name="realtimeMonitor-business-report" />
-        <module name="realtimeMonitorWeb" />
-        <module name="rentManagement-business-badDebt" />
-        <module name="rentManagement-business-contract" />
-        <module name="rentManagement-business-customer" />
-        <module name="rentManagement-business-deptAndEmployee" />
-        <module name="rentManagement-business-device" />
-        <module name="rentManagement-business-rentReport" />
-        <module name="rentManagement-business-stock" />
-        <module name="rentManagement-business-storehouse" />
-        <module name="rentManagement-business-supplier" />
-        <module name="rentManagement-business-transport" />
-        <module name="rentManagementWeb" />
-        <module name="riskManagement-business-craneInspectReport" />
-        <module name="riskManagement-business-craneType" />
-        <module name="riskManagement-business-map" />
-        <module name="riskManagement-business-report" />
-        <module name="riskManagement-business-riskcolor" />
-        <module name="riskManagement-business-riskmodel" />
-        <module name="riskManagementWeb" />
-        <module name="trackSystem-business-communication" />
-        <module name="trackSystem-business-device" />
-        <module name="trackSystem-business-group" />
-        <module name="trackSystem-business-trackRecord" />
-        <module name="trackSystemWeb" />
+        <processorPath useClasspath="true" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

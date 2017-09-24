@@ -15,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -76,12 +77,36 @@ public class ReturnMeterWeb {
             condition.put("fmetercode",returnMeter.getFmetercode());
         }
         List<Map<String,Object>> list = returnByCodeService.findByCode(condition);
-        System.out.println(list.get(0).get("fmetername").toString()+list.get(0).get("fmeterdirection").toString());
-        returnMeter.setFmetername(list.get(0).get("fmetername").toString());
-        returnMeter.setFcustomer(list.get(0).get("fcustomer").toString());
-        returnMeter.setFmeterdirection(list.get(0).get("fmeterdirection").toString());
-        returnMeterService.update(returnMeter);
-        return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.SUCCESS);
+        if (list.size() == 0){
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "表具编号修改错误!");
+        }
+        else{
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String datestr = null;
+            Date date = new Date();
+            if(returnMeter.getFmetercode().length()==12){
+                datestr = "20" + returnMeter.getFmetercode().substring(3,5) + "-" + returnMeter.getFmetercode().substring(5,7) + "-" + "01";
+            }
+            else if(returnMeter.getFmetercode().length()==13){
+                datestr = "20" + returnMeter.getFmetercode().substring(4,6) + "-" + returnMeter.getFmetercode().substring(6,8) + "-" + "01";
+            }
+            else {
+                datestr = null;
+            }
+            try {
+                date = sdf.parse(datestr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            returnMeter.setFproducetime(new java.sql.Date(date.getTime()));
+            returnMeter.setFmetername(list.get(0).get("fmetername").toString());
+            returnMeter.setFvalvecode(list.get(0).get("fvalvecode").toString());
+//            不用将查询到的市场赋值，以前台修改后的为准
+//            returnMeter.setFcustomer(list.get(0).get("fcustomer").toString());
+            returnMeter.setFmeterdirection(list.get(0).get("fmeterdirection").toString());
+            returnMeterService.update(returnMeter);
+            return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.SUCCESS);
+        }
     }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -103,7 +128,6 @@ public class ReturnMeterWeb {
             }
             return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
         }
-
         else return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"查询不到结果！");
     }
 
@@ -111,6 +135,14 @@ public class ReturnMeterWeb {
     @Path("/getBatchlist")
     @POST
     public String getBatchlist() {
+        List<Map<String,Object>> list = returnMeterService.getBatchlist();
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/getAllBatchlist")
+    @POST
+    public String getAllBatchlist() {
         List<Map<String,Object>> list = returnMeterService.getBatchlist();
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
@@ -162,12 +194,11 @@ public class ReturnMeterWeb {
             condition.put("startTime",sTime+" 00:00:00");
         }
         if(eTime!=null&&!eTime.equals("")){
-            condition.put("endTime",eTime+" 59:59:59");
+            condition.put("endTime",eTime+" 23:59:59");
         }
         if (curFuncRole.equals("3") || curFuncRole.equals("4")){
             condition.put("fanalysor",fanalysor);
         }
-
         List<Map<String,Object>> list = returnMeterService.findBySearch(condition);
         if (list.size()==0)  {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");

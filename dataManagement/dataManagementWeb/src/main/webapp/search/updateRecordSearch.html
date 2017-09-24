@@ -15,6 +15,7 @@
     <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(function(){
+            f_update();
             $("#submitBtn").click(function (){
                 var updatename = $("#updatename").val();
                 var dataname = $("#dataname").val();
@@ -55,12 +56,12 @@
         }
 
         function f_update() {
+            $("#dataname").empty();
             switch ($("#updatename").val())
             {
                 case "部门管理表":
                     $("#dataname").append("<option value='部门编号'>部门编号</option>");
                     $("#dataname").append("<option value='部门名称'>部门名称</option>");
-
                     break;
                 case "枚举表":
                     $("#dataname").append("<option value='枚举类型'>枚举类型</option>");
@@ -103,7 +104,6 @@
             <td align="right" class="l-table-edit-td">修改表:</td>
             <td align="left" class="l-table-edit-td">
                 <select id="updatename" onchange="f_update()">
-                    <option>无</option>
                     <option>部门管理表</option>
                     <option>枚举表</option>
                     <option>维修分析表</option>

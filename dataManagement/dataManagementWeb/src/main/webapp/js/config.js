@@ -130,7 +130,8 @@
             "findBySearch": "rs/returnMeter/findBySearch",
             "findByMap":"rs/returnMeter/findByMap",
             "findLastData":"rs/returnMeter/findLastData",
-            "getBatchlist":"rs/returnMeter/getBatchlist"
+            "getBatchlist":"rs/returnMeter/getBatchlist",
+            "getAllBatchlist":"rs/returnMeter/getAllBatchlist"
         },
         "returnMeterInfo": {
             "add": "rs/returnMeterInfo/add",

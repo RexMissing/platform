@@ -14,11 +14,11 @@
     <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
     <script type="text/javascript">
+        $.ligerDialog.close("#addreturnMeter");
         var curFuncRole = getCookie("funcRole");
         var fanalysor = getCookie("userName");
         var nowbatch = null;
         $(function(){
-
             var d=new Date();
             var endTime=d.getFullYear()+"-"+ (d.getMonth()+1)+"-"+ d.getDate();
             var startTime;
@@ -32,6 +32,7 @@
             $("#returnMeterEndTime").ligerDateEditor({initValue: endTime});
             $.post($.URL.enumTable.mislist, null, enumMisListCallBack, "json");
             $.post($.URL.enumTable.cuslist, null, enumCusListCallBack, "json");
+            $.post($.URL.returnMeter.getBatchlist,null,bacthListCallBack,"json");
             $.post($.URL.returnMeter.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
         });
         function Appendzero(obj) {
@@ -39,7 +40,6 @@
                 return "0"+obj;
             else return obj;
         }
-
         function f_batch() {
             var mydate = new Date();
             var str = mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate());
@@ -56,10 +56,8 @@
                     nowbatch = "f"+mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate())+"01";
                     alert("当前生成批次号："+nowbatch);
                 }
-
             }
         }
-
         function getCookie(cname) {
             var ss = document.cookie;
             var name = cname + "=";
@@ -72,35 +70,55 @@
             }
             return "";
         }
-
-        var enumData=[];
+        var enumData = [];
         function enumMisListCallBack(data) {
             if (data.code == 200) {
                 $("#freportmisfune").empty();
                 $("#freportmisfune").append("<option value='无'>无</option>");
+                var k = {};
+                k.text = "无";
+                k.value = "无";
+                enumData.push(k);
                 for(var i = 0; i < data.data.length; i++){
+                    var j = {};
+                    j.text = data.data[i].fenumname;
+                    j.value = data.data[i].fenumname;
+                    enumData.push(j);
                     $("#freportmisfune").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
                 }
             }
         }
-
+        var enumcus = [];
         function enumCusListCallBack(data) {
             for(var i = 0; i < data.data.length; i++){
+                var j = {};
+                j.text = data.data[i].fenumname;
+                j.value = data.data[i].fenumname;
+                enumcus.push(j);
                 $("#fcustomer").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
             }
         }
-
+        var curdayBatch = [];
         function bacthListCallBack(data) {
             if (data.code == 200) {
+                curdayBatch.splice(0,curdayBatch.length);
                 $("#freturnbatch").empty();
-                if (nowbatch != null)
+                if (nowbatch != null){
+                    var k = {};
+                    k.text = nowbatch;
+                    k.value = nowbatch;
+                    curdayBatch.push(k);
                     $("#freturnbatch").append("<option value='"+nowbatch+"'>"+nowbatch+"</option>");
+                }
                 for(var i = 0; i < data.data.length; i++){
+                    var j = {};
+                    j.text = data.data[i].freturnbatch;
+                    j.value = data.data[i].freturnbatch;
+                    curdayBatch.push(j);
                     $("#freturnbatch").append("<option value='" + data.data[i].freturnbatch + "'>" + data.data[i].freturnbatch + "</option>");
                 }
             }
         }
-
         function f_customer() {
             var fmetercode = $("#fmetercode").val();
             $.post($.URL.returnByCode.findByCode, {"fmetercode": fmetercode}, getCustomerCallback, "json");
@@ -113,29 +131,34 @@
                 }
             }
         }
-
         $("#submitBtn").click(function () {
             var mdata={};
             mdata.freturnbatch = $("#freturnbatch").val();
             mdata.fmetercode = $("#fmetercode").val();
             mdata.fcustomer = $("#fcustomer").val();
+            mdata.freportmisfune = $("#freportmisfune").val();
             $.post($.URL.returnByCode.findByCode,{"fmetercode":mdata.fmetercode},getInfoCallback,"json");
             function getInfoCallback(data) {
-                mdata.fvalvecode = data.data[0].fvalvecode;
-                mdata.fmetername = data.data[0].fmetername;
-                mdata.fmeterdirection = data.data[0].fmeterdirection;
-                var nowdate = new Date();
-                mdata.fdatetime = nowdate.getFullYear()+"-"+Appendzero(nowdate.getMonth()+1)+"-"+Appendzero(nowdate.getDate());
-                mdata.foperator = getCookie("userName");
-                mdata.freportmisfune = $("#freportmisfune").val();
-                if(mdata.fmetercode.length==12)
-                    mdata.fproducetime = "20"+mdata.fmetercode.substring(3,5)+"-"+mdata.fmetercode.substring(5,7)+"-"+"01";
-                else
-                    mdata.fproducetime = "20"+mdata.fmetercode.substring(4,6)+"-"+mdata.fmetercode.substring(6,8)+"-"+"01";
-                mdata.fsaletime = "2017-09-20";
-                mdata.fpremaintain = "lilang";
-                $.post($.URL.returnMeter.add,{"jsonString":$.toJSON(mdata)},addCallback,"json");
-
+                if (data.code == 200){
+                    mdata.fvalvecode = data.data[0].fvalvecode;
+                    mdata.fmetername = data.data[0].fmetername;
+                    mdata.fmeterdirection = data.data[0].fmeterdirection;
+                    var nowdate = new Date();
+                    mdata.fdatetime = nowdate.getFullYear()+"-"+Appendzero(nowdate.getMonth()+1)+"-"+Appendzero(nowdate.getDate());
+                    mdata.foperator = getCookie("userName");
+                    if(mdata.fmetercode.length==12)
+                        mdata.fproducetime = "20"+mdata.fmetercode.substring(3,5)+"-"+mdata.fmetercode.substring(5,7)+"-"+"01";
+                    else if(mdata.fmetercode.length==13)
+                        mdata.fproducetime = "20"+mdata.fmetercode.substring(4,6)+"-"+mdata.fmetercode.substring(6,8)+"-"+"01";
+                    else
+                        mdata.fproducetime = null;
+                    mdata.fsaletime = "2017-09-20";
+                    mdata.fpremaintain = "lilang";
+                    $.post($.URL.returnMeter.add,{"jsonString":$.toJSON(mdata)},addCallback,"json");
+                }
+                else{
+                    $.ligerDialog.alert(data.message);
+                }
                 function addCallback(data){
                     if(data.code==200){
                         //不弹出添加成功的提示框。
@@ -150,7 +173,6 @@
                 }
             }
         });
-
         $("#returnSearchBtn").click(function () {
             var freturnbatch = $("#batch").val();
             var fmetercode = $("#code").val();
@@ -158,7 +180,6 @@
             var eTime=$("#returnMeterEndTime").val();
             $.post($.URL.returnMeter.findBySearch,{"curFuncRole":curFuncRole,"fanalysor":fanalysor,"freturnbatch":freturnbatch,"fmetercode":fmetercode,"sTime":sTime,"eTime":eTime},listCallback,"json");
         });
-
         var gridData = {};
         function listCallback(data){
             if(data.code==200){
@@ -170,21 +191,44 @@
                 $.ligerDialog.alert(data.message);
             }
         }
-
         var manager, g;
         function f_initGrid()
         {
             g = manager = $("#maingrid").ligerGrid({
                 columns: [
                     { display: '主键', name: 'id', width: '5%', type: 'int', frozen: true},
-                    { display: '清点批次', name: 'freturnbatch', width: '10%', editor:{type:'text'}},
+                    { display: '清点批次', name: 'freturnbatch', width: '10%',
+                        editor: {
+                            type: 'select',
+                            emptyText: null,
+                            data: curdayBatch,
+                            valueField: 'value',
+                            textField: 'text'
+                        }
+                    },
                     { display: '表具编号', name: 'fmetercode', width: '10%', editor:{type:'text'}},
-                    { display: '市场',name: 'fcustomer',width: '10%',editor:{type:'text'}} ,
+                    { display: '市场',name: 'fcustomer',width: '10%',
+                        editor: {
+                            type: 'select',
+                            emptyText: null,
+                            data: enumcus,
+                            valueField: 'value',
+                            textField: 'text'
+                        }
+                    } ,
                     { display: '表具类型',name: 'fmetername',width: '10%'},
                     { display: '表具方向',name: 'fmeterdirection',width: '8%'},
                     { display: '录入时间',name: 'fdatetime',width: '10%'},
                     { display: '录入人员',name: 'foperator',width: '10%'},
-                    { display: '预报故障',name: 'freportmisfune',width: '10%',editor:{type:'text'}},
+                    { display: '预报故障',name: 'freportmisfune',width: '10%',
+                        editor: {
+                            type: 'select',
+                            emptyText: null,
+                            data: enumData,
+                            valueField: 'value',
+                            textField: 'text'
+                        }
+                    },
                     { display: '现场维修员',name: 'fpremaintain',width: '7%',editor:{type:'text'}},
                     { display: '操作', isSort: false, width: '10%',render: function (rowdata, rowindex, value)
                     {
@@ -231,7 +275,6 @@
             window.row = manager.getRow(rowid);
             var jsonString  = $.toJSON(row);
             $.post($.URL.returnMeter.update,{"jsonString":jsonString},updateCallback,"json");
-
             function updateCallback(data){
                 if(data.code==200){
                     $.ligerDialog.success("修改成功");
@@ -306,7 +349,6 @@
                 //manager.deleteRow(rowid);
             }
         }
-
         function deleteCallback(data){
             if(data.code==200){
                 $.ligerDialog.success("成功删除！");
@@ -315,15 +357,12 @@
                 $.ligerDialog.success("删除失败！");
             }
         }
-
-
         function f_add() {
             document.getElementById('form1').reset();
             $.post($.URL.returnMeter.getBatchlist,null,bacthListCallBack,"json");
             c_show();
             $.ligerDialog.open({ target: $("#addreturnMeter"),width:500,title:'添加返修表'});
         }
-
         function c_show(){
             $('#addreturnMeter').css('display','block');
         }
