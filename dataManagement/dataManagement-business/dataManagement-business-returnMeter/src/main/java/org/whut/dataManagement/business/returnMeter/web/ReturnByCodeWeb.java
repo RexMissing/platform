@@ -37,6 +37,9 @@ public class ReturnByCodeWeb {
             condition.put("fmetercode",fmetercode);
         }
         List<Map<String,Object>> list = returnByCodeService.findByCode(condition);
+        if (list.size()==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到该表具编号!");
+        }
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
     }
 

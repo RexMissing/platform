@@ -26,6 +26,10 @@ public class ReturnMeterService {
         return returnMeterMapper.delete(returnMeter);
     }
 
+    public List<Map<String,Object>> findByfanalysor(String fanalysor) {
+        return returnMeterMapper.findByfanalysor(fanalysor);
+    }
+
     public List<Map<String,Object>> list() {
         return returnMeterMapper.getlist();
     }

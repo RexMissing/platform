@@ -18,5 +18,5 @@ public interface ReturnMeterMapper extends AbstractMapper<ReturnMeter> {
     List<Map<String,Object>> findByCondition(Map<String, Object> conditions);
     List<Map<String,Object>> findByMap(Map<String,Object> condition);
     List<Map<String,Object>> findLastData();
-
+    List<Map<String,Object>> findByfanalysor(String fanalysor);
 }

@@ -61,6 +61,11 @@
         FROM treturnmeter
         WHERE IsDelete=0;
     </select>
+    <select id="findByfanalysor" resultMap="returnMeterResultMap">
+        SELECT <include refid="returnMeter_fields"/>
+        FROM treturnmeter
+        WHERE IsDelete=0 AND FOperator=#{fanalysor};
+    </select>
 
     <select id="getBatchlist" resultMap="returnMeterResultMap">
         SELECT DISTINCT freturnbatch
@@ -96,6 +101,7 @@
             <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
             <if test="startTime!=null"><![CDATA[ AND FDateTime>=#{startTime}]]></if>
             <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
+            <if test="fanalysor!=null">AND FOperator=#{fanalysor}</if>
         </where>
     </select>
 

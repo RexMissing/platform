@@ -14,8 +14,11 @@
     <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
     <script type="text/javascript">
+        var curFuncRole = getCookie("funcRole");
+        var fanalysor = getCookie("userName");
         var nowbatch = null;
         $(function(){
+
             var d=new Date();
             var endTime=d.getFullYear()+"-"+ (d.getMonth()+1)+"-"+ d.getDate();
             var startTime;
@@ -29,7 +32,7 @@
             $("#returnMeterEndTime").ligerDateEditor({initValue: endTime});
             $.post($.URL.enumTable.mislist, null, enumMisListCallBack, "json");
             $.post($.URL.enumTable.cuslist, null, enumCusListCallBack, "json");
-            $.post($.URL.returnMeter.list,null,listCallback,"json");
+            $.post($.URL.returnMeter.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
         });
         function Appendzero(obj) {
             if(obj<10)
@@ -102,8 +105,11 @@
             var fmetercode = $("#fmetercode").val();
             $.post($.URL.returnByCode.findByCode, {"fmetercode": fmetercode}, getCustomerCallback, "json");
             function getCustomerCallback(data) {
-                if (data.data[0].fcustomer != "") {
+                if (data.code==200) {
                     $('#fcustomer').attr('value',data.data[0].fcustomer);
+                }
+                else{
+                    $.ligerDialog.alert(data.message);
                 }
             }
         }
@@ -132,9 +138,10 @@
 
                 function addCallback(data){
                     if(data.code==200){
+                        //不弹出添加成功的提示框。
                         $.ligerDialog.success("添加成功");
                         document.getElementById('form1').reset();
-                        $.post($.URL.returnMeter.list,null,listCallback,"json");
+                        $.post($.URL.returnMeter.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
                         $.ligerDialog.hide("#addreturnMeter");
                     }
                     else{
@@ -149,7 +156,7 @@
             var fmetercode = $("#code").val();
             var sTime=$("#returnMeterStartTime").val();
             var eTime=$("#returnMeterEndTime").val();
-            $.post($.URL.returnMeter.findBySearch,{"freturnbatch":freturnbatch,"fmetercode":fmetercode,"sTime":sTime,"eTime":eTime},listCallback,"json");
+            $.post($.URL.returnMeter.findBySearch,{"curFuncRole":curFuncRole,"fanalysor":fanalysor,"freturnbatch":freturnbatch,"fmetercode":fmetercode,"sTime":sTime,"eTime":eTime},listCallback,"json");
         });
 
         var gridData = {};
@@ -158,6 +165,9 @@
                 gridData.Rows = data.data;
                 gridData.Total = data.data.length;
                 f_initGrid();
+            }
+            else{
+                $.ligerDialog.alert(data.message);
             }
         }
 
@@ -225,7 +235,7 @@
             function updateCallback(data){
                 if(data.code==200){
                     $.ligerDialog.success("修改成功");
-                    $.post($.URL.returnMeter.list,null,listCallback,"json");
+                    $.post($.URL.returnMeter.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
                     var dataupdate = {};
                     dataupdate.updateoperator = getCookie("userName");
                     dataupdate.updatename = "返修表录入表";
@@ -281,7 +291,7 @@
                     }
                 }
                 else{
-                    $.post($.URL.returnMeter.list,null,listCallback,"json");
+                    $.post($.URL.returnMeter.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
                     $.ligerDialog.warn(data.message);
                 }
             }
@@ -293,14 +303,14 @@
                 var row = manager.getRow(rowid);
                 var jsonString  = $.toJSON(row);
                 $.post($.URL.returnMeter.delete,{"jsonString":jsonString},deleteCallback,"json");
-                manager.deleteRow(rowid);
+                //manager.deleteRow(rowid);
             }
         }
 
         function deleteCallback(data){
             if(data.code==200){
                 $.ligerDialog.success("成功删除！");
-                $.post($.URL.returnMeter.list,null,listCallback,"json");
+                $.post($.URL.returnMeter.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
             }else{
                 $.ligerDialog.success("删除失败！");
             }

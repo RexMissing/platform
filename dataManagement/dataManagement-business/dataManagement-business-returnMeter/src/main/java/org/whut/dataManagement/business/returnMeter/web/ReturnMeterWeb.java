@@ -76,7 +76,7 @@ public class ReturnMeterWeb {
             condition.put("fmetercode",returnMeter.getFmetercode());
         }
         List<Map<String,Object>> list = returnByCodeService.findByCode(condition);
-        System.out.print(list.get(0).get("fmetername").toString()+list.get(0).get("fmeterdirection").toString());
+        System.out.println(list.get(0).get("fmetername").toString()+list.get(0).get("fmeterdirection").toString());
         returnMeter.setFmetername(list.get(0).get("fmetername").toString());
         returnMeter.setFcustomer(list.get(0).get("fcustomer").toString());
         returnMeter.setFmeterdirection(list.get(0).get("fmeterdirection").toString());
@@ -87,9 +87,24 @@ public class ReturnMeterWeb {
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/list")
     @POST
-    public String list() {
-        List<Map<String,Object>> list = returnMeterService.list();
-        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    public String list(@FormParam("curFuncRole") String curFuncRole,@FormParam("fanalysor") String fanalysor) {
+        List<Map<String,Object>> list;
+        if (curFuncRole.equals("1")||curFuncRole.equals("2")){
+            list=returnMeterService.list();
+            if (list.toArray().length==0)  {
+                return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+            }
+            return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+        }
+        else if (curFuncRole.equals("3") || curFuncRole.equals("4")){
+            list = returnMeterService.findByfanalysor(fanalysor);
+            if (list.toArray().length==0)  {
+                return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+            }
+            return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+        }
+
+        else return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"查询不到结果！");
     }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
@@ -132,7 +147,7 @@ public class ReturnMeterWeb {
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findBySearch")
     @POST
-    public String findBySearch(@FormParam("freturnbatch")String freturnbatch,@FormParam("fmetercode")String fmetercode,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    public String findBySearch(@FormParam("curFuncRole") String curFuncRole,@FormParam("fanalysor") String fanalysor,@FormParam("freturnbatch")String freturnbatch,@FormParam("fmetercode")String fmetercode,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
     {
         Map<String,Object> condition = new HashMap<String, Object>();
         if(freturnbatch!=null&&!freturnbatch.equals(""))
@@ -149,7 +164,14 @@ public class ReturnMeterWeb {
         if(eTime!=null&&!eTime.equals("")){
             condition.put("endTime",eTime+" 59:59:59");
         }
+        if (curFuncRole.equals("3") || curFuncRole.equals("4")){
+            condition.put("fanalysor",fanalysor);
+        }
+
         List<Map<String,Object>> list = returnMeterService.findBySearch(condition);
+        if (list.size()==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
     }
 
