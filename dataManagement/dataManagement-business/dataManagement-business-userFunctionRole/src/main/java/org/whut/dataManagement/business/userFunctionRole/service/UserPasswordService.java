@@ -1,6 +1,7 @@
 package org.whut.dataManagement.business.userFunctionRole.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.whut.dataManagement.business.dynamicDataSource.DataSource;
 import org.whut.dataManagement.business.userFunctionRole.entity.UserDepartNo;
 import org.whut.dataManagement.business.userFunctionRole.entity.UserPassword;
 import org.whut.dataManagement.business.userFunctionRole.mapper.UserPasswordMapper;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/7/26.
  */
+@DataSource("datamanagement")
 public class UserPasswordService {
     @Autowired
     private UserPasswordMapper userPasswordMapper;

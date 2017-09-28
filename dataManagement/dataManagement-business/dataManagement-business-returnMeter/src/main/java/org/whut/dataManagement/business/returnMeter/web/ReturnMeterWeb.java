@@ -276,8 +276,10 @@ public class ReturnMeterWeb {
             condition.put("fmetercode",fmetercode);
         }
         List<Map<String,Object>> list=dispatchService.findByDispatch(condition);
-        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
-    }
+        if (list.size()==0){
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到预报故障!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);}
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/returnMeterNum")

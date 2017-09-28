@@ -113,7 +113,7 @@
                     $("#freturnbatch").append("<option value='"+nowbatch+"'>"+nowbatch+"</option>");
                 }
                 $("#batch").append("<option value=''></option>");
-                for(var i = 0; i < data.data.length; i++){
+                for(var i = data.data.length - 1; i >= 0 ; i--){
                     var j = {};
                     j.text = data.data[i].freturnbatch;
                     j.value = data.data[i].freturnbatch;
@@ -140,7 +140,7 @@
                         $('#freportmisfune').attr('value',data.data[0].freportmisfune);
                     }
                     else{
-                        $.ligerDialog.alert(data.message);
+                        $('#freportmisfune').attr('value','无');
                     }
                 }
             }
@@ -170,8 +170,14 @@
                         mdata.fproducetime = null;
                     $.post($.URL.returnMeter.findByDispatch, {"fmetercode": mdata.fmetercode}, getDispatchCallback, "json");
                     function getDispatchCallback(data) {
-                        mdata.fmeterreading = data.data[0].fmeterreading;
-                        mdata.fpremaintain = data.data[0].fpremaintain;
+                        if (data.code == 200){
+                            mdata.fmeterreading = data.data[0].fmeterreading;
+                            mdata.fpremaintain = data.data[0].fpremaintain;
+                        }
+                        else{
+                            mdata.fmeterreading = null;
+                            mdata.fpremaintain = null;
+                        }
                         $.post($.URL.returnMeter.add, {"jsonString": $.toJSON(mdata)}, addCallback, "json");
                     }
                 }

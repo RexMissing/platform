@@ -1,6 +1,7 @@
 package org.whut.dataManagement.business.userFunctionRole.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.whut.dataManagement.business.dynamicDataSource.DataSource;
 import org.whut.dataManagement.business.userFunctionRole.entity.*;
 import org.whut.dataManagement.business.userFunctionRole.mapper.UserFuncRoleMapper;
 
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/7/25.
  */
-
+@DataSource("datamanagement")
 public class UserFuncRoleService {
     @Autowired
     private UserFuncRoleMapper userFuncRoleMapper;

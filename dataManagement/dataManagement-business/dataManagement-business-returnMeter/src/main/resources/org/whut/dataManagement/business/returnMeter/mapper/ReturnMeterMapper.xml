@@ -134,7 +134,7 @@
     <select id="findByDispatch" parameterType="map" resultType="map">
         SELECT fmetercode,fmeterreading,freportmisfune,fpremaintain
         FROM Dispatch
-        WHERE fmetercode=#{fmetercode};
+        WHERE fmetercode=#{fmetercode} ORDER BY ID DESC limit 1;
     </select>
 
     <select id="returnMeterNum" parameterType="map" resultType="map">
