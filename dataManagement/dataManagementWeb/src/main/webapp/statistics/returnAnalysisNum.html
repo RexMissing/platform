@@ -33,6 +33,7 @@
         });
 
         function enumCusListCallBack(data) {
+            $("#fcustomer").empty();
             $("#fcustomer").append("<option value=''></option>");
             for(var i = 0; i < data.data.length; i++){
                 $("#fcustomer").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
@@ -41,6 +42,7 @@
         }
 
         function enumMeterListCallBack(data) {
+            $("#fmetername").empty();
             $("#fmetername").append("<option value=''></option>");
             for(var i = 0; i < data.data.length; i++){
                 $("#fmetername").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
