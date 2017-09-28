@@ -99,6 +99,11 @@
         FROM treturnmeter
         WHERE IsDelete = 0 AND FMeterCode = #{fmetercode};
     </select>
+    <select id="getReportMisByCode" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT FReportMisFune
+        FROM treturnmeter
+        WHERE IsDelete = 0 AND FMeterCode = #{fmetercode};
+    </select>
 
     <select id="findBySearch" parameterType="map" resultMap="meterAnalysisResultMap">
         SELECT <include refid="meterAnalysis_fields"/>

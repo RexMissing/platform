@@ -122,7 +122,7 @@ public class ReturnMeterInfoWeb {
             condition.put("startTime",sTime+" 00:00:00");
         }
         if(eTime!=null&&!eTime.equals("")){
-            condition.put("endTime",eTime+" 59:59:59");
+            condition.put("endTime",eTime+" 23:59:59");
         }
         List<Map<String,Object>> list=returnMeterInfoService.findByCondition(condition);
         System.out.print(list);

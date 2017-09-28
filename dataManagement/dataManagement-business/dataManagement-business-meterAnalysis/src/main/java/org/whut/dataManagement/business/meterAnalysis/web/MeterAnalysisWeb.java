@@ -86,14 +86,14 @@ public class MeterAnalysisWeb {
     @POST
     public String list(@FormParam("curFuncRole") String curFuncRole,@FormParam("fanalysor") String fanalysor) {
         List<MeterAnalysis> list;
-        if (curFuncRole.equals("1") || curFuncRole.equals("2")){
+        if (curFuncRole.equals("1") || curFuncRole.equals("2")||curFuncRole.equals("3")){
             list = meterAnalysisService.getList();
             if (list.toArray().length==0)  {
                 return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
             }
             return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
         }
-        else if (curFuncRole.equals("3") || curFuncRole.equals("4")){
+        else if (curFuncRole.equals("4")){
             list = meterAnalysisService.getListByFanalysor(fanalysor);
             if (list.toArray().length==0)  {
                 return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
@@ -110,10 +110,14 @@ public class MeterAnalysisWeb {
     @POST
     public String getCusByCode(@FormParam("fmetercode") String fmetercode){
         String cus = meterAnalysisService.getCusByCode(fmetercode);
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("fcustomer",cus);
+        String reportMis = meterAnalysisService.getReportMisByCode(fmetercode);
+        Map<String, String> mapcus = new HashMap<String, String>();
+        Map<String, String> mapmis = new HashMap<String, String>();
+        mapcus.put("fcustomer",cus);
+        mapmis.put("freportmisfune",reportMis);
         List<Map<String,String>> list = new ArrayList<Map<String, String>>();
-        list.add(map);
+        list.add(mapcus);
+        list.add(mapmis);
         if (list.toArray().length==0)  {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
         }
@@ -174,7 +178,7 @@ public class MeterAnalysisWeb {
         {
             condition.put("fmetername",fmetername);
         }
-        if (curFuncRole.equals("3") || curFuncRole.equals("4")){
+        if (curFuncRole.equals("4")){
             condition.put("fanalysor",fanalysor);
         }
         List<MeterAnalysis> meterlist = meterAnalysisService.findBySearch(condition);

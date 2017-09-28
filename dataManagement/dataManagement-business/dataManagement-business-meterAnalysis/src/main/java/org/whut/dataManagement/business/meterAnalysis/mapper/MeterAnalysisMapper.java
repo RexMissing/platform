@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public interface MeterAnalysisMapper extends AbstractMapper<MeterAnalysis> {
     String getCusByCode(String fmetercode);
+    String getReportMisByCode(String fmetercode);
     List<MeterAnalysis> getList();
     List<MeterAnalysis> getListByFanalysor(String fanalysor);
     List<Map<String,String>> getConfirmList();

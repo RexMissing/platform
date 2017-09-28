@@ -97,7 +97,6 @@
                 $("#felecdisplay").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
             }
         }
-
         var gridData = {};
         function listCallback(data) {
             if (data.code == 200) {
@@ -168,16 +167,21 @@
                     {display: '分析时间', name: 'fdatetime', width: '9%'},
                     {
                         display: '操作', isSort: false, width: '10%', render: function (rowdata, rowindex, value) {
-                        var h = "";
-                        if (!rowdata._editing) {
-                            h += "<a href='javascript:beginEdit(" + rowindex + ")'>修改</a> ";
-                            h += "<a href='javascript:deleteRow(" + rowindex + ")'>删除</a> ";
-                        }
-                        else {
-                            h += "<a href='javascript:endEdit(" + rowindex + ")'>提交</a> ";
-                            h += "<a href='javascript:cancelEdit(" + rowindex + ")'>取消</a> ";
-                        }
-                        return h;
+                            var h = "";
+                            if (curFuncRole == "3" && rowdata.fanalysor != fanalysor){
+                                h += "<a>没有操作权限</a>";
+                            }
+                            else{
+                                if (!rowdata._editing) {
+                                    h += "<a href='javascript:beginEdit(" + rowindex + ")'>修改</a> ";
+                                    h += "<a href='javascript:deleteRow(" + rowindex + ")'>删除</a> ";
+                                }
+                                else {
+                                    h += "<a href='javascript:endEdit(" + rowindex + ")'>提交</a> ";
+                                    h += "<a href='javascript:cancelEdit(" + rowindex + ")'>取消</a> ";
+                                }
+                            }
+                            return h;
                         }
                     }
                 ],
@@ -347,6 +351,7 @@
             $.post($.URL.meterAnalysis.getCusByCode,{"fmetercode":fmetercode},selectCusBack,"json");
             function selectCusBack(data) {
                 $("#fcustomer").attr("value",data.data[0].fcustomer);
+                $("#freportmisfune").attr("value",data.data[1].freportmisfune);
             }
         }
         function showMisDescrib() {

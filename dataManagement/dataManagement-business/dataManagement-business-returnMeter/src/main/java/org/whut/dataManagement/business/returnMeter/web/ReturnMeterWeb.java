@@ -114,14 +114,14 @@ public class ReturnMeterWeb {
     @POST
     public String list(@FormParam("curFuncRole") String curFuncRole,@FormParam("fanalysor") String fanalysor) {
         List<Map<String,Object>> list;
-        if (curFuncRole.equals("1")||curFuncRole.equals("2")){
+        if (curFuncRole.equals("1")||curFuncRole.equals("2")||curFuncRole.equals("3")){
             list=returnMeterService.list();
             if (list.toArray().length==0)  {
                 return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
             }
             return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
         }
-        else if (curFuncRole.equals("3") || curFuncRole.equals("4")){
+        else if (curFuncRole.equals("4")){
             list = returnMeterService.findByfanalysor(fanalysor);
             if (list.toArray().length==0)  {
                 return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
@@ -169,7 +169,7 @@ public class ReturnMeterWeb {
             condition.put("startTime",sTime+" 00:00:00");
         }
         if(eTime!=null&&!eTime.equals("")){
-            condition.put("endTime",eTime+" 59:59:59");
+            condition.put("endTime",eTime+" 23:59:59");
         }
         List<Map<String,Object>> list=returnMeterService.findByCondition(condition);
         System.out.print(list);
@@ -196,7 +196,7 @@ public class ReturnMeterWeb {
         if(eTime!=null&&!eTime.equals("")){
             condition.put("endTime",eTime+" 23:59:59");
         }
-        if (curFuncRole.equals("3") || curFuncRole.equals("4")){
+        if (curFuncRole.equals("4")){
             condition.put("fanalysor",fanalysor);
         }
         List<Map<String,Object>> list = returnMeterService.findBySearch(condition);
@@ -233,7 +233,7 @@ public class ReturnMeterWeb {
             condition.put("startTime",sTime+" 00:00:00");
         }
         if(eTime!=null&&!eTime.equals("")){
-            condition.put("endTime",eTime+" 59:59:59");
+            condition.put("endTime",eTime+" 23:59:59");
         }
         List<Map<String,Object>> list = returnMeterService.findByMap(condition);
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
