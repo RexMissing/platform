@@ -61,7 +61,7 @@
     <select id="getlist" resultMap="returnMeterResultMap">
         SELECT <include refid="returnMeter_fields"/>
         FROM treturnmeter
-        WHERE IsDelete=0;
+        WHERE IsDelete=0 ORDER BY ID DESC;
     </select>
     <select id="findByfanalysor" resultMap="returnMeterResultMap">
         SELECT <include refid="returnMeter_fields"/>
@@ -115,6 +115,7 @@
             <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
             <if test="fanalysor!=null">AND FOperator=#{fanalysor}</if>
         </where>
+        ORDER BY ID DESC;
     </select>
 
     <select id="findByMap" parameterType="map" resultMap="returnMeterResultMap">

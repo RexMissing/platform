@@ -352,6 +352,7 @@
             function selectCusBack(data) {
                 $("#fcustomer").attr("value",data.data[0].fcustomer);
                 $("#freportmisfune").attr("value",data.data[1].freportmisfune);
+                $("#fmeterreading").val(data.data[2].fmeterreading);
             }
         }
         function showMisDescrib() {
@@ -426,6 +427,11 @@
                 <td align="left"></td>
             </tr>
             <tr>
+                <td align="right" class="l-table-edit-td">表具止码:</td>
+                <td align="left" class="l-table-edit-td"><input name="fmeterreading" type="text" id="fmeterreading" ></td>
+                <td align="left"></td>
+            </tr>
+            <tr>
                 <td align="right" class="l-table-edit-td">实查故障:</td>
                 <td align="left" class="l-table-edit-td">
                     <select name="fconfirmmisfune" id="fconfirmmisfune" onchange="showMisDescrib()">
@@ -439,11 +445,6 @@
                     <select name="fmisfuneinfo" id="fmisfuneinfo" >
                         <!--js控制添加故障详情-->
                     </select></td>
-                <td align="left"></td>
-            </tr>
-            <tr>
-                <td align="right" class="l-table-edit-td">表具止码:</td>
-                <td align="left" class="l-table-edit-td"><input name="fmeterreading" type="text" id="fmeterreading" ></td>
                 <td align="left"></td>
             </tr>
             <tr>

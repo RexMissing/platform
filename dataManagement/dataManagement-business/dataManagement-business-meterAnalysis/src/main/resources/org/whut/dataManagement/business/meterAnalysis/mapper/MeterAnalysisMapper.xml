@@ -60,7 +60,7 @@
     <select id="getList" resultMap="meterAnalysisResultMap">
         SELECT <include refid="meterAnalysis_fields"/> 
         FROM tmeteranalysisinfo 
-        WHERE IsDelete=0;
+        WHERE IsDelete=0 ORDER BY ID DESC;
     </select>
 
     <select id="getListByFanalysor" resultMap="meterAnalysisResultMap">
@@ -90,12 +90,17 @@
     <select id="getCusByCode" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT FCustomer
         FROM treturnmeter
-        WHERE IsDelete = 0 AND FMeterCode = #{fmetercode};
+        WHERE IsDelete = 0 AND FMeterCode = #{fmetercode} ORDER BY ID DESC limit 1;
     </select>
     <select id="getReportMisByCode" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT FReportMisFune
         FROM treturnmeter
-        WHERE IsDelete = 0 AND FMeterCode = #{fmetercode};
+        WHERE IsDelete = 0 AND FMeterCode = #{fmetercode} ORDER BY ID DESC limit 1;
+    </select>
+    <select id="getReadingByCode" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT FMeterReading
+        FROM treturnmeter
+        WHERE IsDelete = 0 AND FMeterCode = #{fmetercode} ORDER BY ID DESC limit 1;
     </select>
 
     <select id="findBySearch" parameterType="map" resultMap="meterAnalysisResultMap">
@@ -107,6 +112,7 @@
             <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
             <if test="fanalysor!=null">AND FAnalysor=#{fanalysor}</if>
         </where>
+        ORDER BY ID DESC;
     </select>
     
     <select id="findValveAndName" parameterType="map" resultType="map">

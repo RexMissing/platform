@@ -39,6 +39,9 @@ public class MeterAnalysisService {
     public String getReportMisByCode(String fmetercode){
         return meterAnalysisMapper.getReportMisByCode(fmetercode);
     }
+    public String getReadingByCode(String fmetercode){
+        return meterAnalysisMapper.getReadingByCode(fmetercode);
+    }
     public List<Map<String,String>> findValveAndName(Map<String,String> condition)
     {
         return meterAnalysisMapper.findValveAndName(condition);

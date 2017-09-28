@@ -111,13 +111,17 @@ public class MeterAnalysisWeb {
     public String getCusByCode(@FormParam("fmetercode") String fmetercode){
         String cus = meterAnalysisService.getCusByCode(fmetercode);
         String reportMis = meterAnalysisService.getReportMisByCode(fmetercode);
+        String meterreading = meterAnalysisService.getReadingByCode(fmetercode);
         Map<String, String> mapcus = new HashMap<String, String>();
         Map<String, String> mapmis = new HashMap<String, String>();
+        Map<String, String> mapreading = new HashMap<String, String>();
         mapcus.put("fcustomer",cus);
         mapmis.put("freportmisfune",reportMis);
+        mapreading.put("fmeterreading",meterreading);
         List<Map<String,String>> list = new ArrayList<Map<String, String>>();
         list.add(mapcus);
         list.add(mapmis);
+        list.add(mapreading);
         if (list.toArray().length==0)  {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
         }
