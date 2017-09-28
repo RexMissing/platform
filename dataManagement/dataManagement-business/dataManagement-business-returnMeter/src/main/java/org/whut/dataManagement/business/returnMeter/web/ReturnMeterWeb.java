@@ -299,31 +299,40 @@ public class ReturnMeterWeb {
         if(eTime!=null&&!eTime.equals("")){
             condition.put("endTime",eTime+" 59:59:59");
         }
-        List<Map<String,Object>> list=returnMeterService.returnMeterNum(condition);
-        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+        List<Map<String,Object>> list1=returnMeterService.returnMeterNum(condition);
+        List<Map<String,Object>> list2=returnMeterService.returnAnalysisNum(condition);
+        int num = Integer.parseInt(list1.get(0).get("returnmeternum").toString())-Integer.parseInt(list2.get(0).get("analysisnum").toString());
+        Map<String,Object> condition1 = new HashMap<String, Object>();
+        condition1.put("notanalysisnum",num);
+        condition1.put("returnbatchnum",list1.get(0).get("returnbatchnum"));
+        condition1.put("returnmeternum",list1.get(0).get("returnmeternum"));
+        condition1.put("analysisnum",list2.get(0).get("analysisnum"));
+        List<Map<String,Object>> list3 = new ArrayList<Map<String, Object>>();
+        list3.add(condition1);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list3,JsonResultUtils.Code.SUCCESS);
     }
 
-    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
-    @Path("/returnAnalysisNum")
-    @POST
-    public String returnAnalysisNum(@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
-    {
-        Map<String,Object> condition = new HashMap<String, Object>();
-        if(fcustomer!=null&&!fcustomer.equals(""))
-        {
-            condition.put("fcustomer",fcustomer);
-        }
-        if (fmetername!=null&&!fmetername.equals(""))
-        {
-            condition.put("fmetername",fmetername);
-        }
-        if(sTime!=null&&!sTime.equals("")){
-            condition.put("startTime",sTime+" 00:00:00");
-        }
-        if(eTime!=null&&!eTime.equals("")){
-            condition.put("endTime",eTime+" 59:59:59");
-        }
-        List<Map<String,Object>> list=returnMeterService.returnAnalysisNum(condition);
-        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
-    }
+//    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+//    @Path("/returnAnalysisNum")
+//    @POST
+//    public String returnAnalysisNum(@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+//    {
+//        Map<String,Object> condition = new HashMap<String, Object>();
+//        if(fcustomer!=null&&!fcustomer.equals(""))
+//        {
+//            condition.put("fcustomer",fcustomer);
+//        }
+//        if (fmetername!=null&&!fmetername.equals(""))
+//        {
+//            condition.put("fmetername",fmetername);
+//        }
+//        if(sTime!=null&&!sTime.equals("")){
+//            condition.put("startTime",sTime+" 00:00:00");
+//        }
+//        if(eTime!=null&&!eTime.equals("")){
+//            condition.put("endTime",eTime+" 59:59:59");
+//        }
+//        List<Map<String,Object>> list=returnMeterService.returnAnalysisNum(condition);
+//        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+//    }
 }

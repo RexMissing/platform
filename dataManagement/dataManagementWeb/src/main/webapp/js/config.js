@@ -132,7 +132,9 @@
             "findLastData":"rs/returnMeter/findLastData",
             "getBatchlist":"rs/returnMeter/getBatchlist",
             "getAllBatchlist":"rs/returnMeter/getAllBatchlist",
-            "findByDispatch":"rs/returnMeter/findByDispatch"
+            "findByDispatch":"rs/returnMeter/findByDispatch",
+            "returnMeterNum":"rs/returnMeter/returnMeterNum",
+            "returnAnalysisNum":"rs/returnMeter/returnAnalysisNum"
         },
         "returnMeterInfo": {
             "add": "rs/returnMeterInfo/add",

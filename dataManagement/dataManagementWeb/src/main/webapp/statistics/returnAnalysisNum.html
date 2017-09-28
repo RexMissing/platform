@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>返回分析表数量统计</title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="lib/assert/select/combo.select.css" type="text/css"/>
+    <script src="lib/assert/select/jquery.combo.select.js" type="text/javascript"></script>
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function(){
+            var d=new Date();
+            var endTime=d.getFullYear()+"-"+ (d.getMonth()+1)+"-"+ d.getDate();
+            var startTime;
+            if(d.getMonth()==1){
+                startTime=(d.getFullYear()-1)+"-"+12+"-"+ d.getDate();
+
+            }else{
+                startTime=(d.getFullYear())+"-"+ (d.getMonth())+"-"+ d.getDate();
+            }
+            $("#returnMeterStartTime").ligerDateEditor({initValue: startTime});
+            $("#returnMeterEndTime").ligerDateEditor({initValue: endTime});
+            $.post($.URL.enumTable.meterlist,null,enumMeterListCallBack,"json");
+            $.post($.URL.enumTable.cuslist, null, enumCusListCallBack, "json");
+        });
+
+        function enumCusListCallBack(data) {
+            $("#fcustomer").append("<option value=''></option>");
+            for(var i = 0; i < data.data.length; i++){
+                $("#fcustomer").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+            $("#fcustomer").comboSelect();
+        }
+
+        function enumMeterListCallBack(data) {
+            $("#fmetername").append("<option value=''></option>");
+            for(var i = 0; i < data.data.length; i++){
+                $("#fmetername").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+            $("#fmetername").comboSelect();
+        }
+
+        var gridData={};
+
+        $("#SearchBtn").click(function () {
+            var fcustomer=$("#fcustomer").val();
+            var fmetername=$("#fmetername").val();
+            var sTime=$("#returnMeterStartTime").val();
+            var eTime=$("#returnMeterEndTime").val();
+            $.post($.URL.returnMeter.returnMeterNum,{"fcustomer":fcustomer,"fmetername":fmetername,"sTime":sTime,"eTime":eTime},meterNumCallback,"json");
+            function meterNumCallback(data) {
+                if(data.code==200){
+                    gridData.Rows = data.data;
+                    gridData.Total = data.data.length;
+                    f_initGrid();
+                }
+                else{
+                    $.ligerDialog.alert(data.message);
+                }
+                }
+        });
+
+        var manager, g;
+        var h = "";
+        function f_initGrid()
+        {
+            g = manager = $("#MainGrid").ligerGrid({
+                columns: [
+                    { display: '返回批次总数', name: 'returnbatchnum', width: '25%'},
+                    { display: '返回表具总数', name: 'returnmeternum', width: '25%'},
+                    { display: '已分析表总数', name: 'analysisnum', width: '25%'},
+                    { display: '未分析表总数',name: 'notanalysisnum',width: '25%'}
+                ],
+                onSelectRow: function (rowdata, rowindex)
+                {
+                    $("#txtrowindex").val(rowindex);
+                },
+                enabledEdit: true,clickToEdit:false, isScroll: false,
+                data:gridData,
+                width: '100%'
+            });
+        }
+
+    </script>
+    <style type="text/css">
+        .l-table-edit {}
+        .l-table-edit-td {padding: 4px;}
+        .l-button-submit, .l-button-reset {width: 80px;float: left; margin-left: 10px;padding-bottom: 2px;}
+        .l-dialog-tc { background: #E0EDFF;}
+    </style>
+</head>
+<body style="padding:10px">
+<div id="list">
+    <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <tr>
+            <td align="right" class="l-table-edit-td">市场:</td>
+            <td align="left" class="l-table-edit-td">
+                <select  id="fcustomer"></select>
+            </td>
+            <td align="right" class="l-table-edit-td">表具类型:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="fmetername"></select>
+            </td>
+            <td align="right" class="l-table-edit-td">起始时间:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="returnMeterStartTime" type="date"  id="returnMeterStartTime">
+            </td>
+            <td align="right" class="l-table-edit-td">终止时间:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="returnMeterEndTime" type="date"  id="returnMeterEndTime">
+            </td>
+            <td align="right"><input type="button" value="查询" id="SearchBtn" class="l-button l-button-submit" /></td>
+        </tr>
+    </table>
+    <div class="l-clear"></div>
+    <div id="MainGrid" style="margin-top:5px"></div>
+    <br/>
+</div>
+<div style="display:none;">
+</div>
+
+</body>
+</html>

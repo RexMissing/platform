@@ -138,7 +138,7 @@
     </select>
 
     <select id="returnMeterNum" parameterType="map" resultType="map">
-        SELECT COUNT(FReturnBatch) AS returnbatchnum,COUNT(fmetercode) AS returnmeternum
+        SELECT COUNT(DISTINCT FReturnBatch) AS returnbatchnum,COUNT(DISTINCT fmetercode) AS returnmeternum
         FROM treturnmeter
         <where>
             IsDelete=0
@@ -150,14 +150,15 @@
     </select>
 
     <select id="returnAnalysisNum" parameterType="map" resultType="map">
-        SELECT COUNT(fmetercode) AS analysisnum
-        FROM treturnmeter AND
+        SELECT COUNT(DISTINCT treturnmeter.fmetercode) AS analysisnum
+        FROM treturnmeter
+        JOIN tmeteranalysisinfo ON treturnmeter.fmetercode=tmeteranalysisinfo.fmetercode
         <where>
-            IsDelete=0
-            <if test="fcustomer!=null">AND FCustomer=#{fcustomer}</if>
-            <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
-            <if test="startTime!=null"><![CDATA[ AND FDateTime>=#{startTime}]]></if>
-            <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
+            treturnmeter.IsDelete=0 AND tmeteranalysisinfo.IsDelete=0
+            <if test="fcustomer!=null">AND treturnmeter.FCustomer=#{fcustomer}</if>
+            <if test="fmetername!=null">AND treturnmeter.FMeterName=#{fmetername}</if>
+            <if test="startTime!=null"><![CDATA[ AND treturnmeter.FDateTime>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND treturnmeter.FDateTime<=#{endTime} ]]> </if>
         </where>
     </select>
 </mapper>
