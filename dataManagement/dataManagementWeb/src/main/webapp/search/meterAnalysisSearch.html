@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title></title>
     <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="lib/assert/select/combo.select.css" type="text/css"/>
+    <script src="lib/assert/select/jquery.combo.select.js" type="text/javascript"></script>
     <script src="lib/json2.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
@@ -25,68 +27,67 @@
             }
             $("#returnMeterStartTime").ligerDateEditor({initValue: startTime});
             $("#returnMeterEndTime").ligerDateEditor({initValue: endTime});
-            $.post($.URL.enumTable.list, null, enumListCallBack, "json");
-            $.post($.URL.department.list,null,departListCallBack,"json");
+            $.post($.URL.enumTable.mislist, null, enumMisListCallBack, "json");
+            $.post($.URL.enumTable.misinfolist, {"misType":"all"}, enumMisInfoListCallBack,"json");
+            $.post($.URL.enumTable.cuslist, null, enumCusListCallBack, "json");
+            $.post($.URL.enumTable.meterlist,null,enumMeterListCallBack,"json");
         });
 
-        var enumData=[];
-        function enumListCallBack(data) {
+        function enumMisListCallBack(data) {
             if (data.code == 200) {
-                $.each(data.data, function (index, content) {
-                    var j = {};
-                    j.text = content.fenumname;
-                    j.value = content.fenumvalue;
-                    enumData.push(j);
-                });
-                $("#freportmisfune").ligerComboBox({
-                    isShowCheckBox: true, emptyText: null, /*实现下拉表*/
-                    data: enumData,
-                    width: 200,
-                    valueField: 'value',
-                    textField: 'text',
-                    valueFieldID: 'freportmisfuneSelect'   /*下拉表Id是Device*/
-                });
-                $("#fconfirmmisfune").ligerComboBox({
-                    isShowCheckBox: true, emptyText: null, /*实现下拉表*/
-                    data: enumData,
-                    width: 200,
-                    valueField: 'value',
-                    textField: 'text',
-                    valueFieldID: 'fconfirmmisfuneSelect'   /*下拉表Id是Device*/
-                });
+                $("#freportmisfune").empty();
+                $("#freportmisfune").append("<option value=''></option>");
+                for(var i = 0; i < data.data.length; i++){
+                    $("#freportmisfune").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+                }
+                $("#freportmisfune").comboSelect();
+                $("#fconfirmmisfune").empty();
+                $("#fconfirmmisfune").append("<option value=''></option>");
+                for(var i = 0; i < data.data.length; i++){
+                    $("#fconfirmmisfune").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+                }
+                $("#fconfirmmisfune").comboSelect();
             }
         }
 
-        var departData=[];
-        function departListCallBack(data) {
-            if (data.code == 200) {
-                $.each(data.data, function (index, content) {
-                    var j = {};
-                    j.text = content.departName;
-                    j.value = content.departNo;
-                    departData.push(j);
-                });
-                $("#fdepartment").ligerComboBox({
-                    isShowCheckBox: true, emptyText: null, /*实现下拉表*/
-                    data: departData,
-                    width: 200,
-                    valueField: 'value',
-                    textField: 'text',
-                    valueFieldID: 'departSelect'
-                });
+        function enumMisInfoListCallBack(data) {
+            $("#fmisfunedescrib").empty();
+            $("#fmisfunedescrib").append("<option value=''></option>");
+            for(var i = 0; i < data.data.length; i++){
+                $("#fmisfunedescrib").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
             }
+            $("#fmisfunedescrib").comboSelect();
         }
+
+        function enumCusListCallBack(data) {
+            $("#fcustomer").append("<option value=''></option>");
+            for(var i = 0; i < data.data.length; i++){
+                $("#fcustomer").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+            $("#fcustomer").comboSelect();
+        }
+
+        function enumMeterListCallBack(data) {
+            $("#fmetername").append("<option value=''></option>");
+            for(var i = 0; i < data.data.length; i++){
+                $("#fmetername").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+            $("#fmetername").comboSelect();
+        }
+        $("#fdepartment").comboSelect();
 
         function getMeterAnalysisList() {
             var fmetercode = $("#fmetercode").val();
             var fmetername = $("#fmetername").val();
+            var fdepartment = $("#fdepartment").val();
             var fanalysor = $("#fanalysor").val();
             var fcustomer = $("#fcustomer").val();
-            var freportmisfune = $("#freportmisfune").ligerComboBox().getValue();
-            var fconfirmmisfune = $("#fconfirmmisfune").ligerComboBox().getValue();
+            var freportmisfune = $("#freportmisfune").val();
+            var fconfirmmisfune = $("#fconfirmmisfune").val();
+            var fmisfunedescrib = $("#fmisfunedescrib").val();
             var sTime=$("#returnMeterStartTime").val();
             var eTime=$("#returnMeterEndTime").val();
-            $.post($.URL.meterAnalysis.findByCondition,{"fmetercode":fmetercode,"fmetername":fmetername,"fanalysor":fanalysor,"fcustomer":fcustomer,"freportmisfune":freportmisfune,"fconfirmmisfune":fconfirmmisfune,"sTime":sTime,"eTime":eTime},getListCallback,"json");
+            $.post($.URL.meterAnalysis.findByCondition,{"fmetercode":fmetercode,"fmetername":fmetername,"fdepartment":fdepartment,"fanalysor":fanalysor,"fcustomer":fcustomer,"freportmisfune":freportmisfune,"fconfirmmisfune":fconfirmmisfune,"fmisfunedescrib":fmisfunedescrib,"sTime":sTime,"eTime":eTime},getListCallback,"json");
         }
 
         var analysisSearchData={};
@@ -112,52 +113,19 @@
         {
             g = manager = $("#analysisMainGrid").ligerGrid({
                 columns: [
-                    {display: '表具编号', name: 'fmetercode', width: '10%', type: 'String', frozen: true},
-                    {display: '表具类型', name: 'fmetername', width: '10%', editor: {type: 'text'}},
-                    {display: '基表条码', name: 'fvalvename', width: '10%', editor: {type: 'text'}},
-                    {
-                        display: '部门', name: 'fdepartment', width: '10%', type: 'text',
-                        editor: {
-                            type: 'select',
-                            emptyText: null,
-                            data: departData,
-                            valueField: 'value',
-                            textField: 'text'
-                        },
-                        render: function (item) {
-                            return item.departenum;
-                        }
-                    },
-                    {display: '分析员', name: 'fanalysor', width: '10%', editor: {type: 'text'}},
-                    {display: '燃气公司', name: 'fcustomer', width: '10%', editor: {type: 'text'}},
-                    {
-                        display: '报修故障', name: 'freportmisfune', width: '10%', type: 'int',
-                        editor: {
-                            type: 'select',
-                            emptyText: null,
-                            data: enumData,
-                            valueField: 'value',
-                            textField: 'text'
-                        },
-                        render: function (item) {
-                            return item.reportenum;
-                        }
-                    },
-                    {
-                        display: '实查故障', name: 'fconfirmmisfune', width: '10%', type: 'int',
-                        editor: {
-                            type: 'select',
-                            emptyText: null,
-                            data: enumData,
-                            valueField: 'value',
-                            textField: 'text'
-                        },
-                        render: function (item) {
-                            return item.confirmenum;
-                        }
-                    },
-                    {display: '表具止码', name: 'fmeterreading', width: '10%', editor: {type: 'text'}},
-                    {display: '分析时间', name: 'fdatetime', width: '10%', editor: {type: 'text'}}
+                    {display: '主键', name: 'id', width: '5%', type: 'int', frozen:true},
+                    {display: '表具编号', name: 'fmetercode', width: '8%',editor: {type: 'text'}},
+                    {display: '表具类型', name: 'fmetername', width: '8%'},
+                    {display: '基表条码', name: 'fvalvename', width: '8%'},
+                    {display: '分析部门', name: 'fdepartment', width: '8%'},
+                    {display: '分析员', name: 'fanalysor', width: '8%'},
+                    {display: '市场', name: 'fcustomer', width: '8%'},
+                    {display: '报修故障', name: 'freportmisfune', width: '8%'},
+                    {display: '实查故障', name: 'fconfirmmisfune', width: '8%'},
+                    {display: '故障详情', name: 'fmisfunedescrib', width: '8%'},
+                    {display: '表具止码', name: 'fmeterreading', width: '8%', editor: {type: 'text'}},
+                    {display: '上电显示状态', name: 'felecdisplay', width: '7%'},
+                    {display: '分析时间', name: 'fdatetime', width: '8%'}
                 ],
                 onSelectRow: function (rowdata, rowindex) {
                     $("#txtrowindex").val(rowindex);
@@ -185,7 +153,15 @@
             </td>
             <td align="right" class="l-table-edit-td">表具类型:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="fmetername" type="text"  id="fmetername">
+                <select id="fmetername"></select>
+            </td>
+            <td align="right" class="l-table-edit-td">分析部门:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="fdepartment">
+                    <option value=""></option>
+                    <option value="维修部">维修部</option>
+                    <option value="生产部">生产部</option>
+                </select>
             </td>
             <td align="right" class="l-table-edit-td">分析员:</td>
             <td align="left" class="l-table-edit-td">
@@ -193,17 +169,21 @@
             </td>
         </tr>
         <tr>
-            <td align="right" class="l-table-edit-td">燃气公司:</td>
+            <td align="right" class="l-table-edit-td">市场:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="fcustomer" type="text"  id="fcustomer">
+                <select id="fcustomer"></select>
             </td>
             <td align="right" class="l-table-edit-td">报修故障:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="freportmisfune" type="text"  id="freportmisfune">
+                <select id="freportmisfune"></select>
             </td>
             <td align="right" class="l-table-edit-td">实查故障:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="fconfirmmisfune" type="text"  id="fconfirmmisfune">
+                <select id="fconfirmmisfune"></select>
+            </td>
+            <td align="right" class="l-table-edit-td">故障详情:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="fmisfunedescrib"></select>
             </td>
         </tr>
         <tr>

@@ -31,9 +31,9 @@ public class EnumTableService {
     public List<Map<String, String>> getEleList() {
         return enumTableMapper.getEleList();
     }
-//    public List<Map<String, String>> getMeterList() {
-//        return enumTableMapper.getMeterList();
-//    }
+    public List<Map<String, String>> getMeterList() {
+        return enumTableMapper.getMeterList();
+    }
 
     public List<Map<String, String>> getAllList() {
         return enumTableMapper.getAllList();

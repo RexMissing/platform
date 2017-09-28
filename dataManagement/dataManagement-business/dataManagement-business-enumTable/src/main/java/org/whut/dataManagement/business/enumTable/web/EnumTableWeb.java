@@ -139,17 +139,17 @@ public class EnumTableWeb {
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
     }
 
-//    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
-//    @Path("/meterlist")
-//    @POST
-//    public String meterlist()
-//    {
-//        List<Map<String,String>> list = enumTableService.getMeterList();
-//        if (list.toArray().length==0)  {
-//            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
-//        }
-//        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
-//    }
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/meterlist")
+    @POST
+    public String meterlist()
+    {
+        List<Map<String,String>> list = enumTableService.getMeterList();
+        if (list.toArray().length==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findBySearch")

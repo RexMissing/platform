@@ -1,27 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<WorkBook xmlVersion="20151125" releaseVersion="8.0.0">
+<WorkBook xmlVersion="20170715" releaseVersion="8.0.0">
 <TableDataMap>
-<TableData name="左表统计" class="com.fr.data.impl.DBTableData">
-<Parameters/>
-<Attributes share="true" maxMemRowCount="-1"/>
-<Connection class="com.fr.data.impl.NameDatabaseConnection">
-<DatabaseName>
-<![CDATA[FRDemo]]></DatabaseName>
-</Connection>
-<Query>
-<![CDATA[select frinvono, count(fmetername) from treturnmeter where fmetername like '%左' and IsDelete=0 group by frinvono order by frinvono desc;]]></Query>
-</TableData>
-<TableData name="ds" class="com.fr.data.impl.DBTableData">
-<Parameters/>
-<Attributes share="true" maxMemRowCount="-1"/>
-<Connection class="com.fr.data.impl.NameDatabaseConnection">
-<DatabaseName>
-<![CDATA[FRDemo]]></DatabaseName>
-</Connection>
-<Query>
-<![CDATA[select * from treturnmeter where IsDelete=0 order by frinvono desc;]]></Query>
-</TableData>
-<TableData name="右表统计" class="com.fr.data.impl.DBTableData">
+<TableData name="returnmeter" class="com.fr.data.impl.DBTableData">
 <Parameters/>
 <Attributes maxMemRowCount="-1"/>
 <Connection class="com.fr.data.impl.NameDatabaseConnection">
@@ -29,7 +9,37 @@
 <![CDATA[FRDemo]]></DatabaseName>
 </Connection>
 <Query>
-<![CDATA[select frinvono, count(fmetername) from treturnmeter where fmetername like '%右' and IsDelete=0 group by frinvono order by frinvono desc;]]></Query>
+<![CDATA[select * from treturnmeter where IsDelete=0;]]></Query>
+</TableData>
+<TableData name="左表查询" class="com.fr.data.impl.DBTableData">
+<Parameters/>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[FRDemo]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select count(fmetercode),freturnbatch,fcustomer,fmetername,fdatetime from treturnmeter where IsDelete=0 and fmeterdirection='左' group by freturnbatch,fcustomer,fmetername,fdatetime;]]></Query>
+</TableData>
+<TableData name="右表查询" class="com.fr.data.impl.DBTableData">
+<Parameters/>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[FRDemo]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select count(fmetercode),freturnbatch,fcustomer,fmetername,fdatetime from treturnmeter where IsDelete=0 and fmeterdirection='右' group by freturnbatch,fcustomer,fmetername,fdatetime;]]></Query>
+</TableData>
+<TableData name="批次小计" class="com.fr.data.impl.DBTableData">
+<Parameters/>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[FRDemo]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select count(fmetercode),freturnbatch,fcustomer,fdatetime from treturnmeter where IsDelete=0 group by freturnbatch,fcustomer,fdatetime;]]></Query>
 </TableData>
 </TableDataMap>
 <Report class="com.fr.report.worksheet.WorkSheet" name="sheet1">
@@ -42,86 +52,235 @@
 <ColumnPrivilegeControl/>
 <RowPrivilegeControl/>
 <RowHeight defaultValue="723900">
-<![CDATA[723900,723900,723900,762000,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
+<![CDATA[723900,723900,723900,723900,762000,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
 <ColumnWidth defaultValue="2743200">
-<![CDATA[3200400,2590800,2857500,3429000,2743200,2743200,2438400,3429000,2743200,2743200,2743200]]></ColumnWidth>
+<![CDATA[2743200,3352800,3886200,2247900,3771900,1638300,1638300,1638300,3695700,2743200,2743200,2743200]]></ColumnWidth>
 <CellElementList>
-<C c="0" r="0" cs="8" rs="2" s="0">
+<C c="0" r="0" cs="2" rs="2" s="0">
 <O>
-<![CDATA[返回故障表分析数量的统计]]></O>
+<![CDATA[退库单据号：]]></O>
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="0" r="2" rs="2" s="1">
-<O>
-<![CDATA[退库单据号]]></O>
+<C c="2" r="0" s="1">
+<PrivilegeControl/>
+</C>
+<C c="3" r="0" s="1">
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="1" r="2" cs="3" s="2">
+<C c="4" r="0" rs="2" s="2">
 <O>
-<![CDATA[数量]]></O>
+<![CDATA[时间段:]]></O>
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="4" r="2" rs="2" s="3">
+<C c="5" r="0" cs="2" rs="2" s="2">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$begindate]]></Attributes>
+</O>
+<PrivilegeControl/>
+<CellPageAttr/>
+<CellInsertPolicy>
+<InsertPolicy>
+<![CDATA[default]]></InsertPolicy>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$begindate]]></Attributes>
+</O>
+</CellInsertPolicy>
+<Expand/>
+</C>
+<C c="7" r="0" rs="2" s="3">
+<O>
+<![CDATA[--]]></O>
+<PrivilegeControl/>
+</C>
+<C c="8" r="0" rs="2" s="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$enddate]]></Attributes>
+</O>
+<PrivilegeControl/>
+<CellPageAttr/>
+<CellInsertPolicy>
+<InsertPolicy>
+<![CDATA[default]]></InsertPolicy>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$enddate]]></Attributes>
+</O>
+</CellInsertPolicy>
+<Expand/>
+</C>
+<C c="2" r="1" s="1">
+<PrivilegeControl/>
+</C>
+<C c="3" r="1" s="1">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="2" cs="9" rs="2" s="4">
+<O>
+<![CDATA[返回故障表数量统计]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="4" rs="2" s="5">
 <O>
 <![CDATA[日期]]></O>
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="5" r="2" rs="2" s="1">
+<C c="1" r="4" rs="2" s="6">
+<O>
+<![CDATA[批次]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="4" rs="2" s="6">
+<O>
+<![CDATA[市场]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="4" rs="2" s="6">
+<O>
+<![CDATA[数量小计]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="4" cs="4" s="6">
+<O>
+<![CDATA[数量详情]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="4" rs="2" s="6">
+<O>
+<![CDATA[操作员]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="5" s="6">
 <O>
 <![CDATA[配置规格]]></O>
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="6" r="2" rs="2" s="1">
-<O>
-<![CDATA[退表单位]]></O>
-<PrivilegeControl/>
-<Expand/>
-</C>
-<C c="7" r="2" rs="2" s="1">
-<O>
-<![CDATA[操作人员]]></O>
-<PrivilegeControl/>
-<Expand/>
-</C>
-<C c="1" r="3" s="2">
+<C c="5" r="5" s="6">
 <O>
 <![CDATA[左]]></O>
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="2" r="3" s="2">
+<C c="6" r="5" s="6">
 <O>
 <![CDATA[右]]></O>
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="3" r="3" s="2">
+<C c="7" r="5" s="6">
 <O>
 <![CDATA[合计]]></O>
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="0" r="4" s="4">
+<C c="0" r="6" s="5">
 <O t="DSColumn">
-<Attributes dsName="ds" columnName="frinvono"/>
+<Attributes dsName="returnmeter" columnName="FDateTime"/>
+<Condition class="com.fr.data.condition.ListCondition">
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FDateTime]]></CNAME>
+<Compare op="3">
+<Parameter>
+<Attributes name="begindate"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FDateTime]]></CNAME>
+<Compare op="5">
+<Parameter>
+<Attributes name="enddate"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FReturnBatch]]></CNAME>
+<Compare op="12">
+<Parameter>
+<Attributes name="batch"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Compare>
+</Condition>
+</JoinCondition>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="1" r="6" s="6">
+<O t="DSColumn">
+<Attributes dsName="returnmeter" columnName="FReturnBatch"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FReturnBatch]]></CNAME>
+<Compare op="0">
+<Parameter>
+<Attributes name="batch"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="2" r="6" s="6">
+<O t="DSColumn">
+<Attributes dsName="returnmeter" columnName="FCustomer"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="3" r="6" s="6">
+<O t="DSColumn">
+<Attributes dsName="批次小计" columnName="count(fmetercode)"/>
 <Condition class="com.fr.data.condition.ListCondition">
 <JoinCondition join="0">
 <Condition class="com.fr.data.condition.CommonCondition">
 <CNUMBER>
 <![CDATA[0]]></CNUMBER>
 <CNAME>
-<![CDATA[FOperator]]></CNAME>
-<Compare op="12">
-<Parameter>
-<Attributes name="FOperator"/>
-<O>
-<![CDATA[]]></O>
-</Parameter>
+<![CDATA[freturnbatch]]></CNAME>
+<Compare op="0">
+<SimpleDSColumn dsName="returnmeter" columnName="FReturnBatch"/>
 </Compare>
 </Condition>
 </JoinCondition>
@@ -130,13 +289,18 @@
 <CNUMBER>
 <![CDATA[0]]></CNUMBER>
 <CNAME>
-<![CDATA[FMeterName]]></CNAME>
-<Compare op="12">
-<Parameter>
-<Attributes name="FMeterName"/>
-<O>
-<![CDATA[]]></O>
-</Parameter>
+<![CDATA[fcustomer]]></CNAME>
+<Compare op="0">
+<SimpleDSColumn dsName="returnmeter" columnName="FCustomer"/>
+</Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[fdatetime]]></CNAME>
+<Compare op="0">
+<SimpleDSColumn dsName="returnmeter" columnName="FDateTime"/>
 </Compare>
 </Condition>
 </JoinCondition>
@@ -148,17 +312,62 @@
 <PrivilegeControl/>
 <Expand dir="0"/>
 </C>
-<C c="1" r="4" s="4">
+<C c="4" r="6" s="6">
 <O t="DSColumn">
-<Attributes dsName="左表统计" columnName="count(fmetername)"/>
+<Attributes dsName="returnmeter" columnName="FMeterName"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="5" r="6" s="6">
+<O t="DSColumn">
+<Attributes dsName="左表查询" columnName="count(fmetercode)"/>
+<Condition class="com.fr.data.condition.ListCondition">
+<JoinCondition join="0">
 <Condition class="com.fr.data.condition.CommonCondition">
 <CNUMBER>
 <![CDATA[0]]></CNUMBER>
 <CNAME>
-<![CDATA[frinvono]]></CNAME>
+<![CDATA[freturnbatch]]></CNAME>
 <Compare op="0">
-<SimpleDSColumn dsName="ds" columnName="FRInvoNo"/>
+<SimpleDSColumn dsName="returnmeter" columnName="FReturnBatch"/>
 </Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[fcustomer]]></CNAME>
+<Compare op="0">
+<SimpleDSColumn dsName="returnmeter" columnName="FCustomer"/>
+</Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[fmetername]]></CNAME>
+<Compare op="0">
+<SimpleDSColumn dsName="returnmeter" columnName="FMeterName"/>
+</Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[fdatetime]]></CNAME>
+<Compare op="0">
+<SimpleDSColumn dsName="returnmeter" columnName="FDateTime"/>
+</Compare>
+</Condition>
+</JoinCondition>
 </Condition>
 <Complex/>
 <RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
@@ -167,17 +376,52 @@
 <PrivilegeControl/>
 <Expand dir="0"/>
 </C>
-<C c="2" r="4" s="4">
+<C c="6" r="6" s="6">
 <O t="DSColumn">
-<Attributes dsName="右表统计" columnName="count(fmetername)"/>
+<Attributes dsName="右表查询" columnName="count(fmetercode)"/>
+<Condition class="com.fr.data.condition.ListCondition">
+<JoinCondition join="0">
 <Condition class="com.fr.data.condition.CommonCondition">
 <CNUMBER>
 <![CDATA[0]]></CNUMBER>
 <CNAME>
-<![CDATA[frinvono]]></CNAME>
+<![CDATA[fcustomer]]></CNAME>
 <Compare op="0">
-<SimpleDSColumn dsName="ds" columnName="FRInvoNo"/>
+<SimpleDSColumn dsName="returnmeter" columnName="FCustomer"/>
 </Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[freturnbatch]]></CNAME>
+<Compare op="0">
+<SimpleDSColumn dsName="returnmeter" columnName="FReturnBatch"/>
+</Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[fmetername]]></CNAME>
+<Compare op="0">
+<SimpleDSColumn dsName="returnmeter" columnName="FMeterName"/>
+</Compare>
+</Condition>
+</JoinCondition>
+<JoinCondition join="0">
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[fdatetime]]></CNAME>
+<Compare op="0">
+<SimpleDSColumn dsName="returnmeter" columnName="FDateTime"/>
+</Compare>
+</Condition>
+</JoinCondition>
 </Condition>
 <Complex/>
 <RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
@@ -186,17 +430,17 @@
 <PrivilegeControl/>
 <Expand dir="0"/>
 </C>
-<C c="3" r="4" s="4">
+<C c="7" r="6" s="6">
 <O t="Formula" class="Formula">
 <Attributes>
-<![CDATA[=SUM(B5,C5)]]></Attributes>
+<![CDATA[=SUM(F7, G7)]]></Attributes>
 </O>
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="4" r="4" s="3">
+<C c="8" r="6" s="6">
 <O t="DSColumn">
-<Attributes dsName="ds" columnName="FDateTime"/>
+<Attributes dsName="returnmeter" columnName="FOperator"/>
 <Complex/>
 <RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
 <Parameters/>
@@ -204,62 +448,61 @@
 <PrivilegeControl/>
 <Expand dir="0"/>
 </C>
-<C c="5" r="4" s="3">
-<O t="DSColumn">
-<Attributes dsName="ds" columnName="fmetername"/>
-<Complex/>
-<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
-<Parameters/>
-</O>
+<C c="0" r="7" s="1">
 <PrivilegeControl/>
-<Expand dir="0"/>
 </C>
-<C c="6" r="4" s="4">
-<O t="DSColumn">
-<Attributes dsName="ds" columnName="FCustomer"/>
-<Complex/>
-<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
-<Parameters/>
-</O>
+<C c="1" r="7" s="1">
 <PrivilegeControl/>
-<Expand dir="0"/>
 </C>
-<C c="7" r="4" s="4">
-<O t="DSColumn">
-<Attributes dsName="ds" columnName="FOperator"/>
-<Condition class="com.fr.data.condition.CommonCondition">
-<CNUMBER>
-<![CDATA[0]]></CNUMBER>
-<CNAME>
-<![CDATA[FOperator]]></CNAME>
-<Compare op="12">
-<Parameter>
-<Attributes name="FOperator"/>
+<C c="2" r="7" rs="2" s="5">
 <O>
-<![CDATA[]]></O>
-</Parameter>
-</Compare>
-</Condition>
-<Complex/>
-<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
-<Parameters/>
-</O>
-<PrivilegeControl/>
-<Expand dir="0"/>
-</C>
-<C c="2" r="5" s="2">
-<O>
-<![CDATA[合累计]]></O>
+<![CDATA[数量总计]]></O>
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="3" r="5" s="4">
+<C c="3" r="7" rs="2" s="5">
 <O t="Formula" class="Formula">
 <Attributes>
-<![CDATA[=SUM(D5)]]></Attributes>
+<![CDATA[=SUM(D7)]]></Attributes>
 </O>
 <PrivilegeControl/>
 <Expand/>
+</C>
+<C c="4" r="7" s="1">
+<PrivilegeControl/>
+</C>
+<C c="5" r="7" s="1">
+<PrivilegeControl/>
+</C>
+<C c="6" r="7" s="1">
+<PrivilegeControl/>
+</C>
+<C c="7" r="7" s="1">
+<PrivilegeControl/>
+</C>
+<C c="8" r="7" s="1">
+<PrivilegeControl/>
+</C>
+<C c="0" r="8" s="1">
+<PrivilegeControl/>
+</C>
+<C c="1" r="8" s="1">
+<PrivilegeControl/>
+</C>
+<C c="4" r="8" s="1">
+<PrivilegeControl/>
+</C>
+<C c="5" r="8" s="1">
+<PrivilegeControl/>
+</C>
+<C c="6" r="8" s="1">
+<PrivilegeControl/>
+</C>
+<C c="7" r="8" s="1">
+<PrivilegeControl/>
+</C>
+<C c="8" r="8" s="1">
+<PrivilegeControl/>
 </C>
 </CellElementList>
 <ReportAttrSet>
@@ -307,16 +550,16 @@
 <LCAttr vgap="0" hgap="0" compInterval="0"/>
 <Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
 <InnerWidget class="com.fr.form.ui.ComboCheckBox">
-<WidgetName name="FMeterName"/>
+<WidgetName name="batch"/>
 <WidgetAttr description="">
 <PrivilegeControl/>
 </WidgetAttr>
 <Dictionary class="com.fr.data.impl.TableDataDictionary">
-<FormulaDictAttr kiName="FMeterName" viName="FMeterName"/>
+<FormulaDictAttr kiName="FReturnBatch" viName="FReturnBatch"/>
 <TableDataDictAttr>
 <TableData class="com.fr.data.impl.NameTableData">
 <Name>
-<![CDATA[ds]]></Name>
+<![CDATA[returnmeter]]></Name>
 </TableData>
 </TableDataDictAttr>
 </Dictionary>
@@ -324,23 +567,9 @@
 <O>
 <![CDATA[null]]></O>
 </widgetValue>
-<RAAttr isArray="false"/>
+<RAAttr/>
 </InnerWidget>
-<BoundsAttr x="310" y="21" width="80" height="21"/>
-</Widget>
-<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
-<InnerWidget class="com.fr.form.ui.TextEditor">
-<WidgetName name="配置规格"/>
-<WidgetAttr description="">
-<PrivilegeControl/>
-</WidgetAttr>
-<TextAttr/>
-<widgetValue>
-<O>
-<![CDATA[    配置规格]]></O>
-</widgetValue>
-</InnerWidget>
-<BoundsAttr x="230" y="21" width="80" height="21"/>
+<BoundsAttr x="144" y="25" width="80" height="21"/>
 </Widget>
 <Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
 <InnerWidget class="com.fr.form.ui.FreeButton">
@@ -348,7 +577,7 @@
 <JavaScript class="com.fr.js.JavaScriptImpl">
 <Parameters/>
 <Content>
-<![CDATA[_g().parameterCommit();  ]]></Content>
+<![CDATA[_g().parameterCommit(); ]]></Content>
 </JavaScript>
 </Listener>
 <WidgetName name="button0"/>
@@ -358,7 +587,63 @@
 <Text>
 <![CDATA[查询]]></Text>
 </InnerWidget>
-<BoundsAttr x="411" y="21" width="80" height="21"/>
+<BoundsAttr x="565" y="23" width="80" height="21"/>
+</Widget>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.ui.TextEditor">
+<WidgetName name="textEditor2"/>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<widgetValue>
+<O>
+<![CDATA[至]]></O>
+</widgetValue>
+</InnerWidget>
+<BoundsAttr x="440" y="24" width="19" height="21"/>
+</Widget>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.ui.DateEditor">
+<WidgetName name="enddate"/>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<DateAttr/>
+<widgetValue>
+<O t="Date">
+<![CDATA[1506182400000]]></O>
+</widgetValue>
+</InnerWidget>
+<BoundsAttr x="459" y="24" width="80" height="21"/>
+</Widget>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.ui.DateEditor">
+<WidgetName name="begindate"/>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<DateAttr/>
+<widgetValue>
+<O t="Date">
+<![CDATA[1506329867626]]></O>
+</widgetValue>
+</InnerWidget>
+<BoundsAttr x="359" y="24" width="80" height="21"/>
+</Widget>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.ui.TextEditor">
+<WidgetName name="textEditor1"/>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<TextAttr/>
+<widgetValue>
+<O>
+<![CDATA[      时间段]]></O>
+</widgetValue>
+</InnerWidget>
+<BoundsAttr x="279" y="23" width="80" height="21"/>
 </Widget>
 <Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
 <InnerWidget class="com.fr.form.ui.TextEditor">
@@ -369,41 +654,20 @@
 <TextAttr/>
 <widgetValue>
 <O>
-<![CDATA[    操作人员]]></O>
+<![CDATA[      批次号]]></O>
 </widgetValue>
 </InnerWidget>
-<BoundsAttr x="55" y="21" width="80" height="21"/>
-</Widget>
-<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
-<InnerWidget class="com.fr.form.ui.ComboCheckBox">
-<WidgetName name="FOperator"/>
-<WidgetAttr description="">
-<PrivilegeControl/>
-</WidgetAttr>
-<Dictionary class="com.fr.data.impl.TableDataDictionary">
-<FormulaDictAttr kiName="FOperator" viName="FOperator"/>
-<TableDataDictAttr>
-<TableData class="com.fr.data.impl.NameTableData">
-<Name>
-<![CDATA[ds]]></Name>
-</TableData>
-</TableDataDictAttr>
-</Dictionary>
-<widgetValue>
-<O>
-<![CDATA[null]]></O>
-</widgetValue>
-<RAAttr isArray="false"/>
-</InnerWidget>
-<BoundsAttr x="135" y="21" width="80" height="21"/>
+<BoundsAttr x="64" y="25" width="80" height="21"/>
 </Widget>
 <Sorted sorted="false"/>
 <MobileWidgetList>
-<Widget widgetName="textEditor0"/>
-<Widget widgetName="FOperator"/>
-<Widget widgetName="配置规格"/>
-<Widget widgetName="FMeterName"/>
+<Widget widgetName="textEditor1"/>
 <Widget widgetName="button0"/>
+<Widget widgetName="begindate"/>
+<Widget widgetName="textEditor2"/>
+<Widget widgetName="enddate"/>
+<Widget widgetName="textEditor0"/>
+<Widget widgetName="batch"/>
 </MobileWidgetList>
 <Display display="true"/>
 <DelayDisplayContent delay="true"/>
@@ -416,14 +680,44 @@
 </ParameterUI>
 </ReportParameterAttr>
 <StyleList>
+<Style horizontal_alignment="2" imageLayout="1">
+<FRFont name="SimSun" style="0" size="96"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
 <Style horizontal_alignment="0" imageLayout="1">
-<FRFont name="宋体" style="0" size="112"/>
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="4" imageLayout="1">
+<FRFont name="SimSun" style="0" size="96"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="0" size="112"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="0" size="120"/>
 <Background name="NullBackground"/>
 <Border>
-<Top style="1" color="-16777216"/>
-<Bottom style="1" color="-16777216"/>
-<Left style="1" color="-16777216"/>
-<Right style="1" color="-16777216"/>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
 </Border>
 </Style>
 <Style horizontal_alignment="0" imageLayout="1">
@@ -436,38 +730,8 @@
 <Right style="1"/>
 </Border>
 </Style>
-<Style horizontal_alignment="0" imageLayout="1">
-<FRFont name="SimSun" style="0" size="104"/>
-<Background name="NullBackground"/>
-<Border>
-<Top style="1"/>
-<Bottom style="1"/>
-<Left style="1"/>
-<Right style="1"/>
-</Border>
-</Style>
-<Style imageLayout="1">
-<FRFont name="SimSun" style="0" size="72"/>
-<Background name="NullBackground"/>
-<Border>
-<Top style="1"/>
-<Bottom style="1"/>
-<Left style="1"/>
-<Right style="1"/>
-</Border>
-</Style>
-<Style horizontal_alignment="0" imageLayout="1">
-<FRFont name="SimSun" style="0" size="72"/>
-<Background name="NullBackground"/>
-<Border>
-<Top style="1"/>
-<Bottom style="1"/>
-<Left style="1"/>
-<Right style="1"/>
-</Border>
-</Style>
 </StyleList>
 <DesignerVersion DesignerVersion="IAA"/>
 <PreviewType PreviewType="0"/>
-<TemplateID TemplateID="2035ec3e-1a2e-4af3-ba97-2a0fde05f9e1"/>
+<TemplateID TemplateID="8531579c-091f-4c09-89f7-bdcc47d0aac0"/>
 </WorkBook>

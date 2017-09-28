@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>返修表具数量统计</title>
-    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="lib/assert/select/combo.select.css" type="text/css"/>
+    <script src="lib/assert/select/jquery.combo.select.js" type="text/javascript"></script>
     <script src="lib/json2.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
@@ -12,7 +14,6 @@
     <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
-    <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(function(){
             var d=new Date();
@@ -26,79 +27,156 @@
             }
             $("#returnMeterStartTime").ligerDateEditor({initValue: startTime});
             $("#returnMeterEndTime").ligerDateEditor({initValue: endTime});
+            $.post($.URL.enumTable.mislist, null, enumMisListCallBack, "json");
+            $.post($.URL.enumTable.cuslist, null, enumCusListCallBack, "json");
+            $.post($.URL.returnMeter.getAllBatchlist,null,bacthListCallBack,"json");
+            $.post($.URL.enumTable.meterlist,null,enumMeterListCallBack,"json");
         });
 
-        $("#submitBtn").click(function () {
-            var foperator = $("#foperator").val();
-            var fcustomer = $("#fcustomer").val();
-            var fmetername = $("#fmetername").val();
-            var frinvono = $("#frinvono").val();
-            var sTime=$("#returnMeterStartTime").val();
-            var eTime=$("#returnMeterEndTime").val();
-            $.post($.URL.returnMeter.findByMap,{"foperator":foperator,"fcustomer":fcustomer,"fmetername":fmetername,"frinvono":frinvono,"sTime":sTime,"eTime":eTime},listCallback,"json");
-        });
-
-        var gridData = {};
-        function listCallback(data) {
-            if(data.code==200){
-                gridData.Rows = data.data;
-                gridData.Total = data.data.length;
-                f_initGrid();
+        function enumMisListCallBack(data) {
+            if (data.code == 200) {
+                $("#freportmisfune").empty();
+                $("#freportmisfune").append("<option value=''></option>");
+                for(var i = 0; i < data.data.length; i++){
+                    $("#freportmisfune").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+                }
+                $("#freportmisfune").comboSelect();
             }
         }
+
+        function enumCusListCallBack(data) {
+            $("#fcustomer").append("<option value=''></option>");
+            for(var i = 0; i < data.data.length; i++){
+                $("#fcustomer").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+            $("#fcustomer").comboSelect();
+        }
+
+        function enumMeterListCallBack(data) {
+            $("#fmetername").append("<option value=''></option>");
+            for(var i = 0; i < data.data.length; i++){
+                $("#fmetername").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+            $("#fmetername").comboSelect();
+        }
+
+        function bacthListCallBack(data) {
+            if (data.code == 200) {
+                $("#freturnbatch").append("<option value=''></option>");
+                for(var i = 0; i < data.data.length; i++){
+                    $("#freturnbatch").append("<option value='" + data.data[i].freturnbatch + "'>" + data.data[i].freturnbatch + "</option>");
+                }
+                $("#freturnbatch").comboSelect();
+            }
+        }
+        $("#fmeterdirection").comboSelect();
+
+        function getreturnMeterList() {
+            var freturnbatch=$("#freturnbatch").val();
+            var fmetercode=$("#fmetercode").val();
+            var foperator=$("#foperator").val();
+            var fcustomer=$("#fcustomer").val();
+            var fmetername=$("#fmetername").val();
+            var fmeterdirection=$("#fmeterdirection").val();
+            var freportmisfune=$("#freportmisfune").val();
+            var sTime=$("#returnMeterStartTime").val();
+            var eTime=$("#returnMeterEndTime").val();
+            $.post($.URL.returnMeter.findByCondition,{"freturnbatch":freturnbatch,"fmetercode":fmetercode,"foperator":foperator,"fcustomer":fcustomer,"fmetername":fmetername,"fmeterdirection":fmeterdirection,"freportmisfune":freportmisfune,"sTime":sTime,"eTime":eTime},getListCallback,"json");
+        }
+        var batchSearchData={};
+        function getListCallback(data) {
+            if(data.code==200){
+                if(data.data==null){
+                    $.ligerDialog.alert("抱歉,记录不存在!");
+                }
+                else
+                {
+                    batchSearchData.Rows = data.data;
+                    batchSearchData.Total = data.data.length;
+                    f_peopleRecord();
+                }
+            }
+            else
+            {
+                $.ligerDialog.warn("记录不存在！")
+            }
+        }
+
+        $("#batchSearchBtn").click(function(){
+            getreturnMeterList();
+        });
+
         var manager, g;
-        function f_initGrid()
+        var h = "";
+        function f_peopleRecord()
         {
-            g = manager = $("#maingrid").ligerGrid({
+            g = manager = $("#batchMainGrid").ligerGrid({
                 columns: [
                     { display: '主键', name: 'id', width: '10%', type: 'int', frozen: true},
-                    { display: '表具编号', name: 'fmetercode', width: '15%', editor:{type:'text'}},
-                    { display: '燃气公司',name: 'fcustomer',width: '15%',editor:{type:'text'}} ,
-                    { display: '表具类型',name: 'fmetername',width: '10%',editor:{type:'text'}},
-                    { display: '返修表数量',name: 'fquantity',width: '10%',editor:{type:'int'}},
-                    { display: '退库单据号',name: 'frinvono',width: '15%',editor:{type:'text'}},
-                    { display: '录入时间',name: 'fdatetime',width: '15%',editor:{type:'text'}},
-                    { display: '录入人员',name: 'foperator',width: '10%',editor:{type:'text'}}
+                    { display: '清点批次', name: 'freturnbatch', width: '10%'},
+                    { display: '表具编号', name: 'fmetercode', width: '10%', editor:{type:'text'}},
+                    { display: '市场',name: 'fcustomer',width: '10%'},
+                    { display: '表具类型',name: 'fmetername',width: '10%'},
+                    { display: '表具方向',name: 'fmeterdirection',width: '10%'},
+                    { display: '录入时间',name: 'fdatetime',width: '10%'},
+                    { display: '录入人员',name: 'foperator',width: '10%'},
+                    { display: '预报故障',name: 'freportmisfune',width: '10%'},
+                    { display: '现场维修员',name: 'fpremaintain',width: '10%',editor:{type:'text'}}
                 ],
                 onSelectRow: function (rowdata, rowindex)
                 {
                     $("#txtrowindex").val(rowindex);
                 },
                 enabledEdit: true,clickToEdit:false, isScroll: false,
-                data: gridData,
+                data: batchSearchData,
                 width: '100%'
             });
         }
     </script>
     <style type="text/css">
         .l-table-edit {}
-        .l-table-edit-td{margin-left:30px; margin-top:10px;padding:4px;height: 20px}
-        .l-table-edit-input{ padding:4px;width:300px}
-        .l-button-submit,.l-button-reset{width:80px; float:left; margin-left:10px; padding-bottom:2px;}
-        .l-dialog-tc{background:#E0EDFF; }
+        .l-table-edit-td {padding: 4px;}
+        .l-button-submit, .l-button-reset {width: 80px;float: left; margin-left: 10px;padding-bottom: 2px;}
+        .l-dialog-tc { background: #E0EDFF;}
     </style>
 </head>
 <body style="padding:10px">
 <div id="list">
     <table cellpadding="0" cellspacing="0" class="l-table-edit" >
         <tr>
+            <td align="right" class="l-table-edit-td">清点批次号:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="freturnbatch"></select>
+            </td>
+            <td align="right" class="l-table-edit-td">表具编号:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="foperator" type="text" id="fmetercode"/>
+            </td>
             <td align="right" class="l-table-edit-td">录入人员:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="foperator" type="text" id="foperator"/>
+                <input name="foperator" type="text" id="foperator" />
             </td>
-            <td align="right" class="l-table-edit-td">供应商:</td>
+            <td align="right" class="l-table-edit-td">市场:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="fcustomer" type="text"  id="fcustomer">
+                <select  id="fcustomer"></select>
             </td>
-            <td align="right" class="l-table-edit-td">表具类型:</td>
+            <td align="right" class="l-table-edit-td">表具方向:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="fmetername" type="text"  id="fmetername">
+                <select id="fmeterdirection">
+                    <option value=""></option>
+                    <option value="左">左</option>
+                    <option value="右">右</option>
+                </select>
             </td>
         </tr>
         <tr>
-            <td align="right" class="1-table-edit-td">退库单据号:</td>
-            <td align="left" class="1-table-edit-td">
-                <input name="frinvono" type="text" id="frinvono">
+            <td align="right" class="l-table-edit-td">表具类型:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="fmetername"></select>
+            </td>
+            <td align="right" class="l-table-edit-td">报修故障:</td>
+            <td align="left" class="l-table-edit-td">
+                <select  id="freportmisfune"></select>
             </td>
             <td align="right" class="l-table-edit-td">起始时间:</td>
             <td align="left" class="l-table-edit-td">
@@ -108,11 +186,11 @@
             <td align="left" class="l-table-edit-td">
                 <input name="returnMeterEndTime" type="date"  id="returnMeterEndTime">
             </td>
-            <td align="right"><input type="button" value="查询" id="submitBtn" class="l-button l-button-submit" /></td>
+            <td align="right"><input type="button" value="查询" id="batchSearchBtn" class="l-button l-button-submit" /></td>
         </tr>
     </table>
     <div class="l-clear"></div>
-    <div id="maingrid" style="margin-top:5px"></div>
+    <div id="batchMainGrid" style="margin-top:5px"></div>
     <br/>
 </div>
 <div style="display:none;">

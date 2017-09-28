@@ -15,7 +15,7 @@ public interface EnumTableMapper extends AbstractMapper<EnumTable> {
     List<Map<String,String>> getMisInfoAllList();
     List<Map<String,String>> getCusList();
     List<Map<String,String>> getEleList();
-//    List<Map<String,String>> getMeterList();
+    List<Map<String,String>> getMeterList();
     List<Map<String,String>> getAllList();
     List<Map<String,Object>> findBySearch(Map<String,Object> condition);
 }

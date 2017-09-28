@@ -26,4 +26,7 @@
     <bean id="NetBarCode" class="platform.fundamental.datasource.DbcpFactoryBean">
         <property name="dbname" value="NetBarCode"></property>
     </bean>
+    <bean id="lyims0707" class="platform.fundamental.datasource.DbcpFactoryBean">
+        <property name="dbname" value="lyims0707"></property>
+    </bean>
 </beans>

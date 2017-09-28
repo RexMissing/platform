@@ -12,6 +12,6 @@
     <title>返修表数量统计报表</title>
 </head>
 <body>
-<iframe id="test" width="1300" height="700" src="/ReportServer?reportlet=test.cpt"></iframe>
+<iframe id="test" width="1300" height="700" src="/ReportServer?reportlet=returnMeter.cpt"></iframe>
 </body>
 </html>

@@ -3,6 +3,7 @@ package org.whut.dataManagement.business.returnMeter.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.whut.dataManagement.business.returnMeter.entity.ReturnMeter;
+import org.whut.dataManagement.business.returnMeter.service.DispatchService;
 import org.whut.dataManagement.business.returnMeter.service.ReturnByCodeService;
 import org.whut.dataManagement.business.returnMeter.service.ReturnMeterService;
 import org.whut.platform.fundamental.logger.PlatformLogger;
@@ -29,6 +30,8 @@ public class ReturnMeterWeb {
     private ReturnMeterService returnMeterService;
     @Autowired
     private ReturnByCodeService returnByCodeService;
+    @Autowired
+    private DispatchService dispatchService;
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/add")
@@ -101,8 +104,6 @@ public class ReturnMeterWeb {
             returnMeter.setFproducetime(new java.sql.Date(date.getTime()));
             returnMeter.setFmetername(list.get(0).get("fmetername").toString());
             returnMeter.setFvalvecode(list.get(0).get("fvalvecode").toString());
-//            不用将查询到的市场赋值，以前台修改后的为准
-//            returnMeter.setFcustomer(list.get(0).get("fcustomer").toString());
             returnMeter.setFmeterdirection(list.get(0).get("fmeterdirection").toString());
             returnMeterService.update(returnMeter);
             return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.SUCCESS);
@@ -143,16 +144,24 @@ public class ReturnMeterWeb {
     @Path("/getAllBatchlist")
     @POST
     public String getAllBatchlist() {
-        List<Map<String,Object>> list = returnMeterService.getBatchlist();
+        List<Map<String,Object>> list = returnMeterService.getAllBatchlist();
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findByCondition")
     @POST
-    public String findByCondition(@FormParam("foperator")String foperator,@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    public String findByCondition(@FormParam("freturnbatch")String freturnbatch,@FormParam("fmetercode")String fmetercode,@FormParam("foperator")String foperator,@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,@FormParam("fmeterdirection")String fmeterdirection,@FormParam("freportmisfune")String freportmisfune,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
     {
         Map<String,Object> condition = new HashMap<String, Object>();
+        if(freturnbatch!=null&&!freturnbatch.equals(""))
+        {
+            condition.put("freturnbatch",freturnbatch);
+        }
+        if(fmetercode!=null&&!fmetercode.equals(""))
+        {
+            condition.put("fmetercode",fmetercode);
+        }
         if(foperator!=null&&!foperator.equals(""))
         {
             condition.put("foperator",foperator);
@@ -164,6 +173,14 @@ public class ReturnMeterWeb {
         if (fmetername!=null&&!fmetername.equals(""))
         {
             condition.put("fmetername",fmetername);
+        }
+        if (fmeterdirection!=null&&!fmeterdirection.equals(""))
+        {
+            condition.put("fmeterdirection",fmeterdirection);
+        }
+        if (freportmisfune!=null&&!freportmisfune.equals(""))
+        {
+            condition.put("freportmisfune",freportmisfune);
         }
         if(sTime!=null&&!sTime.equals("")){
             condition.put("startTime",sTime+" 00:00:00");
@@ -244,6 +261,69 @@ public class ReturnMeterWeb {
     @POST
     public String findLastData() {
        List<Map<String,Object>> list = returnMeterService.findLastData();
+       System.out.print(list);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findByDispatch")
+    @POST
+    public String findByDispatch(@FormParam("fmetercode")String fmetercode)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(fmetercode!=null&&!fmetercode.equals(""))
+        {
+            condition.put("fmetercode",fmetercode);
+        }
+        List<Map<String,Object>> list=dispatchService.findByDispatch(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/returnMeterNum")
+    @POST
+    public String returnMeterNum(@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(fcustomer!=null&&!fcustomer.equals(""))
+        {
+            condition.put("fcustomer",fcustomer);
+        }
+        if (fmetername!=null&&!fmetername.equals(""))
+        {
+            condition.put("fmetername",fmetername);
+        }
+        if(sTime!=null&&!sTime.equals("")){
+            condition.put("startTime",sTime+" 00:00:00");
+        }
+        if(eTime!=null&&!eTime.equals("")){
+            condition.put("endTime",eTime+" 59:59:59");
+        }
+        List<Map<String,Object>> list=returnMeterService.returnMeterNum(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/returnAnalysisNum")
+    @POST
+    public String returnAnalysisNum(@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(fcustomer!=null&&!fcustomer.equals(""))
+        {
+            condition.put("fcustomer",fcustomer);
+        }
+        if (fmetername!=null&&!fmetername.equals(""))
+        {
+            condition.put("fmetername",fmetername);
+        }
+        if(sTime!=null&&!sTime.equals("")){
+            condition.put("startTime",sTime+" 00:00:00");
+        }
+        if(eTime!=null&&!eTime.equals("")){
+            condition.put("endTime",eTime+" 59:59:59");
+        }
+        List<Map<String,Object>> list=returnMeterService.returnAnalysisNum(condition);
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 }

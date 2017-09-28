@@ -5,7 +5,7 @@
 <mapper namespace="org.whut.dataManagement.business.returnMeter.mapper.ReturnByCodeMapper">
     <select id="findByCode" parameterType="map" resultType="map">
         SELECT tb_WalvesAssembly.FMeterCode,tb_WalvesAssembly.FMeterDirection as fmeterdirection,tb_WalvesAssembly.FCoverName as fmetername,tb_WalvesAssembly.FValveCode as fvalvecode,
-        t.FBoxCode,b.FDBatchID,d.FCustomerID,s.FName as fcustomer
+        t.FBoxCode,b.FDBatchID,d.FCustomerID,s.FName as fcustomer,d.FDate AS fsaletime
         FROM tb_WalvesAssembly
         LEFT JOIN TPackDetails t ON t.FMeterCode=tb_WalvesAssembly.FMeterCode
         LEFT JOIN TBox b ON t.FBoxCode=b.FBoxCode

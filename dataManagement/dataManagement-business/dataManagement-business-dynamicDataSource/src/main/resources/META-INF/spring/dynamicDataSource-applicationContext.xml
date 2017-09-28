@@ -7,6 +7,7 @@
             <map key-type="java.lang.String">
                 <entry key="datamanagement" value-ref="datamanagement"></entry>
                 <entry key="NetBarCode" value-ref="NetBarCode"></entry>
+                <entry key="lyims0707" value-ref="lyims0707"></entry>
             </map>
         </property>
         <property name="defaultTargetDataSource" ref="datamanagement" ></property>

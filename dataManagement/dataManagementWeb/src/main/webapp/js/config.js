@@ -131,7 +131,8 @@
             "findByMap":"rs/returnMeter/findByMap",
             "findLastData":"rs/returnMeter/findLastData",
             "getBatchlist":"rs/returnMeter/getBatchlist",
-            "getAllBatchlist":"rs/returnMeter/getAllBatchlist"
+            "getAllBatchlist":"rs/returnMeter/getAllBatchlist",
+            "findByDispatch":"rs/returnMeter/findByDispatch"
         },
         "returnMeterInfo": {
             "add": "rs/returnMeterInfo/add",

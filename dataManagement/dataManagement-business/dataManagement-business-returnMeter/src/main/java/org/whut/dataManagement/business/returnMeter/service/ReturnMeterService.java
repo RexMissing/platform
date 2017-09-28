@@ -38,6 +38,10 @@ public class ReturnMeterService {
     {
         return returnMeterMapper.getBatchlist();
     }
+    public List<Map<String,Object>> getAllBatchlist()
+    {
+        return returnMeterMapper.getAllBatchlist();
+    }
 
     public List<Map<String,Object>> findByCondition(Map<String,Object> condition)
     {
@@ -55,5 +59,12 @@ public class ReturnMeterService {
     {
         return returnMeterMapper.findLastData();
     }
-
+    public List<Map<String,Object>> returnMeterNum(Map<String,Object> condition)
+    {
+        return returnMeterMapper.returnMeterNum(condition);
+    }
+    public List<Map<String,Object>> returnAnalysisNum(Map<String,Object> condition)
+    {
+        return returnMeterMapper.returnAnalysisNum(condition);
+    }
 }

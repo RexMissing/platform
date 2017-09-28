@@ -20,6 +20,16 @@ public class ReturnMeter {
     private Date fdatetime;
     private String foperator;
     private String freportmisfune;
+    private String fmeterreading;
+
+    public String getFmeterreading() {
+        return fmeterreading;
+    }
+
+    public void setFmeterreading(String fmeterreading) {
+        this.fmeterreading = fmeterreading;
+    }
+
     @JsonDeserialize(using=CustomDateDeserialize.class)
     private Date fproducetime;
     @JsonDeserialize(using=CustomDateDeserialize.class)

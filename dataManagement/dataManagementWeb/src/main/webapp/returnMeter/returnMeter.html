@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title></title>
     <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="lib/assert/select/combo.select.css" type="text/css"/>
+    <script src="lib/assert/select/jquery.combo.select.js" type="text/javascript"></script>
     <script src="lib/json2.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
@@ -48,12 +50,12 @@
                 var batch = data.data[0].freturnbatch;
                 if(str==batch.substring(1,9))
                 {
-                    nowbatch = "f"+mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate())+Appendzero(parseInt(batch.substring(9,11))+1);
+                    window.nowbatch = "f"+mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate())+Appendzero(parseInt(batch.substring(9,11))+1);
                     alert("当前生成批次号："+nowbatch);
                 }
                 else
                 {
-                    nowbatch = "f"+mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate())+"01";
+                    window.nowbatch = "f"+mydate.getFullYear()+Appendzero(mydate.getMonth()+1)+Appendzero(mydate.getDate())+"01";
                     alert("当前生成批次号："+nowbatch);
                 }
             }
@@ -110,13 +112,16 @@
                     curdayBatch.push(k);
                     $("#freturnbatch").append("<option value='"+nowbatch+"'>"+nowbatch+"</option>");
                 }
+                $("#batch").append("<option value=''></option>");
                 for(var i = 0; i < data.data.length; i++){
                     var j = {};
                     j.text = data.data[i].freturnbatch;
                     j.value = data.data[i].freturnbatch;
                     curdayBatch.push(j);
                     $("#freturnbatch").append("<option value='" + data.data[i].freturnbatch + "'>" + data.data[i].freturnbatch + "</option>");
+                    $("#batch").append("<option value='" + data.data[i].freturnbatch + "'>" + data.data[i].freturnbatch + "</option>");
                 }
+                $("#batch").comboSelect();
             }
         }
         function f_customer() {
@@ -129,8 +134,18 @@
                 else{
                     $.ligerDialog.alert(data.message);
                 }
+                $.post($.URL.returnMeter.findByDispatch,{"fmetercode":fmetercode},getreportmisfune,"json");
+                function getreportmisfune(data) {
+                    if (data.code==200) {
+                        $('#freportmisfune').attr('value',data.data[0].freportmisfune);
+                    }
+                    else{
+                        $.ligerDialog.alert(data.message);
+                    }
+                }
             }
         }
+
         $("#submitBtn").click(function () {
             var mdata={};
             mdata.freturnbatch = $("#freturnbatch").val();
@@ -139,22 +154,26 @@
             mdata.freportmisfune = $("#freportmisfune").val();
             $.post($.URL.returnByCode.findByCode,{"fmetercode":mdata.fmetercode},getInfoCallback,"json");
             function getInfoCallback(data) {
-                if (data.code == 200){
+                if (data.code == 200) {
                     mdata.fvalvecode = data.data[0].fvalvecode;
                     mdata.fmetername = data.data[0].fmetername;
                     mdata.fmeterdirection = data.data[0].fmeterdirection;
+                    mdata.fsaletime = data.data[0].fsaletime;
                     var nowdate = new Date();
-                    mdata.fdatetime = nowdate.getFullYear()+"-"+Appendzero(nowdate.getMonth()+1)+"-"+Appendzero(nowdate.getDate());
+                    mdata.fdatetime = nowdate.getFullYear() + "-" + Appendzero(nowdate.getMonth() + 1) + "-" + Appendzero(nowdate.getDate());
                     mdata.foperator = getCookie("userName");
-                    if(mdata.fmetercode.length==12)
-                        mdata.fproducetime = "20"+mdata.fmetercode.substring(3,5)+"-"+mdata.fmetercode.substring(5,7)+"-"+"01";
-                    else if(mdata.fmetercode.length==13)
-                        mdata.fproducetime = "20"+mdata.fmetercode.substring(4,6)+"-"+mdata.fmetercode.substring(6,8)+"-"+"01";
+                    if (mdata.fmetercode.length == 12)
+                        mdata.fproducetime = "20" + mdata.fmetercode.substring(3, 5) + "-" + mdata.fmetercode.substring(5, 7) + "-" + "01";
+                    else if (mdata.fmetercode.length == 13)
+                        mdata.fproducetime = "20" + mdata.fmetercode.substring(4, 6) + "-" + mdata.fmetercode.substring(6, 8) + "-" + "01";
                     else
                         mdata.fproducetime = null;
-                    mdata.fsaletime = "2017-09-20";
-                    mdata.fpremaintain = "lilang";
-                    $.post($.URL.returnMeter.add,{"jsonString":$.toJSON(mdata)},addCallback,"json");
+                    $.post($.URL.returnMeter.findByDispatch, {"fmetercode": mdata.fmetercode}, getDispatchCallback, "json");
+                    function getDispatchCallback(data) {
+                        mdata.fmeterreading = data.data[0].fmeterreading;
+                        mdata.fpremaintain = data.data[0].fpremaintain;
+                        $.post($.URL.returnMeter.add, {"jsonString": $.toJSON(mdata)}, addCallback, "json");
+                    }
                 }
                 else{
                     $.ligerDialog.alert(data.message);
@@ -390,7 +409,7 @@
         <tr>
             <td align="right" class="l-table-edit-td">清点批次:</td>
             <td align="left" class="l-table-edit-td">
-                <input name="batch" type="text" id="batch"/>
+                <select id="batch"></select>
             </td>
             <td align="right" class="l-table-edit-td">表具编号:</td>
             <td align="left" class="l-table-edit-td">

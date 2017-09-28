@@ -128,9 +128,9 @@ public class MeterAnalysisWeb {
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findByCondition")
     @POST
-    public String findByCondition(@FormParam("fmetercode")String fmetercode,@FormParam("fmetername")String fmetername,@FormParam("fanalysor")String fanalysor,
-                                  @FormParam("fcustomer")String fcustomer,@FormParam("freportmisfune")int freportmisfune,@FormParam("fconfirmmisfune")int fconfirmmisfune,
-                                  @FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    public String findByCondition(@FormParam("fmetercode")String fmetercode,@FormParam("fmetername")String fmetername,@FormParam("fdepartment")String fdepartment,
+                                  @FormParam("fanalysor")String fanalysor, @FormParam("fcustomer")String fcustomer,@FormParam("freportmisfune")String freportmisfune,@FormParam("fconfirmmisfune")String fconfirmmisfune,
+                                  @FormParam("fmisfunedescrib")String fmisfunedescrib, @FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
     {
         Map<String,Object> condition = new HashMap<String, Object>();
         if(fmetercode!=null&&!fmetercode.equals(""))
@@ -141,6 +141,10 @@ public class MeterAnalysisWeb {
         {
             condition.put("fmetername",fmetername);
         }
+        if(fdepartment!=null&&!fdepartment.equals(""))
+        {
+            condition.put("fdepartment",fdepartment);
+        }
         if(fanalysor!=null&&!fanalysor.equals(""))
         {
             condition.put("fanalysor",fanalysor);
@@ -149,8 +153,18 @@ public class MeterAnalysisWeb {
         {
             condition.put("fcustomer",fcustomer);
         }
-        condition.put("freportmisfune",freportmisfune);
-        condition.put("fconfirmmisfune",fconfirmmisfune);
+        if(freportmisfune!=null&&!freportmisfune.equals(""))
+        {
+            condition.put("freportmisfune",freportmisfune);
+        }
+        if(fconfirmmisfune!=null&&!fconfirmmisfune.equals(""))
+        {
+            condition.put("fconfirmmisfune",fconfirmmisfune);
+        }
+        if(fmisfunedescrib!=null&&!fmisfunedescrib.equals(""))
+        {
+            condition.put("fmisfunedescrib",fmisfunedescrib);
+        }
         if(sTime!=null&&!sTime.equals("")){
             condition.put("startTime",sTime+" 00:00:00");
         }
