@@ -132,9 +132,9 @@
     </select>
 
     <select id="findByDispatch" parameterType="map" resultType="map">
-        SELECT fmetercode,fmeterreading,freportmisfune,fpremaintain
-        FROM Dispatch
-        WHERE fmetercode=#{fmetercode} ORDER BY ID DESC limit 1;
+        SELECT old_gasmeter_number AS fmetercode,old_gasmeter_code AS fmeterreading,repair_fault AS freportmisfune,service_staff AS fpremaintain
+        FROM wo_workorder_service
+        WHERE old_gasmeter_number=#{fmetercode} ORDER BY ID DESC limit 1;
     </select>
 
     <select id="returnMeterNum" parameterType="map" resultType="map">

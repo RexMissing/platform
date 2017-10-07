@@ -364,7 +364,7 @@
                 $.ligerDialog.success(data.message);
                 document.getElementById('form1').reset();
                 $.post($.URL.meterAnalysis.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
-                $.ligerDialog.hide("#addMeterAnalysis");
+//                $.ligerDialog.hide("#addMeterAnalysis");
             }
             else {
                 $.ligerDialog.warn(data.message);
@@ -457,7 +457,7 @@
             </tr>
         </table>
         <br/>
-        <input type="button" value="提交" id="submitBtn" class="l-button l-button-submit" />
+        <input type="button" value="下一块" id="submitBtn" class="l-button l-button-submit" />
     </form>
 </div>
 <div style="display:none;">

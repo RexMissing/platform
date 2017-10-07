@@ -261,7 +261,6 @@ public class ReturnMeterWeb {
     @POST
     public String findLastData() {
        List<Map<String,Object>> list = returnMeterService.findLastData();
-       System.out.print(list);
         return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
     }
 
@@ -276,6 +275,7 @@ public class ReturnMeterWeb {
             condition.put("fmetercode",fmetercode);
         }
         List<Map<String,Object>> list=dispatchService.findByDispatch(condition);
+        System.out.print(list);
         if (list.size()==0){
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到预报故障!");
         }
