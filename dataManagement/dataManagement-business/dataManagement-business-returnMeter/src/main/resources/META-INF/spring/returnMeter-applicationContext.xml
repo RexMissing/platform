@@ -4,4 +4,5 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="returnMeterService" class="org.whut.dataManagement.business.returnMeter.service.ReturnMeterService" depends-on="mappers"></bean>
     <bean id="dispatchService" class="org.whut.dataManagement.business.returnMeter.service.DispatchService" depends-on="mappers"></bean>
+    <bean id="confirmCodeService" class="org.whut.dataManagement.business.returnMeter.service.ConfirmCodeService" depends-on="mappers"></bean>
 </beans>

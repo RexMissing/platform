@@ -161,4 +161,10 @@
             <if test="endTime!=null"><![CDATA[ AND treturnmeter.FDateTime<=#{endTime} ]]> </if>
         </where>
     </select>
+
+    <select id="confirmFMeterCode" parameterType="map" resultType="map">
+        SELECT FProductName as fmetername,FMeterCodeMark as fmetercodemark
+        FROM TProducts
+        WHERE FMeterCodeMark=#{fmetercodemark};
+    </select>
 </mapper>

@@ -23,4 +23,5 @@ public interface ReturnMeterMapper extends AbstractMapper<ReturnMeter> {
     List<Map<String,Object>> findByDispatch(Map<String,Object> condition);
     List<Map<String,Object>> returnMeterNum(Map<String,Object> condition);
     List<Map<String,Object>> returnAnalysisNum(Map<String,Object> condition);
+    List<Map<String,Object>> confirmFMeterCode(Map<String,Object> condition);
 }

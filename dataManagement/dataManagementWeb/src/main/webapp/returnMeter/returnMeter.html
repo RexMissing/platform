@@ -125,18 +125,96 @@
                 $("#batch").comboSelect();
             }
         }
-
         function f_enter() {
             var mdata = {};
+            var flag = false;
             mdata.freturnbatch = $("#freturnbatch").val();
             mdata.fmetercode = $("#fmetercode").val();
+            if (mdata.fmetercode.length == 12) {
+               var fmetercodemark = mdata.fmetercode.substring(0,3).toString();
+//               $.post($.URL.returnMeter.confirmCode,{"fmetercodemark":fmetercodemark},confirmCallBack,"json");
+               $.ajax(
+                   {
+                       type:"post",
+                       url:$.URL.returnMeter.confirmCode,
+                       data:{"fmetercodemark":fmetercodemark},
+                       async:false,
+                       success:function(data){
+                           if(data.data.length==0)
+                           {
+                               $('embed').remove();
+                               $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                               $.ligerDialog.alert("输入表具编号格式错误");
+                               flag = true;
+                               return false;
+                           }
+                       },
+                       dataType:"json"
+                   }
+               );
+//               function confirmCallBack(data) {
+//                   if(data.data.length==0)
+//                   {
+//                       $('embed').remove();
+//                       $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+//                       $.ligerDialog.error("输入表具编号格式错误");
+//                       flag = true;
+//                       return false;
+//                   }
+//               }
+               if(flag)
+                   return false;
+            }
+            else if (mdata.fmetercode.length == 13)
+            {
+                var fmetercodemark = mdata.fmetercode.substring(0,4);
+//                $.post($.URL.returnMeter.confirmCode,{"fmetercodemark":fmetercodemark},confirmCallBack1,"json");
+                $.ajax(
+                    {
+                        type:"post",
+                        url:$.URL.returnMeter.confirmCode,
+                        data:{"fmetercodemark":fmetercodemark},
+                        async:false,
+                        success:function(data){
+                            if(data.data.length==0)
+                            {
+                                $('embed').remove();
+                                $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                                $.ligerDialog.alert("输入表具编号格式错误");
+                                flag = true;
+                                return false;
+                            }
+                        },
+                        dataType:"json"
+                    }
+                );
+//                function confirmCallBack1(data) {
+//                    if(data.data.length==0)
+//                    {
+//                        $('embed').remove();
+//                        $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+//                        $.ligerDialog.error("输入表具编号格式错误");
+//                        flag = true;
+//                        return false;
+//                    }
+//                }
+                if(flag)
+                    return false;
+            }
+            else
+            {
+                $('embed').remove();
+                $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                $.ligerDialog.alert("输入表具编号格式错误");
+                return false;
+            }
             mdata.freportmisfune = $("#freportmisfune").val();
             $.post($.URL.returnByCode.findByCode, {"fmetercode": mdata.fmetercode}, getInfoCallback, "json");
             function getInfoCallback(data) {
                 if (data.code == 200) {
                     mdata.fvalvecode = data.data[0].fvalvecode;
-                    mdata.fmetername = data.data[0].fmetername;
                     mdata.fmeterdirection = data.data[0].fmeterdirection;
+                    mdata.fmetername = data.data[0].fmetername;
                     mdata.fsaletime = data.data[0].fsaletime;
                     mdata.fcustomer = data.data[0].fcustomer;
                     var nowdate = new Date();
@@ -169,6 +247,8 @@
                 function addCallback(data) {
                     if (data.code == 200){
                         document.getElementById('form1').reset();
+                        $('embed').remove();
+                        $('body').append('<embed src="/sound/Success.wav" autostart="true" hidden="true" loop="false">');
                         $.post($.URL.returnMeter.list, {
                             "curFuncRole": curFuncRole,
                             "fanalysor": fanalysor
@@ -179,6 +259,7 @@
                     }
                 }
             }
+
         }
 
 
@@ -397,13 +478,14 @@
                 $.post($.URL.returnMeter.getBatchlist, null, bacthListCallBack, "json");
                 c_show();
                 $.ligerDialog.open({target: $("#addreturnMeter"), width: 500, title: '添加返修表'});
-                $("#form1").keydown(function (e) {
-                    if (e.keyCode == 13) {
-                        e.preventDefault();
-                        f_enter();
-                    }
-                })
             }
+
+        $("#form1").keydown(function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                f_enter();
+            }
+        });
             function c_show() {
                 $('#addreturnMeter').css('display', 'block');
             }

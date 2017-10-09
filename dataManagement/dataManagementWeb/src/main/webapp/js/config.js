@@ -134,7 +134,8 @@
             "getAllBatchlist":"rs/returnMeter/getAllBatchlist",
             "findByDispatch":"rs/returnMeter/findByDispatch",
             "returnMeterNum":"rs/returnMeter/returnMeterNum",
-            "returnAnalysisNum":"rs/returnMeter/returnAnalysisNum"
+            "returnAnalysisNum":"rs/returnMeter/returnAnalysisNum",
+            "confirmCode":"rs/returnMeter/confirmCode"
         },
         "returnMeterInfo": {
             "add": "rs/returnMeterInfo/add",

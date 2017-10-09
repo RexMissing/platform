@@ -3,6 +3,7 @@ package org.whut.dataManagement.business.returnMeter.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.whut.dataManagement.business.returnMeter.entity.ReturnMeter;
+import org.whut.dataManagement.business.returnMeter.service.ConfirmCodeService;
 import org.whut.dataManagement.business.returnMeter.service.DispatchService;
 import org.whut.dataManagement.business.returnMeter.service.ReturnByCodeService;
 import org.whut.dataManagement.business.returnMeter.service.ReturnMeterService;
@@ -32,6 +33,8 @@ public class ReturnMeterWeb {
     private ReturnByCodeService returnByCodeService;
     @Autowired
     private DispatchService dispatchService;
+    @Autowired
+    private ConfirmCodeService confirmCodeService;
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/add")
@@ -275,11 +278,11 @@ public class ReturnMeterWeb {
             condition.put("fmetercode",fmetercode);
         }
         List<Map<String,Object>> list=dispatchService.findByDispatch(condition);
-        System.out.print(list);
         if (list.size()==0){
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到预报故障!");
         }
-        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);}
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/returnMeterNum")
@@ -313,6 +316,21 @@ public class ReturnMeterWeb {
         list3.add(condition1);
         return JsonResultUtils.getObjectResultByStringAsDefault(list3,JsonResultUtils.Code.SUCCESS);
     }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/confirmCode")
+    @POST
+    public String confirmCode(@FormParam("fmetercodemark")String fmetercodemark)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(fmetercodemark!=null&&!fmetercodemark.equals(""))
+        {
+            condition.put("fmetercodemark",fmetercodemark);
+        }
+        List<Map<String,Object>> list=confirmCodeService.confirmFMeterCode(condition);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
 
 //    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
 //    @Path("/returnAnalysisNum")
