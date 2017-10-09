@@ -101,7 +101,10 @@ public class ProductAnalysisWeb {
         map.put("fmetercode",meterAnalysis.getFmetercode());
         List<Map<String,Object>> list = returnValveAndNameService.findValveAndName(map);
         if (list.size()==0)  {
-            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "修改的表具编号未清点!");
+            meterAnalysis.setFmetername("");
+            meterAnalysis.setFvalvename("");
+            productAnalysisService.update(meterAnalysis);
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.SUCCESS.getCode(), "未找到修改的表具编号!");
         }
         meterAnalysis.setFmetername(list.get(0).get("fmetername").toString());
         meterAnalysis.setFvalvename(list.get(0).get("fvalvecode").toString());

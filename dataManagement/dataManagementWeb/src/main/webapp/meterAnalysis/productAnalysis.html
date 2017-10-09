@@ -294,6 +294,9 @@
                 if(data.data.length == 0)
                 {
                     $.ligerDialog.alert("未查询到该表具编号！");
+                    gdata.fmetername = null;
+                    gdata.fvalvename = null;
+                    $.post($.URL.productAnalysis.add,{"jsonString":$.toJSON(gdata)},addCallback,"json");
                 }
                 else
                 {
