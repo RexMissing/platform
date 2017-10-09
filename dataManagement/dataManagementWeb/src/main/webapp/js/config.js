@@ -163,6 +163,13 @@
             "getCusByCode":"rs/meterAnalysis/getCusByCode",
             "findBySearch":"rs/meterAnalysis/findBySearch"
         },
+        "productAnalysis":{
+            "add":"rs/productAnalysis/add",
+            "update":"rs/productAnalysis/update",
+            "list":"rs/productAnalysis/list",
+            "findBySearch":"rs/productAnalysis/findBySearch",
+            "delete":"rs/productAnalysis/delete"
+        },
         "returnValveAndName":{
             "findValveAndName":"rs/returnValveAndName/findValveAndName"
         },

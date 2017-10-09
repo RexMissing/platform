@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.whut.dataManagement.business.meterAnalysis.mapper.ProductAnalysisMapper">
+    <sql id="productAnalysis_fields">
+        ID,FMeterCode,FMeterName,FValveName,FDepartment,FAnalysor,FCustomer,FReportMisFune,FConfirmMisFune,FMisFuneDescrib,FMeterReading,FElecDisplay,FDateTime
+    </sql>
+
+    <resultMap id="productAnalysisResultMap" type="meterAnalysis">
+        <id property="id" column="ID"/>
+        <result property="fmetercode" column="FMeterCode"/>
+        <result property="fmetername" column="FMeterName"/>
+        <result property="fvalvename" column="FValveName"/>
+        <result property="fdepartment" column="FDepartment"/>
+        <result property="fanalysor" column="FAnalysor"/>
+        <result property="fcustomer" column="FCustomer"/>
+        <result property="freportmisfune" column="FReportMisFune"/>
+        <result property="fconfirmmisfune" column="FConfirmMisFune"/>
+        <result property="fmisfunedescrib" column="FMisFuneDescrib"/>
+        <result property="fmeterreading" column="FMeterReading"/>
+        <result property="felecdisplay" column="FElecDisplay"/>
+        <result property="fdatetime" column="FDateTime"/>
+    </resultMap>
+
+    <insert id="add" parameterType="meterAnalysis" keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO
+        tproductanalysis(
+        <include refid="productAnalysis_fields"/>
+        )
+        VALUES (#{id},#{fmetercode},#{fmetername},#{fvalvename},#{fdepartment},#{fanalysor},#{fcustomer},#{freportmisfune},#{fconfirmmisfune},#{fmisfunedescrib},#{fmeterreading},#{felecdisplay},#{fdatetime});
+    </insert>
+
+    <update id="update" parameterType="meterAnalysis">
+        UPDATE tproductanalysis
+        <set>
+            <if test="fmetercode!=null">FMeterCode=#{fmetercode},</if>
+            <if test="fmetername!=null">FMeterName=#{fmetername},</if>
+            <if test="fvalvename!=null">FValveName=#{fvalvename},</if>
+            <if test="fdepartment!=null">FDepartment=#{fdepartment},</if>
+            <if test="fanalysor!=null">FAnalysor=#{fanalysor},</if>
+            <if test="fcustomer!=null">FCustomer=#{fcustomer},</if>
+            <if test="freportmisfune!=null">FReportMisFune=#{freportmisfune},</if>
+            <if test="fconfirmmisfune!=null">FConfirmMisFune=#{fconfirmmisfune},</if>
+            <if test="fmisfunedescrib!=null">FMisFuneDescrib=#{fmisfunedescrib},</if>
+            <if test="fmeterreading!=null">FMeterReading=#{fmeterreading},</if>
+            <if test="felecdisplay!=null">FElecDisplay=#{felecdisplay},</if>
+            <if test="fdatetime!=null">FDateTime=#{fdatetime}</if>
+        </set>
+        WHERE ID=#{id};
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        UPDATE tproductanalysis
+        SET IsDelete=1
+        WHERE ID=#{id};
+    </delete>
+
+    <select id="getList" resultMap="productAnalysisResultMap">
+        SELECT <include refid="productAnalysis_fields"/>
+        FROM tproductanalysis
+        WHERE IsDelete=0 ORDER BY ID DESC;
+    </select>
+
+    <select id="getListByFanalysor" resultMap="productAnalysisResultMap">
+        SELECT <include refid="productAnalysis_fields"/>
+        FROM tproductanalysis
+        WHERE IsDelete=0 AND FAnalysor=#{fanalysor};
+    </select>
+
+    <select id="findBySearch" parameterType="map" resultMap="productAnalysisResultMap">
+        SELECT <include refid="productAnalysis_fields"/>
+        FROM tproductanalysis
+        <where>
+            IsDelete=0
+            <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
+            <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
+            <if test="fanalysor!=null">AND FAnalysor=#{fanalysor}</if>
+        </where>
+        ORDER BY ID DESC;
+    </select>
+
+</mapper>

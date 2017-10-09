@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>维修分析记录录入</title>
+    <title>生产表具维修分析记录录入</title>
     <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css"/>
     <script src="lib/json2.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
@@ -18,11 +18,9 @@
         var fanalysor = getCookie("userName");
         $(function(){
             $.post($.URL.enumTable.mislist, null, enumMisListCallBack, "json");
-            $.post($.URL.enumTable.cuslist, null, enumCusListCallBack, "json");
             $.post($.URL.enumTable.misinfolist, {"misType":"all"}, enumMisInfoAllListCallBack, "json");
             $.post($.URL.enumTable.elelist, null, enumEleListCallBack, "json");
-//            $.post($.URL.department.list,null,departListCallBack,"json");
-            $.post($.URL.meterAnalysis.list, {"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
+            $.post($.URL.productAnalysis.list, {"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
         });
         function getCookie(cname) {
             var ss = document.cookie;
@@ -75,17 +73,6 @@
                 $("#fmisfuneinfo").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
             }
         }
-        var customertData = [];
-        function enumCusListCallBack(data) {
-            $("#fcustomer").empty();
-            for(var i = 0; i < data.data.length; i++){
-                var j = {};
-                j.text = data.data[i].fenumname;
-                j.value = data.data[i].fenumname;
-                customertData.push(j);
-                $("#fcustomer").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
-            }
-        }
         var elecData = [];
         function enumEleListCallBack(data) {
             $("#felecdisplay").empty();
@@ -118,15 +105,6 @@
                     {display: '基表条码', name: 'fvalvename', width: '8%'},
                     {display: '分析部门', name: 'fdepartment', width: '8%'},
                     {display: '分析员', name: 'fanalysor', width: '8%'},
-                    {display: '市场', name: 'fcustomer', width: '8%',
-                        editor: {
-                            type: 'select',
-                            emptyText: null,
-                            data: customertData,
-                            valueField: 'value',
-                            textField: 'text'
-                        }
-                    },
                     {display: '报修故障', name: 'freportmisfune', width: '9%',
                         editor: {
                             type: 'select',
@@ -154,7 +132,6 @@
                             textField: 'text'
                         }
                     },
-                    {display: '表具止码', name: 'fmeterreading', width: '9%', editor: {type: 'text'}},
                     {display: '上电显示状态', name: 'felecdisplay', width: '6%',
                         editor: {
                             type: 'select',
@@ -167,22 +144,22 @@
                     {display: '分析时间', name: 'fdatetime', width: '9%'},
                     {
                         display: '操作', isSort: false, width: '10%', render: function (rowdata, rowindex, value) {
-                            var h = "";
-                            if (curFuncRole == "3" && rowdata.fanalysor != fanalysor){
-                                h += "<a>没有操作权限</a>";
-                            }
-                            else{
-                                if (!rowdata._editing) {
-                                    h += "<a href='javascript:beginEdit(" + rowindex + ")'>修改</a> ";
-                                    h += "<a href='javascript:deleteRow(" + rowindex + ")'>删除</a> ";
-                                }
-                                else {
-                                    h += "<a href='javascript:endEdit(" + rowindex + ")'>提交</a> ";
-                                    h += "<a href='javascript:cancelEdit(" + rowindex + ")'>取消</a> ";
-                                }
-                            }
-                            return h;
+                        var h = "";
+                        if (curFuncRole == "3" && rowdata.fanalysor != fanalysor){
+                            h += "<a>没有操作权限</a>";
                         }
+                        else{
+                            if (!rowdata._editing) {
+                                h += "<a href='javascript:beginEdit(" + rowindex + ")'>修改</a> ";
+                                h += "<a href='javascript:deleteRow(" + rowindex + ")'>删除</a> ";
+                            }
+                            else {
+                                h += "<a href='javascript:endEdit(" + rowindex + ")'>提交</a> ";
+                                h += "<a href='javascript:cancelEdit(" + rowindex + ")'>取消</a> ";
+                            }
+                        }
+                        return h;
+                    }
                     }
                 ],
                 onSelectRow: function (rowdata, rowindex) {
@@ -197,11 +174,9 @@
         function beginEdit(rowid) {
             var row = manager.getRow(rowid);
             rowbefore.fmetercode = row.fmetercode;
-            rowbefore.fcustomer = row.fcustomer;
             rowbefore.freportmisfune = row.freportmisfune;
             rowbefore.fconfirmmisfune = row.fconfirmmisfune;
             rowbefore.fmisfunedescrib = row.fmisfunedescrib;
-            rowbefore.fmeterreading = row.fmeterreading;
             rowbefore.felecdisplay = row.felecdisplay;
             manager.beginEdit(rowid);
         }
@@ -213,13 +188,13 @@
             var row = manager.getRow(rowid);
             var dataupdate = {};
             var jsonString = $.toJSON(row);
-            $.post($.URL.meterAnalysis.update,{"jsonString": jsonString},updateCallback,"json");
+            $.post($.URL.productAnalysis.update,{"jsonString": jsonString},updateCallback,"json");
             function updateCallback(data) {
                 if (data.code == 200) {
                     $.ligerDialog.success("修改成功");
-                    $.post($.URL.meterAnalysis.list, {"curFuncRole":curFuncRole,"fanalysor":fanalysor}, listCallback, "json");
+                    $.post($.URL.productAnalysis.list, {"curFuncRole":curFuncRole,"fanalysor":fanalysor}, listCallback, "json");
                     dataupdate.updateoperator = getCookie("userName");
-                    dataupdate.updatename = "返修维修分析表";
+                    dataupdate.updatename = "生产维修分析表";
                     dataupdate.updatekey = row.id;
                     var flag = true;
                     while(flag){
@@ -229,14 +204,6 @@
                             dataupdate.updatebefore = rowbefore.fmetercode;
                             dataupdate.updateafter = row.fmetercode;
                             rowbefore.fmetercode = row.fmetercode;
-                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
-                            flag = true;
-                        }
-                        else if (rowbefore.fcustomer != row.fcustomer){
-                            dataupdate.dataname = "市场";
-                            dataupdate.updatebefore = rowbefore.fcustomer;
-                            dataupdate.updateafter = row.fcustomer;
-                            rowbefore.fcustomer = row.fcustomer;
                             $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
                             flag = true;
                         }
@@ -264,14 +231,6 @@
                             $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
                             flag = true;
                         }
-                        else if (rowbefore.fmeterreading != row.fmeterreading){
-                            dataupdate.dataname = "表具止码";
-                            dataupdate.updatebefore = rowbefore.fmeterreading;
-                            dataupdate.updateafter = row.fmeterreading;
-                            rowbefore.fmeterreading = row.fmeterreading;
-                            $.post($.URL.updateRecord.add,{"jsonString":$.toJSON(dataupdate)},RecordCallback,"json");
-                            flag = true;
-                        }
                         else if (rowbefore.felecdisplay != row.felecdisplay){
                             dataupdate.dataname = "上电显示状态";
                             dataupdate.updatebefore = rowbefore.felecdisplay;
@@ -288,27 +247,27 @@
                     }
                 }
                 else {
-                    $.post($.URL.meterAnalysis.list, {"curFuncRole":curFuncRole,"fanalysor":fanalysor}, listCallback, "json");
+                    $.post($.URL.productAnalysis.list, {"curFuncRole":curFuncRole,"fanalysor":fanalysor}, listCallback, "json");
                     $.ligerDialog.warn(data.message);
                 }
             }
         }
         function deleteRow(rowid) {
-                if (confirm('确定删除?')) {
-                    var row = manager.getRow(rowid);
-                    var jsonString = $.toJSON(row);
-                    $.post($.URL.meterAnalysis.delete, {"jsonString": jsonString},deleteCallback, "json");
-                    manager.deleteRow(rowid);
-                }
+            if (confirm('确定删除?')) {
+                var row = manager.getRow(rowid);
+                var jsonString = $.toJSON(row);
+                $.post($.URL.productAnalysis.delete, {"jsonString": jsonString},deleteCallback, "json");
+                manager.deleteRow(rowid);
             }
+        }
         function deleteCallback(data) {
-                if (data.code == 200) {
-                    $.ligerDialog.success("成功删除！");
-                    $.post($.URL.meterAnalysis.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback, "json");
-                } else {
-                    $.ligerDialog.success("删除失败！");
-                }
+            if (data.code == 200) {
+                $.ligerDialog.success("成功删除！");
+                $.post($.URL.productAnalysis.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback, "json");
+            } else {
+                $.ligerDialog.success("删除失败！");
             }
+        }
         $("#addSubmitBtn").click(function () {
             {
                 document.getElementById('form1').reset();
@@ -326,45 +285,32 @@
             gdata.fanalysor = getCookie("userName");
             gdata.fdepartment = getCookie("departName");
             gdata.fmetercode = $("#fmetercode").val();
-            gdata.fcustomer = $("#fcustomer").val();
             gdata.freportmisfune = $("#freportmisfune").val();
             gdata.fconfirmmisfune = $("#fconfirmmisfune").val();
             gdata.fmisfunedescrib = $("#fmisfuneinfo").val();
-            gdata.fmeterreading = $("#fmeterreading").val();
             gdata.felecdisplay = $("#felecdisplay").val();
-            $.post($.URL.meterAnalysis.findValveAndName,{"fmetercode":gdata.fmetercode},getValveListCallback,"json");
+            $.post($.URL.returnValveAndName.findValveAndName,{"fmetercode":gdata.fmetercode},getValveListCallback,"json");
             function getValveListCallback(data) {
                 if(data.data.length == 0)
                 {
-                    $.ligerDialog.alert("表具编号未清点");
+                    $.ligerDialog.alert("未查询到该表具编号！");
                 }
                 else
                 {
                     gdata.fmetername = data.data[0].fmetername;
                     gdata.fvalvename = data.data[0].fvalvecode;
-                    $.post($.URL.meterAnalysis.add,{"jsonString":$.toJSON(gdata)},addCallback,"json");
+                    $.post($.URL.productAnalysis.add,{"jsonString":$.toJSON(gdata)},addCallback,"json");
                 }
             }
         });
-        function selectCus(){
-            var fmetercode = $("#fmetercode").val();
-            $.post($.URL.meterAnalysis.getCusByCode,{"fmetercode":fmetercode},selectCusBack,"json");
-            function selectCusBack(data) {
-                $("#fcustomer").attr("value",data.data[0].fcustomer);
-                $("#freportmisfune").attr("value",data.data[1].freportmisfune);
-                $("#fmeterreading").val(data.data[2].fmeterreading);
-            }
-        }
         function showMisDescrib() {
             var misType = $("#fconfirmmisfune").val();
             $.post($.URL.enumTable.misinfolist, {"misType":misType}, enumMisInfoListCallBack, "json");
         }
         function addCallback(data){
             if (data.code == 200) {
-                $.ligerDialog.success(data.message);
                 document.getElementById('form1').reset();
-                $.post($.URL.meterAnalysis.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
-//                $.ligerDialog.hide("#addMeterAnalysis");
+                $.post($.URL.productAnalysis.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
             }
             else {
                 $.ligerDialog.warn(data.message);
@@ -373,7 +319,7 @@
         $("#analysisSearchBtn").click(function () {
             var fmetercode = $("#code").val();
             var fmetername = $("#type").val();
-            $.post($.URL.meterAnalysis.findBySearch,{"fmetercode":fmetercode,"fmetername":fmetername,"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
+            $.post($.URL.productAnalysis.findBySearch,{"fmetercode":fmetercode,"fmetername":fmetername,"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
         });
     </script>
     <style type="text/css">
@@ -407,15 +353,7 @@
         <table cellpadding="0" cellspacing="0" class="l-table-edit" >
             <tr>
                 <td align="right" class="l-table-edit-td">表具编号:</td>
-                <td align="left" class="l-table-edit-td"><input name="fmetercode" type="text" id="fmetercode" onchange="selectCus()"></td>
-                <td align="left"></td>
-            </tr>
-            <tr>
-                <td align="right" class="l-table-edit-td">市场:</td>
-                <td align="left" class="l-table-edit-td">
-                    <select name="fcustomer" id="fcustomer" >
-                        <!--js控制添加市场-->
-                    </select></td>
+                <td align="left" class="l-table-edit-td"><input name="fmetercode" type="text" id="fmetercode"></td>
                 <td align="left"></td>
             </tr>
             <tr>
@@ -424,11 +362,6 @@
                     <select name="freportmisfune" id="freportmisfune" >
                         <!--js控制添加报修故障-->
                     </select></td>
-                <td align="left"></td>
-            </tr>
-            <tr>
-                <td align="right" class="l-table-edit-td">表具止码:</td>
-                <td align="left" class="l-table-edit-td"><input name="fmeterreading" type="text" id="fmeterreading" ></td>
                 <td align="left"></td>
             </tr>
             <tr>

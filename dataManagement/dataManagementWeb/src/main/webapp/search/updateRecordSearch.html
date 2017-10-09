@@ -69,13 +69,20 @@
                     $("#dataname").append("<option value='枚举值'>枚举值</option>");
                     $("#dataname").append("<option value='枚举描述'>枚举描述</option>");
                     break;
-                case "维修分析表":
+                case "返修维修分析表":
                     $("#dataname").append("<option value='表具编号'>表具编号</option>");
                     $("#dataname").append("<option value='市场'>市场</option>");
                     $("#dataname").append("<option value='报修故障'>报修故障</option>");
                     $("#dataname").append("<option value='实查故障'>实查故障</option>");
                     $("#dataname").append("<option value='故障详情'>故障详情</option>");
                     $("#dataname").append("<option value='表具止码'>表具止码</option>");
+                    $("#dataname").append("<option value='上电显示状态'>上电显示状态</option>");
+                    break;
+                case "生产维修分析表":
+                    $("#dataname").append("<option value='表具编号'>表具编号</option>");
+                    $("#dataname").append("<option value='报修故障'>报修故障</option>");
+                    $("#dataname").append("<option value='实查故障'>实查故障</option>");
+                    $("#dataname").append("<option value='故障详情'>故障详情</option>");
                     $("#dataname").append("<option value='上电显示状态'>上电显示状态</option>");
                     break;
                 case "返修表录入表":
@@ -106,7 +113,8 @@
                 <select id="updatename" onchange="f_update()">
                     <option>部门管理表</option>
                     <option>枚举表</option>
-                    <option>维修分析表</option>
+                    <option>返修维修分析表</option>
+                    <option>生产维修分析表</option>
                     <option>返修表录入表</option>
                 </select></td>
             <td align="right" class="l-table-edit-td">数据名称:</td>

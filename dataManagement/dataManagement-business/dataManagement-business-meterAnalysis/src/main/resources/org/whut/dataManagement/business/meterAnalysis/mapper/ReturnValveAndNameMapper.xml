@@ -9,8 +9,8 @@
     </sql>
 
     <select id="findValveAndName" parameterType="map" resultType="map">
-        SELECT fmetercode,fcovername AS fmetername,fvalvecode AS fvalvename
-        FROM tb_WalvesAssembly
-        WHERE FMeterCode=#{fmetercode};
+        SELECT a.fmetercode,a.fcovername AS fmetername,a.fvalvecode AS fvalvecode
+        FROM tb_WalvesAssembly a, tb_ZFuncCheck b
+        WHERE b.FMeterCode=#{fmetercode} AND a.FMeterCode = b.FMeterCode;
     </select>
 </mapper>

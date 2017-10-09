@@ -18,11 +18,9 @@ public class MeterAnalysisService {
     public void add(MeterAnalysis meterAnalysis) {
         meterAnalysisMapper.add(meterAnalysis);
     }
-
     public void update(MeterAnalysis meterAnalysis) {
         meterAnalysisMapper.update(meterAnalysis) ;
     }
-
     public int delete(MeterAnalysis meterAnalysis) {
         return meterAnalysisMapper.delete(meterAnalysis);
     }
