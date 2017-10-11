@@ -12,6 +12,7 @@ public class Inspection {
     private int id;
     private String finspectionbatch;
     private String fmetercode;
+    private String fmetername;
     private String fdepartment;
     private String foperator;
     @JsonDeserialize(using=CustomDateDeserialize.class)
@@ -53,6 +54,14 @@ public class Inspection {
 
     public void setFmetercode(String fmetercode) {
         this.fmetercode = fmetercode;
+    }
+
+    public String getFmetername() {
+        return fmetername;
+    }
+
+    public void setFmetername(String fmetername) {
+        this.fmetername = fmetername;
     }
 
     public String getFdepartment() {

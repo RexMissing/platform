@@ -4,10 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.whut.dataManagement.business.inspection.mapper.InspectionMapper">
     <sql id="inspection_fields">
-        ID,FInspectionBatch,FMeterCode,FDepartment,FOperator,FDate,FGasTightness
+        ID,FInspectionBatch,FMeterCode,FMeterName,FDepartment,FOperator,FDate,FGasTightness
     </sql>
     <sql id="inspection_all_fields">
-        ID,FInspectionBatch,FMeterCode,FDepartment,FOperator,FDate,
+        ID,FInspectionBatch,FMeterCode,FMeterName,FDepartment,FOperator,FDate,
         FExterior,FVoltage,FGas,FMisOperation,FGasControl,FDataKeep,
         FGasAccumulated,FExteriorProtect,FDefend,FMDisturbance,FMaxElec,
         FGasTightness,FAirtightness,FSwitchError
@@ -17,6 +17,7 @@
         <id property="id" column="ID"/>
         <result property="finspectionbatch" column="FInspectionBatch"/>
         <result property="fmetercode" column="FMeterCode"/>
+        <result property="fmetername" column="FMeterName"/>
         <result property="fdepartment" column="FDepartment"/>
         <result property="foperator" column="FOperator"/>
         <result property="fdate" column="FDate"/>
@@ -38,7 +39,7 @@
         tinspection(
         <include refid="inspection_all_fields"/>
         )
-        VALUES (#{id},#{finspectionbatch},#{fmetercode},#{fdepartment},#{foperator},#{fdate},
+        VALUES (#{id},#{finspectionbatch},#{fmetercode},#{fmetername},#{fdepartment},#{foperator},#{fdate},
         #{fexterior},#{fvoltage},#{fgas},#{fmisoperation},#{fgascontrol},#{fdatakeep},
         #{fgasaccumulated},#{fexteriorprotect},#{fdefend},#{fmdisturbance},#{fmaxelec},
         #{fgastightness},#{fairtightness},#{fswitcherror});

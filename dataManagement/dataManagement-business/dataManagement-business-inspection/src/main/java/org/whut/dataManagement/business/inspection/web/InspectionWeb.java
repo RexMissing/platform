@@ -32,6 +32,7 @@ public class InspectionWeb {
     public String add(
             @FormParam("finspectionbatch") String finspectionbatch,
             @FormParam("fmetercode") String fmetercode,
+            @FormParam("fmetername") String fmetername,
             @FormParam("fair") String fgastightness,
             @FormParam("foperator") String foperator,
             @FormParam("departName") String fdepartment
@@ -39,6 +40,7 @@ public class InspectionWeb {
         Inspection inspection = new Inspection();
         inspection.setFinspectionbatch(finspectionbatch);
         inspection.setFmetercode(fmetercode);
+        inspection.setFmetername(fmetername);
         inspection.setFdepartment(fdepartment);
         inspection.setFoperator(foperator);
         Date date = new Date();
