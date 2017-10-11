@@ -60,6 +60,13 @@
                 }
             }
         }
+
+        function returnNumCallBack(data) {
+//            $("#freturnnum").empty();
+            var obj = document.getElementById("freturnnum");
+            obj.setAttribute("value",data.data[0].freturnnum);
+        }
+
         function getCookie(cname) {
             var ss = document.cookie;
             var name = cname + "=";
@@ -111,6 +118,8 @@
                     k.value = nowbatch;
                     curdayBatch.push(k);
                     $("#freturnbatch").append("<option value='"+nowbatch+"'>"+nowbatch+"</option>");
+                    var freturnbatch = $("#freturnbatch").val();
+                    $.post($.URL.returnMeter.getReturnNum,{"freturnbatch":freturnbatch},returnNumCallBack,"json");
                 }
                 $("#batch").empty();
                 $("#batch").append("<option value=''></option>");
@@ -132,7 +141,6 @@
             mdata.fmetercode = $("#fmetercode").val();
             if (mdata.fmetercode.length == 12) {
                var fmetercodemark = mdata.fmetercode.substring(0,3).toString();
-//               $.post($.URL.returnMeter.confirmCode,{"fmetercodemark":fmetercodemark},confirmCallBack,"json");
                $.ajax(
                    {
                        type:"post",
@@ -152,23 +160,13 @@
                        dataType:"json"
                    }
                );
-//               function confirmCallBack(data) {
-//                   if(data.data.length==0)
-//                   {
-//                       $('embed').remove();
-//                       $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
-//                       $.ligerDialog.error("输入表具编号格式错误");
-//                       flag = true;
-//                       return false;
-//                   }
-//               }
+
                if(flag)
                    return false;
             }
             else if (mdata.fmetercode.length == 13)
             {
                 var fmetercodemark = mdata.fmetercode.substring(0,4);
-//                $.post($.URL.returnMeter.confirmCode,{"fmetercodemark":fmetercodemark},confirmCallBack1,"json");
                 $.ajax(
                     {
                         type:"post",
@@ -188,16 +186,6 @@
                         dataType:"json"
                     }
                 );
-//                function confirmCallBack1(data) {
-//                    if(data.data.length==0)
-//                    {
-//                        $('embed').remove();
-//                        $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
-//                        $.ligerDialog.error("输入表具编号格式错误");
-//                        flag = true;
-//                        return false;
-//                    }
-//                }
                 if(flag)
                     return false;
             }
@@ -255,6 +243,8 @@
                             "curFuncRole": curFuncRole,
                             "fanalysor": fanalysor
                         }, listCallback, "json");
+                        var freturnbatch = $("#freturnbatch").val();
+                        $.post($.URL.returnMeter.getReturnNum,{"freturnbatch":freturnbatch},returnNumCallBack,"json");
                     }
                     else {
                         $.ligerDialog.warn(data.message);
@@ -478,6 +468,8 @@
             function f_add() {
                 document.getElementById('form1').reset();
                 $.post($.URL.returnMeter.getBatchlist, null, bacthListCallBack, "json");
+                var freturnbatch = $("#freturnbatch").val();
+                $.post($.URL.returnMeter.getReturnNum,{"freturnbatch":freturnbatch},returnNumCallBack,"json");
                 c_show();
                 $.ligerDialog.open({target: $("#addreturnMeter"), width: 500, title: '添加返修表'});
             }
@@ -491,6 +483,11 @@
             function c_show() {
                 $('#addreturnMeter').css('display', 'block');
             }
+
+        function f_returnnum(){
+            var freturnbatch = $("#freturnbatch").val();
+            $.post($.URL.returnMeter.getReturnNum,{"freturnbatch":freturnbatch},returnNumCallBack,"json");
+        }
     </script>
     <style type="text/css">
         .l-table-edit {}
@@ -539,7 +536,7 @@
             <tr>
                 <td align="right" class="l-table-edit-td">清点批次:</td>
                 <td align="left" class="l-table-edit-td">
-                    <select name="freturnbatch" id="freturnbatch" >
+                    <select name="freturnbatch" id="freturnbatch" onchange="f_returnnum()" >
                         <!--js控制添加批次-->
                     </select></td>
                 <td align="left"></td>
@@ -550,8 +547,14 @@
                     <input name="fmetercode" type="text" id="fmetercode"></td>
                 <td align="left"></td>
             </tr>
+            <tr>
+                <td align="right" class="l-table-edit-td">当前批次已清点数量:</td>
+                <td align="left" class="l-table-edit-td">
+                    <input name="freturnnum" id="freturnnum" value=""> 块</td>
+                <td align="left"></td>
+            </tr>
         </table>
-        <br />
+    </br>
     </form>
 </div>
 </body>

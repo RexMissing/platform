@@ -167,4 +167,10 @@
         FROM TProducts
         WHERE FMeterCodeMark=#{fmetercodemark};
     </select>
+
+    <select id="getReturnNum" parameterType="map" resultType="map">
+        SELECT COUNT(DISTINCT fmetercode) as freturnnum
+        FROM treturnmeter
+        WHERE FReturnBatch=#{freturnbatch};
+    </select>
 </mapper>

@@ -135,7 +135,8 @@
             "findByDispatch":"rs/returnMeter/findByDispatch",
             "returnMeterNum":"rs/returnMeter/returnMeterNum",
             "returnAnalysisNum":"rs/returnMeter/returnAnalysisNum",
-            "confirmCode":"rs/returnMeter/confirmCode"
+            "confirmCode":"rs/returnMeter/confirmCode",
+            "getReturnNum":"rs/returnMeter/getReturnNum"
         },
         "inspection":{
             "add": "rs/inspection/add",

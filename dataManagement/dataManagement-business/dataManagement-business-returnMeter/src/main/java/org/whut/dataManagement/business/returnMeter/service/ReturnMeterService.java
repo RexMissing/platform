@@ -5,6 +5,7 @@ import org.whut.dataManagement.business.dynamicDataSource.DataSource;
 import org.whut.dataManagement.business.returnMeter.entity.ReturnMeter;
 import org.whut.dataManagement.business.returnMeter.mapper.ReturnMeterMapper;
 
+import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.List;
 import java.util.Map;
 
@@ -66,5 +67,9 @@ public class ReturnMeterService {
     public List<Map<String,Object>> returnAnalysisNum(Map<String,Object> condition)
     {
         return returnMeterMapper.returnAnalysisNum(condition);
+    }
+    public List<Map<String,Object>> getReturnNum(Map<String,Object> condition)
+    {
+        return returnMeterMapper.getReturnNum(condition);
     }
 }

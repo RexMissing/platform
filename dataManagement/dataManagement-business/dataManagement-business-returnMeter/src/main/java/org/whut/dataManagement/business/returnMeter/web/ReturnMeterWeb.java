@@ -331,6 +331,22 @@ public class ReturnMeterWeb {
         return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
     }
 
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/getReturnNum")
+    @POST
+    public String getReturnNum(@FormParam("freturnbatch")String freturnbatch)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(freturnbatch!=null&&!freturnbatch.equals(""))
+        {
+            condition.put("freturnbatch",freturnbatch);
+        }
+        List<Map<String,Object>> list=returnMeterService.getReturnNum(condition);
+        System.out.print(list);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+
 
 //    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
 //    @Path("/returnAnalysisNum")
