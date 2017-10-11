@@ -109,6 +109,9 @@
           <element id="archive" name="dataManagement-business-meterAnalysis-1.0-SNAPSHOT.jar">
             <element id="module-output" name="dataManagement-business-meterAnalysis" />
           </element>
+          <element id="archive" name="dataManagement-business-inspection-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="dataManagement-business-inspection" />
+          </element>
           <element id="archive" name="dataManagement-business-userFunctionRole-1.0-SNAPSHOT.jar">
             <element id="module-output" name="dataManagement-business-userFunctionRole" />
           </element>

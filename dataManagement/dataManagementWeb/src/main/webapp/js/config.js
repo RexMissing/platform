@@ -137,6 +137,15 @@
             "returnAnalysisNum":"rs/returnMeter/returnAnalysisNum",
             "confirmCode":"rs/returnMeter/confirmCode"
         },
+        "inspection":{
+            "add": "rs/inspection/add",
+            "list": "rs/inspection/list",
+            "findLastBatch":"rs/inspection/findLastBatch",
+            "getBatchlist":"rs/inspection/getBatchlist",
+            "findBySearch": "rs/inspection/findBySearch",
+            "delete": "rs/inspection/delete",
+            "findAirByCode":"rs/inspection/findAirByCode"
+        },
         "returnMeterInfo": {
             "add": "rs/returnMeterInfo/add",
             "delete": "rs/returnMeterInfo/delete",

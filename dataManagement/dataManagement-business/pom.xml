@@ -20,6 +20,7 @@
         <module>dataManagement-business-search</module>
         <module>dataManagement-business-userFunctionRole</module>
         <module>dataManagement-business-updateRecord</module>
+        <module>dataManagement-business-inspection</module>
     </modules>
 
 </project>

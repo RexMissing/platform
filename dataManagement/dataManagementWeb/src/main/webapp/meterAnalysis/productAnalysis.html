@@ -285,6 +285,63 @@
             gdata.fanalysor = getCookie("userName");
             gdata.fdepartment = getCookie("departName");
             gdata.fmetercode = $("#fmetercode").val();
+            var flag = false;
+            if (gdata.fmetercode.length == 12) {
+                var fmetercodemark = gdata.fmetercode.substring(0,3).toString();
+                $.ajax(
+                        {
+                            type:"post",
+                            url:$.URL.returnMeter.confirmCode,
+                            data:{"fmetercodemark":fmetercodemark},
+                            async:false,
+                            success:function(data){
+                                if(data.data.length==0)
+                                {
+                                    $('embed').remove();
+                                    $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                                    $.ligerDialog.alert("输入表具编号格式错误");
+                                    flag = true;
+                                    return false;
+                                }
+                            },
+                            dataType:"json"
+                        }
+                );
+                if(flag)
+                    return false;
+            }
+            else if (gdata.fmetercode.length == 13)
+            {
+                var fmetercodemark = gdata.fmetercode.substring(0,4);
+                $.ajax(
+                        {
+                            type:"post",
+                            url:$.URL.returnMeter.confirmCode,
+                            data:{"fmetercodemark":fmetercodemark},
+                            async:false,
+                            success:function(data){
+                                if(data.data.length==0)
+                                {
+                                    $('embed').remove();
+                                    $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                                    $.ligerDialog.alert("输入表具编号格式错误");
+                                    flag = true;
+                                    return false;
+                                }
+                            },
+                            dataType:"json"
+                        }
+                );
+                if(flag)
+                    return false;
+            }
+            else
+            {
+                $('embed').remove();
+                $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                $.ligerDialog.alert("输入表具编号格式错误");
+                return false;
+            }
             gdata.freportmisfune = $("#freportmisfune").val();
             gdata.fconfirmmisfune = $("#fconfirmmisfune").val();
             gdata.fmisfunedescrib = $("#fmisfuneinfo").val();

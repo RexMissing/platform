@@ -246,7 +246,9 @@
                 }
                 function addCallback(data) {
                     if (data.code == 200){
+                        var batch = $("#freturnbatch").val();
                         document.getElementById('form1').reset();
+                        $("#freturnbatch").attr("value",batch);
                         $('embed').remove();
                         $('body').append('<embed src="/sound/Success.wav" autostart="true" hidden="true" loop="false">');
                         $.post($.URL.returnMeter.list, {
