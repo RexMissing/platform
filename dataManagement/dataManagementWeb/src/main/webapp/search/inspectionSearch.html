@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="lib/assert/select/combo.select.css" type="text/css"/>
+    <script src="lib/assert/select/jquery.combo.select.js" type="text/javascript"></script>
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function() {
+            $.post($.URL.enumTable.meterlist, null, enumMeterListCallBack, "json");
+            $.post($.URL.inspection.getAllBatchlist, null, allBacthListCallBack, "json");
+        });
+
+        function enumMeterListCallBack(data) {
+            $("#fmetername").empty();
+            $("#fmetername").append("<option value=''></option>");
+            for(var i = 0; i < data.data.length; i++){
+                $("#fmetername").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+            }
+            $("#fmetername").comboSelect();
+        }
+
+        function allBacthListCallBack(data) {
+            $("#batch").empty();
+            $("#batch").append("<option value=''></option>");
+            for(var i = 0; i < data.data.length; i++){
+                $("#batch").append("<option value='" + data.data[i].finspectionbatch + "'>" + data.data[i].finspectionbatch + "</option>");
+            }
+            $("#batch").comboSelect();
+        }
+
+        $("#inspectionSearchBtn").click(function () {
+            var finspectionbatch = $("#batch").val();
+            var fmetercode = $("#fmetercode").val();
+            var fmetername = $("#fmetername").val();
+            var foperator = $("#foperator").val();
+            var sTime = $("#inspectionStartTime").val();
+            var eTime = $("#inspectionEndTime").val();
+            $.post($.URL.inspection.findAllBySearch, {
+                "finspectionbatch": finspectionbatch,
+                "fmetercode": fmetercode,
+                "fmetername":fmetername,
+                "foperator": foperator,
+                "sTime": sTime,
+                "eTime": eTime
+            }, listCallback, "json");
+        });
+
+        var gridData = {};
+        function listCallback(data) {
+            if (data.code == 200) {
+                gridData.Rows = data.data;
+                gridData.Total = data.data.length;
+                f_initGrid();
+            }
+            else {
+                $.ligerDialog.alert(data.message);
+            }
+        }
+        var manager, g;
+        function f_initGrid() {
+            g = manager = $("#maingrid").ligerGrid({
+                columns: [
+                    {display: '主键', name: 'id', width: '12%', type: 'int', frozen: true},
+                    {display: '抽检批次', name: 'finspectionbatch', width: '15%'},
+                    {display: '表具编号', name: 'fmetercode', width: '15%'},
+                    {display: '表具类型', name: 'fmetername', width: '15%'},
+                    {display: '阀门密封性', name: 'fgastightness', width: '15%'},
+                    {display: '抽检部门', name: 'fdepartment', width: '10%'},
+                    {display: '抽检人员', name: 'foperator', width: '10%'},
+                    {display: '抽检时间', name: 'fdate', width: '8%'}
+                ],
+                onSelectRow: function (rowdata, rowindex) {
+                    $("#txtrowindex").val(rowindex);
+                },
+                enabledEdit: true, clickToEdit: false, isScroll: false,
+                data: gridData,
+                width: '100%'
+            });
+        }
+    </script>
+    <style type="text/css">
+        .l-table-edit {}
+        .l-table-edit-td{margin-left:30px; margin-top:10px;padding:4px;height: 20px}
+        .l-table-edit-input{ padding:4px;width:300px}
+        .l-button-submit,.l-button-reset{width:80px; float:left; margin-left:10px; padding-bottom:2px;}
+        .l-dialog-tc{background:#E0EDFF; }
+    </style>
+</head>
+<body style="padding:10px">
+<div id="list">
+    <table cellpadding="0" cellspacing="0" class="l-table-edit" >
+        <tr>
+            <td align="right" class="l-table-edit-td">清点批次:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="batch"></select>
+            </td>
+            <td align="right" class="l-table-edit-td">表具编号:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="fmetercode" type="text" id="fmetercode"/>
+            </td>
+            <td align="right" class="l-table-edit-td">表具类型:</td>
+            <td align="left" class="l-table-edit-td">
+                <select id="fmetername"></select>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" class="l-table-edit-td">抽检人员:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="foperator" type="text" id="foperator"/>
+            </td>
+            <td align="right" class="l-table-edit-td">起始时间:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="inspectionStartTime" type="date"  id="inspectionStartTime">
+            </td>
+            <td align="right" class="l-table-edit-td">终止时间:</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="inspectionEndTime" type="date"  id="inspectionEndTime">
+            </td>
+            <td align="right"><input type="button" value="查询" id="inspectionSearchBtn" class="l-button l-button-submit" /></td>
+        </tr>
+    </table>
+    <div class="l-clear"></div>
+</div>
+<div style="display:none;">
+</div>
+<div id="maingrid" style="margin-top:5px"></div>
+</body>
+</html>

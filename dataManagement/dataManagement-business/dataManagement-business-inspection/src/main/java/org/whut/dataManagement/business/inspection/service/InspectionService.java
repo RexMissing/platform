@@ -39,4 +39,12 @@ public class InspectionService {
     public int delete(Inspection inspection) {
         return inspectionMapper.delete(inspection);
     }
+    public List<Map<String,Object>> getAllBatchList()
+    {
+        return inspectionMapper.getAllBatchList();
+    }
+    public List<Map<String,Object>> findAllBySearch(Map<String,Object> condition)
+    {
+        return inspectionMapper.findAllBySearch(condition);
+    }
 }

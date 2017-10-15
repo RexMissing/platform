@@ -15,4 +15,6 @@ public interface InspectionMapper extends AbstractMapper<Inspection> {
     List<Map<String,Object>> getBatchlist();
     List<Map<String,Object>> findBySearch(Map<String,Object> condition);
     List<Map<String,Object>> findByfoperator(String foperator);
+    List<Map<String,Object>> getAllBatchList();
+    List<Map<String,Object>> findAllBySearch(Map<String,Object> condition);
 }

@@ -64,6 +64,11 @@
         FROM tinspection
         WHERE IsDelete=0 AND fdate=CURRENT_DATE;
     </select>
+    <select id="getAllBatchList" resultMap="inspectionResultMap">
+        SELECT DISTINCT finspectionbatch
+        FROM tinspection
+        WHERE IsDelete=0;
+    </select>
     <select id="findBySearch" parameterType="map" resultMap="inspectionResultMap">
         SELECT <include refid="inspection_fields"/>
         FROM tinspection
@@ -71,6 +76,20 @@
             IsDelete=0
             <if test="finspectionbatch!=null">AND FInspectionBatch=#{finspectionbatch}</if>
             <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
+            <if test="startTime!=null"><![CDATA[ AND FDate>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND FDate<=#{endTime} ]]> </if>
+            <if test="foperator!=null">AND FOperator=#{foperator}</if>
+        </where>
+        ORDER BY ID DESC;
+    </select>
+    <select id="findAllBySearch" parameterType="map" resultMap="inspectionResultMap">
+        SELECT <include refid="inspection_fields"/>
+        FROM tinspection
+        <where>
+            IsDelete=0
+            <if test="finspectionbatch!=null">AND FInspectionBatch=#{finspectionbatch}</if>
+            <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
+            <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
             <if test="startTime!=null"><![CDATA[ AND FDate>=#{startTime}]]></if>
             <if test="endTime!=null"><![CDATA[ AND FDate<=#{endTime} ]]> </if>
             <if test="foperator!=null">AND FOperator=#{foperator}</if>

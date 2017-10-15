@@ -145,7 +145,9 @@
             "getBatchlist":"rs/inspection/getBatchlist",
             "findBySearch": "rs/inspection/findBySearch",
             "delete": "rs/inspection/delete",
-            "findAirByCode":"rs/inspection/findAirByCode"
+            "findAirByCode":"rs/inspection/findAirByCode",
+            "getAllBatchlist":"rs/inspection/getAllBatchlist",
+            "findAllBySearch":"rs/inspection/findAllBySearch"
         },
         "returnMeterInfo": {
             "add": "rs/returnMeterInfo/add",

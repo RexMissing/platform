@@ -105,6 +105,14 @@ public class InspectionWeb {
     }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/getAllBatchlist")
+    @POST
+    public String getAllBatchlist() {
+        List<Map<String,Object>> list = inspectionService.getAllBatchList();
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/findBySearch")
     @POST
     public String findBySearch(@FormParam("curFuncRole") String curFuncRole,@FormParam("foperator") String foperator,@FormParam("finspectionbatch")String finspectionbatch,@FormParam("fmetercode")String fmetercode,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
@@ -128,6 +136,41 @@ public class InspectionWeb {
             condition.put("foperator",foperator);
         }
         List<Map<String,Object>> list = inspectionService.findBySearch(condition);
+        if (list.size()==0)  {
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
+        }
+        return JsonResultUtils.getObjectResultByStringAsDefault(list, JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/findAllBySearch")
+    @POST
+    public String findAllBySearch(@FormParam("finspectionbatch") String finspectionbatch,@FormParam("fmetercode") String fmetercode,@FormParam("fmetername")String fmetername,@FormParam("foperator")String foperator,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(finspectionbatch!=null&&!finspectionbatch.equals(""))
+        {
+            condition.put("finspectionbatch",finspectionbatch);
+        }
+        if (fmetercode!=null&&!fmetercode.equals(""))
+        {
+            condition.put("fmetercode",fmetercode);
+        }
+        if (fmetername!=null&&!fmetername.equals(""))
+        {
+            condition.put("fmetername",fmetername);
+        }
+        if (foperator!=null&&!foperator.equals(""))
+        {
+            condition.put("foperator",foperator);
+        }
+        if(sTime!=null&&!sTime.equals("")){
+            condition.put("startTime",sTime+" 00:00:00");
+        }
+        if(eTime!=null&&!eTime.equals("")){
+            condition.put("endTime",eTime+" 23:59:59");
+        }
+        List<Map<String,Object>> list = inspectionService.findAllBySearch(condition);
         if (list.size()==0)  {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "查询不到结果!");
         }
