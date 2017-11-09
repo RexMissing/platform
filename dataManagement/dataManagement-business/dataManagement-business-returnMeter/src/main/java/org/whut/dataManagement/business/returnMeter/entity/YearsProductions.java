@@ -3,25 +3,25 @@ package org.whut.dataManagement.business.returnMeter.entity;
 /**
  * Created by Administrator on 2017/9/5.
  */
-public class MonthProductions {
-    private String year;
-    private int month;
+public class YearsProductions {
+    private int year;
+    private String fmetername;
     private int productions;
 
-    public String getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
         this.year = year;
     }
 
-    public int getMonth() {
-        return month;
+    public String getFmetername() {
+        return fmetername;
     }
 
-    public void setMonth(int month) {
-        this.month = month;
+    public void setFmetername(String fmetername) {
+        this.fmetername = fmetername;
     }
 
     public int getProductions() {

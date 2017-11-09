@@ -4,16 +4,16 @@ package org.whut.dataManagement.business.returnMeter.entity;
  * Created by Administrator on 2017/9/11.
  */
 public class YearsCompare {
-    private int month;
+    private int year;
     private int number1;
     private int number2;
 
-    public int getMonth() {
-        return month;
+    public int getYear() {
+        return year;
     }
 
-    public void setMonth(int month) {
-        this.month = month;
+    public void setYear(int year) {
+        this.year = year;
     }
 
     public int getNumber1() {

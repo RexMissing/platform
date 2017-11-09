@@ -2,12 +2,10 @@ package org.whut.dataManagement.business.returnMeter.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.whut.dataManagement.business.dynamicDataSource.DataSource;
-import org.whut.dataManagement.business.returnMeter.entity.MonthReturnMeters;
-import org.whut.dataManagement.business.returnMeter.entity.ReturnMeter;
+import org.whut.dataManagement.business.returnMeter.entity.YearsReturnMeters;
 import org.whut.dataManagement.business.returnMeter.entity.ReturnMeterInfo;
 import org.whut.dataManagement.business.returnMeter.entity.StaQuery;
 import org.whut.dataManagement.business.returnMeter.mapper.ReturnMeterInfoMapper;
-import org.whut.dataManagement.business.returnMeter.mapper.ReturnMeterMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,30 +58,17 @@ public class ReturnMeterInfoService{
             return null;
     }
 
-    public List<MonthReturnMeters> getMonthReturnMeters(String year){
-        List<MonthReturnMeters> rlist = new ArrayList<MonthReturnMeters>();
+    public List<YearsReturnMeters> getYearReturnMeters(String year,String fmeternames,String minYear,String maxYear){
+        List<YearsReturnMeters> rlist = new ArrayList<YearsReturnMeters>();
         int temp = 0;
-        for (int i = 1; i <= 12; i++){
-            MonthReturnMeters monthReturnMeters = new MonthReturnMeters();
-            monthReturnMeters.setYear(year);
-            monthReturnMeters.setMonth(i);
-            temp = returnMeterInfoMapper.getMonthReturnMeters(monthReturnMeters);
-            monthReturnMeters.setReturnMeters(temp);
-            rlist.add(monthReturnMeters);
-        }
-        return rlist;
-    }
-
-    public List<MonthReturnMeters> getYearReturnMeters(String year){
-        List<MonthReturnMeters> rlist = new ArrayList<MonthReturnMeters>();
-        int temp = 0;
-        for (int i = 0; i < 10; i++){
-            MonthReturnMeters monthReturnMeters = new MonthReturnMeters();
-            monthReturnMeters.setYear(Integer.toString(Integer.parseInt(year) - i));
-            monthReturnMeters.setMonth(0);
-            temp = returnMeterInfoMapper.getYearReturnMeters(monthReturnMeters);
-            monthReturnMeters.setReturnMeters(temp);
-            rlist.add(monthReturnMeters);
+        for (int i = Integer.parseInt(minYear); i <= Integer.parseInt(maxYear); i++){
+            YearsReturnMeters yearsReturnMeters = new YearsReturnMeters();
+            yearsReturnMeters.setPyear(i);
+            yearsReturnMeters.setCyear(Integer.parseInt(year));
+            yearsReturnMeters.setFmetername(fmeternames);
+            temp = returnMeterInfoMapper.getYearReturnMeters(yearsReturnMeters);
+            yearsReturnMeters.setReturnMeters(temp);
+            rlist.add(yearsReturnMeters);
         }
         return rlist;
     }

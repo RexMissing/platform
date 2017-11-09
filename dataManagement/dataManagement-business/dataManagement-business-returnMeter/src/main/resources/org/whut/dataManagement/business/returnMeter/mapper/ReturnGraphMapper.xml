@@ -3,20 +3,29 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.whut.dataManagement.business.returnMeter.mapper.ReturnGraphMapper">
-    <select id="graphReturnYear" parameterType="org.whut.dataManagement.business.returnMeter.entity.MonthProductions"
+    <select id="getMinYear" parameterType="map" resultType="java.sql.Date">
+        SELECT FProduceTime FROM treturnmeter
+        where IsDelete=0 AND FProduceTime != '' AND FDateTime BETWEEN #{yearBegin} AND #{yearEnd}
+        ORDER BY FProduceTime ASC limit 1;
+    </select>
+    <select id="graphReturnAccuYear" parameterType="org.whut.dataManagement.business.returnMeter.entity.YearsProductions"
             resultType="java.lang.Integer">
-        select COUNT(a.FMeterCode) from TPackDetailsII as a,TBox as b,TDeliveryBatch as c
+        select COUNT(a.FMeterCode) from TPackDetails as a,TBox as b,TDeliveryBatch as c,tb_WalvesAssembly as d
         where b.FDBatchID = c.FDBatchID
         AND b.FBoxCode = a.FBoxCode
-        AND YEAR(c.FDate) = #{year}
-        AND MONTH(c.FDate)= #{month};
+        AND d.FMeterCode = a.FMeterCode
+        AND YEAR(c.FDate) &lt;= #{year}
+        --         &lt;=  小于等于，这里小于符号必须用转义符号
+        AND d.FCoverName = #{fmetername};
     </select>
 
-    <select id="graphReturnYears" parameterType="org.whut.dataManagement.business.returnMeter.entity.MonthProductions"
+    <select id="graphReturnYears" parameterType="org.whut.dataManagement.business.returnMeter.entity.YearsProductions"
             resultType="java.lang.Integer">
-        select COUNT(a.FMeterCode) from TPackDetailsII as a,TBox as b,TDeliveryBatch as c
+        select COUNT(a.FMeterCode) from TPackDetails as a,TBox as b,TDeliveryBatch as c,tb_WalvesAssembly as d
         where b.FDBatchID = c.FDBatchID
         AND b.FBoxCode = a.FBoxCode
-        AND YEAR(c.FDate) = #{year};
+        AND d.FMeterCode = a.FMeterCode
+        AND YEAR(c.FDate) = #{year}
+        AND d.FCoverName = #{fmetername};
     </select>
 </mapper>

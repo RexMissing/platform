@@ -100,16 +100,19 @@
         WHERE FDateTime BETWEEN #{begindate} AND #{enddate} AND FRInvoNo = #{queryvalue};
     </select>
 
-    <select id="getMonthReturnMeters" parameterType="org.whut.dataManagement.business.returnMeter.entity.MonthReturnMeters"
+    <select id="getMonthReturnMeters" parameterType="org.whut.dataManagement.business.returnMeter.entity.YearsReturnMeters"
             resultType="java.lang.Integer">
         select count(FMeterCode) from treturnmeter
         where YEAR (FDateTime) = #{year}
         AND MONTH (FDateTime) = #{month}
     </select>
 
-    <select id="getYearReturnMeters" parameterType="org.whut.dataManagement.business.returnMeter.entity.MonthReturnMeters"
+    <select id="getYearReturnMeters" parameterType="org.whut.dataManagement.business.returnMeter.entity.YearsReturnMeters"
             resultType="java.lang.Integer">
-        select count(FMeterCode) from treturnmeter
-        where YEAR (FDateTime) = #{year};
+        select count(DISTINCT FMeterCode) from treturnmeter
+        where IsDelete = 0
+        AND YEAR (FDateTime) = #{cyear}
+        AND YEAR (FProduceTime) = #{pyear}
+        AND FMeterName = #{fmetername};
     </select>
 </mapper>

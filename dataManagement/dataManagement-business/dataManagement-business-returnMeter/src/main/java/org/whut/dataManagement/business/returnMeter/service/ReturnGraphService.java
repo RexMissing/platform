@@ -2,7 +2,7 @@ package org.whut.dataManagement.business.returnMeter.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.whut.dataManagement.business.dynamicDataSource.DataSource;
-import org.whut.dataManagement.business.returnMeter.entity.MonthProductions;
+import org.whut.dataManagement.business.returnMeter.entity.YearsProductions;
 import org.whut.dataManagement.business.returnMeter.mapper.ReturnGraphMapper;
 
 import java.util.ArrayList;
@@ -16,29 +16,29 @@ public class ReturnGraphService {
     @Autowired
     private ReturnGraphMapper returnGraphMapper;
 
-    public List<MonthProductions> graphReturnYear(String year){
-        List<MonthProductions> plist = new ArrayList<MonthProductions>();
+    public List<YearsProductions> graphReturnAccuYear(String year,String fmeternames,String minYear){
+        List<YearsProductions> plist = new ArrayList<YearsProductions>();
         int temp = 0;
-        for (int i = 1; i <= 12; i++){
-            MonthProductions monthProductions = new MonthProductions();
-            monthProductions.setYear(year);
-            monthProductions.setMonth(i);
-            temp = returnGraphMapper.graphReturnYear(monthProductions);
-            monthProductions.setProductions(temp);
-            plist.add(monthProductions);
+        for (int i = Integer.parseInt(minYear); i <= Integer.parseInt(year); i++){
+            YearsProductions yearsProductions = new YearsProductions();
+            yearsProductions.setYear(i);
+            yearsProductions.setFmetername(fmeternames);
+            temp = returnGraphMapper.graphReturnAccuYear(yearsProductions);
+            yearsProductions.setProductions(temp);
+            plist.add(yearsProductions);
         }
         return plist;
     }
-    public List<MonthProductions> graphReturnYears(String year){
-        List<MonthProductions> plist = new ArrayList<MonthProductions>();
+    public List<YearsProductions> graphReturnYears(String fmeternames,String minYear,String maxYear){
+        List<YearsProductions> plist = new ArrayList<YearsProductions>();
         int temp = 0;
-        for (int i = 0; i < 10; i++){
-            MonthProductions monthProductions = new MonthProductions();
-            monthProductions.setYear(Integer.toString(Integer.parseInt(year) - i));
-            monthProductions.setMonth(0);
-            temp = returnGraphMapper.graphReturnYears(monthProductions);
-            monthProductions.setProductions(temp);
-            plist.add(monthProductions);
+        for (int i = Integer.parseInt(minYear); i <= Integer.parseInt(maxYear); i++){
+            YearsProductions yearsProductions = new YearsProductions();
+            yearsProductions.setYear(i);
+            yearsProductions.setFmetername(fmeternames);
+            temp = returnGraphMapper.graphReturnYears(yearsProductions);
+            yearsProductions.setProductions(temp);
+            plist.add(yearsProductions);
         }
         return plist;
     }

@@ -1,6 +1,6 @@
 package org.whut.dataManagement.business.returnMeter.mapper;
 
-import org.whut.dataManagement.business.returnMeter.entity.MonthReturnMeters;
+import org.whut.dataManagement.business.returnMeter.entity.YearsReturnMeters;
 import org.whut.dataManagement.business.returnMeter.entity.ReturnMeterInfo;
 import org.whut.dataManagement.business.returnMeter.entity.StaQuery;
 import org.whut.platform.fundamental.orm.mapper.AbstractMapper;
@@ -21,6 +21,6 @@ public interface ReturnMeterInfoMapper extends AbstractMapper<ReturnMeterInfo> {
     List<ReturnMeterInfo> getcomlist(StaQuery staQuery);
     List<ReturnMeterInfo> getretlist(StaQuery staQuery);
     List<ReturnMeterInfo> gettypelist(StaQuery staQuery);
-    int getMonthReturnMeters(MonthReturnMeters monthReturnMeters);
-    int getYearReturnMeters(MonthReturnMeters monthReturnMeters);
+    int getMonthReturnMeters(YearsReturnMeters yearsReturnMeters);
+    int getYearReturnMeters(YearsReturnMeters yearsReturnMeters);
 }

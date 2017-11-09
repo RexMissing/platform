@@ -1,17 +1,17 @@
 package org.whut.dataManagement.business.returnMeter.entity;
 
 /**
- * Created by Administrator on 2017/9/6.
+ * Created by Administrator on 2017/9/5.
  */
 public class YearReturnRate {
-    private String year;
+    private int year;
     private double rate;
 
-    public String getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
         this.year = year;
     }
 

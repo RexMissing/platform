@@ -159,8 +159,11 @@
             "stalist":"rs/returnMeterInfo/stalist"
         },
         "graph":{
+            "xYear":"rs/graph/xYear",
+            "year":"rs/graph/year",
             "graphYear":"rs/graph/graphYear",
             "graphYears":"rs/graph/graphYears",
+            "graphSaleYears":"rs/graph/graphSaleYears",
             "graphCompareYears":"rs/graph/graphCompareYears"
         },
         "returnCustomAndName":{

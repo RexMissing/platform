@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title></title>
     <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="lib/assert/select/combo.select.css" type="text/css"/>
     <script src="lib/json2.js" type="text/javascript"></script>
+    <script src="lib/assert/select/jquery.combo.select.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
     <script src="lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
@@ -16,31 +18,199 @@
     <script src="js/exporting.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
-            var graphType = $("#graphType").val();
-            if (graphType == 0){
-                $.post($.URL.graph.graphYears, null, showYears, "json");
+            $.post($.URL.enumTable.meterlist,null,enumMeterListCallBack,"json");
+            var date = new Date();
+            var year = date.getFullYear();
+            $("#saleyear1").empty();
+            $("#saleyear2").empty();
+            $("#compareYear1").empty();
+            $("#compareYear2").empty();
+            $("#year1").empty();
+            $("#year2").empty();
+            $("#year").empty();
+            for(var i = 0; i < 20; i++){
+                $("#compareYear1").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
+                $("#compareYear2").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
+                $("#year1").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
+                $("#year2").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
+                $("#saleyear1").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
+                $("#saleyear2").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
+                $("#year").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
             }
         });
+        function enumMeterListCallBack(data) {
+            if (data.code == 200) {
+                $("#fmeternames").empty();
+                for(var i = 0; i < data.data.length; i++){
+                    $("#fmeternames").append("<option value='" + data.data[i].fenumname + "'>" + data.data[i].fenumname + "</option>");
+                }
+                $("#fmeternames").comboSelect();
+            }
+        }
+        var years = new Array();
+        var yearMis = new Array();
+        var compareYears = new Array();
+        var saleYears = new Array();
         $("#submitBtn1").click(function () {
             var graphType = $("#graphType").val();
             if (graphType == 0){
-                $.post($.URL.graph.graphYears, null, showYears, "json");
+                var compareYear1 = $("#compareYear1").val();
+                var compareYear2 = $("#compareYear2").val();
+                var maxYear = (parseInt(compareYear1) > parseInt(compareYear2)) ? parseInt(compareYear1):parseInt(compareYear2);
+                var fmeternames = $("#fmeternames").val();
+                $.ajax(
+                    {
+                        type:"post",
+                        url:$.URL.graph.xYear,
+                        data:{"compareYear1":compareYear1,"compareYear2":compareYear2,"fmeternames":fmeternames},
+                        async:false,
+                        success:function(data){
+                            if(data.data.length==0)
+                            {
+                                return false;
+                            }
+                            else{
+                                var minYear = data.data[0].minYear;
+                                if (parseInt(minYear) > parseInt(maxYear))
+                                    return false;
+                                for (var i = 0; i <= parseInt(maxYear) - parseInt(minYear); i++){
+                                    years[i] = (parseInt(minYear) + i).toString();
+                                }
+                                $.post($.URL.graph.graphYears, {"compareYear1":compareYear1,"compareYear2":compareYear2,
+                                                                "fmeternames":fmeternames,"minYear":minYear,"maxYear":maxYear},
+                                        showYears, "json");
+                            }
+                        },
+                        dataType:"json"
+                    }
+                );
             }
             else if (graphType == 1){
                 var year = $("#year").val();
-                var data = {};
-                data.year = year;
-                $.post($.URL.graph.graphYear, data, showYear,"json");
+                var fmeternames = $("#fmeternames").val();
+                $.ajax(
+                    {
+                        type:"post",
+                        url:$.URL.graph.year,
+                        data:{"year":year,"fmeternames":fmeternames},
+                        async:false,
+                        success:function(data){
+                            if(data.data.length==0)
+                            {
+                                return false;
+                            }
+                            else{
+                                var minYear = data.data[0].minYear;
+                                if (parseInt(minYear) > parseInt(year))
+                                    return false;
+                                for (var i = 0; i <= parseInt(year) - parseInt(minYear); i++){
+                                    yearMis[i] = (parseInt(minYear) + i).toString();
+                                }
+                                $.post($.URL.graph.graphYear, {"year":year,"fmeternames":fmeternames,"minYear":minYear},
+                                        showYear, "json");
+                            }
+                        },
+                        dataType:"json"
+                    }
+                );
             }
             else if (graphType == 2){
                 var year1 = $("#year1").val();
                 var year2 = $("#year2").val();
-                var data = {};
-                data.year1 = year1;
-                data.year2 = year2;
-                $.post($.URL.graph.graphCompareYears, data, showCompareYears, "json");
+                var maxYear = (parseInt(year1) > parseInt(year2)) ? parseInt(year1):parseInt(year2);
+                var fmeternames = $("#fmeternames").val();
+                $.ajax(
+                    {
+                        type:"post",
+                        url:$.URL.graph.xYear,
+                        data:{"compareYear1":year1,"compareYear2":year2,"fmeternames":fmeternames},
+                        async:false,
+                        success:function(data){
+                            if(data.data.length==0)
+                            {
+                                return false;
+                            }
+                            else{
+                                var minYear = data.data[0].minYear;
+                                if (parseInt(minYear) > parseInt(maxYear))
+                                    return false;
+                                for (var i = 0; i <= parseInt(maxYear) - parseInt(minYear); i++){
+                                    compareYears[i] = (parseInt(minYear) + i).toString();
+                                }
+                                $.post($.URL.graph.graphCompareYears, {"compareYear1":year1,"compareYear2":year2,
+                                            "fmeternames":fmeternames,"minYear":minYear,"maxYear":maxYear},
+                                        showCompareYears, "json");
+                            }
+                        },
+                        dataType:"json"
+                    }
+                );
+            }
+            else if (graphType == 3){
+                var saleyear1 = $("#saleyear1").val();
+                var saleyear2 = $("#saleyear2").val();
+                var fmeternames = $("#fmeternames").val();
+                var maxYear = (parseInt(saleyear1) > parseInt(saleyear2)) ? parseInt(saleyear1):parseInt(saleyear2);
+                var minYear = (parseInt(saleyear1) < parseInt(saleyear2)) ? parseInt(saleyear1):parseInt(saleyear2);
+                for (var i = 0; i <= parseInt(maxYear) - parseInt(minYear); i++){
+                    saleYears[i] = (parseInt(minYear) + i).toString();
+                }
+                $.post($.URL.graph.graphSaleYears, {"fmeternames":fmeternames,"minYear":minYear,"maxYear":maxYear},
+                        showSaleYears, "json");
             }
         });
+        function showSaleYears(data) {
+            if (data.code == 200){
+                var number = new Array();
+                for(var i = 0; i < data.data.length; i++){
+                    number[i] = data.data[i].number1;
+                }
+                $("#containerMonth").css("display", "none");
+                $("#containerYear").css("display", "none");
+                $("#containerYearNumber").css("display", "none");
+                $("#containerSaleYear").css("display", "block");
+                $('#containerSaleYear').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    credits: {
+                        text: '武汉理工大学',
+                        href: false
+                    },
+                    title: {
+                        text: $("#fmeternames").val() + '表年销售数量对比图'
+                    },
+                    xAxis: {
+                        categories: saleYears,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '返修表数量 (块)'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y} 块</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: $("#fmeternames").val() + '表年销售数量',
+                        data: number
+                    }]
+                });
+            }
+        }
         function showCompareYears(data) {
             if (data.code == 200){
                 var number1 = new Array();
@@ -52,6 +222,7 @@
                 $("#containerMonth").css("display", "none");
                 $("#containerYear").css("display", "none");
                 $("#containerYearNumber").css("display", "block");
+                $("#containerSaleYear").css("display", "none");
                 $('#containerYearNumber').highcharts({
                     chart: {
                         type: 'column'
@@ -61,23 +232,10 @@
                         href: false
                     },
                     title: {
-                        text: '返修表年故障数量对比图'
+                        text:$("#fmeternames").val() + '返修表年故障数量对比图'
                     },
                     xAxis: {
-                        categories: [
-                            '一月',
-                            '二月',
-                            '三月',
-                            '四月',
-                            '五月',
-                            '六月',
-                            '七月',
-                            '八月',
-                            '九月',
-                            '十月',
-                            '十一月',
-                            '十二月'
-                        ],
+                        categories: compareYears,
                         crosshair: true
                     },
                     yAxis: {
@@ -111,23 +269,20 @@
             }
         }
         function showYears(data) {
-            var yearReturnRate = new Array();
-            var years = new Array();
-            var date = new Date();
-            var year = date.getFullYear();
-            for (var i = 9; i >= 0; i--){
-                years[i] = (year - i).toString();
-            }
+            var yearsReturnRate1 = new Array();
+            var yearsReturnRate2 = new Array();
             if (data.code == 200) {
-                for (var i = 9; i >= 0; i--) {
-                    yearReturnRate[i] = parseFloat((data.data[i].rate * 100).toFixed(5));
+                for (var i = 0; i < years.length; i++) {
+                    yearsReturnRate1[i] = parseFloat((data.data[i].rate1 * 100).toFixed(5));
+                    yearsReturnRate2[i] = parseFloat((data.data[i].rate2 * 100).toFixed(5));
                 }
                 $("#containerMonth").css("display", "none");
                 $("#containerYearNumber").css("display", "none");
                 $("#containerYear").css("display", "block");
+                $("#containerSaleYear").css("display", "none");
                 var chart = new Highcharts.Chart('containerYear', {
                     title: {
-                        text: '返修表近十年故障率趋势图',
+                        text:$("#fmeternames").val() + '返修表各年故障率趋势图',
                         x: -20
                     },
                     credits: {
@@ -160,8 +315,11 @@
                         borderWidth: 0
                     },
                     series: [{
-                        name: '返修表年故障率',
-                        data: yearReturnRate
+                        name: $("#compareYear1").val(),
+                        data: yearsReturnRate1
+                    },{
+                        name: $("#compareYear2").val(),
+                        data: yearsReturnRate2
                     }]
                 });
             }
@@ -169,17 +327,18 @@
                 $.ligerDialog.error("查询错误");
         }
         function showYear(data) {
-            var monthReturnRate = new Array();
+            var yearReturnRate = new Array();
             if(data.code == 200){
                 for (var i = 0; i < data.data.length; i++){
-                    monthReturnRate[i] = parseFloat((data.data[i].rate * 100).toFixed(5));
+                    yearReturnRate[i] = parseFloat((data.data[i].rate * 100).toFixed(5));
                 }
                 $("#containerYear").css("display","none");
                 $("#containerYearNumber").css("display", "none");
                 $("#containerMonth").css("display","block");
+                $("#containerSaleYear").css("display", "none");
                 var chart = new Highcharts.Chart('containerMonth', {
                     title: {
-                        text: '返修表年故障率趋势图',
+                        text:$("#fmeternames").val() + '返修表年故障率趋势图',
                         x: -20
                     },
                     credits:{
@@ -190,7 +349,7 @@
                         x: -20
                     },
                     xAxis: {
-                        categories: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                        categories: yearMis
                     },
                     yAxis: {
                         title: {
@@ -213,7 +372,7 @@
                     },
                     series: [{
                         name: '返修表故障率',
-                        data: monthReturnRate
+                        data: yearReturnRate
                     }]
                 });
             }
@@ -221,32 +380,29 @@
                 $.ligerDialog.error("查询错误");
         }
         function graphTypeChange(){
-            if($("#graphType").val() == 2){
+            if($("#graphType").val() == 3){
+                $("#compareYears").css("display","none");
+                $("#compareQuery").css("display","none");
+                $("#years").css("display","none");
+                $("#saleyears").css("display","block");
+            }
+            else if($("#graphType").val() == 2){
+                $("#compareYears").css("display","none");
                 $("#compareQuery").css("display","block");
                 $("#years").css("display","none");
-                var date = new Date();
-                var year = date.getFullYear();
-                $("#year1").empty();
-                $("#year2").empty();
-                for(var i = 0; i < 10; i++){
-                    $("#year1").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
-                    $("#year2").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
-                }
-
+                $("#saleyears").css("display","none");
             }
             else if($("#graphType").val() == 1){
+                $("#compareYears").css("display","none");
                 $("#compareQuery").css("display","none");
                 $("#years").css("display","block");
-                var date = new Date();
-                var year = date.getFullYear();
-                $("#year").empty();
-                for(var i = 0; i < 10; i++){
-                    $("#year").append("<option value='" + (year - i) + "'>" + (year - i) + "</option>");
-                }
+                $("#saleyears").css("display","none");
             }
             else {
+                $("#compareYears").css("display","block");
                 $("#years").css("display","none");
                 $("#compareQuery").css("display","none");
+                $("#saleyears").css("display","none");
             }
         }
     </script>
@@ -269,10 +425,32 @@
                         <option value="0">返修表各年故障率趋势图</option>
                         <option value="1">返修表年故障率趋势图</option>
                         <option value="2">返修表年故障数量对比图</option>
+                        <option value="3">表具年销售数量对比图</option>
+                    </select>
+                </td>
+                <td class="l-table-edit-td">表具类型选择</td>
+                <td class="l-table-edit-td">
+                    <select id="fmeternames" >
                     </select>
                 </td>
             </tr>
         </table>
+        <div id="compareYears" style="display:block;">
+            <table>
+                <tr>
+                    <td class="l-table-edit-td">年份选择</td>
+                    <td class="l-table-edit-td">
+                        <select id="compareYear1">
+                        </select>
+                    </td>
+                    <td class="l-table-edit-td">对比</td>
+                    <td class="l-table-edit-td">
+                        <select id="compareYear2">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <div id="years" style="display: none">
             <table>
                 <tr>
@@ -300,6 +478,22 @@
                 </tr>
             </table>
         </div>
+        <div id="saleyears" style="display: none">
+            <table>
+                <tr>
+                    <td class="l-table-edit-td">年份选择</td>
+                    <td class="l-table-edit-td">
+                        <select id="saleyear1">
+                        </select>
+                    </td>
+                    <td class="l-table-edit-td">至</td>
+                    <td class="l-table-edit-td">
+                        <select id="saleyear2">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <div>
             <table>
                 <tr>
@@ -310,7 +504,8 @@
     </div>
 </div>
 <div id="containerMonth" style="min-width: 400px;height: 400px;display: none"></div>
-<div id="containerYear" style="min-width: 400px;height: 400px;display: none"></div>
+<div id="containerYear" style="min-width: 400px;height: 400px;display: block"></div>
 <div id="containerYearNumber" style="min-width: 400px;height: 400px;display: none"></div>
+<div id="containerSaleYear" style="min-width: 400px;height: 400px;display: none"></div>
 </body>
 </html>
