@@ -9,6 +9,7 @@ import org.whut.platform.fundamental.util.json.CustomDateDeserialize;
  */
 public class MeterAnalysis {
     private long id;
+    private String freturnbatch;
     private String fdepartment;
     private String fmetername;
     private String fmetercode;
@@ -23,6 +24,14 @@ public class MeterAnalysis {
 //    @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date fdatetime;
     private int isdelete;
+
+    public String getFreturnbatch() {
+        return freturnbatch;
+    }
+
+    public void setFreturnbatch(String freturnbatch) {
+        this.freturnbatch = freturnbatch;
+    }
 
     public long getId() {
         return id;

@@ -40,6 +40,12 @@ public class InspectionWeb {
         Inspection inspection = new Inspection();
         inspection.setFinspectionbatch(finspectionbatch);
         inspection.setFmetercode(fmetercode);
+        //判断是否同一批次是否同号
+        int flag = 0;
+        flag = inspectionService.ifSamecode(inspection);
+        if (flag == 1){
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(), "同一批次有相同的表号!");
+        }
         inspection.setFmetername(fmetername);
         inspection.setFdepartment(fdepartment);
         inspection.setFoperator(foperator);

@@ -15,6 +15,9 @@ import java.util.Map;
 public class InspectionService {
     @Autowired
     private InspectionMapper inspectionMapper;
+    public int ifSamecode(Inspection inspection){
+        return inspectionMapper.ifSamecode(inspection);
+    }
     public void add(Inspection inspection) {
         inspectionMapper.add(inspection);
     }

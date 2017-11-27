@@ -397,6 +397,8 @@
                 }
                 else
                 {
+                    //返修表具维修分析中添加清点批次字段
+                    gdata.freturnbatch = data.data[0].freturnbatch;
                     gdata.fmetername = data.data[0].fmetername;
                     gdata.fvalvename = data.data[0].fvalvecode;
                     $.post($.URL.meterAnalysis.add,{"jsonString":$.toJSON(gdata)},addCallback,"json");

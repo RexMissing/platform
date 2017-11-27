@@ -12,6 +12,7 @@ import java.util.Map;
  * Created by Administrator on 2017/7/24 0024.
  */
 public interface ReturnMeterMapper extends AbstractMapper<ReturnMeter> {
+    int ifSamecode(ReturnMeter returnMeter);
     List<Map<String,Object>> getlist();
     List<Map<String,Object>> getBatchlist();
     List<Map<String,Object>> getAllBatchlist();

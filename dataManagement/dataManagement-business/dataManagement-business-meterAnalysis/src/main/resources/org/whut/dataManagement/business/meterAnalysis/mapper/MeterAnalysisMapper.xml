@@ -4,11 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.whut.dataManagement.business.meterAnalysis.mapper.MeterAnalysisMapper">
     <sql id="meterAnalysis_fields">
-        ID,FMeterCode,FMeterName,FValveName,FDepartment,FAnalysor,FCustomer,FReportMisFune,FConfirmMisFune,FMisFuneDescrib,FMeterReading,FElecDisplay,FDateTime
+        ID,FReturnBatch,FMeterCode,FMeterName,FValveName,FDepartment,FAnalysor,FCustomer,FReportMisFune,FConfirmMisFune,FMisFuneDescrib,FMeterReading,FElecDisplay,FDateTime
     </sql>
 
     <resultMap id="meterAnalysisResultMap" type="meterAnalysis">
         <id property="id" column="ID"/>
+        <result property="freturnbatch" column="FReturnBatch"/>
         <result property="fmetercode" column="FMeterCode"/>
         <result property="fmetername" column="FMeterName"/>
         <result property="fvalvename" column="FValveName"/>
@@ -29,7 +30,7 @@
         tmeteranalysisinfo(
         <include refid="meterAnalysis_fields"/>
         )
-        VALUES (#{id},#{fmetercode},#{fmetername},#{fvalvename},#{fdepartment},#{fanalysor},#{fcustomer},#{freportmisfune},#{fconfirmmisfune},#{fmisfunedescrib},#{fmeterreading},#{felecdisplay},#{fdatetime});
+        VALUES (#{id},#{freturnbatch},#{fmetercode},#{fmetername},#{fvalvename},#{fdepartment},#{fanalysor},#{fcustomer},#{freportmisfune},#{fconfirmmisfune},#{fmisfunedescrib},#{fmeterreading},#{felecdisplay},#{fdatetime});
     </insert>
 
     <update id="update" parameterType="meterAnalysis">
@@ -116,7 +117,7 @@
     </select>
     
     <select id="findValveAndName" parameterType="map" resultType="map">
-        SELECT fmetercode,fmetername,fvalvecode
+        SELECT freturnbatch,fmetercode,fmetername,fvalvecode
         FROM treturnmeter
         WHERE FMeterCode=#{fmetercode} AND IsDelete = 0
     </select>

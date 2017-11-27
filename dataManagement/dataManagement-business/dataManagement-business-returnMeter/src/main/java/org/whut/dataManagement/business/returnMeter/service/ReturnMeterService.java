@@ -16,6 +16,9 @@ import java.util.Map;
 public class ReturnMeterService {
     @Autowired
     private ReturnMeterMapper returnMeterMapper;
+    public int ifSamecode(ReturnMeter returnMeter){
+        return returnMeterMapper.ifSamecode(returnMeter);
+    }
     public void add(ReturnMeter returnMeter) {
         returnMeterMapper.add(returnMeter);
     }

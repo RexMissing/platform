@@ -24,6 +24,10 @@
         <result property="fpremaintain" column="FPreMaintain"/>
     </resultMap>
 
+    <select id="ifSamecode" parameterType="returnMeter" resultType="int">
+        SELECT COUNT(FMeterCode) FROM treturnmeter
+        WHERE IsDelete=0 AND FReturnBatch=#{freturnbatch} AND FMeterCode=#{fmetercode};
+    </select>
     <insert id="add" parameterType="returnMeter" keyProperty="id"
             useGeneratedKeys="true">
         INSERT INTO
@@ -61,12 +65,12 @@
     <select id="getlist" resultMap="returnMeterResultMap">
         SELECT <include refid="returnMeter_fields"/>
         FROM treturnmeter
-        WHERE IsDelete=0 ORDER BY ID DESC;
+        WHERE IsDelete=0 AND FDateTime=CURRENT_DATE ORDER BY ID DESC;
     </select>
     <select id="findByfanalysor" resultMap="returnMeterResultMap">
         SELECT <include refid="returnMeter_fields"/>
         FROM treturnmeter
-        WHERE IsDelete=0 AND FOperator=#{fanalysor};
+        WHERE IsDelete=0 AND FOperator=#{fanalysor} AND FDateTime=CURRENT_DATE ORDER BY ID DESC;
     </select>
 
     <select id="getBatchlist" resultMap="returnMeterResultMap">
@@ -114,6 +118,7 @@
             <if test="startTime!=null"><![CDATA[ AND FDateTime>=#{startTime}]]></if>
             <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
             <if test="fanalysor!=null">AND FOperator=#{fanalysor}</if>
+            AND FDateTime=CURRENT_DATE
         </where>
         ORDER BY ID DESC;
     </select>

@@ -22,17 +22,11 @@
         <result property="foperator" column="FOperator"/>
         <result property="fdate" column="FDate"/>
         <result property="fgastightness" column="FGasTightness"/>
-        <!--<result property="FMisOperation" column="FMisOperation"/>-->
-        <!--<result property="FGasControl" column="FGasControl"/>-->
-        <!--<result property="FDataKeep" column="FDataKeep"/>-->
-        <!--<result property="FGasAccumulated" column="FGasAccumulated"/>-->
-        <!--<result property="FExteriorProtect" column="FExteriorProtect"/>-->
-        <!--<result property="FDefend" column="FDefend"/>-->
-        <!--<result property="FMDisturbance" column="FMDisturbance"/>-->
-        <!--<result property="FMaxElec" column="FMaxElec"/>-->
-        <!--<result property="FAirTightness" column="FAirTightness"/>-->
-        <!--<result property="FSwitchError" column="FSwitchError"/>-->
     </resultMap>
+    <select id="ifSamecode" parameterType="inspection" resultType="int">
+        SELECT COUNT(FMeterCode) FROM tinspection
+        WHERE IsDelete=0 AND FInspectionBatch=#{finspectionbatch} AND FMeterCode=#{fmetercode};
+    </select>
     <insert id="add" parameterType="inspection" keyProperty="id"
             useGeneratedKeys="true">
         INSERT INTO

@@ -10,6 +10,7 @@ import java.util.Map;
  * Created by Administrator on 2017/10/10.
  */
 public interface InspectionMapper extends AbstractMapper<Inspection> {
+    int ifSamecode(Inspection inspection);
     List<Map<String,Object>> getlist();
     List<Map<String,Object>> findLastBatch();
     List<Map<String,Object>> getBatchlist();

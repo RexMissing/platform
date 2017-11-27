@@ -48,6 +48,12 @@ public class ReturnMeterWeb {
         if(returnMeter==null){
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"参数不能是空!");
         }
+        //添加同一批次不能有同一表号的判断
+        int flag = 0;
+        flag = returnMeterService.ifSamecode(returnMeter);
+        if (flag == 1){
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"同一批次中表号相同!");
+        }
         returnMeterService.add(returnMeter);
         return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.SUCCESS.getCode(), "添加成功!");
     }

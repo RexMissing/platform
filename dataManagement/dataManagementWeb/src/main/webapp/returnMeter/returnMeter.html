@@ -151,7 +151,7 @@
                            if(data.data.length==0)
                            {
                                $('embed').remove();
-                               $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                               $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                $.ligerDialog.alert("输入表具编号格式错误");
                                flag = true;
                                return false;
@@ -177,7 +177,7 @@
                             if(data.data.length==0)
                             {
                                 $('embed').remove();
-                                $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                                $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                 $.ligerDialog.alert("输入表具编号格式错误");
                                 flag = true;
                                 return false;
@@ -192,11 +192,10 @@
             else
             {
                 $('embed').remove();
-                $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                 $.ligerDialog.alert("输入表具编号格式错误");
                 return false;
             }
-            mdata.freportmisfune = $("#freportmisfune").val();
             $.post($.URL.returnByCode.findByCode, {"fmetercode": mdata.fmetercode}, getInfoCallback, "json");
             function getInfoCallback(data) {
                 if (data.code == 200) {
@@ -238,7 +237,7 @@
                         document.getElementById('form1').reset();
                         $("#freturnbatch").attr("value",batch);
                         $('embed').remove();
-                        $('body').append('<embed src="/sound/Success.wav" autostart="true" hidden="true" loop="false">');
+                        $('body').append('<embed src="sound/Success.wav" autostart="true" hidden="true" loop="false">');
                         $.post($.URL.returnMeter.list, {
                             "curFuncRole": curFuncRole,
                             "fanalysor": fanalysor
@@ -247,7 +246,10 @@
                         $.post($.URL.returnMeter.getReturnNum,{"freturnbatch":freturnbatch},returnNumCallBack,"json");
                     }
                     else {
+                        $('embed').remove();
+                        $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                         $.ligerDialog.warn(data.message);
+                        return false;
                     }
                 }
             }
