@@ -184,7 +184,8 @@
             "update":"rs/productAnalysis/update",
             "list":"rs/productAnalysis/list",
             "findBySearch":"rs/productAnalysis/findBySearch",
-            "delete":"rs/productAnalysis/delete"
+            "delete":"rs/productAnalysis/delete",
+            "findByCondition":"rs/productAnalysis/findByCondition"
         },
         "returnValveAndName":{
             "findValveAndName":"rs/returnValveAndName/findValveAndName"

@@ -14,4 +14,5 @@ public interface ProductAnalysisMapper extends AbstractMapper<MeterAnalysis> {
     List<MeterAnalysis> getList();
     List<MeterAnalysis> getListByFanalysor(String fanalysor);
     List<MeterAnalysis> findBySearch(Map<String,Object> condition);
+    List<Map<String,Object>> findByCondition(Map<String,Object> condition);
 }

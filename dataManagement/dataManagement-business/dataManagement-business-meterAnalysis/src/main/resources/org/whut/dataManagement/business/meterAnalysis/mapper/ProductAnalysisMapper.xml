@@ -86,4 +86,22 @@
         ORDER BY ID DESC;
     </select>
 
+    <select id="findByCondition" parameterType="map" resultMap="productAnalysisResultMap">
+        SELECT <include refid="productAnalysis_fields"/>
+        FROM tproductanalysis
+        <where>
+            IsDelete=0
+            <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
+            <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
+            <if test="fdepartment!=null">AND FDepartment=#{fdepartment}</if>
+            <if test="fanalysor!=null">AND FAnalysor=#{fanalysor}</if>
+            <if test="fcustomer!=null">AND FCustomer=#{fcustomer}</if>
+            <if test="freportmisfune!=null">AND FReportMisFune=#{freportmisfune}</if>
+            <if test="fconfirmmisfune!=null">AND FConfirmMisFune=#{fconfirmmisfune}</if>
+            <if test="fmisfunedescrib!=null">AND FMisFuneDescrib=#{fmisfunedescrib}</if>
+            <if test="startTime!=null"><![CDATA[ AND FDateTime>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
+        </where>
+    </select>
+
 </mapper>

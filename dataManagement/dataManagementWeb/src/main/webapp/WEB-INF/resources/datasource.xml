@@ -9,7 +9,7 @@
 </Connection>
 <Connection name="JDBC2" class="com.fr.data.impl.JDBCDatabaseConnection">
 <DatabaseAttr originalCharsetName="UTF-8" newCharsetName="UTF-8"/>
-<JDBCDatabaseAttr url="jdbc:sqlserver://localhost:1433;databaseName=NetBarCode" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver" user="sa" password="___0022007c0039003b005100e3" encryptPassword="true">
+<JDBCDatabaseAttr url="jdbc:sqlserver://127.0.0.1:1433;databaseName=NetBarCode" driver="com.microsoft.sqlserver.jdbc.SQLServerDriver" user="sa" password="___0060002f" encryptPassword="true">
 <DBCPAttr/>
 </JDBCDatabaseAttr>
 </Connection>

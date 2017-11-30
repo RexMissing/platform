@@ -268,12 +268,7 @@
                         }
                         else {
                             if (!rowdata._editing) {
-                                h += "<a href='javascript:beginEdit(" + rowindex + ")'>修改</a> ";
                                 h += "<a href='javascript:deleteRow(" + rowindex + ")'>删除</a> ";
-                            }
-                            else {
-                                h += "<a href='javascript:endEdit(" + rowindex + ")'>提交</a> ";
-                                h += "<a href='javascript:cancelEdit(" + rowindex + ")'>取消</a> ";
                             }
                         }
                         return h;
@@ -287,94 +282,6 @@
                 data: gridData,
                 width: '100%'
             });
-        }
-        var rowbefore = {};
-        function beginEdit(rowid) {
-//            var row = manager.getRow(rowid);
-//            rowbefore.freturnbatch = row.freturnbatch;
-//            rowbefore.fmetercode = row.fmetercode;
-//            rowbefore.fcustomer = row.fcustomer;
-//            rowbefore.freportmisfune = row.freportmisfune;
-//            rowbefore.fpremaintain = row.fpremaintain;
-//            manager.beginEdit(rowid);
-        }
-        function cancelEdit(rowid) {
-            manager.cancelEdit(rowid);
-        }
-        function endEdit(rowid) {
-//            manager.endEdit(rowid);
-//            window.row = manager.getRow(rowid);
-//            var jsonString = $.toJSON(row);
-//            $.post($.URL.returnMeter.update, {"jsonString": jsonString}, updateCallback, "json");
-//            function updateCallback(data) {
-//                if (data.code == 200) {
-//                    $.ligerDialog.success("修改成功");
-//                    $.post($.URL.inspection.list, {
-//                        "curFuncRole": curFuncRole,
-//                        "foperator": foperator
-//                    }, listCallback, "json");
-//                    var dataupdate = {};
-//                    dataupdate.updateoperator = getCookie("userName");
-//                    dataupdate.updatename = "返修表录入表";
-//                    dataupdate.updatekey = row.id;
-//                    var flag = true;
-//                    while (flag) {
-//                        flag = false;
-//                        if (rowbefore.freturnbatch != row.freturnbatch) {
-//                            dataupdate.dataname = "清点批次";
-//                            dataupdate.updatebefore = rowbefore.freturnbatch;
-//                            dataupdate.updateafter = row.freturnbatch;
-//                            rowbefore.freturnbatch = row.freturnbatch;
-//                            $.post($.URL.updateRecord.add, {"jsonString": $.toJSON(dataupdate)}, RecordCallback, "json");
-//                            flag = true;
-//                        }
-//                        else if (rowbefore.fmetercode != row.fmetercode) {
-//                            dataupdate.dataname = "表具编号";
-//                            dataupdate.updatebefore = rowbefore.fmetercode;
-//                            dataupdate.updateafter = row.fmetercode;
-//                            rowbefore.fmetercode = row.fmetercode;
-//                            $.post($.URL.updateRecord.add, {"jsonString": $.toJSON(dataupdate)}, RecordCallback, "json");
-//                            flag = true;
-//                        }
-//                        else if (rowbefore.fcustomer != row.fcustomer) {
-//                            dataupdate.dataname = "市场";
-//                            dataupdate.updatebefore = rowbefore.fcustomer;
-//                            dataupdate.updateafter = row.fcustomer;
-//                            rowbefore.fcustomer = row.fcustomer;
-//                            $.post($.URL.updateRecord.add, {"jsonString": $.toJSON(dataupdate)}, RecordCallback, "json");
-//                            flag = true;
-//                        }
-//                        else if (rowbefore.freportmisfune != row.freportmisfune) {
-//                            dataupdate.dataname = "报修故障";
-//                            dataupdate.updatebefore = rowbefore.freportmisfune;
-//                            dataupdate.updateafter = row.freportmisfune;
-//                            rowbefore.freportmisfune = row.freportmisfune;
-//                            $.post($.URL.updateRecord.add, {"jsonString": $.toJSON(dataupdate)}, RecordCallback, "json");
-//                            flag = true;
-//                        }
-//                        else if (rowbefore.fpremaintain != row.fpremaintain) {
-//                            dataupdate.dataname = "现场维修员";
-//                            dataupdate.updatebefore = rowbefore.fpremaintain;
-//                            dataupdate.updateafter = row.fpremaintain;
-//                            rowbefore.fpremaintain = row.fpremaintain;
-//                            $.post($.URL.updateRecord.add, {"jsonString": $.toJSON(dataupdate)}, RecordCallback, "json");
-//                            flag = true;
-//                        }
-//                        function RecordCallback(data) {
-//                            if (data.code != 200) {
-//                                $.ligerDialog.warn(data.message);
-//                            }
-//                        }
-//                    }
-//                }
-//                else {
-//                    $.post($.URL.inspection.list, {
-//                        "curFuncRole": curFuncRole,
-//                        "foperator": foperator
-//                    }, listCallback, "json");
-//                    $.ligerDialog.warn(data.message);
-//                }
-//            }
         }
         function deleteRow(rowid) {
             if (confirm('确定删除?')) {

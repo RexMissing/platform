@@ -38,4 +38,8 @@ public class ProductAnalysisService {
     {
         return productAnalysisMapper.findBySearch(condition);
     }
+    public List<Map<String,Object>> findByCondition(Map<String,Object> condition)
+    {
+        return productAnalysisMapper.findByCondition(condition);
+    }
 }

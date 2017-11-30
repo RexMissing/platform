@@ -1,0 +1,1344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkBook xmlVersion="20170715" releaseVersion="8.0.0">
+<TableDataMap>
+<TableData name="外漏检测" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'01-01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'12-31']]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[JDBC2]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select FValveName from tb_OCWalves where FDate between '${A}' and '${B}';]]></Query>
+</TableData>
+<TableData name="外漏检测检验数" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[JDBC2]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select count(FValveCode) countF,FValveName from tb_OCWalves where FDate between '${A}' and '${B}' GROUP BY FValveName;]]></Query>
+</TableData>
+<TableData name="外漏检测合格数" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[JDBC2]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select count(FValveCode) countF,FValveName from tb_OCWalves where FDate between '${A}' and '${B}' and FRecord='合格' GROUP BY FValveName;]]></Query>
+</TableData>
+</TableDataMap>
+<Report class="com.fr.report.worksheet.WorkSheet" name="sheet1">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[723900,723900,723900,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[2743200,4152900,2743200,1752600,1752600,1790700,1752600,1790700,1790700,1828800,1752600,1790700,1790700,1790700,1790700,3695700,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0" cs="5" s="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="0" cs="11" s="1">
+<O>
+<![CDATA[年1--12月生产过程中平均一次送检合格率统计（%）]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="1" cs="3" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="1" s="2">
+<O t="I">
+<![CDATA[1]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="1" s="2">
+<O t="I">
+<![CDATA[2]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="1" s="2">
+<O t="I">
+<![CDATA[3]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="1" s="2">
+<O t="I">
+<![CDATA[4]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="1" s="2">
+<O t="I">
+<![CDATA[5]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="1" s="2">
+<O t="I">
+<![CDATA[6]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="1" s="2">
+<O t="I">
+<![CDATA[7]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="1" s="2">
+<O t="I">
+<![CDATA[8]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="1" s="2">
+<O t="I">
+<![CDATA[9]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="1" s="2">
+<O t="I">
+<![CDATA[10]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="1" s="2">
+<O t="I">
+<![CDATA[11]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="1" s="2">
+<O t="I">
+<![CDATA[12]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="1" s="2">
+<O>
+<![CDATA[合累计]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="2" rs="3" s="2">
+<O>
+<![CDATA[外漏检测]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="2" rs="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测" columnName="FValveName"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="2" r="2" s="2">
+<O>
+<![CDATA[检验数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'01'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'01'+'-'+DAYSOFMONTH($dateEditor0+'-'+'01'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="4" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'02'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'02'+'-'+DAYSOFMONTH($dateEditor0+'-'+'02'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="5" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'03'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'03'+'-'+DAYSOFMONTH($dateEditor0+'-'+'03'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="6" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'04'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'04'+'-'+DAYSOFMONTH($dateEditor0+'-'+'04'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="7" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'05'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'05'+'-'+DAYSOFMONTH($dateEditor0+'-'+'05'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="8" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'06'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'06'+'-'+DAYSOFMONTH($dateEditor0+'-'+'06'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="9" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'07'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'07'+'-'+DAYSOFMONTH($dateEditor0+'-'+'07'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="10" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'08'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'08'+'-'+DAYSOFMONTH($dateEditor0+'-'+'08'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="11" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'09'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'09'+'-'+DAYSOFMONTH($dateEditor0+'-'+'09'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="12" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'10'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'10'+'-'+DAYSOFMONTH($dateEditor0+'-'+'10'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="13" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'11'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'11'+'-'+DAYSOFMONTH($dateEditor0+'-'+'11'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="14" r="2" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测检验数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B3]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'12'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'12'+'-'+DAYSOFMONTH($dateEditor0+'-'+'12'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C3"/>
+</C>
+<C c="15" r="2" s="2">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=D3+E3+F3+G3+H3+I3+J3+K3+L3+M3+N3+O3]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="3" s="2">
+<O>
+<![CDATA[合格数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'01'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'01'+'-'+DAYSOFMONTH($dateEditor0+'-'+'01'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="4" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'02'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'02'+'-'+DAYSOFMONTH($dateEditor0+'-'+'02'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="5" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'03'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'03'+'-'+DAYSOFMONTH($dateEditor0+'-'+'03'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="6" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'04'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'04'+'-'+DAYSOFMONTH($dateEditor0+'-'+'04'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="7" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'05'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'05'+'-'+DAYSOFMONTH($dateEditor0+'-'+'05'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="8" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'06'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'06'+'-'+DAYSOFMONTH($dateEditor0+'-'+'06'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="9" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'07'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'07'+'-'+DAYSOFMONTH($dateEditor0+'-'+'07'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="10" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'08'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'08'+'-'+DAYSOFMONTH($dateEditor0+'-'+'08'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="11" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'09'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'09'+'-'+DAYSOFMONTH($dateEditor0+'-'+'09'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="12" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'10'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'10'+'-'+DAYSOFMONTH($dateEditor0+'-'+'10'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="13" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'11'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'11'+'-'+DAYSOFMONTH($dateEditor0+'-'+'11'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="14" r="3" s="2">
+<O t="DSColumn">
+<Attributes dsName="外漏检测合格数" columnName="countF"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[FValveName]]></CNAME>
+<Compare op="0">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=B4]]></Attributes>
+</O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters>
+<Parameter>
+<Attributes name="A"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'12'+'-'+'01']]></Attributes>
+</O>
+</Parameter>
+<Parameter>
+<Attributes name="B"/>
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=$dateEditor0+'-'+'12'+'-'+DAYSOFMONTH($dateEditor0+'-'+'12'+'-01')]]></Attributes>
+</O>
+</Parameter>
+</Parameters>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="C4"/>
+</C>
+<C c="15" r="3" s="2">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=D4+E4+F4+G4+H4+I4+J4+K4+L4+M4+N4+O4]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="2" r="4" s="2">
+<O>
+<![CDATA[合格率]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=D4/D3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=E4/E3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=F4/F3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=G4/G3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=H4/H3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=I4/I3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=J4/J3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=K4/K3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=L4/L3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="12" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=M4/M3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="13" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=N4/N3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="14" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=O4/O3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="15" r="4" s="3">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=P4/P3*100]]></Attributes>
+</O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+</CellElementList>
+<ReportAttrSet>
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting orientation="1">
+<Margin top="986400" left="2743200" bottom="986400" right="2743200"/>
+</PaperSetting>
+</ReportSettings>
+</ReportAttrSet>
+<PrivilegeControl/>
+</Report>
+<ReportParameterAttr>
+<Attributes showWindow="true" delayPlaying="true" windowPosition="1" align="0"/>
+<PWTitle>
+<![CDATA[参数]]></PWTitle>
+<ParameterUI class="com.fr.form.main.parameter.FormParameterUI">
+<Parameters/>
+<Layout class="com.fr.form.ui.container.WParameterLayout">
+<WidgetName name="para"/>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Margin top="0" left="0" bottom="0" right="0"/>
+<Border>
+<border style="0" color="-723724" borderRadius="0" type="0" borderStyle="0"/>
+<WidgetTitle>
+<O>
+<![CDATA[新建标题]]></O>
+<FRFont name="SimSun" style="0" size="72"/>
+<Position pos="0"/>
+</WidgetTitle>
+<Alpha alpha="1.0"/>
+</Border>
+<Background name="ColorBackground" color="-1118482"/>
+<LCAttr vgap="0" hgap="0" compInterval="0"/>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.ui.FreeButton">
+<Listener event="click">
+<JavaScript class="com.fr.js.JavaScriptImpl">
+<Parameters/>
+<Content>
+<![CDATA[_g().parameterCommit(); ]]></Content>
+</JavaScript>
+</Listener>
+<WidgetName name="button0"/>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<Text>
+<![CDATA[查询]]></Text>
+</InnerWidget>
+<BoundsAttr x="395" y="31" width="80" height="21"/>
+</Widget>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.ui.DateEditor">
+<WidgetName name="dateEditor0"/>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<DateAttr format="yyyy"/>
+<widgetValue>
+<O t="Date">
+<![CDATA[1509593013595]]></O>
+</widgetValue>
+</InnerWidget>
+<BoundsAttr x="295" y="31" width="80" height="21"/>
+</Widget>
+<Widget class="com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget">
+<InnerWidget class="com.fr.form.ui.Label">
+<WidgetName name="label0"/>
+<WidgetAttr description="">
+<PrivilegeControl/>
+</WidgetAttr>
+<widgetValue>
+<O>
+<![CDATA[选取年份：]]></O>
+</widgetValue>
+<LabelAttr verticalcenter="true" textalign="4" autoline="true"/>
+<FRFont name="SimSun" style="0" size="72"/>
+<border style="0" color="-723724"/>
+</InnerWidget>
+<BoundsAttr x="215" y="31" width="80" height="21"/>
+</Widget>
+<Sorted sorted="false"/>
+<MobileWidgetList>
+<Widget widgetName="dateEditor0"/>
+<Widget widgetName="button0"/>
+</MobileWidgetList>
+<Display display="true"/>
+<DelayDisplayContent delay="true"/>
+<Position position="0"/>
+<Design_Width design_width="960"/>
+<NameTagModified/>
+<WidgetNameTagMap>
+<NameTag name="dateEditor0" tag="选取年份："/>
+</WidgetNameTagMap>
+</Layout>
+<DesignAttr width="960" height="80"/>
+</ParameterUI>
+</ReportParameterAttr>
+<StyleList>
+<Style horizontal_alignment="4" imageLayout="1">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+</Border>
+</Style>
+<Style imageLayout="1">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<Format class="com.fr.base.CoreDecimalFormat">
+<![CDATA[#0.00]]></Format>
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+</StyleList>
+<DesignerVersion DesignerVersion="IAA"/>
+<PreviewType PreviewType="0"/>
+<TemplateID TemplateID="d752b5a3-bc6c-4d84-b7d4-8881b16de666"/>
+</WorkBook>
