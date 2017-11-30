@@ -16,6 +16,9 @@ import java.util.Map;
 public class ProductAnalysisService {
     @Autowired
     private ProductAnalysisMapper productAnalysisMapper;
+    public int ifSamecode(MeterAnalysis meterAnalysis){
+        return productAnalysisMapper.ifSamecode(meterAnalysis);
+    }
     public void add(MeterAnalysis meterAnalysis) {
         productAnalysisMapper.add(meterAnalysis);
     }

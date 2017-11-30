@@ -38,6 +38,11 @@ public class MeterAnalysisWeb {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"参数不能是空!");
         }
         meterAnalysis.setFdatetime(new java.sql.Date(System.currentTimeMillis()));
+        int flag = 0;
+        flag = meterAnalysisService.ifSamecode(meterAnalysis);
+        if (flag == 1){
+            return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"同一天分析表号相同!");
+        }
         meterAnalysisService.add(meterAnalysis);
         return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.SUCCESS.getCode(), "添加成功!");
     }

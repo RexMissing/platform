@@ -106,6 +106,7 @@
             <if test="startTime!=null"><![CDATA[ AND FDateTime>=#{startTime}]]></if>
             <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
         </where>
+        ORDER BY ID DESC;
     </select>
 
     <select id="findBySearch" parameterType="map" resultMap="returnMeterResultMap">

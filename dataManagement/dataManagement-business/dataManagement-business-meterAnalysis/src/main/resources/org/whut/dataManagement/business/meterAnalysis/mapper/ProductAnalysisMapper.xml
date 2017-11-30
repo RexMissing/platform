@@ -23,6 +23,10 @@
         <result property="fdatetime" column="FDateTime"/>
     </resultMap>
 
+    <select id="ifSamecode" parameterType="meterAnalysis" resultType="int">
+        SELECT COUNT(FMeterCode) FROM tproductanalysis
+        WHERE IsDelete=0 AND FDateTime=CURRENT_DATE  AND FMeterCode=#{fmetercode};
+    </select>
     <insert id="add" parameterType="meterAnalysis" keyProperty="id"
             useGeneratedKeys="true">
         INSERT INTO
@@ -60,13 +64,13 @@
     <select id="getList" resultMap="productAnalysisResultMap">
         SELECT <include refid="productAnalysis_fields"/>
         FROM tproductanalysis
-        WHERE IsDelete=0 ORDER BY ID DESC;
+        WHERE IsDelete=0 AND FDateTime=CURRENT_DATE ORDER BY ID DESC;
     </select>
 
     <select id="getListByFanalysor" resultMap="productAnalysisResultMap">
         SELECT <include refid="productAnalysis_fields"/>
         FROM tproductanalysis
-        WHERE IsDelete=0 AND FAnalysor=#{fanalysor};
+        WHERE IsDelete=0 AND FAnalysor=#{fanalysor} AND FDateTime=CURRENT_DATE ORDER BY ID DESC;
     </select>
 
     <select id="findBySearch" parameterType="map" resultMap="productAnalysisResultMap">
@@ -77,6 +81,7 @@
             <if test="fmetercode!=null">AND FMeterCode=#{fmetercode}</if>
             <if test="fmetername!=null">AND FMeterName=#{fmetername}</if>
             <if test="fanalysor!=null">AND FAnalysor=#{fanalysor}</if>
+            AND FDateTime=CURRENT_DATE
         </where>
         ORDER BY ID DESC;
     </select>

@@ -29,6 +29,7 @@
     <select id="findByCondition" parameterType="map" resultMap="updateRecordResultMap">
         SELECT <include refid="updateRecord_fields"/>
         FROM updaterecord
-        WHERE UpdateName=#{updatename} AND DataName=#{dataname};
+        WHERE UpdateName=#{updatename} AND DataName=#{dataname}
+        ORDER BY ID DESC;
     </select>
 </mapper>

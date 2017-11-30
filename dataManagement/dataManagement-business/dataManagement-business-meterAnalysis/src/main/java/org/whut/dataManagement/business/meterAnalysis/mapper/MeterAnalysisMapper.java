@@ -10,6 +10,7 @@ import java.util.Map;
  * Created by Administrator on 2017/7/27 0027.
  */
 public interface MeterAnalysisMapper extends AbstractMapper<MeterAnalysis> {
+    int ifSamecode(MeterAnalysis meterAnalysis);
     String getCusByCode(String fmetercode);
     String getReportMisByCode(String fmetercode);
     String getReadingByCode(String fmetercode);

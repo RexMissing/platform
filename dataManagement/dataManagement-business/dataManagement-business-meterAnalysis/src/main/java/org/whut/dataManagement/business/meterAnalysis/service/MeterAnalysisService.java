@@ -24,7 +24,9 @@ public class MeterAnalysisService {
     public int delete(MeterAnalysis meterAnalysis) {
         return meterAnalysisMapper.delete(meterAnalysis);
     }
-
+    public int ifSamecode(MeterAnalysis meterAnalysis){
+        return meterAnalysisMapper.ifSamecode(meterAnalysis);
+    }
     public List<MeterAnalysis> getList() {
         return meterAnalysisMapper.getList();
     }

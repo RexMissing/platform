@@ -373,7 +373,10 @@
                 $.post($.URL.productAnalysis.list,{"curFuncRole":curFuncRole,"fanalysor":fanalysor},listCallback,"json");
             }
             else {
+                $('embed').remove();
+                $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                 $.ligerDialog.warn(data.message);
+                return false;
             }
         }
         $("#analysisSearchBtn").click(function () {
