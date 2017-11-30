@@ -139,7 +139,7 @@
                                 if(data.data.length==0)
                                 {
                                     $('embed').remove();
-                                    $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                                    $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                     $.ligerDialog.alert("输入表具编号格式错误");
                                     f_flag = true;
                                     return false;
@@ -167,7 +167,7 @@
                                 if(data.data.length==0)
                                 {
                                     $('embed').remove();
-                                    $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                                    $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                     $.ligerDialog.alert("输入表具编号格式错误");
                                     f_flag = true;
                                     return false;
@@ -185,7 +185,7 @@
             else
             {
                 $('embed').remove();
-                $('body').append('<embed src="/sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                 $.ligerDialog.alert("输入表具编号格式错误");
                 return false;
             }
@@ -207,7 +207,7 @@
             function addCallback(data) {
                 if (data.code == 200){
                     $('embed').remove();
-                    $('body').append('<embed src="/sound/Success.wav" autostart="true" hidden="true" loop="false">');
+                    $('body').append('<embed src="sound/Success.wav" autostart="true" hidden="true" loop="false">');
                     $("#fmetercode").val("");
                     $("#fair").val("");
                     $.post($.URL.inspection.list, {
