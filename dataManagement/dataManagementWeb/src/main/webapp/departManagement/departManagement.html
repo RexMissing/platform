@@ -59,17 +59,33 @@
                     {display:'用户编号',name: 'userid',width:"20%",
                         editor: { type: 'text'}
                     },
-                    {display:'用户名',name:'username',width:"20%",
+                    {display:'用户名',name:'username',width:"15%",
                         editor:{type:'text'}
                     },
-                    {display:'姓名',name:'fname',width:"20%",
+                    {display:'姓名',name:'fname',width:"15%",
                         editor:{type:'text'}
                     },
-                    {display:'性别',name:'sex', width:"20%",
+                    {display:'性别',name:'sex', width:"10%",
                         editor:{type:'text'}
                     },
                     {display:'角色权限',name:'funcroleName', width:"20%",
                         editor:{type:'text'}
+                    },
+                    { display: '操作', isSort: false, width: '20%',render: function (rowdata, rowindex, value)
+                    {
+                        var h = "";
+                        if (!rowdata._editing)
+                        {
+//                            h += "<a href='javascript:beginEdit(" + rowindex + ")'>修改</a> ";
+                            h += "<a href='javascript:deleteRow(" + rowindex + ")'>删除</a> ";
+                        }
+//                        else
+//                        {
+//                            h += "<a href='javascript:endEdit(" + rowindex + ")'>提交</a> ";
+//                            h += "<a href='javascript:cancelEdit(" + rowindex + ")'>取消</a> ";
+//                        }
+                        return h;
+                    }
                     }
                 ],
                 onSelectRow: function (rowdata, rowindex)
@@ -81,96 +97,29 @@
                 width: '100%'
             });
         }
+
+        function deleteRow(rowid)
+        {
+            if (confirm('确定删除?'))
+            {
+                var row = manager.getRow(rowid);
+                var jsonString  = $.toJSON(row);
+                $.post($.URL.depart.delete,{"jsonString":jsonString},deleteCallback,"json");
+                manager.deleteRow(rowid);
+            }
+        }
+
+        function deleteCallback(data){
+            if(data.code==200){
+                $.ligerDialog.success("成功删除！");
+            }else{
+                $.ligerDialog.success("删除失败！");
+            }
+        }
+
         $("#submitBtn1").click(function(){
             query();
         });
-//        $("#submitBtn2").click(function () {
-//            cleartable();
-//            $("#addDepart").css('display','block');
-//            $.ligerDialog.open({title:'添加部门', target: $("#addDepart"),width:550});
-//        });
-//        function dNoChange() {
-//            if($("#departNo").val() == null || $("#departNo").val().trim() == ""){
-//                $("#dNoMessage").css("color","red")
-//                $("#dNoMessage").text("部门编号不能为空！");
-//                checkdepartno = 0;
-//            }
-//            else {
-//                var addDepartNo = {};
-//                addDepartNo.departNo = $("#departNo").val();
-//                $.post($.URL.depart.checkNo,addDepartNo,checkDepartNo,"json");
-//            }
-//        }
-//        function checkDepartNo(data){
-//            if(data.code == 200){
-//                $("#dNoMessage").css("color","green")
-//                $("#dNoMessage").text("部门编号可用！");
-//                checkdepartno = 1;
-//            }
-//            else {
-//                $("#dNoMessage").css("color","red")
-//                $("#dNoMessage").text("部门编号已存在！");
-//                checkdepartno = 0;
-//            }
-//        }
-//        function dNameChange() {
-//            if($("#departName").val() == null || $("#departName").val().trim() == ""){
-//                $("#dNameMessage").css("color","red")
-//                $("#dNameMessage").text("部门名称不能为空！");
-//                checkdepartname = 0;
-//            }
-//            else {
-//                var addDepartName = {};
-//                addDepartName.departName = $("#departName").val();
-//                $.post($.URL.depart.checkName,addDepartName,checkDepartName,"json");
-//            }
-//        }
-//        function checkDepartName(data){
-//            if(data.code == 200){
-//                $("#dNameMessage").css("color","green")
-//                $("#dNameMessage").text("部门名称可用！");
-//                checkdepartname = 1;
-//            }
-//            else {
-//                $("#dNameMessage").css("color","red")
-//                $("#dNameMessage").text("部门名称已存在！");
-//                checkdepartname = 0;
-//            }
-//        }
-//        $("#submitBtn3").click(function () {
-//            var department = {};
-//            department.departNo = $("#departNo").val();
-//            department.departName = $("#departName").val();
-//            if(department.departNo == null || department.departNo.trim() == ""){
-//                $("#dNoMessage").css("color","red")
-//                $("#dNoMessage").text("部门编号不能为空！");
-//                checkdepartno = 0;
-//            }
-//            else if(department.departName == null || department.departName.trim() == ""){
-//                $("#dNameMessage").css("color","red")
-//                $("#dNameMessage").text("部门名称不能为空！");
-//                checkdepartname = 0;
-//            }else if(checkdepartno == 1 && checkdepartname == 1){
-//                $.post($.URL.depart.add,department,addback,"json");
-//            }
-//        });
-//
-//        function addback(data) {
-//            if(data.code == 200){
-//                $.ligerDialog.success("添加成功！");
-//                cleartable();
-//            }
-//            else{
-//                $.ligerDialog.error("添加失败！");
-//                cleartable();
-//            }
-//        }
-//        function cleartable() {
-//            $("#departNo").val("");
-//            $("#departName").val("");
-//            $("#dNoMessage").text("");
-//            $("#dNameMessage").text("");
-//        }
         function queryListCallback(data){
             if(data.code==200){
                 gridData.Rows=data.data;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.whut.dataManagement.business.userFunctionRole.entity.*;
 import org.whut.dataManagement.business.userFunctionRole.service.DepartUserService;
 import org.whut.platform.fundamental.logger.PlatformLogger;
+import org.whut.platform.fundamental.util.json.JsonMapper;
 import org.whut.platform.fundamental.util.json.JsonResultUtils;
 
 import javax.ws.rs.FormParam;
@@ -121,6 +122,21 @@ public class DepartUserWeb {
         }
         else {
             return JsonResultUtils.getCodeAndMesByString(JsonResultUtils.Code.ERROR.getCode(),"修改失败！");
+        }
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/delete")
+    @POST
+    public String delete(@FormParam("jsonString")String jsonString) {
+        DepartUser departUser = JsonMapper.buildNonDefaultMapper().fromJson(jsonString,DepartUser.class);
+        int result = departUserService.delete(departUser);
+        if(result>0)
+        {
+            return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.SUCCESS) ;
+        }
+        else {
+            return JsonResultUtils.getCodeAndMesByStringAsDefault(JsonResultUtils.Code.ERROR);
         }
     }
 

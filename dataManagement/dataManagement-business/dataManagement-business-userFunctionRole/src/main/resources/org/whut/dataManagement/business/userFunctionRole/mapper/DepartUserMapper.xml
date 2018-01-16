@@ -36,6 +36,10 @@
         ORDER BY a.id;
     </select>
 
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE a,u FROM user a LEFT JOIN user_authority u ON a.ID=u.userId
+        WHERE a.ID=#{userid}
+    </delete>
 
     <select id="getUser" parameterType="java.lang.String"
             resultMap="departUser">

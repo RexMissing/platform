@@ -37,4 +37,5 @@ public class DepartUserService {
     public int upRoleById(RoleNo roleNo){
         return departUserMapper.upRoleById(roleNo);
     }
+    public int delete(DepartUser departUser){return departUserMapper.delete(departUser);}
 }

@@ -52,7 +52,9 @@
             "departuser": "rs/depart/departuser",
             "findUser": "rs/depart/findUser",
             "uprole": "rs/depart/uprole",
-            "list": "rs/depart/list"
+            "list": "rs/depart/list",
+            "delete":"rs/depart/delete",
+            "deleteUser":"rs/depart/deleteUser"
         },
         "department": {
             "list": "rs/department/list",

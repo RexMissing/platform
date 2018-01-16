@@ -47,12 +47,18 @@
                 $("#fmeternames").comboSelect();
             }
         }
+        function rebutton() {
+            $.ligerDialog.warn("请求无数据，请更换查询条件...");
+            $("#submitBtn1").attr("disabled",false);
+        }
         var years = new Array();
         var yearMis = new Array();
         var compareYears = new Array();
         var saleYears = new Array();
         $("#submitBtn1").click(function () {
             $("#loading").css("display","block");
+            $("#loadingerror").css("display","none");
+            $("#submitBtn1").attr("disabled",true);
             var graphType = $("#graphType").val();
             if (graphType == 0){
                 var compareYear1 = $("#compareYear1").val();
@@ -68,12 +74,20 @@
                         success:function(data){
                             if(data.data.length==0)
                             {
+                                rebutton();
+                                $("#loading").css("display","none");
+                                $("#loadingerror").css("display","block");
                                 return false;
                             }
                             else{
                                 var minYear = data.data[0].minYear;
                                 if (parseInt(minYear) > parseInt(maxYear))
+                                {
+                                    rebutton();
+                                    $("#loading").css("display","none");
+                                    $("#loadingerror").css("display","block");
                                     return false;
+                                }
                                 for (var i = 0; i <= parseInt(maxYear) - parseInt(minYear); i++){
                                     years[i] = (parseInt(minYear) + i).toString();
                                 }
@@ -98,12 +112,20 @@
                         success:function(data){
                             if(data.data.length==0)
                             {
+                                rebutton();
+                                $("#loading").css("display","none");
+                                $("#loadingerror").css("display","block");
                                 return false;
                             }
                             else{
                                 var minYear = data.data[0].minYear;
                                 if (parseInt(minYear) > parseInt(year))
+                                {
+                                    rebutton();
+                                    $("#loading").css("display","none");
+                                    $("#loadingerror").css("display","block");
                                     return false;
+                                }
                                 for (var i = 0; i <= parseInt(year) - parseInt(minYear); i++){
                                     yearMis[i] = (parseInt(minYear) + i).toString();
                                 }
@@ -129,12 +151,20 @@
                         success:function(data){
                             if(data.data.length==0)
                             {
+                                rebutton();
+                                $("#loading").css("display","none");
+                                $("#loadingerror").css("display","block");
                                 return false;
                             }
                             else{
                                 var minYear = data.data[0].minYear;
                                 if (parseInt(minYear) > parseInt(maxYear))
+                                {
+                                    rebutton();
+                                    $("#loading").css("display","none");
+                                    $("#loadingerror").css("display","block");
                                     return false;
+                                }
                                 for (var i = 0; i <= parseInt(maxYear) - parseInt(minYear); i++){
                                     compareYears[i] = (parseInt(minYear) + i).toString();
                                 }
@@ -159,10 +189,17 @@
                 $.post($.URL.graph.graphSaleYears, {"fmeternames":fmeternames,"minYear":minYear,"maxYear":maxYear},
                         showSaleYears, "json");
             }
-            $("#submitBtn1").attr("disabled",true);
+
         });
         function showSaleYears(data) {
             if (data.code == 200){
+                if(data.data.length==0)
+                {
+                    rebutton();
+                    $("#loading").css("display","none");
+                    $("#loadingerror").css("display","block");
+                    return false;
+                }
                 var number = new Array();
                 for(var i = 0; i < data.data.length; i++){
                     number[i] = data.data[i].number1;
@@ -514,6 +551,7 @@
     </div>
 </div>
 <div id="loading" style="display:none;font-size: 18px;">正在加载中，请稍后...</div>
+<div id="loadingerror" style="display:none;font-size: 18px;">请求无数据，请更换查询条件...</div>
 <div id="containerMonth" style="min-width: 400px;height: 400px;display: none"></div>
 <div id="containerYear" style="min-width: 400px;height: 400px;display: block"></div>
 <div id="containerYearNumber" style="min-width: 400px;height: 400px;display: none"></div>
