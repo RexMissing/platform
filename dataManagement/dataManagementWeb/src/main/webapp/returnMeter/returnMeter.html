@@ -134,6 +134,7 @@
                 $("#batch").comboSelect();
             }
         }
+        var trueProductName = null;
         function f_enter() {
             var mdata = {};
             var flag = false;
@@ -155,6 +156,10 @@
                                $.ligerDialog.alert("输入表具编号格式错误");
                                flag = true;
                                return false;
+                           }
+                           else
+                           {
+                               trueProductName = data.data[0].fmetername;
                            }
                        },
                        dataType:"json"
@@ -182,6 +187,10 @@
                                 flag = true;
                                 return false;
                             }
+                            else
+                            {
+                                trueProductName = data.data[0].fmetername;
+                            }
                         },
                         dataType:"json"
                     }
@@ -202,6 +211,9 @@
                     mdata.fvalvecode = data.data[0].fvalvecode;
                     mdata.fmeterdirection = data.data[0].fmeterdirection;
                     mdata.fmetername = data.data[0].fmetername;
+                    if (typeof (mdata.fmetername) == "undefined"){
+                        mdata.fmetername = trueProductName;
+                    }
                     mdata.fsaletime = data.data[0].fsaletime;
                     mdata.fcustomer = data.data[0].fcustomer;
                     var nowdate = new Date();
