@@ -73,7 +73,6 @@
             <if test="startTime!=null"><![CDATA[ AND FDate>=#{startTime}]]></if>
             <if test="endTime!=null"><![CDATA[ AND FDate<=#{endTime} ]]> </if>
             <if test="foperator!=null">AND FOperator=#{foperator}</if>
-            AND FDate=CURRENT_DATE
         </where>
         ORDER BY ID DESC;
     </select>

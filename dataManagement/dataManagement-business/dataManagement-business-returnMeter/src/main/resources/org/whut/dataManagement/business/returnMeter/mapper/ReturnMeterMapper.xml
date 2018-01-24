@@ -120,7 +120,7 @@
             <if test="endTime!=null"><![CDATA[ AND FDateTime<=#{endTime} ]]> </if>
             <if test="fanalysor!=null">AND FOperator=#{fanalysor}</if>
         </where>
-        AND FDateTime=CURRENT_DATE ORDER BY ID DESC;
+        ORDER BY ID DESC;
     </select>
 
     <select id="findByMap" parameterType="map" resultMap="returnMeterResultMap">
