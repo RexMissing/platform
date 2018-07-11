@@ -9,6 +9,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Created by Administrator on 2017/7/19 0019.
+ * 设置DataSource注解
  */
 @Target({TYPE,METHOD})
 @Retention(RUNTIME)

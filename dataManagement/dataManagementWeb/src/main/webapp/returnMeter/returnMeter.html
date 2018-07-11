@@ -62,7 +62,6 @@
         }
 
         function returnNumCallBack(data) {
-//            $("#freturnnum").empty();
             var obj = document.getElementById("freturnnum");
             obj.setAttribute("value",data.data[0].freturnnum);
         }
@@ -138,6 +137,10 @@
         function f_enter() {
             var mdata = {};
             var flag = false;
+            var today = new Date();
+            var nowYear = today.getFullYear();
+            var limityear = $("#limitYear").val();
+            var startYear = nowYear-limityear;
             mdata.freturnbatch = $("#freturnbatch").val();
             mdata.fmetercode = $("#fmetercode").val();
             if (mdata.fmetercode.length == 12) {
@@ -154,6 +157,14 @@
                                $('embed').remove();
                                $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                $.ligerDialog.alert("输入表具编号格式错误");
+                               flag = true;
+                               return false;
+                           }
+                           else if("20"+mdata.fmetercode.substring(3,5)<startYear)
+                           {
+                               $('embed').remove();
+                               $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                               $.ligerDialog.alert("该表具已超出设置年限");
                                flag = true;
                                return false;
                            }
@@ -184,6 +195,14 @@
                                 $('embed').remove();
                                 $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                 $.ligerDialog.alert("输入表具编号格式错误");
+                                flag = true;
+                                return false;
+                            }
+                            else if("20"+mdata.fmetercode.substring(4,6)<startYear)
+                            {
+                                $('embed').remove();
+                                $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
+                                $.ligerDialog.alert("该表具已超出设置年限");
                                 flag = true;
                                 return false;
                             }
@@ -514,7 +533,18 @@
 <body  style="padding:10px">
 <div>
     <input type="button" value="生成批次" id="" onclick="f_batch()" class="l-button l-button-submit" />
-    <input type="button" value="添加" id="addSubmitBtn" onclick="f_add()" class="l-button l-button-submit" />
+    <!--<input type="button" value="添加" id="addSubmitBtn" onclick="f_add()" class="l-button l-button-submit" />-->
+    <table cellpadding="0" cellspacing="0" class="l-table-edit">
+        <tr>
+            <td align="right" class="l-table-edit-td">年限限制：</td>
+            <td align="left" class="l-table-edit-td">
+                <input name="limitYear" type="text" id="limitYear"/>
+            </td>
+            <td align="right">
+                <input type="button" value="添加" id="addSubmitBtn" onclick="f_add()" class="l-button l-button-submit" />
+            </td>
+        </tr>
+    </table>
 </div>
 <div id="list">
     <table cellpadding="0" cellspacing="0" class="l-table-edit" >
