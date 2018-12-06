@@ -157,14 +157,16 @@
                                $('embed').remove();
                                $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                $.ligerDialog.alert("输入表具编号格式错误");
+                               $("#fmetercode").val("");
                                flag = true;
                                return false;
                            }
-                           else if("20"+mdata.fmetercode.substring(3,5)<startYear)
+                           else if("20"+mdata.fmetercode.substring(3,5)<startYear && $("#limitYear").val() != "")
                            {
                                $('embed').remove();
                                $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                $.ligerDialog.alert("该表具已超出设置年限");
+                               $("#fmetercode").val("");
                                flag = true;
                                return false;
                            }
@@ -195,14 +197,16 @@
                                 $('embed').remove();
                                 $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                 $.ligerDialog.alert("输入表具编号格式错误");
+                                $("#fmetercode").val("");
                                 flag = true;
                                 return false;
                             }
-                            else if("20"+mdata.fmetercode.substring(4,6)<startYear)
+                            else if("20"+mdata.fmetercode.substring(4,6)<startYear && $("#limitYear").val()!= "")
                             {
                                 $('embed').remove();
                                 $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                                 $.ligerDialog.alert("该表具已超出设置年限");
+                                $("#fmetercode").val("");
                                 flag = true;
                                 return false;
                             }
@@ -222,6 +226,7 @@
                 $('embed').remove();
                 $('body').append('<embed src="sound/Wrong.wav" autostart="true" hidden="true" loop="false">');
                 $.ligerDialog.alert("输入表具编号格式错误");
+                $("#fmetercode").val("");
                 return false;
             }
             $.post($.URL.returnByCode.findByCode, {"fmetercode": mdata.fmetercode}, getInfoCallback, "json");

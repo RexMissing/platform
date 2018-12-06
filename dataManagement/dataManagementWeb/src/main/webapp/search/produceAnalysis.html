@@ -137,6 +137,34 @@
                 width: '100%'
             });
         }
+
+        $("#exportExcelBtn").click(function ()
+        {
+            var datasss=analysisSearchData.Rows;
+            console.log(datasss);
+            console.log(datasss[1].fdatetime);
+
+            var str = '主键,表具编号,表具类型,基表条码,分析部门,分析员,市场,报修故障,实查故障,故障详情,表具止码,上电显示状态,分析时间\n';
+            //增加\t为了不让表格显示科学计数法或者其他格式
+            for(var i = 0 ; i < datasss.length; i++ ){
+                str+=datasss[i].id+','+datasss[i].fmetercode+'\t'+','+datasss[i].fmetername
+                    +','+datasss[i].fvalvename+','+datasss[i].fdepartment+','+
+                    datasss[i].fanalysor+','+datasss[i].fcustomer+','+datasss[i].freportmisfune+','+
+                    datasss[i].fconfirmmisfune+','+datasss[i].fmisfunedescrib+'\t'+','+datasss[i].fmeterreading+','+
+                    datasss[i].felecdisplay+','+datasss[i].fdatetime+'\t';
+                str+='\n';
+            }
+
+            var uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
+            //通过创建a标签实现
+            var link = document.createElement("a");
+            link.href = uri;
+            //对下载的文件命名
+            link.download =  "生产表具维修分析信息查询.csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
     </script>
     <style type="text/css">
         .l-table-edit {}
@@ -198,6 +226,7 @@
                 <input name="returnMeterEndTime" type="date"  id="returnMeterEndTime">
             </td>
             <td align="right"><input type="button" value="查询" id="produceanalysisSearchBtn" class="l-button l-button-submit" /></td>
+            <td align="right"><input type="button" value="导出Excel" id="exportExcelBtn" class="l-button l-button-submit" /></td>
         </tr>
     </table>
     <div class="l-clear"></div>
