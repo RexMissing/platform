@@ -136,6 +136,7 @@
             "getAllBatchlist":"rs/returnMeter/getAllBatchlist",
             "findByDispatch":"rs/returnMeter/findByDispatch",
             "returnMeterNum":"rs/returnMeter/returnMeterNum",
+            "unAnalysisMeter":"rs/returnMeter/unAnalysisMeter",
             "returnAnalysisNum":"rs/returnMeter/returnAnalysisNum",
             "confirmCode":"rs/returnMeter/confirmCode",
             "getReturnNum":"rs/returnMeter/getReturnNum"

@@ -167,6 +167,21 @@
         </where>
     </select>
 
+    <select id="unAnalysisMeter" parameterType="map" resultMap="returnMeterResultMap">
+        SELECT treturnmeter.ID,treturnmeter.FReturnBatch,treturnmeter.FMeterCode,treturnmeter.FCustomer,treturnmeter.FMeterName,treturnmeter.FMeterDirection,treturnmeter.FDateTime,treturnmeter.FOperator,treturnmeter.FReportMisFune,treturnmeter.FPreMaintain
+        FROM treturnmeter
+        LEFT JOIN tmeteranalysisinfo ON treturnmeter.fmetercode=tmeteranalysisinfo.fmetercode
+        <where>
+            treturnmeter.IsDelete=0 AND tmeteranalysisinfo.fmetercode is null
+            <if test="fcustomer!=null">AND treturnmeter.FCustomer=#{fcustomer}</if>
+            <if test="fmetername!=null">AND treturnmeter.FMeterName=#{fmetername}</if>
+            <if test="startTime!=null"><![CDATA[ AND treturnmeter.FDateTime>=#{startTime}]]></if>
+            <if test="endTime!=null"><![CDATA[ AND treturnmeter.FDateTime<=#{endTime} ]]> </if>
+            group by treturnmeter.FMeterCode
+        </where>
+        ORDER BY ID DESC;
+    </select>
+
     <select id="confirmFMeterCode" parameterType="map" resultType="map">
         SELECT FProductName as fmetername,FMeterCodeMark as fmetercodemark
         FROM TProducts

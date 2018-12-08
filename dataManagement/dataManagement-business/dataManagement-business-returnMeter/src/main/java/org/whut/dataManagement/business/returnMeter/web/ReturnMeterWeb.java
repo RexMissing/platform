@@ -321,6 +321,32 @@ public class ReturnMeterWeb {
     }
 
     @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
+    @Path("/unAnalysisMeter")
+    @POST
+    public String unAnalysisMeter(@FormParam("fcustomer")String fcustomer,@FormParam("fmetername")String fmetername,@FormParam("sTime")String sTime,@FormParam("eTime")String eTime)
+    {
+        Map<String,Object> condition = new HashMap<String, Object>();
+        if(fcustomer!=null&&!fcustomer.equals(""))
+        {
+            condition.put("fcustomer",fcustomer);
+        }
+        if (fmetername!=null&&!fmetername.equals(""))
+        {
+            condition.put("fmetername",fmetername);
+        }
+        if(sTime!=null&&!sTime.equals("")){
+            condition.put("startTime",sTime+" 00:00:00");
+        }
+        if(eTime!=null&&!eTime.equals("")){
+            condition.put("endTime",eTime+" 59:59:59");
+        }
+
+        List<Map<String,Object>> list=returnMeterService.unAnalysisMeter(condition);
+        System.out.print(list);
+        return JsonResultUtils.getObjectResultByStringAsDefault(list,JsonResultUtils.Code.SUCCESS);
+    }
+
+    @Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
     @Path("/confirmCode")
     @POST
     public String confirmCode(@FormParam("fmetercodemark")String fmetercodemark)
